@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Auth::routes();
+Auth::routes(['register'=>false]);
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
+Route::resource('/registro', 'App\Http\Controllers\Registro2Controller');
