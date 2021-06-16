@@ -18,11 +18,11 @@ class Registro2Controller extends Controller
         $this->middleware('auth');
     }
 
-     public function index()
-    {
-        //
-        return view("auth.registro");
-    }
+    //  public function index()
+    // {
+    //     //
+    //     return view("auth.registro");
+    // }
 
     /**
      * Show the form for creating a new resource.

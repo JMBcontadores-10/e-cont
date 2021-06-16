@@ -3,23 +3,6 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            {{-- <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Dashboard') }}</div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-
-
-                    {{ __('You are logged in!') }}
-                </div>
-            </div>
-        </div> --}}
-
             <div class="inicio" align="center">
                 <h4>Sesión de:</h4>
                 <h2>{{ Auth::user()->nombre }}</h2>
@@ -30,10 +13,10 @@
 
                 <div class="row" style="justify-content: center;">
                     <div class="col">
-                        <form action="\descargas\index.php" method="post">
+                        <form action="{{ url('descargasv2') }}">
+                            {{-- <input type="hidden" name="accion" value="login_fiel" /> --}}
                             <button class="btnModulo" type="submit" value="Descargas" style="font-size: 12pt">
-                                <img style="float:left;" src="{{ asset('img/boton.png') }}" width="25px" height="25px"
-                                    alt=""> Descargas
+                                <img style="float:left;" src="img/boton.png" width="25px" height="25px" alt=""> Descargas
                             </button>
                         </form>
                     </div>
@@ -61,7 +44,7 @@
                         </form>
                     </div>
                 </div>
-                <br>
+                {{-- <br> --}}
                 <div class="row" style="justify-content: center;">
                     <div class="col">
                         <form action="\descargas\pages\cuentasP\index.php" method="post">
