@@ -55,6 +55,12 @@ class Async extends Controller
             $accion = empty($_POST['accion']) ? 'login_fiel' : $_POST['accion'];
 
             if ($accion == 'login_fiel') {
+
+                if (!empty($_POST['sesion'])) {
+                    $sesion = $descargaCfdi->obtenerSesion();
+                    unset($sesion);
+                }
+
                 if (!empty($dircer) && !empty($dirkey) && !empty($pwd)) {
 
                     // preparar certificado para inicio de sesion
@@ -129,8 +135,42 @@ class Async extends Controller
                         'sesion' => $descargaCfdi->obtenerSesion()
                     ));
                 }
-            } elseif ($accion == 'descargar-recibidos' || $accion == 'descargar-emitidos') {
+            } elseif ($accion == 'descargar-recibidos') {
 
+                $rutaDescarga = $rutaDescarga . 'Recibidos/';
+                $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
+
+                if (!empty($_POST['xml'])) {
+                    foreach ($_POST['xml'] as $folioFiscal => $url) {
+                        // xml
+                        $descarga->agregarXml($url, $rutaDescarga, $folioFiscal, $folioFiscal);
+                    }
+                }
+                if (!empty($_POST['ri'])) {
+                    foreach ($_POST['ri'] as $folioFiscal => $url) {
+                        // representacion impresa
+                        $descarga->agregarRepImpr($url, $rutaDescarga, $folioFiscal, $folioFiscal);
+                    }
+                }
+                if (!empty($_POST['acuse'])) {
+                    foreach ($_POST['acuse'] as $folioFiscal => $url) {
+                        // acuse de resultado de cancelacion
+                        $descarga->agregarAcuse($url, $rutaDescarga, $folioFiscal, $folioFiscal . '-acuse');
+                    }
+                }
+
+                $descarga->procesar();
+
+                $str = 'Descargados: ' . $descarga->totalDescargados() . '.'
+                    . ' Errores: ' . $descarga->totalErrores() . '.'
+                    . ' Duración: ' . $descarga->segundosTranscurridos() . ' segundos.';
+                echo json_response(array(
+                    'mensaje' => $str,
+                    'sesion' => $descargaCfdi->obtenerSesion()
+                ));
+            } elseif ($accion == 'descargar-emitidos') {
+
+                $rutaDescarga = $rutaDescarga . 'Emitidos/';
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
 
                 if (!empty($_POST['xml'])) {

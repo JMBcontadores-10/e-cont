@@ -1117,7 +1117,7 @@ class MultiCurl
     private $_options       = array();   //shared cURL options
     private $_headers       = array();   //shared cURL request headers
     private $_callback      = null; //default callback
-    private $_timeout       = 5000; //all requests must be completed by this time
+    private $_timeout       = 10000; //all requests must be completed by this time
     public $requests        = array();   //request_queue
 
 
