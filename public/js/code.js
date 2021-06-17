@@ -1,9 +1,11 @@
-
 function disableInputs() {
-    $('#main select, #main input, #main .btn').attr('disabled', 'disabled');
+    $(':input[type="submit"]').prop('disabled', true);
+    $('a[class="btn btn-primary excel-export"]').addClass('disabled');
 }
+
 function enableInputs() {
-    $('#main select, #main input, #main .btn').removeAttr('disabled');
+    $(':input[type="submit"]').prop('disabled', false);
+    $('a[class="btn btn-primary excel-export disabled"]').removeClass('disabled');
 }
 
 var tableToExcel = (function () {

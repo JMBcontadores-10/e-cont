@@ -2,6 +2,11 @@
 
 @section('content')
 
+    @php
+    $rfc = Auth::user()->RFC;
+    $nombre = Auth::user()->nombre;
+    @endphp
+
     <div class="container">
         <div class="float-md-left">
             <a class="b3" href="{{ url('/') }}">
@@ -14,8 +19,8 @@
         <hr style="border-color:black; width:100%;">
         <div align="left">
             <label class="label1" style="font-weight: bold"> Sesión de: </label>
-            <h1 style="font-weight: bold">{{ Auth::user()->nombre }}</h1>
-            <h5 style="font-weight: bold">{{ Auth::user()->RFC }}</h5>
+            <h1 style="font-weight: bold">{{ $nombre }}</h1>
+            <h5 style="font-weight: bold">{{ $rfc }}</h5>
             <form method="POST" class="login-form">
                 @csrf
                 <input type="hidden" name="accion" value="login_fiel" />
@@ -28,16 +33,15 @@
             <!--datos de la descarga-->
             <hr style="border-color:black; width:100%;">
         </div>
-
         <h2>Descarga</h2>
         <div class="tablas-resultados">
-            <div class="overlay"></div>
+            {{-- <div class="overlay"></div> --}}
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="nav-item active"><a class="nav-link" href="#recibidos" aria-controls="recibidos"
-                        role="tab" data-toggle="tab">Recibidos</a>
+                <li role="presentation" class="nav-item active"><a class="nav-link" href="#recibidos"
+                        aria-controls="recibidos" role="tab" data-toggle="tab">Recibidos</a>
                 </li>
-                <li role="presentation" class="nav-item"><a class="nav-link" href="#emitidos" aria-controls="emitidos" role="tab"
-                        data-toggle="tab">Emitidos</a>
+                <li role="presentation" class="nav-item"><a class="nav-link" href="#emitidos" aria-controls="emitidos"
+                        role="tab" data-toggle="tab">Emitidos</a>
                 </li>
             </ul>
             <div class="tab-content">
@@ -75,7 +79,8 @@
                         </div>
                         <br>
                         <div class="text-right">
-                            <a href="#" class="btn btn-primary excel-export" download="cfdi_emitidos.xls">Exportar a
+                            <a href="#" class="btn btn-primary excel-export"
+                                download="{{ $rfc }}_cfdi_recibidos.xls">Exportar a
                                 Excel</a>
                             <button type="submit" class="btn btn-success">Descargar seleccionados</button>
                         </div>
@@ -114,7 +119,8 @@
                         </div>
                         <br>
                         <div class="text-right">
-                            <a href="#" class="btn btn-primary excel-export" download="cfdi_emitidos.xls">Exportar a
+                            <a href="#" class="btn btn-primary excel-export"
+                                download="{{ $rfc }}_cfdi_emitidos.xls">Exportar a
                                 Excel</a>
                             <button type="submit" class="btn btn-success">Descargar seleccionados</button>
                         </div>
