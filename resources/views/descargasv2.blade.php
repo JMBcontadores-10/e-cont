@@ -35,7 +35,7 @@
         </div>
         <h2>Descarga</h2>
         <div class="tablas-resultados">
-            {{-- <div class="overlay"></div> --}}
+            <div class="overlay"></div>
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="nav-item active"><a class="nav-link" href="#recibidos"
                         aria-controls="recibidos" role="tab" data-toggle="tab">Recibidos</a>
