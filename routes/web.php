@@ -25,3 +25,6 @@ Route::post('/async', [App\Http\Controllers\Async::class, 'index'])->name('async
 
 
 // Rutas Ana
+
+Route::get('/consultas', [App\Http\Controllers\ConsultasController::class, 'index'])->name('consultas');
+Route::get('/volumetrico', [App\Http\Controllers\VolumetricoController::class, 'index'])->name('volumetrico');
