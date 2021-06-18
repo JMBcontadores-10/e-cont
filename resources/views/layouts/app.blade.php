@@ -98,6 +98,6 @@
     </div>
 </body>
 <footer style="margin-top: 50px;">
-    <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">CONTARAPP 2021 | JMB Contadores</p>
+    <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">CONTARAPP {{date('Y')}} | JMB Contadores</p>
 </footer>
 </html>
