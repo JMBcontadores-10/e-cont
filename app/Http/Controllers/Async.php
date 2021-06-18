@@ -138,24 +138,26 @@ class Async extends Controller
             } elseif ($accion == 'descargar-recibidos') {
 
                 $rutaDescarga = $rutaDescarga . 'Recibidos/';
+                $rutaDescargaXml = $rutaDescarga.'XML/';
+                $rutaDescargaPdf = $rutaDescarga.'PDF/';
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
 
                 if (!empty($_POST['xml'])) {
                     foreach ($_POST['xml'] as $folioFiscal => $url) {
                         // xml
-                        $descarga->agregarXml($url, $rutaDescarga, $folioFiscal, $folioFiscal);
+                        $descarga->agregarXml($url, $rutaDescargaXml, $folioFiscal, $folioFiscal);
                     }
                 }
                 if (!empty($_POST['ri'])) {
                     foreach ($_POST['ri'] as $folioFiscal => $url) {
                         // representacion impresa
-                        $descarga->agregarRepImpr($url, $rutaDescarga, $folioFiscal, $folioFiscal);
+                        $descarga->agregarRepImpr($url, $rutaDescargaPdf, $folioFiscal, $folioFiscal);
                     }
                 }
                 if (!empty($_POST['acuse'])) {
                     foreach ($_POST['acuse'] as $folioFiscal => $url) {
                         // acuse de resultado de cancelacion
-                        $descarga->agregarAcuse($url, $rutaDescarga, $folioFiscal, $folioFiscal . '-acuse');
+                        $descarga->agregarAcuse($url, $rutaDescargaPdf, $folioFiscal, $folioFiscal . '-acuse');
                     }
                 }
 
@@ -171,24 +173,26 @@ class Async extends Controller
             } elseif ($accion == 'descargar-emitidos') {
 
                 $rutaDescarga = $rutaDescarga . 'Emitidos/';
+                $rutaDescargaXml = $rutaDescarga.'XML/';
+                $rutaDescargaPdf = $rutaDescarga.'PDF/';
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
 
                 if (!empty($_POST['xml'])) {
                     foreach ($_POST['xml'] as $folioFiscal => $url) {
                         // xml
-                        $descarga->agregarXml($url, $rutaDescarga, $folioFiscal, $folioFiscal);
+                        $descarga->agregarXml($url, $rutaDescargaXml, $folioFiscal, $folioFiscal);
                     }
                 }
                 if (!empty($_POST['ri'])) {
                     foreach ($_POST['ri'] as $folioFiscal => $url) {
                         // representacion impresa
-                        $descarga->agregarRepImpr($url, $rutaDescarga, $folioFiscal, $folioFiscal);
+                        $descarga->agregarRepImpr($url, $rutaDescargaPdf, $folioFiscal, $folioFiscal);
                     }
                 }
                 if (!empty($_POST['acuse'])) {
                     foreach ($_POST['acuse'] as $folioFiscal => $url) {
                         // acuse de resultado de cancelacion
-                        $descarga->agregarAcuse($url, $rutaDescarga, $folioFiscal, $folioFiscal . '-acuse');
+                        $descarga->agregarAcuse($url, $rutaDescargaPdf, $folioFiscal, $folioFiscal . '-acuse');
                     }
                 }
 
