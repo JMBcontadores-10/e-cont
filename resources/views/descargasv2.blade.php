@@ -5,6 +5,9 @@
     @php
     $rfc = Auth::user()->RFC;
     $nombre = Auth::user()->nombre;
+    $dtz = new DateTimeZone('America/Mexico_City');
+    $dt = new DateTime('now', $dtz);
+    $diaDescarga = $dt->format('Y-n-d');
     @endphp
 
     <div class="container">
@@ -47,7 +50,7 @@
             <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="recibidos">
                     @include('descargam.form-recibidos-inc2')
-                    <form method="POST" class="descarga-form">
+                    <form method="POST" class="descargaR-form">
                         @csrf
                         <input type="hidden" name="accion" value="descargar-recibidos" />
                         <input type="hidden" name="sesion" class="sesion-ipt" />
@@ -79,16 +82,15 @@
                         </div>
                         <br>
                         <div class="text-right">
-                            <a href="#" class="btn btn-primary excel-export"
-                                download="{{ $rfc }}_cfdi_recibidos.xls">Exportar a
-                                Excel</a>
+                            <a href="#" class="btn btn-primary excelR-export"
+                                download="{{ $rfc }}_{{ $diaDescarga }}_cfdi_recibidos.xls">Exportar a Excel</a>
                             <button type="submit" class="btn btn-success">Descargar seleccionados</button>
                         </div>
                     </form>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="emitidos">
                     @include('descargam.form-emitidos-inc2')
-                    <form method="POST" class="descarga-form">
+                    <form method="POST" class="descargaE-form">
                         @csrf
                         <input type="hidden" name="accion" value="descargar-emitidos" />
                         <input type="hidden" name="sesion" class="sesion-ipt" />
@@ -119,9 +121,8 @@
                         </div>
                         <br>
                         <div class="text-right">
-                            <a href="#" class="btn btn-primary excel-export"
-                                download="{{ $rfc }}_cfdi_emitidos.xls">Exportar a
-                                Excel</a>
+                            <a href="#" class="btn btn-primary excelE-export"
+                                download="{{ $rfc }}_{{ $diaDescarga }}_cfdi_emitidos.xls">Exportar a Excel</a>
                             <button type="submit" class="btn btn-success">Descargar seleccionados</button>
                         </div>
                     </form>

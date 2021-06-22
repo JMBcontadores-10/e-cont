@@ -31,9 +31,17 @@ var tableToExcel = (function () {
     }
 })();
 
-$('.excel-export').on('click', function () {
+$('.excelR-export').on('click', function () {
     var $this = $(this);
-    var table = $this.closest('.descarga-form').find('.table').get(0);
+    var table = $this.closest('.descargaR-form').find('.table').get(0);
+    var fn = $this.attr('download');
+    $this.attr('href', tableToExcel(table, fn));
+    // window.location.href = tableToExcel(table, fn);
+});
+
+$('.excelE-export').on('click', function () {
+    var $this = $(this);
+    var table = $this.closest('.descargaE-form').find('.table').get(0);
     var fn = $this.attr('download');
     $this.attr('href', tableToExcel(table, fn));
     // window.location.href = tableToExcel(table, fn);
@@ -182,16 +190,16 @@ $('#emitidos-form').on('submit', function () {
                         + '<td class="text-center etpdf">' + (item.urlDescargaRI ? '<input type="checkbox" checked="checked" name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
                         + '<td class="text-center etpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" checked="checked" name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>'
                         + '<td class="blur">' + item.folioFiscal + '</td>'
-						+ '<td class="blur">' + item.receptorRfc + '</td>'
-						+ '<td class="blur">' + item.receptorNombre + '</td>'
-						+ '<td>' + item.fechaEmision + '</td>'
-						+ '<td>' + item.fechaCertificacion + '</td>'
-						+ '<td>' + item.total + '</td>'
-						+ '<td>' + item.efecto + '</td>'
-						+ '<td>' + item.estado + '</td>'
+                        + '<td class="blur">' + item.receptorRfc + '</td>'
+                        + '<td class="blur">' + item.receptorNombre + '</td>'
+                        + '<td>' + item.fechaEmision + '</td>'
+                        + '<td>' + item.fechaCertificacion + '</td>'
+                        + '<td>' + item.total + '</td>'
+                        + '<td>' + item.efecto + '</td>'
+                        + '<td>' + item.estado + '</td>'
                         + '<td>' + aprobacion + '</td>'
-						+ '<td class="blur">' + item.pacCertifico + '</td>'
-						+ '</tr>'
+                        + '<td class="blur">' + item.pacCertifico + '</td>'
+                        + '</tr>'
                         ;
                 }
 
@@ -208,10 +216,16 @@ $('#emitidos-form').on('submit', function () {
     return false;
 });
 
-$('.descarga-form').on('submit', function () {
+$('.descargaR-form').on('submit', function () {
     var form = $(this);
     var formData = new FormData(form.get(0));
     formData.append('sesion', window.sesionDM);
+    var selA = document.getElementById("anio");
+    var anio = selA.options[selA.selectedIndex].value;
+    var selM = document.getElementById("mes");
+    var mes = selM.options[selM.selectedIndex].value;
+    formData.append('anio', anio);
+    formData.append('mes', mes);
 
     disableInputs();
 
@@ -228,6 +242,46 @@ $('.descarga-form').on('submit', function () {
                 if (response.data.sesion) {
                     window.sesionDM = response.data.sesion;
                 }
+
+            }
+            if (response.data && response.data.mensaje) {
+                alert(response.data.mensaje);
+            }
+        }
+    }).always(function () {
+        enableInputs();
+    });
+
+    return false;
+});
+
+$('.descargaE-form').on('submit', function () {
+    var form = $(this);
+    var formData = new FormData(form.get(0));
+    formData.append('sesion', window.sesionDM);
+    var sel_Ai = document.getElementById("anio-e1");
+    var anio_i = sel_Ai.options[sel_Ai.selectedIndex].value;
+    var sel_Mi = document.getElementById("mes-e1");
+    var mes_i = sel_Mi.options[sel_Mi.selectedIndex].value;
+    formData.append('anio_i', anio_i);
+    formData.append('mes_i', mes_i);
+
+    disableInputs();
+
+    $.post({
+        url: "async",
+        dataType: "json",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            console.debug(response);
+
+            if (response.success && response.data) {
+                if (response.data.sesion) {
+                    window.sesionDM = response.data.sesion;
+                }
+
             }
             if (response.data && response.data.mensaje) {
                 alert(response.data.mensaje);

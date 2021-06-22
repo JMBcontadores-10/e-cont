@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use DirectoryIterator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Classes\UtilCertificado;
+use App\Http\Classes\BusquedaEmitidos;
+use App\Http\Classes\BusquedaRecibidos;
+use App\Http\Classes\DescargaAsincrona;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Classes\DescargaMasivaCfdi;
-use App\Http\Classes\BusquedaRecibidos;
-use App\Http\Classes\BusquedaEmitidos;
-use App\Http\Classes\DescargaAsincrona;
 
 class Async extends Controller
 {
-    public function index()
+    public function index(Request $r)
     {
+
+
 
         // Obtener configuracion
         $config = require dirname(dirname(__FILE__)) . '/Classes' . '/config.php';
@@ -29,6 +32,21 @@ class Async extends Controller
         $dk = Storage::url(Auth::user()->dirkey);
         $dirkey = $rutaApp . $dk;
         $pwd = Auth::user()->pass;
+        $rfc = Auth::user()->RFC;
+        $meses = array(
+            '1' => 'Enero',
+            '2' => 'Febrero',
+            '3' => 'Marzo',
+            '4' => 'Abril',
+            '5' => 'Mayo',
+            '6' => 'Junio',
+            '7' => 'Julio',
+            '8' => 'Agosto',
+            '9' => 'Septiembre',
+            '10' => 'Octubre',
+            '11' => 'Noviembre',
+            '12' => 'Diciembre'
+        );
 
         // Instanciar clase principal
         $descargaCfdi = new DescargaMasivaCfdi();
@@ -106,7 +124,7 @@ class Async extends Controller
                     }
                     echo json_response(array(
                         'items' => $items,
-                        'sesion' => $descargaCfdi->obtenerSesion()
+                        'sesion' => $descargaCfdi->obtenerSesion(),
                     ));
                 } else {
                     echo json_response(array(
@@ -137,27 +155,29 @@ class Async extends Controller
                 }
             } elseif ($accion == 'descargar-recibidos') {
 
-                $rutaDescarga = $rutaDescarga . 'Recibidos/';
-                $rutaDescargaXml = $rutaDescarga.'XML/';
-                $rutaDescargaPdf = $rutaDescarga.'PDF/';
+                $anio = $_POST['anio'];
+                $mes = $_POST['mes'];
+                $rutaEmpresa = $rfc . '/' . $anio . '/' . 'Descargas/' .  $mes . '.' . $meses[$mes] . '/'
+                    . 'Recibidos/DescargasManuales/';
+                $rutaDescarga = $rutaDescarga . $rutaEmpresa;
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
 
                 if (!empty($_POST['xml'])) {
                     foreach ($_POST['xml'] as $folioFiscal => $url) {
                         // xml
-                        $descarga->agregarXml($url, $rutaDescargaXml, $folioFiscal, $folioFiscal);
+                        $descarga->agregarXml($url, $rutaDescarga, $folioFiscal, $folioFiscal);
                     }
                 }
                 if (!empty($_POST['ri'])) {
                     foreach ($_POST['ri'] as $folioFiscal => $url) {
                         // representacion impresa
-                        $descarga->agregarRepImpr($url, $rutaDescargaPdf, $folioFiscal, $folioFiscal);
+                        $descarga->agregarRepImpr($url, $rutaDescarga, $folioFiscal, $folioFiscal);
                     }
                 }
                 if (!empty($_POST['acuse'])) {
                     foreach ($_POST['acuse'] as $folioFiscal => $url) {
                         // acuse de resultado de cancelacion
-                        $descarga->agregarAcuse($url, $rutaDescargaPdf, $folioFiscal, $folioFiscal . '-acuse');
+                        $descarga->agregarAcuse($url, $rutaDescarga, $folioFiscal, $folioFiscal . '-acuse');
                     }
                 }
 
@@ -170,29 +190,34 @@ class Async extends Controller
                     'mensaje' => $str,
                     'sesion' => $descargaCfdi->obtenerSesion()
                 ));
+
+                $this->filtroArchivos($rutaDescarga);
+
             } elseif ($accion == 'descargar-emitidos') {
 
-                $rutaDescarga = $rutaDescarga . 'Emitidos/';
-                $rutaDescargaXml = $rutaDescarga.'XML/';
-                $rutaDescargaPdf = $rutaDescarga.'PDF/';
+                $anio = $_POST['anio_i'];
+                $mes = $_POST['mes_i'];
+                $rutaEmpresa = $rfc . '/' . $anio . '/' . 'Descargas/' .  $mes . '.' . $meses[$mes] . '/'
+                    . 'Emitidos/DescargasManuales/';
+                $rutaDescarga = $rutaDescarga . $rutaEmpresa;
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
 
                 if (!empty($_POST['xml'])) {
                     foreach ($_POST['xml'] as $folioFiscal => $url) {
                         // xml
-                        $descarga->agregarXml($url, $rutaDescargaXml, $folioFiscal, $folioFiscal);
+                        $descarga->agregarXml($url, $rutaDescarga, $folioFiscal, $folioFiscal);
                     }
                 }
                 if (!empty($_POST['ri'])) {
                     foreach ($_POST['ri'] as $folioFiscal => $url) {
                         // representacion impresa
-                        $descarga->agregarRepImpr($url, $rutaDescargaPdf, $folioFiscal, $folioFiscal);
+                        $descarga->agregarRepImpr($url, $rutaDescarga, $folioFiscal, $folioFiscal);
                     }
                 }
                 if (!empty($_POST['acuse'])) {
                     foreach ($_POST['acuse'] as $folioFiscal => $url) {
                         // acuse de resultado de cancelacion
-                        $descarga->agregarAcuse($url, $rutaDescargaPdf, $folioFiscal, $folioFiscal . '-acuse');
+                        $descarga->agregarAcuse($url, $rutaDescarga, $folioFiscal, $folioFiscal . '-acuse');
                     }
                 }
 
@@ -205,6 +230,30 @@ class Async extends Controller
                     'mensaje' => $str,
                     'sesion' => $descargaCfdi->obtenerSesion()
                 ));
+
+                $this->filtroArchivos($rutaDescarga);
+
+            }
+        }
+    }
+
+    public function filtroArchivos($rutaDescarga)
+    {
+        $dir = new DirectoryIterator($rutaDescarga);
+        foreach ($dir as $fileinfo) {
+            $fileName = $fileinfo->getFilename();
+            $filePathname = $fileinfo->getPathname();
+            $fileSize = filesize($filePathname);
+            $fileExt = $fileinfo->getExtension();
+            $rutaGuardar = dirname(dirname($filePathname)) . "/";
+            if (!$fileinfo->isDot()) {
+                if ($fileSize > 0) {
+                    if ($fileExt == 'pdf') {
+                        rename($filePathname, $rutaGuardar . 'PDF/' . $fileName);
+                    } else {
+                        rename($filePathname, $rutaGuardar . 'XML/' . $fileName);
+                    }
+                }
             }
         }
     }
