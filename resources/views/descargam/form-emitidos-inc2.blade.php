@@ -20,6 +20,7 @@ $anios = range(2014, date('Y'));
     @csrf
     <input type="hidden" name="accion" value="buscar-emitidos" />
     <input type="hidden" name="sesion" class="sesion-ipt" />
+
     <div class="form-group">
         <label for="dia-e1">Fecha Inicial:</label>
         <select class="form-control m-2" id="dia-e1" name="dia_i">

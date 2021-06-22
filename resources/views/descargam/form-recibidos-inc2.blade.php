@@ -16,10 +16,10 @@ $meses = [
 $dias = range(1, 31);
 $anios = range(2014, date('Y'));
 ?>
-<form class="form-inline" method="POST" id="recibidos-form" {{-- action="{{route('async')}}" --}}>
+<form class="form-inline" method="POST" id="recibidos-form">
     @csrf
     <input type="hidden" name="accion" value="buscar-recibidos" />
-    <input type="hidden" name="sesion" @isset($sesion) value="{{ $sesion }}" @endisset class="sesion-ipt" />
+    <input type="hidden" name="sesion" class="sesion-ipt" />
 
     <div class="form-group">
         <label for="dia">Día:</label>
