@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes(['register'=>false]);
 
 // Rutas Octavio
+
 // Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
 // Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

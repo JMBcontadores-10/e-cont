@@ -20,7 +20,6 @@ class Registro2Controller extends Controller
 
     // public function index()
     // {
-    //     //
     //     return view("auth.registro");
     // }
 
@@ -32,7 +31,6 @@ class Registro2Controller extends Controller
      */
     public function store(Request $request)
     {
-        //
         if ($request->has('RFC')) {
             User::where(['RFC' => $request->input('RFC')])->update(['password' => Hash::make($request->input('password'))]);
         }
