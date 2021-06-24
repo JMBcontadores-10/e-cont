@@ -36,6 +36,15 @@
             <!--datos de la descarga-->
             <hr style="border-color:black; width:100%;">
         </div>
+
+        <!--calendario-->
+    <h1>Calendario Descargas</h1>
+    <br>
+    <br>
+    <div id='calendar'></div>
+    <br><br>
+
+
         <h2>Descarga</h2>
         <div class="tablas-resultados">
             <div class="overlay"></div>
@@ -132,3 +141,7 @@
     </div>
 
 @endsection
+
+@push('calendario')
+    <script type="text/javascript" src="{{ URL::asset('js/calendario.js')}}" defer></script> <!-- esta en raíz de public -->
+@endpush

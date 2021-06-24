@@ -29,6 +29,7 @@ input[type=submit]:hover {
     color: white;
 } */
 
+
 .cerrarSesion {
 
     width: 180px;
@@ -225,6 +226,3 @@ h5 {
 .tab-pane .form-inline {
 	margin-bottom: 10px;
 }
-
-
-

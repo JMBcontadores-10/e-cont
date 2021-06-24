@@ -23,6 +23,18 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 
+    <!--calendario-->
+    <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />-->
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
+    <link  href="{{ asset ('css/fullcalendar.css') }}" rel="stylesheet" />
+    <script src="{{ asset ('js/moment.min.js')}}" defer></script>
+    <script src="{{ asset ('js/fullcalendar.js')}}" defer></script>
+    <script src="{{ asset ('js/es.js')}}"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link href="{{ asset ('css/toastr.min.css')}}" rel="stylesheet" />
+
 </head>
 
 <body>
@@ -96,6 +108,8 @@
             @yield('content')
         </main>
     </div>
+
+    @stack('calendario')
 </body>
 <footer style="margin-top: 50px;">
     <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">CONTARAPP {{date('Y')}} | JMB Contadores</p>
