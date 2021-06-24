@@ -213,9 +213,10 @@ h5 {
 .tablas-resultados.listo .overlay {
 	display: none;
 }
-.tablas-resultados .table td {
+
+/* .tablas-resultados .table td {
 	white-space: nowrap;
-}
+} */
 
 .tab-pane {
 	padding: 15px;

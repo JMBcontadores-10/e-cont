@@ -1,11 +1,15 @@
 function disableInputs() {
     $(':input[type="submit"]').prop('disabled', true);
-    $('a[class="btn btn-primary excel-export"]').addClass('disabled');
+    $('a[class="btn btn-primary excelR-export"]').addClass('disabled');
+    $('a[class="btn btn-primary excelE-export"]').addClass('disabled');
+
 }
 
 function enableInputs() {
     $(':input[type="submit"]').prop('disabled', false);
-    $('a[class="btn btn-primary excel-export disabled"]').removeClass('disabled');
+    $('a[class="btn btn-primary excelR-export disabled"]').removeClass('disabled');
+    $('a[class="btn btn-primary excelE-export disabled"]').removeClass('disabled');
+
 }
 
 var tableToExcel = (function () {
@@ -118,20 +122,20 @@ $('#recibidos-form').on('submit', function () {
                         aprobacion = '<img src="img/ima2.png">';
                     }
                     html += '<tr>'
-                        + '<td>' + i + '</td>'
+                        + '<td class="text-center">' + i + '</td>'
                         + '<td class="text-center txml">' + (item.urlDescargaXml ? '<input type="checkbox" checked="checked" name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
                         + '<td class="text-center tpdf">' + (item.urlDescargaRI ? '<input type="checkbox" checked="checked" name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
-                        + '<td class="blur">' + item.folioFiscal + '</td>'
-                        + '<td class="blur">' + item.emisorRfc + '</td>'
-                        + '<td class="blur">' + item.emisorNombre + '</td>'
-                        + '<td>' + item.fechaEmision + '</td>'
-                        + '<td>' + item.fechaCertificacion + '</td>'
-                        + '<td>' + item.total + '</td>'
-                        + '<td>' + item.efecto + '</td>'
-                        + '<td>' + item.estado + '</td>'
-                        + '<td>' + (item.fechaCancelacion || '-') + '</td>'
-                        + '<td>' + aprobacion + '</td>'
-                        + '<td class="blur">' + item.pacCertifico + '</td>'
+                        + '<td class="text-center">' + item.folioFiscal + '</td>'
+                        + '<td class="text-center">' + item.emisorRfc + '</td>'
+                        + '<td class="text-center">' + item.emisorNombre + '</td>'
+                        + '<td class="text-center">' + item.fechaEmision + '</td>'
+                        + '<td class="text-center">' + item.fechaCertificacion + '</td>'
+                        + '<td class="text-center">' + item.total + '</td>'
+                        + '<td class="text-center">' + item.efecto + '</td>'
+                        + '<td class="text-center">' + item.estado + '</td>'
+                        + '<td class="text-center">' + (item.fechaCancelacion || '-') + '</td>'
+                        + '<td class="text-center">' + aprobacion + '</td>'
+                        // + '<td class="text-center">' + item.pacCertifico + '</td>'
                         + '</tr>'
                         ;
                 }
@@ -185,20 +189,20 @@ $('#emitidos-form').on('submit', function () {
                         aprobacion = '<img src="img/ima2.png">';
                     }
                     html += '<tr>'
-                        + '<td>' + i + '</td>'
+                        + '<td class="text-center">' + i + '</td>'
                         + '<td class="text-center etxml">' + (item.urlDescargaXml ? '<input type="checkbox" checked="checked" name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
                         + '<td class="text-center etpdf">' + (item.urlDescargaRI ? '<input type="checkbox" checked="checked" name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
                         + '<td class="text-center etpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" checked="checked" name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>'
-                        + '<td class="blur">' + item.folioFiscal + '</td>'
-                        + '<td class="blur">' + item.receptorRfc + '</td>'
-                        + '<td class="blur">' + item.receptorNombre + '</td>'
-                        + '<td>' + item.fechaEmision + '</td>'
-                        + '<td>' + item.fechaCertificacion + '</td>'
-                        + '<td>' + item.total + '</td>'
-                        + '<td>' + item.efecto + '</td>'
-                        + '<td>' + item.estado + '</td>'
-                        + '<td>' + aprobacion + '</td>'
-                        + '<td class="blur">' + item.pacCertifico + '</td>'
+                        + '<td class="text-center">' + item.folioFiscal + '</td>'
+                        + '<td class="text-center">' + item.receptorRfc + '</td>'
+                        + '<td class="text-center">' + item.receptorNombre + '</td>'
+                        + '<td class="text-center">' + item.fechaEmision + '</td>'
+                        + '<td class="text-center">' + item.fechaCertificacion + '</td>'
+                        + '<td class="text-center">' + item.total + '</td>'
+                        + '<td class="text-center">' + item.efecto + '</td>'
+                        + '<td class="text-center">' + item.estado + '</td>'
+                        + '<td class="text-center">' + aprobacion + '</td>'
+                        // + '<td class="text-center">' + item.pacCertifico + '</td>'
                         + '</tr>'
                         ;
                 }

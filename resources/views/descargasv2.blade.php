@@ -64,7 +64,7 @@
                         <input type="hidden" name="accion" value="descargar-recibidos" />
                         <input type="hidden" name="sesion" class="sesion-ipt" />
                         <div style="overflow:auto">
-                            <table border=1 class="table table-hover table-condensed" id="tabla-recibidos">
+                            <table class="table table-sm table-bordered table-hover table-condensed" id="tabla-recibidos">
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
@@ -83,7 +83,6 @@
                                         <th class="text-center">Estado</th>
                                         <th class="text-center">Cancelación</th>
                                         <th class="text-center">Aprobación</th>
-                                        <th class="text-center">PAC</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -104,7 +103,7 @@
                         <input type="hidden" name="accion" value="descargar-emitidos" />
                         <input type="hidden" name="sesion" class="sesion-ipt" />
                         <div style="overflow:auto">
-                            <table border=1 class="table table-hover table-condensed" id="tabla-emitidos">
+                            <table class="table table-sm table-bordered table-hover table-condensed" id="tabla-emitidos">
                                 <thead>
                                     <tr>
                                         <th class="text-center">#</th>
@@ -122,7 +121,6 @@
                                         <th class="text-center">Efecto</th>
                                         <th class="text-center">Estado</th>
                                         <th class="text-center">Aprobación</th>
-                                        <th class="text-center">PAC</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
