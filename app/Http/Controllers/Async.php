@@ -17,8 +17,6 @@ class Async extends Controller
     public function index(Request $r)
     {
 
-
-
         // Obtener configuracion
         $config = require dirname(dirname(__FILE__)) . '/Classes' . '/config.php';
 
@@ -115,12 +113,24 @@ class Async extends Controller
             } elseif ($accion == 'buscar-recibidos') {
                 $filtros = new BusquedaRecibidos();
                 $filtros->establecerFecha($_POST['anio'], $_POST['mes'], $_POST['dia']);
+                $anio = $_POST['anio'];
+                $mes = $_POST['mes'];
 
                 $xmlInfoArr = $descargaCfdi->buscar($filtros);
                 if ($xmlInfoArr) {
                     $items = array();
-                    foreach ($xmlInfoArr as $xmlInfo) {
-                        $items[] = (array)$xmlInfo;
+                    $rutaPdf = $rutaDescarga."$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF";
+                    $rutaXml = $rutaDescarga."$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML";
+                    foreach ($xmlInfoArr as $index => $xmlInfo) {
+                        $arr[] = (array)$xmlInfo;
+                        $uuid = $xmlInfo->folioFiscal;
+                        $pdf = $this->dirIteratorPdf($rutaPdf, $uuid);
+                        $xml = $this->dirIteratorXml($rutaXml, $uuid);
+                        $arr2 = array(
+                            'descargadoPdf' => $pdf,
+                            'descargadoXml' => $xml
+                        );
+                        $items[] = array_merge($arr[$index], $arr2);
                     }
                     echo json_response(array(
                         'items' => $items,
@@ -136,12 +146,26 @@ class Async extends Controller
                 $filtros = new BusquedaEmitidos();
                 $filtros->establecerFechaInicial($_POST['anio_i'], $_POST['mes_i'], $_POST['dia_i']);
                 $filtros->establecerFechaFinal($_POST['anio_f'], $_POST['mes_f'], $_POST['dia_f']);
+                $anio = $_POST['anio_i'];
+                $mes = $_POST['mes_i'];
 
                 $xmlInfoArr = $descargaCfdi->buscar($filtros);
                 if ($xmlInfoArr) {
                     $items = array();
-                    foreach ($xmlInfoArr as $xmlInfo) {
-                        $items[] = (array)$xmlInfo;
+                    $rutaXml = $rutaDescarga."$rfc/$anio/Descargas/$mes.$meses[$mes]/Emitidos/XML";
+                    $rutaPdf = $rutaDescarga."$rfc/$anio/Descargas/$mes.$meses[$mes]/Emitidos/PDF";
+                    foreach ($xmlInfoArr as $index => $xmlInfo) {
+                        $arr[] = (array)$xmlInfo;
+                        $uuid = $xmlInfo->folioFiscal;
+                        $xml = $this->dirIteratorXml($rutaXml, $uuid);
+                        $pdf = $this->dirIteratorPdf($rutaPdf, $uuid);
+                        $acuse = $this->dirIteratorPdfAcuse($rutaPdf, $uuid);
+                        $arr2 = array(
+                            'descargadoXml' => $xml,
+                            'descargadoPdf' => $pdf,
+                            'descargadoAcuse' => $acuse,
+                        );
+                        $items[] = array_merge($arr[$index], $arr2);
                     }
                     echo json_response(array(
                         'items' => $items,
@@ -157,8 +181,7 @@ class Async extends Controller
 
                 $anio = $_POST['anio'];
                 $mes = $_POST['mes'];
-                $rutaEmpresa = $rfc . '/' . $anio . '/' . 'Descargas/' .  $mes . '.' . $meses[$mes] . '/'
-                    . 'Recibidos/DescargasManuales/';
+                $rutaEmpresa = "$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/DescargasManuales/";
                 $rutaDescarga = $rutaDescarga . $rutaEmpresa;
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
 
@@ -197,8 +220,7 @@ class Async extends Controller
 
                 $anio = $_POST['anio_i'];
                 $mes = $_POST['mes_i'];
-                $rutaEmpresa = $rfc . '/' . $anio . '/' . 'Descargas/' .  $mes . '.' . $meses[$mes] . '/'
-                    . 'Emitidos/DescargasManuales/';
+                $rutaEmpresa = "$rfc/$anio/Descargas/$mes.$meses[$mes]/Emitidos/DescargasManuales/";
                 $rutaDescarga = $rutaDescarga . $rutaEmpresa;
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
 
@@ -257,4 +279,47 @@ class Async extends Controller
             }
         }
     }
+
+    public function dirIteratorXml($ruta, $uuid)
+    {
+        $dir = new DirectoryIterator($ruta);
+        foreach ($dir as $fileinfo) {
+            $fileBaseName = $fileinfo->getBasename('.xml');
+            if (!$fileinfo->isDot()) {
+                if ($uuid == $fileBaseName) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function dirIteratorPdf($ruta, $uuid)
+    {
+        $dir = new DirectoryIterator($ruta);
+        foreach ($dir as $fileinfo) {
+            $fileBaseName = $fileinfo->getBasename('.pdf');
+            if (!$fileinfo->isDot()) {
+                if ($uuid == $fileBaseName) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function dirIteratorPdfAcuse($ruta, $uuid)
+    {
+        $dir = new DirectoryIterator($ruta);
+        foreach ($dir as $fileinfo) {
+            $fileBaseName = $fileinfo->getBasename('.pdf');
+            if (!$fileinfo->isDot()) {
+                if ($uuid.'-acuse' == $fileBaseName) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 }
