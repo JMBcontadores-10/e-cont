@@ -58,6 +58,7 @@ var calendar = $('#calendar').fullCalendar({
                             });
                         }
                     },
+                    /* evento actualizado */
                     eventDrop: function (event, delta) {
                         var start = $.fullCalendar.formatDate(event.start, "Y-MM-DD");
                         var end = $.fullCalendar.formatDate(event.end, "Y-MM-DD");
@@ -77,6 +78,8 @@ var calendar = $('#calendar').fullCalendar({
                             }
                         });
                     },
+
+                    /*elimina el evento*/
                     eventClick: function (event) {
                         var deleteMsg = confirm("Do you really want to delete?");
                         if (deleteMsg) {
