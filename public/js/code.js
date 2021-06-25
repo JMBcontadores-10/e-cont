@@ -121,10 +121,24 @@ $('#recibidos-form').on('submit', function () {
                     } else {
                         aprobacion = '<img src="img/ima2.png">';
                     }
+                    if (item.descargadoXml) {
+                        descargadoXml = "Si";
+                        checkedXml = '';
+                    } else {
+                        descargadoXml = "No";
+                        checkedXml = 'checked';
+                    }
+                    if (item.descargadoPdf) {
+                        descargadoPdf = "Si";
+                        checkedPdf = '';
+                    } else {
+                        descargadoPdf = "No";
+                        checkedPdf = 'checked';
+                    }
                     html += '<tr>'
                         + '<td class="text-center">' + i + '</td>'
-                        + '<td class="text-center txml">' + (item.urlDescargaXml ? '<input type="checkbox" checked="checked" name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
-                        + '<td class="text-center tpdf">' + (item.urlDescargaRI ? '<input type="checkbox" checked="checked" name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
+                        + '<td class="text-center txml">' + (item.urlDescargaXml ? '<input type="checkbox" '+checkedXml+' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
+                        + '<td class="text-center tpdf">' + (item.urlDescargaRI ? '<input type="checkbox" '+checkedPdf+' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
                         + '<td class="text-center">' + item.folioFiscal + '</td>'
                         + '<td class="text-center">' + item.emisorRfc + '</td>'
                         + '<td class="text-center">' + item.emisorNombre + '</td>'
@@ -135,6 +149,8 @@ $('#recibidos-form').on('submit', function () {
                         + '<td class="text-center">' + item.estado + '</td>'
                         + '<td class="text-center">' + (item.fechaCancelacion || '-') + '</td>'
                         + '<td class="text-center">' + aprobacion + '</td>'
+                        + '<td class="text-center">' + descargadoXml + '</td>'
+                        + '<td class="text-center">' + descargadoPdf + '</td>'
                         // + '<td class="text-center">' + item.pacCertifico + '</td>'
                         + '</tr>'
                         ;
@@ -188,11 +204,32 @@ $('#emitidos-form').on('submit', function () {
                     } else {
                         aprobacion = '<img src="img/ima2.png">';
                     }
+                    if (item.descargadoXml) {
+                        descargadoXml = "Si";
+                        checkedXml ='';
+                    } else {
+                        descargadoXml = "No";
+                        checkedXml ='checked';
+                    }
+                    if (item.descargadoPdf) {
+                        descargadoPdf = "Si";
+                        checkedPdf ='';
+                    } else {
+                        descargadoPdf = "No";
+                        checkedPdf ='checked';
+                    }
+                    if (item.descargadoAcuse) {
+                        descargadoAcuse = "Si";
+                        checkedAcuse ='';
+                    } else {
+                        descargadoAcuse = "No";
+                        checkedAcuse ='checked';
+                    }
                     html += '<tr>'
                         + '<td class="text-center">' + i + '</td>'
-                        + '<td class="text-center etxml">' + (item.urlDescargaXml ? '<input type="checkbox" checked="checked" name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
-                        + '<td class="text-center etpdf">' + (item.urlDescargaRI ? '<input type="checkbox" checked="checked" name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
-                        + '<td class="text-center etpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" checked="checked" name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>'
+                        + '<td class="text-center etxml">' + (item.urlDescargaXml ? '<input type="checkbox" '+checkedXml+' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
+                        + '<td class="text-center etpdf">' + (item.urlDescargaRI ? '<input type="checkbox" '+checkedPdf+' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
+                        + '<td class="text-center etpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" '+checkedAcuse+' name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>'
                         + '<td class="text-center">' + item.folioFiscal + '</td>'
                         + '<td class="text-center">' + item.receptorRfc + '</td>'
                         + '<td class="text-center">' + item.receptorNombre + '</td>'
@@ -202,6 +239,9 @@ $('#emitidos-form').on('submit', function () {
                         + '<td class="text-center">' + item.efecto + '</td>'
                         + '<td class="text-center">' + item.estado + '</td>'
                         + '<td class="text-center">' + aprobacion + '</td>'
+                        + '<td class="text-center">' + descargadoXml + '</td>'
+                        + '<td class="text-center">' + descargadoPdf + '</td>'
+                        + '<td class="text-center">' + descargadoAcuse + '</td>'
                         // + '<td class="text-center">' + item.pacCertifico + '</td>'
                         + '</tr>'
                         ;

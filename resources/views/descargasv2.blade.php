@@ -83,6 +83,8 @@
                                         <th class="text-center">Estado</th>
                                         <th class="text-center">Cancelación</th>
                                         <th class="text-center">Aprobación</th>
+                                        <th class="text-center">Descargado XML</th>
+                                        <th class="text-center">Descargado PDF</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -121,6 +123,9 @@
                                         <th class="text-center">Efecto</th>
                                         <th class="text-center">Estado</th>
                                         <th class="text-center">Aprobación</th>
+                                        <th class="text-center">Descargado XML</th>
+                                        <th class="text-center">Descargado PDF</th>
+                                        <th class="text-center">Descargado Acuse</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
