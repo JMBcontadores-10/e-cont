@@ -137,8 +137,8 @@ $('#recibidos-form').on('submit', function () {
                     }
                     html += '<tr>'
                         + '<td class="text-center">' + i + '</td>'
-                        + '<td class="text-center txml">' + (item.urlDescargaXml ? '<input type="checkbox" '+checkedXml+' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
-                        + '<td class="text-center tpdf">' + (item.urlDescargaRI ? '<input type="checkbox" '+checkedPdf+' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
+                        + '<td class="text-center txml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
+                        + '<td class="text-center tpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
                         + '<td class="text-center">' + item.folioFiscal + '</td>'
                         + '<td class="text-center">' + item.emisorRfc + '</td>'
                         + '<td class="text-center">' + item.emisorNombre + '</td>'
@@ -206,30 +206,30 @@ $('#emitidos-form').on('submit', function () {
                     }
                     if (item.descargadoXml) {
                         descargadoXml = "Si";
-                        checkedXml ='';
+                        checkedXml = '';
                     } else {
                         descargadoXml = "No";
-                        checkedXml ='checked';
+                        checkedXml = 'checked';
                     }
                     if (item.descargadoPdf) {
                         descargadoPdf = "Si";
-                        checkedPdf ='';
+                        checkedPdf = '';
                     } else {
                         descargadoPdf = "No";
-                        checkedPdf ='checked';
+                        checkedPdf = 'checked';
                     }
                     if (item.descargadoAcuse) {
                         descargadoAcuse = "Si";
-                        checkedAcuse ='';
+                        checkedAcuse = '';
                     } else {
                         descargadoAcuse = "No";
-                        checkedAcuse ='checked';
+                        checkedAcuse = 'checked';
                     }
                     html += '<tr>'
                         + '<td class="text-center">' + i + '</td>'
-                        + '<td class="text-center etxml">' + (item.urlDescargaXml ? '<input type="checkbox" '+checkedXml+' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
-                        + '<td class="text-center etpdf">' + (item.urlDescargaRI ? '<input type="checkbox" '+checkedPdf+' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
-                        + '<td class="text-center etpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" '+checkedAcuse+' name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>'
+                        + '<td class="text-center etxml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
+                        + '<td class="text-center etpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
+                        + '<td class="text-center etpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" ' + checkedAcuse + ' name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>'
                         + '<td class="text-center">' + item.folioFiscal + '</td>'
                         + '<td class="text-center">' + item.receptorRfc + '</td>'
                         + '<td class="text-center">' + item.receptorNombre + '</td>'
@@ -294,6 +294,8 @@ $('.descargaR-form').on('submit', function () {
         }
     }).always(function () {
         enableInputs();
+        var tablaBody = $('#tabla-recibidos tbody');
+        tablaBody.empty();
     });
 
     return false;
@@ -333,6 +335,8 @@ $('.descargaE-form').on('submit', function () {
         }
     }).always(function () {
         enableInputs();
+        var tablaBody = $('#tabla-emitidos tbody');
+        tablaBody.empty();
     });
 
     return false;
