@@ -218,13 +218,18 @@ $('#emitidos-form').on('submit', function () {
                         descargadoPdf = "No";
                         checkedPdf = 'checked';
                     }
-                    if (item.descargadoAcuse) {
-                        descargadoAcuse = "Si";
-                        checkedAcuse = '';
-                    } else {
-                        descargadoAcuse = "No";
-                        checkedAcuse = 'checked';
+                    if (item.urlDescargaAcuse) {
+                        if (item.descargadoAcuse) {
+                            descargadoAcuse = "Si";
+                            checkedAcuse = '';
+                        } else {
+                            descargadoAcuse = "No";
+                            checkedAcuse = 'checked';
+                        }
+                    }else{
+                        descargadoAcuse = "-";
                     }
+
                     html += '<tr>'
                         + '<td class="text-center">' + i + '</td>'
                         + '<td class="text-center etxml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
@@ -268,8 +273,11 @@ $('.descargaR-form').on('submit', function () {
     var anio = selA.options[selA.selectedIndex].value;
     var selM = document.getElementById("mes");
     var mes = selM.options[selM.selectedIndex].value;
+    var selD = document.getElementById("dia");
+    var dia = selD.options[selD.selectedIndex].value;
     formData.append('anio', anio);
     formData.append('mes', mes);
+    formData.append('dia', dia);
 
     disableInputs();
 
@@ -309,8 +317,20 @@ $('.descargaE-form').on('submit', function () {
     var anio_i = sel_Ai.options[sel_Ai.selectedIndex].value;
     var sel_Mi = document.getElementById("mes-e1");
     var mes_i = sel_Mi.options[sel_Mi.selectedIndex].value;
+    var sel_Di = document.getElementById("dia-e1");
+    var dia_i = sel_Di.options[sel_Di.selectedIndex].value;
+    var sel_Af = document.getElementById("anio-e2");
+    var anio_f = sel_Af.options[sel_Af.selectedIndex].value;
+    var sel_Mf = document.getElementById("mes-e2");
+    var mes_f = sel_Mf.options[sel_Mf.selectedIndex].value;
+    var sel_Df = document.getElementById("dia-e2");
+    var dia_f = sel_Df.options[sel_Df.selectedIndex].value;
     formData.append('anio_i', anio_i);
     formData.append('mes_i', mes_i);
+    formData.append('dia_i', dia_i);
+    formData.append('anio_f', anio_f);
+    formData.append('mes_f', mes_f);
+    formData.append('dia_f', dia_f);
 
     disableInputs();
 

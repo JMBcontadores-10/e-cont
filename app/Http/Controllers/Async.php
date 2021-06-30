@@ -11,6 +11,9 @@ use App\Http\Classes\BusquedaRecibidos;
 use App\Http\Classes\DescargaAsincrona;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Classes\DescargaMasivaCfdi;
+use App\Models\Calendario;
+use App\Models\CalendarioE;
+use App\Models\CalendarioR;
 
 class Async extends Controller
 {
@@ -119,8 +122,8 @@ class Async extends Controller
                 $xmlInfoArr = $descargaCfdi->buscar($filtros);
                 if ($xmlInfoArr) {
                     $items = array();
-                    $rutaPdf = $rutaDescarga."$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF";
-                    $rutaXml = $rutaDescarga."$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML";
+                    $rutaPdf = $rutaDescarga . "$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF";
+                    $rutaXml = $rutaDescarga . "$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML";
                     foreach ($xmlInfoArr as $index => $xmlInfo) {
                         $arr[] = (array)$xmlInfo;
                         $uuid = $xmlInfo->folioFiscal;
@@ -152,8 +155,8 @@ class Async extends Controller
                 $xmlInfoArr = $descargaCfdi->buscar($filtros);
                 if ($xmlInfoArr) {
                     $items = array();
-                    $rutaXml = $rutaDescarga."$rfc/$anio/Descargas/$mes.$meses[$mes]/Emitidos/XML";
-                    $rutaPdf = $rutaDescarga."$rfc/$anio/Descargas/$mes.$meses[$mes]/Emitidos/PDF";
+                    $rutaXml = $rutaDescarga . "$rfc/$anio/Descargas/$mes.$meses[$mes]/Emitidos/XML";
+                    $rutaPdf = $rutaDescarga . "$rfc/$anio/Descargas/$mes.$meses[$mes]/Emitidos/PDF";
                     foreach ($xmlInfoArr as $index => $xmlInfo) {
                         $arr[] = (array)$xmlInfo;
                         $uuid = $xmlInfo->folioFiscal;
@@ -181,6 +184,7 @@ class Async extends Controller
 
                 $anio = $_POST['anio'];
                 $mes = $_POST['mes'];
+                $dia = $_POST['dia'];
                 $rutaEmpresa = "$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/DescargasManuales/";
                 $rutaDescarga = $rutaDescarga . $rutaEmpresa;
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
@@ -215,11 +219,18 @@ class Async extends Controller
                 ));
 
                 $this->filtroArchivos($rutaDescarga);
-
+                $fecha = "$anio-$mes-$dia";
+                $totalDR = $descarga->totalDescargados();
+                $totalER = $descarga->totalErrores();
+                $this->updateRecibidos($rfc, $fecha, $totalDR, $totalER);
             } elseif ($accion == 'descargar-emitidos') {
 
                 $anio = $_POST['anio_i'];
                 $mes = $_POST['mes_i'];
+                $dia = $_POST['dia_i'];
+                $aniof = $_POST['anio_f'];
+                $mesf = $_POST['mes_f'];
+                $diaf = $_POST['dia_f'];
                 $rutaEmpresa = "$rfc/$anio/Descargas/$mes.$meses[$mes]/Emitidos/DescargasManuales/";
                 $rutaDescarga = $rutaDescarga . $rutaEmpresa;
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
@@ -254,7 +265,11 @@ class Async extends Controller
                 ));
 
                 $this->filtroArchivos($rutaDescarga);
-
+                $fecha = "$anio-$mes-$dia";
+                $fechaF = "$aniof-$mesf-$diaf";
+                $totalDE = $descarga->totalDescargados();
+                $totalEE = $descarga->totalErrores();
+                $this->updateEmitidos($rfc, $fecha, $fechaF, $totalDE, $totalEE);
             }
         }
     }
@@ -269,7 +284,7 @@ class Async extends Controller
             $fileExt = $fileinfo->getExtension();
             $rutaGuardar = dirname(dirname($filePathname)) . "/";
             if (!$fileinfo->isDot()) {
-                if ($fileSize > 0) {
+                if ($fileSize > 2000) {
                     if ($fileExt == 'pdf') {
                         rename($filePathname, $rutaGuardar . 'PDF/' . $fileName);
                     } else {
@@ -314,7 +329,7 @@ class Async extends Controller
         foreach ($dir as $fileinfo) {
             $fileBaseName = $fileinfo->getBasename('.pdf');
             if (!$fileinfo->isDot()) {
-                if ($uuid.'-acuse' == $fileBaseName) {
+                if ($uuid . '-acuse' == $fileBaseName) {
                     return true;
                 }
             }
@@ -322,4 +337,61 @@ class Async extends Controller
         return false;
     }
 
+    public function updateRecibidos($rfc, $fecha, $totalD, $totalE)
+    {
+        $cal = CalendarioR::where(['rfc' => $rfc, 'fechaDescarga' => $fecha, 'fechaDescargaF' => $fecha]);
+        $cget = $cal->get()->first();
+        if (!$cget == null) {
+            $descargas = $cget->descargasRecibidos;
+            $errores = $cget->erroresRecibidos;
+            $nDescargas = $descargas + $totalD;
+            $nErrores = $errores - $totalD;
+            $nTotal = $nDescargas + $nErrores;
+        } else {
+            $nDescargas = $totalD;
+            $nErrores = $totalE;
+            $nTotal = $nDescargas + $nErrores;
+        }
+
+        $cal->update(
+            [
+                'rfc' => $rfc,
+                'fechaDescarga' => $fecha,
+                'fechaDescargaF' => $fecha,
+                'descargasRecibidos' => $nDescargas,
+                'erroresRecibidos' => $nErrores,
+                'totalRecibidos' => $nTotal,
+            ],
+            ['upsert' => true]
+        );
+    }
+
+    public function updateEmitidos($rfc, $fecha, $fechaF, $totalD, $totalE)
+    {
+        $cal = CalendarioE::where(['rfc' => $rfc, 'fechaDescarga' => $fecha, 'fechaDescargaF' => $fechaF]);
+        $cget = $cal->get()->first();
+        if (!$cget == null) {
+            $descargas = $cget->descargasEmitidos;
+            $errores = $cget->erroresEmitidos;
+            $nDescargas = $descargas + $totalD;
+            $nErrores = $errores - $totalD;
+            $nTotal = $nDescargas + $nErrores;
+        } else {
+            $nDescargas = $totalD;
+            $nErrores = $totalE;
+            $nTotal = $nDescargas + $nErrores;
+        }
+
+        $cal->update(
+            [
+                'rfc' => $rfc,
+                'fechaDescarga' => $fecha,
+                'fechaDescargaF' => $fechaF,
+                'descargasEmitidos' => $nDescargas,
+                'erroresEmitidos' => $nErrores,
+                'totalEmitidos' => $nTotal,
+            ],
+            ['upsert' => true]
+        );
+    }
 }
