@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use DirectoryIterator;
 use App\Models\MetadataE;
 use App\Models\MetadataR;
-use App\Models\Calendario;
 use App\Models\CalendarioE;
 use App\Models\CalendarioR;
 use Illuminate\Http\Request;
