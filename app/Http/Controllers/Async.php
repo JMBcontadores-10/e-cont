@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use DirectoryIterator;
+use App\Models\MetadataE;
+use App\Models\MetadataR;
+use App\Models\Calendario;
+use App\Models\CalendarioE;
+use App\Models\CalendarioR;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Classes\UtilCertificado;
@@ -11,9 +16,6 @@ use App\Http\Classes\BusquedaRecibidos;
 use App\Http\Classes\DescargaAsincrona;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Classes\DescargaMasivaCfdi;
-use App\Models\Calendario;
-use App\Models\CalendarioE;
-use App\Models\CalendarioR;
 
 class Async extends Controller
 {
@@ -189,6 +191,57 @@ class Async extends Controller
                 $rutaDescarga = $rutaDescarga . $rutaEmpresa;
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
 
+                $filtros = new BusquedaRecibidos();
+                $filtros->establecerFecha($anio, $mes, $dia);
+                $xmlInfoArr = $descargaCfdi->buscar($filtros);
+                if ($xmlInfoArr) {
+                    foreach ($xmlInfoArr as $index => $xmlInfo) {
+                        $udx = $xmlInfo->urlDescargaXml;
+                        $uda = $xmlInfo->urlDescargaAcuse;
+                        $udr = $xmlInfo->urlDescargaRI;
+                        $ff = $xmlInfo->folioFiscal;
+                        $er = $xmlInfo->emisorRfc;
+                        $en = $xmlInfo->emisorNombre;
+                        $rr = $xmlInfo->receptorRfc;
+                        $rn = $xmlInfo->receptorNombre;
+                        $fe =  $xmlInfo->fechaEmision;
+                        $fcer = $xmlInfo->fechaCertificacion;
+                        $pc = $xmlInfo->pacCertifico;
+                        $total = $xmlInfo->total;
+                        $efecto = $xmlInfo->efecto;
+                        $estado = $xmlInfo->estado;
+                        $ec = $xmlInfo->estadoCancelacion;
+                        $epc = $xmlInfo->estadoProcesoCancelacion;
+                        $fcan = $xmlInfo->fechaCancelacion;
+                        $ua = $xmlInfo->urlAcuseXml;
+
+                        $meta = MetadataR::where(['folioFiscal' => $ff]);
+                        $meta->update(
+                            [
+                                'urlDescargaXml'            => $udx,
+                                'urlDescargaAcuse'          => $uda,
+                                'urlDescargaRI'             => $udr,
+                                'folioFiscal'               => $ff,
+                                'emisorRfc'                 => $er,
+                                'emisorNombre'              => $en,
+                                'receptorRfc'               => $rr,
+                                'receptorNombre'            => $rn,
+                                'fechaEmision'              => $fe,
+                                'fechaCertificacion'        => $fcer,
+                                'pacCertificado'            => $pc,
+                                'total'                     => $total,
+                                'efecto'                    => $efecto,
+                                'estado'                    => $estado,
+                                'estadoCancelacion'         => $ec,
+                                'estadoProcesoCancelacion'  => $epc,
+                                'fechaCancelacion'          => $fcan,
+                                'urlAcuseXml'               => $ua,
+                            ],
+                            ['upsert' => true]
+                        );
+                    }
+                }
+
                 if (!empty($_POST['xml'])) {
                     foreach ($_POST['xml'] as $folioFiscal => $url) {
                         // xml
@@ -234,6 +287,58 @@ class Async extends Controller
                 $rutaEmpresa = "$rfc/$anio/Descargas/$mes.$meses[$mes]/Emitidos/DescargasManuales/";
                 $rutaDescarga = $rutaDescarga . $rutaEmpresa;
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
+
+                $filtros = new BusquedaEmitidos();
+                $filtros->establecerFechaInicial($anio, $mes, $dia);
+                $filtros->establecerFechaFinal($aniof, $mesf, $diaf);
+                $xmlInfoArr = $descargaCfdi->buscar($filtros);
+                if ($xmlInfoArr) {
+                    foreach ($xmlInfoArr as $index => $xmlInfo) {
+                        $udx = $xmlInfo->urlDescargaXml;
+                        $uda = $xmlInfo->urlDescargaAcuse;
+                        $udr = $xmlInfo->urlDescargaRI;
+                        $ff = $xmlInfo->folioFiscal;
+                        $er = $xmlInfo->emisorRfc;
+                        $en = $xmlInfo->emisorNombre;
+                        $rr = $xmlInfo->receptorRfc;
+                        $rn = $xmlInfo->receptorNombre;
+                        $fe =  $xmlInfo->fechaEmision;
+                        $fcer = $xmlInfo->fechaCertificacion;
+                        $pc = $xmlInfo->pacCertifico;
+                        $total = $xmlInfo->total;
+                        $efecto = $xmlInfo->efecto;
+                        $estado = $xmlInfo->estado;
+                        $ec = $xmlInfo->estadoCancelacion;
+                        $epc = $xmlInfo->estadoProcesoCancelacion;
+                        $fcan = $xmlInfo->fechaCancelacion;
+                        $ua = $xmlInfo->urlAcuseXml;
+
+                        $meta = MetadataE::where(['folioFiscal' => $ff]);
+                        $meta->update(
+                            [
+                                'urlDescargaXml'            => $udx,
+                                'urlDescargaAcuse'          => $uda,
+                                'urlDescargaRI'             => $udr,
+                                'folioFiscal'               => $ff,
+                                'emisorRfc'                 => $er,
+                                'emisorNombre'              => $en,
+                                'receptorRfc'               => $rr,
+                                'receptorNombre'            => $rn,
+                                'fechaEmision'              => $fe,
+                                'fechaCertificacion'        => $fcer,
+                                'pacCertificado'            => $pc,
+                                'total'                     => $total,
+                                'efecto'                    => $efecto,
+                                'estado'                    => $estado,
+                                'estadoCancelacion'         => $ec,
+                                'estadoProcesoCancelacion'  => $epc,
+                                'fechaCancelacion'          => $fcan,
+                                'urlAcuseXml'               => $ua,
+                            ],
+                            ['upsert' => true]
+                        );
+                    }
+                }
 
                 if (!empty($_POST['xml'])) {
                     foreach ($_POST['xml'] as $folioFiscal => $url) {

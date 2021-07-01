@@ -226,7 +226,7 @@ $('#emitidos-form').on('submit', function () {
                             descargadoAcuse = "No";
                             checkedAcuse = 'checked';
                         }
-                    }else{
+                    } else {
                         descargadoAcuse = "-";
                     }
 
