@@ -59,12 +59,19 @@
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="recibidos">
                 @include('descargam.form-recibidos-inc2')
+
+                {{-- <div class="input-group">
+                    <span class="input-group-text">Buscar</span>
+                    <input id="filtrar" type="text" class="form-control"
+                        placeholder="Ingrese UUID que desea buscar o el nombre de empresa...">
+                </div><br> --}}
+
                 <form method="POST" class="descargaR-form">
                     @csrf
                     <input type="hidden" name="accion" value="descargar-recibidos" />
                     <input type="hidden" name="sesion" class="sesion-ipt" />
                     <div style="overflow:auto">
-                        <table class="table table-sm table-bordered table-hover table-condensed" id="tabla-recibidos">
+                        <table class="table table-sm table-bordered table-hover " id="tabla-recibidos">
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>
@@ -86,7 +93,7 @@
                                     <th class="text-center">Descargado PDF</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody class="buscar"></tbody>
                         </table>
                     </div>
                     <br>
@@ -104,7 +111,7 @@
                     <input type="hidden" name="accion" value="descargar-emitidos" />
                     <input type="hidden" name="sesion" class="sesion-ipt" />
                     <div style="overflow:auto">
-                        <table class="table table-sm table-bordered table-hover table-condensed" id="tabla-emitidos">
+                        <table class="table table-sm table-bordered table-hover" id="tabla-emitidos">
                             <thead>
                                 <tr>
                                     <th class="text-center">#</th>

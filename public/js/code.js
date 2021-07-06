@@ -12,21 +12,21 @@ function enableInputs() {
 
 }
 
-var tableToExcel = (function () {
+var tableToExcel = (function() {
     var uri = 'data:application/vnd.ms-excel;base64,',
-        template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">'
-            + '<head><meta http-equiv="Content-type" content="text/html;charset=UTF-8" /><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/>'
-            + '</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
-        base64 = function (s) {
+        template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
+        '<head><meta http-equiv="Content-type" content="text/html;charset=UTF-8" /><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/>' +
+        '</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+        base64 = function(s) {
             return window.btoa(unescape(encodeURIComponent(s)))
         },
-        format = function (s, c) {
-            return s.replace(/{(\w+)}/g, function (m, p) {
+        format = function(s, c) {
+            return s.replace(/{(\w+)}/g, function(m, p) {
                 return c[p];
             })
         };
 
-    return function (table, name) {
+    return function(table, name) {
         var ctx = {
             worksheet: name || 'Worksheet',
             table: table.innerHTML
@@ -35,7 +35,7 @@ var tableToExcel = (function () {
     }
 })();
 
-$('.excelR-export').on('click', function () {
+$('.excelR-export').on('click', function() {
     var $this = $(this);
     var table = $this.closest('.descargaR-form').find('.table').get(0);
     var fn = $this.attr('download');
@@ -43,7 +43,7 @@ $('.excelR-export').on('click', function () {
     // window.location.href = tableToExcel(table, fn);
 });
 
-$('.excelE-export').on('click', function () {
+$('.excelE-export').on('click', function() {
     var $this = $(this);
     var table = $this.closest('.descargaE-form').find('.table').get(0);
     var fn = $this.attr('download');
@@ -51,7 +51,7 @@ $('.excelE-export').on('click', function () {
     // window.location.href = tableToExcel(table, fn);
 });
 
-$('.login-form').on('submit', function () {
+$('.login-form').on('submit', function() {
     var form = $(this);
     var formData = new FormData(form.get(0));
 
@@ -67,7 +67,7 @@ $('.login-form').on('submit', function () {
         data: formData,
         contentType: false,
         processData: false,
-        success: function (response) {
+        success: function(response) {
             console.debug(response);
             if (response.success && response.data) {
                 if (response.data.sesion) {
@@ -79,14 +79,14 @@ $('.login-form').on('submit', function () {
                 alert(response.data.mensaje);
             }
         }
-    }).always(function () {
+    }).always(function() {
         enableInputs();
     });
 
     return false;
 });
 
-$('#recibidos-form').on('submit', function () {
+$('#recibidos-form').on('submit', function() {
     var form = $(this);
     var formData = new FormData(form.get(0));
     formData.append('sesion', window.sesionDM);
@@ -102,7 +102,7 @@ $('#recibidos-form').on('submit', function () {
         data: formData,
         contentType: false,
         processData: false,
-        success: function (response) {
+        success: function(response) {
             console.debug(response);
 
             if (response.success && response.data) {
@@ -135,25 +135,25 @@ $('#recibidos-form').on('submit', function () {
                         descargadoPdf = "No";
                         checkedPdf = 'checked';
                     }
-                    html += '<tr>'
-                        + '<td class="text-center">' + i + '</td>'
-                        + '<td class="text-center txml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
-                        + '<td class="text-center tpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
-                        + '<td class="text-center">' + item.folioFiscal + '</td>'
-                        + '<td class="text-center">' + item.emisorRfc + '</td>'
-                        + '<td class="text-center">' + item.emisorNombre + '</td>'
-                        + '<td class="text-center">' + item.fechaEmision + '</td>'
-                        + '<td class="text-center">' + item.fechaCertificacion + '</td>'
-                        + '<td class="text-center">' + item.total + '</td>'
-                        + '<td class="text-center">' + item.efecto + '</td>'
-                        + '<td class="text-center">' + item.estado + '</td>'
-                        + '<td class="text-center">' + (item.fechaCancelacion || '-') + '</td>'
-                        + '<td class="text-center">' + aprobacion + '</td>'
-                        + '<td class="text-center">' + descargadoXml + '</td>'
-                        + '<td class="text-center">' + descargadoPdf + '</td>'
+                    html += '<tr>' +
+                        '<td class="text-center">' + i + '</td>' +
+                        '<td class="text-center txml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>' +
+                        '<td class="text-center tpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>' +
+                        '<td class="text-center">' + item.folioFiscal + '</td>' +
+                        '<td class="text-center">' + item.emisorRfc + '</td>' +
+                        '<td class="text-center">' + item.emisorNombre + '</td>' +
+                        '<td class="text-center">' + item.fechaEmision + '</td>' +
+                        '<td class="text-center">' + item.fechaCertificacion + '</td>' +
+                        '<td class="text-center">' + item.total + '</td>' +
+                        '<td class="text-center">' + item.efecto + '</td>' +
+                        '<td class="text-center">' + item.estado + '</td>' +
+                        '<td class="text-center">' + (item.fechaCancelacion || '-') + '</td>' +
+                        '<td class="text-center">' + aprobacion + '</td>' +
+                        '<td class="text-center">' + descargadoXml + '</td>' +
+                        '<td class="text-center">' + descargadoPdf + '</td>'
                         // + '<td class="text-center">' + item.pacCertifico + '</td>'
-                        + '</tr>'
-                        ;
+                        +
+                        '</tr>';
                 }
 
                 tablaBody.html(html);
@@ -162,14 +162,14 @@ $('#recibidos-form').on('submit', function () {
                 alert(response.data.mensaje);
             }
         }
-    }).always(function () {
+    }).always(function() {
         enableInputs();
     });
 
     return false;
 });
 
-$('#emitidos-form').on('submit', function () {
+$('#emitidos-form').on('submit', function() {
     var form = $(this);
     var formData = new FormData(form.get(0));
     formData.append('sesion', window.sesionDM);
@@ -184,7 +184,7 @@ $('#emitidos-form').on('submit', function () {
         data: formData,
         contentType: false,
         processData: false,
-        success: function (response) {
+        success: function(response) {
             console.debug(response);
 
             if (response.success && response.data) {
@@ -230,26 +230,26 @@ $('#emitidos-form').on('submit', function () {
                         descargadoAcuse = "-";
                     }
 
-                    html += '<tr>'
-                        + '<td class="text-center">' + i + '</td>'
-                        + '<td class="text-center etxml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>'
-                        + '<td class="text-center etpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>'
-                        + '<td class="text-center etpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" ' + checkedAcuse + ' name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>'
-                        + '<td class="text-center">' + item.folioFiscal + '</td>'
-                        + '<td class="text-center">' + item.receptorRfc + '</td>'
-                        + '<td class="text-center">' + item.receptorNombre + '</td>'
-                        + '<td class="text-center">' + item.fechaEmision + '</td>'
-                        + '<td class="text-center">' + item.fechaCertificacion + '</td>'
-                        + '<td class="text-center">' + item.total + '</td>'
-                        + '<td class="text-center">' + item.efecto + '</td>'
-                        + '<td class="text-center">' + item.estado + '</td>'
-                        + '<td class="text-center">' + aprobacion + '</td>'
-                        + '<td class="text-center">' + descargadoXml + '</td>'
-                        + '<td class="text-center">' + descargadoPdf + '</td>'
-                        + '<td class="text-center">' + descargadoAcuse + '</td>'
+                    html += '<tr>' +
+                        '<td class="text-center">' + i + '</td>' +
+                        '<td class="text-center etxml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>' +
+                        '<td class="text-center etpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>' +
+                        '<td class="text-center etpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" ' + checkedAcuse + ' name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>' +
+                        '<td class="text-center">' + item.folioFiscal + '</td>' +
+                        '<td class="text-center">' + item.receptorRfc + '</td>' +
+                        '<td class="text-center">' + item.receptorNombre + '</td>' +
+                        '<td class="text-center">' + item.fechaEmision + '</td>' +
+                        '<td class="text-center">' + item.fechaCertificacion + '</td>' +
+                        '<td class="text-center">' + item.total + '</td>' +
+                        '<td class="text-center">' + item.efecto + '</td>' +
+                        '<td class="text-center">' + item.estado + '</td>' +
+                        '<td class="text-center">' + aprobacion + '</td>' +
+                        '<td class="text-center">' + descargadoXml + '</td>' +
+                        '<td class="text-center">' + descargadoPdf + '</td>' +
+                        '<td class="text-center">' + descargadoAcuse + '</td>'
                         // + '<td class="text-center">' + item.pacCertifico + '</td>'
-                        + '</tr>'
-                        ;
+                        +
+                        '</tr>';
                 }
 
                 tablaBody.html(html);
@@ -258,14 +258,14 @@ $('#emitidos-form').on('submit', function () {
                 alert(response.data.mensaje);
             }
         }
-    }).always(function () {
+    }).always(function() {
         enableInputs();
     });
 
     return false;
 });
 
-$('.descargaR-form').on('submit', function () {
+$('.descargaR-form').on('submit', function() {
     var form = $(this);
     var formData = new FormData(form.get(0));
     formData.append('sesion', window.sesionDM);
@@ -287,7 +287,7 @@ $('.descargaR-form').on('submit', function () {
         data: formData,
         contentType: false,
         processData: false,
-        success: function (response) {
+        success: function(response) {
             console.debug(response);
 
             if (response.success && response.data) {
@@ -300,7 +300,7 @@ $('.descargaR-form').on('submit', function () {
                 alert(response.data.mensaje);
             }
         }
-    }).always(function () {
+    }).always(function() {
         enableInputs();
         var tablaBody = $('#tabla-recibidos tbody');
         tablaBody.empty();
@@ -309,7 +309,7 @@ $('.descargaR-form').on('submit', function () {
     return false;
 });
 
-$('.descargaE-form').on('submit', function () {
+$('.descargaE-form').on('submit', function() {
     var form = $(this);
     var formData = new FormData(form.get(0));
     formData.append('sesion', window.sesionDM);
@@ -340,7 +340,7 @@ $('.descargaE-form').on('submit', function () {
         data: formData,
         contentType: false,
         processData: false,
-        success: function (response) {
+        success: function(response) {
             console.debug(response);
 
             if (response.success && response.data) {
@@ -353,7 +353,7 @@ $('.descargaE-form').on('submit', function () {
                 alert(response.data.mensaje);
             }
         }
-    }).always(function () {
+    }).always(function() {
         enableInputs();
         var tablaBody = $('#tabla-emitidos tbody');
         tablaBody.empty();
@@ -362,19 +362,25 @@ $('.descargaE-form').on('submit', function () {
     return false;
 });
 
-$('#allxml').change(function () {
+$('#allxml').change(function() {
     $('tbody tr td[class="text-center txml"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
-$('#allpdf').change(function () {
+$('#allpdf').change(function() {
     $('tbody tr td[class="text-center tpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
-$('#eallxml').change(function () {
+$('#eallxml').change(function() {
     $('tbody tr td[class="text-center etxml"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
-$('#eallpdf').change(function () {
+$('#eallpdf').change(function() {
     $('tbody tr td[class="text-center etpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
+$("#filtrar").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $(".buscar tr").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+});
