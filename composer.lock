@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1186b95ed0137e591e3b6829cf8f4523",
+    "content-hash": "f94ac9e6270a668ceb002888179f1974",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1989,6 +1989,59 @@
                 "source": "https://github.com/opis/closure/tree/3.6.2"
             },
             "time": "2021-04-09T13:42:10+00:00"
+        },
+        {
+            "name": "phpcfdi/cfdi-to-json",
+            "version": "v0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpcfdi/cfdi-to-json.git",
+                "reference": "9d19770d69a750f94db1ec086e0b85e85da77e84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpcfdi/cfdi-to-json/zipball/9d19770d69a750f94db1ec086e0b85e85da77e84",
+                "reference": "9d19770d69a750f94db1ec086e0b85e85da77e84",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-json": "*",
+                "php": ">=7.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "PhpCfdi\\CfdiToJson\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Carlos C Soto",
+                    "email": "eclipxe13@gmail.com",
+                    "homepage": "https://github.com/phpcfdi/cfdi-to-json"
+                }
+            ],
+            "description": "Convert CFDI to JSON",
+            "homepage": "https://github.com/phpcfdi/cfdi-to-json",
+            "keywords": [
+                "cfdi",
+                "json",
+                "mexico",
+                "sat"
+            ],
+            "support": {
+                "issues": "https://github.com/phpcfdi/cfdi-to-json/issues",
+                "source": "https://github.com/phpcfdi/cfdi-to-json/tree/v0.2.1"
+            },
+            "time": "2021-05-18T03:55:45+00:00"
         },
         {
             "name": "phpoption/phpoption",

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\XmlR;
 use DirectoryIterator;
 use App\Models\MetadataE;
 use App\Models\MetadataR;
@@ -10,6 +11,7 @@ use App\Models\CalendarioR;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Classes\UtilCertificado;
+use PhpCfdi\CfdiToJson\JsonConverter;
 use App\Http\Classes\BusquedaEmitidos;
 use App\Http\Classes\BusquedaRecibidos;
 use App\Http\Classes\DescargaAsincrona;
@@ -397,6 +399,7 @@ class Async extends Controller
                         rename($filePathname, $rutaGuardar . 'PDF/' . $fileName);
                     } else {
                         rename($filePathname, $rutaGuardar . 'XML/' . $fileName);
+
                     }
                 }
             }
@@ -509,5 +512,17 @@ class Async extends Controller
         $val = preg_replace('/\.(?=.*\.)/', '', $val);
         return $val;
         // return floatval($val);
+    }
+
+    public function xml_json($rutaXml, $fileBaseName)
+    {
+        $fileContents = file_get_contents($rutaXml);
+        $json = JsonConverter::convertToJson($fileContents);
+        $jsonArr = json_decode($json, true);
+        XmlR::where(['UUID' => $fileBaseName])
+            ->update(
+                [$jsonArr],
+                ['upsert' => true]
+            );
     }
 }

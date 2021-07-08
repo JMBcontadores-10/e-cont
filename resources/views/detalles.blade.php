@@ -44,7 +44,7 @@ use App\Models\XmlR;
             <thead>
                 <tr>
                     <th class="text-center">N°</th>
-                    <th class="text-center">Check <input type="checkbox" checked id="allcheck" name="allcheck"/></th>
+                    <th class="text-center">Check <input type="checkbox" checked id="allcheck" name="allcheck" /></th>
                     <th class="text-center">UUID</th>
                     <th class="text-center">Fecha Fiscal</th>
                     <th class="text-center">Concepto</th>
@@ -60,18 +60,21 @@ use App\Models\XmlR;
             <tbody class="buscar">
                 @foreach ($colM as $i)
                     <tr>
-                        <td class="text-center" >{{ ++$n }}</td>
-                        <td class="text-center" ><input type="checkbox" id="allcheck" name="allcheck"/></td>
-                        <td class="text-center" >{{ $i->folioFiscal }}</td>
-                        <td class="text-center" >{{ $i->fechaCertificacion }}</td>
+                        <td class="text-center">{{ ++$n }}</td>
+                        <td class="text-center"><input type="checkbox" id="allcheck" name="allcheck" /></td>
+                        <td class="text-center">{{ $i->folioFiscal }}</td>
+                        <td class="text-center">{{ $i->fechaCertificacion }}</td>
                         @php
+                        $mp = '';
                             $colX = XmlR::where(['UUID' => $i->folioFiscal])->get();
+                            // dd($colX);
                             foreach ($colX as $v) {
-
+                                $mp = $v['0'];
+                                dd($mp);
                             }
                         @endphp
-                        <td></td>
-                        <td></td>
+                        <td>Descripción</td>
+                        <td>{{ $mp }}</td>
                         <td></td>
                         <td></td>
                         <td></td>

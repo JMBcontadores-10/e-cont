@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MetadataR;
+use App\Models\XmlR;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -28,6 +29,27 @@ class CuentasPorPagar extends Controller
             ->groupBy('emisorRfc')
             ->orderBy('emisorNombre', 'asc')
             ->get();
+
+        // $col = DB::collection('xml_r')
+        //     ->select('0.Emisor.Rfc','0.Receptor.Nombre')
+        //     // ->where(['0.Receptor.Rfc' => $rfc])
+        //     ->where('0.Receptor.Rfc', $rfc)
+        //     ->distinct('0.Emisor.Rfc')
+        //     ->orderBy('0.Emisor.Rfc', 'asc')
+        //     ->get();
+
+        // dd($col);
+        // $col = XmlR::where(['0.Receptor.Rfc' => $rfc])
+        //     ->groupBy(['0.Emisor.Rfc'])
+        //     // ->orderBy([''],'asc')
+        //     ->get();
+
+        // $arr = array();
+        // foreach ($col as $v) {
+        //     $var = $v['0']['Emisor']['Rfc'];
+        //     $arr[] = (array)$var;
+        // }
+        // dd($arr);
 
         return view('cuentasporpagar')
             ->with('n', $n)

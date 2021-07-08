@@ -2,14 +2,14 @@ function disableInputs() {
     $(':input[type="submit"]').prop('disabled', true);
     $('a[class="btn btn-primary excelR-export"]').addClass('disabled');
     $('a[class="btn btn-primary excelE-export"]').addClass('disabled');
-
+    $('a[class="btn btn-primary ml-2"]').addClass('disabled');
 }
 
 function enableInputs() {
     $(':input[type="submit"]').prop('disabled', false);
     $('a[class="btn btn-primary excelR-export disabled"]').removeClass('disabled');
     $('a[class="btn btn-primary excelE-export disabled"]').removeClass('disabled');
-
+    $('a[class="btn btn-primary ml-2 disabled"]').removeClass('disabled');
 }
 
 var tableToExcel = (function() {
