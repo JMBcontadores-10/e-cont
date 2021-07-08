@@ -207,6 +207,7 @@ class Async extends Controller
                         $fcer = $xmlInfo->fechaCertificacion;
                         $pc = $xmlInfo->pacCertifico;
                         $total = $xmlInfo->total;
+                        $total = substr($total, 1);
                         $efecto = $xmlInfo->efecto;
                         $estado = $xmlInfo->estado;
                         $ec = $xmlInfo->estadoCancelacion;
@@ -305,6 +306,7 @@ class Async extends Controller
                         $fcer = $xmlInfo->fechaCertificacion;
                         $pc = $xmlInfo->pacCertifico;
                         $total = $xmlInfo->total;
+                        $total = substr($total, 1);
                         $efecto = $xmlInfo->efecto;
                         $estado = $xmlInfo->estado;
                         $ec = $xmlInfo->estadoCancelacion;
