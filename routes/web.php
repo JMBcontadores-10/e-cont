@@ -23,6 +23,9 @@ Auth::routes(['register'=>false]);
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/descargasv2', [App\Http\Controllers\DescargasControllerv2::class, 'index'])->name('descargasv2');
 Route::post('/async', [App\Http\Controllers\Async::class, 'index'])->name('async');
+Route::get('/cuentasporpagar', [App\Http\Controllers\CuentasPorPagar::class, 'index'])->name('cuentasporpagar');
+Route::post('/detalles', [App\Http\Controllers\CuentasPorPagar::class, 'detalles'])->name('detalles');
+
 
 
 // Rutas Ana

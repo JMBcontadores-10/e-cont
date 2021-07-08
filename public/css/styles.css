@@ -10,6 +10,7 @@ select {
     box-sizing: border-box;
 } */
 
+
 /* input[type=submit] {
 
     width: 180px;
@@ -29,9 +30,7 @@ input[type=submit]:hover {
     color: white;
 } */
 
-
 .cerrarSesion {
-
     width: 180px;
     font-size: 10pt;
     color: #0055ff;
@@ -41,7 +40,6 @@ input[type=submit]:hover {
     margin-left: 10px;
     border-radius: 4px;
     cursor: pointer;
-
 }
 
 .cerrarSesion:hover {
@@ -55,12 +53,11 @@ input[type=submit]:hover {
     font-size: 10pt;
     background-color: #0055ff;
     margin-bottom: 5px;
-
 }
 
 .inicio {
     border-radius: 5px;
-    background-color: #ffffff;
+    background-color: #f4f5f9;
     padding: 20px;
     width: 1000px;
     margin-left: auto;
@@ -87,7 +84,6 @@ button {
     border: none;
     cursor: pointer;
     box-sizing: border-box;
-
 }
 
 .button1 {
@@ -99,6 +95,21 @@ button {
     border: #0055FF 1px solid;
     border-radius: 4px;
     box-sizing: border-box;
+    font-family: 'Work Sans', sans-serif;
+    font-weight: bold;
+}
+
+.button2 {
+    /* width: 170px; */
+    /* height: 60px; */
+    /* text-align: center; */
+    margin-left: 10px;
+    background-color: #ffffff;
+    color: #000000;
+    border: #0055FF 1px solid;
+    border-radius: 4px;
+    /* box-sizing: border-box; */
+    /* box-sizing: content-box; */
     font-family: 'Work Sans', sans-serif;
     font-weight: bold;
 }
@@ -129,7 +140,6 @@ button {
     color: #0055FF;
     font-size: 18px;
     font-family: 'Work Sans', sans-serif;
-
 }
 
 .label2 {
@@ -197,33 +207,40 @@ h5 {
 }
 
 .tablas-resultados {
-	position: relative;
+    position: relative;
 }
+
 .tablas-resultados .overlay {
-	position: absolute;
-	left:0;
-	right:0;
-	top:0;
-	bottom:0;
-	background-color: #fff;
-	opacity: 0.5;
-	z-index: 1000;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #fff;
+    opacity: 0.5;
+    z-index: 1000;
 }
 
 .tablas-resultados.listo .overlay {
-	display: none;
+    display: none;
 }
+
 
 /* .tablas-resultados .table td {
 	white-space: nowrap;
 } */
 
 .tab-pane {
-	padding: 15px;
-	border: solid 1px #ddd;
-	margin-top: -1px;
-	overflow: auto;
+    padding: 15px;
+    border: solid 1px #ddd;
+    margin-top: -1px;
+    overflow: auto;
 }
+
 .tab-pane .form-inline {
-	margin-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.text-bold {
+    font-weight: bold;
 }

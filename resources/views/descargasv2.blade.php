@@ -22,8 +22,8 @@
         <hr style="border-color:black; width:100%;">
         <div align="left">
             <label class="label1" style="font-weight: bold"> Sesión de: </label>
-            <h1 style="font-weight: bold">{{ $nombre }}</h1>
-            <h5 style="font-weight: bold">{{ $rfc }}</h5>
+            <h1 style="font-weight: bold">{{ Auth::user()->nombre }}</h1>
+            <h5 style="font-weight: bold">{{ Auth::user()->RFC }}</h5>
             <form method="POST" class="login-form">
                 @csrf
                 <input type="hidden" name="accion" value="login_fiel" />
@@ -33,7 +33,6 @@
                     </div>
                 </div>
             </form>
-            <!--datos de la descarga-->
             <hr style="border-color:black; width:100%;">
         </div>
 
@@ -74,7 +73,7 @@
                         <table class="table table-sm table-bordered table-hover " id="tabla-recibidos">
                             <thead>
                                 <tr>
-                                    <th class="text-center">#</th>
+                                    <th class="text-center">N°</th>
                                     <th class="text-center">XML <input type="checkbox" checked id="allxml" name="allxml" />
                                     </th>
                                     <th class="text-center">R. Imp. <input type="checkbox" checked id="allpdf"
@@ -98,7 +97,7 @@
                     </div>
                     <br>
                     <div class="text-right">
-                        <a href="#" class="btn btn-primary excelR-export"
+                        <a href="#" id="bottomR" class="btn btn-primary excelR-export"
                             download="{{ $rfc }}_{{ $diaDescarga }}_cfdi_recibidos.xls">Exportar a Excel</a>
                         <button type="submit" class="btn btn-success">Descargar seleccionados</button>
                     </div>
@@ -114,7 +113,7 @@
                         <table class="table table-sm table-bordered table-hover" id="tabla-emitidos">
                             <thead>
                                 <tr>
-                                    <th class="text-center">#</th>
+                                    <th class="text-center">N°</th>
                                     <th class="text-center">XML <input type="checkbox" checked id="eallxml"
                                             name="eallxml" /></th>
                                     <th class="text-center">R. Imp. <input type="checkbox" checked id="eallpdf"
@@ -139,7 +138,7 @@
                     </div>
                     <br>
                     <div class="text-right">
-                        <a href="#" class="btn btn-primary excelE-export"
+                        <a href="#" id="bottomE" class="btn btn-primary excelE-export"
                             download="{{ $rfc }}_{{ $diaDescarga }}_cfdi_emitidos.xls">Exportar a Excel</a>
                         <button type="submit" class="btn btn-success">Descargar seleccionados</button>
                     </div>

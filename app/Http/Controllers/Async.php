@@ -207,6 +207,8 @@ class Async extends Controller
                         $fcer = $xmlInfo->fechaCertificacion;
                         $pc = $xmlInfo->pacCertifico;
                         $total = $xmlInfo->total;
+                        $total = substr($total, 1);
+                        $total = $this->floatvalue($total);
                         $efecto = $xmlInfo->efecto;
                         $estado = $xmlInfo->estado;
                         $ec = $xmlInfo->estadoCancelacion;
@@ -305,6 +307,8 @@ class Async extends Controller
                         $fcer = $xmlInfo->fechaCertificacion;
                         $pc = $xmlInfo->pacCertifico;
                         $total = $xmlInfo->total;
+                        $total = substr($total, 1);
+                        $total = $this->floatvalue($total);
                         $efecto = $xmlInfo->efecto;
                         $estado = $xmlInfo->estado;
                         $ec = $xmlInfo->estadoCancelacion;
@@ -497,5 +501,13 @@ class Async extends Controller
             ],
             ['upsert' => true]
         );
+    }
+
+    public function floatvalue($val)
+    {
+        $val = str_replace(",", ".", $val);
+        $val = preg_replace('/\.(?=.*\.)/', '', $val);
+        return $val;
+        // return floatval($val);
     }
 }

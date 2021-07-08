@@ -47,7 +47,7 @@
                 {{-- <br> --}}
                 <div class="row" style="justify-content: center;">
                     <div class="col">
-                        <form action="\descargas\pages\cuentasP\index.php" method="post">
+                        <form action="{{url('cuentasporpagar')}}">
                             <button class="btnModulo" type="submit" value="Cuentas por pagar" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
                                 <img style="float:left;" src="img/cuenta.png" width="25px" height="25px" alt=""> Cuentas por
                                 pagar
