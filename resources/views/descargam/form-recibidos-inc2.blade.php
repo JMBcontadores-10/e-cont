@@ -50,7 +50,7 @@ $anios = range(2014, date('Y'));
     </div>
     <div class="text-right">
         <button type="submit" class="btn btn-primary">Buscar</button>
-        <a href="#bottomR" class="btn btn-primary ml-2">Ir abajo</a>
+        <a href="#bottomR" class="btn btn-primary ml-2">Ir a descargar</a>
 
     </div>
 </form>

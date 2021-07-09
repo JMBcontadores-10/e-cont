@@ -61,7 +61,22 @@ class CuentasPorPagar extends Controller
 
     public function detalles(Request $req)
     {
-
+        $meses = array(
+            '1' => 'Enero',
+            '2' => 'Febrero',
+            '3' => 'Marzo',
+            '4' => 'Abril',
+            '5' => 'Mayo',
+            '6' => 'Junio',
+            '7' => 'Julio',
+            '8' => 'Agosto',
+            '9' => 'Septiembre',
+            '10' => 'Octubre',
+            '11' => 'Noviembre',
+            '12' => 'Diciembre'
+        );
+        $config = require dirname(dirname(__FILE__)) . '/Classes' . '/config.php';
+        $rutaDescarga = $config['rutaDescarga'];
         $rfc = Auth::user()->RFC;
         $emisorRfc = $req->emisorRfc;
         $emisorNombre = $req->emisorNombre;
@@ -70,6 +85,9 @@ class CuentasPorPagar extends Controller
         $colM = MetadataR::where(['receptorRfc' => $rfc, 'emisorRfc' => $emisorRfc])->orderBy('folioFiscal')->get();
 
         return view('detalles')
+            ->with('meses', $meses)
+            ->with('rutaDescarga', $rutaDescarga)
+            ->with('rfc', $rfc)
             ->with('colM', $colM)
             ->with('n', $n)
             ->with('emisorRfc', $emisorRfc)

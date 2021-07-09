@@ -25,7 +25,8 @@ use App\Models\MetadataR;
             <h5 style="font-weight: bold">{{ Auth::user()->RFC }}</h5>
             <hr style="border-color:black; width:100%;">
         </div>
-        <div class="row justify-content-end">
+
+        {{-- <div class="row justify-content-end">
             <div>
                 <form action="/" method="get">
                     <button class="button2">Módulo: Cheques y Transferencias</button>
@@ -36,7 +37,7 @@ use App\Models\MetadataR;
                     <button class="button2">Vincular Varios Proveedores</button>
                 </form>
             </div>
-        </div>
+        </div> --}}
 
         <div class="input-group">
             <span class="input-group-text">Buscar</span>
@@ -71,6 +72,9 @@ use App\Models\MetadataR;
                                 ->get();
                             foreach ($colT as $v) {
                                 $var = (float) $v->total;
+                                if ($v->efecto == 'Egreso') {
+                                    $var = -1 * abs($var);
+                                }
                                 $sum = $sum + $var;
                                 $nXml++;
                             }
@@ -93,7 +97,7 @@ use App\Models\MetadataR;
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td class="text-center text-bold">Total</td>
+                    <td class="text-center text-bold">Total:</td>
                     <td class="text-center text-bold">{{ $tXml }}</td>
                     <td id="bottom" class="text-center text-bold">${{ number_format($tTabla, 2) }}</td>
                 </tr>

@@ -378,9 +378,32 @@ $('#eallpdf').change(function() {
     $('tbody tr td[class="text-center etpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
+$('#allcheck').change(function() {
+    $('tbody tr td[class="text-center allcheck"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    calcular();
+});
+
 $("#filtrar").on("keyup", function() {
     var value = $(this).val().toLowerCase();
     $(".buscar tr").filter(function() {
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
 });
+
+$(document).on('click keyup', '.mis-checkboxes,.mis-adicionales', function() {
+    calcular();
+});
+
+function calcular() {
+    var tot = $('#total');
+    tot.val(0);
+    $('.mis-checkboxes,.mis-adicionales').each(function() {
+        if ($(this).hasClass('mis-checkboxes')) {
+            tot.val(($(this).is(':checked') ? parseFloat($(this).attr('tu-attr-precio')) : 0) + parseFloat(tot.val()));
+        } else {
+            tot.val(parseFloat(tot.val()) + (isNaN(parseFloat($(this).val())) ? 0 : parseFloat($(this).val())));
+        }
+    });
+    var totalParts = parseFloat(tot.val()).toFixed(2).split('.');
+    tot.val('$' + totalParts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.' + (totalParts.length > 1 ? totalParts[1] : '00'));
+}
