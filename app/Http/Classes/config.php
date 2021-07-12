@@ -8,5 +8,6 @@ return array(
 	'maxDescargasSimultaneas' => 10,
 
 	// Ruta donde serán guardados los archivos descargados
-	'rutaDescarga' => 'C:/contarappv1_descargas/'
+	'rutaDescarga' => 'C:/laragon/www/contarappv1/public/storage/contarappv1_descargas/'
+
 );

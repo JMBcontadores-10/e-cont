@@ -79,8 +79,8 @@ use App\Models\XmlR;
                         @php
                             $anio = substr($fechaC, 0, 4);
                             $mes = (string) (int) substr($fechaC, 5, 2);
-                            $rutaXml = $rutaDescarga . "$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML/$folioF.xml";
-                            $rutaPdf = $rutaDescarga . "$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF/$folioF.pdf";
+                            $rutaXml = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML/$folioF.xml";
+                            $rutaPdf = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF/$folioF.pdf";
                             $concepto = '-';
                             $metodoPago = '-';
                             $uuidRef = '-';
@@ -104,12 +104,9 @@ use App\Models\XmlR;
                         <td class="text-center">${{ number_format($total, 2) }}</td>
                         <td class="text-center">{{ $estado }}</td>
                         <td class="text-center">
-                            <a class="btn btn-primary m-1" href="{{ $rutaXml }}" download="{{ $folioF }}.xml">
-                                XML
-                            </a>
-                            <a class="btn btn-danger m-1" href="{{ $rutaPdf }}" target="_blank">
-                                PDF
-                            </a>
+                            <a class="btn btn-primary m-1" href="{{ $rutaXml }}"
+                                download="{{ $folioF }}.xml">XML</a>
+                            <a class="btn btn-danger m-1" href="{{ $rutaPdf }}" target="_blank">PDF</a>
                         </td>
                     </tr>
                 @endforeach
