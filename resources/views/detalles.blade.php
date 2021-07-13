@@ -35,10 +35,10 @@ use App\Models\XmlR;
             </div>
         </div> --}}
 
-        <div class="input-group">
+        {{-- <div class="input-group">
             <span class="input-group-text">Buscar</span>
             <input id="filtrar" type="text" class="form-control" placeholder="Buscar proveedor">
-        </div><br>
+        </div><br> --}}
 
         <table class="table table-sm table-hover table-bordered">
             <thead>
@@ -120,7 +120,7 @@ use App\Models\XmlR;
                     <td></td>
                     <td></td>
                     <td class="text-center text-bold">Total:</td>
-                    <td> <input readonly id="total" type="text" placeholder=" $0.00" /> </td>
+                    <td> <input readonly id="total" type="text" placeholder="$0.00" /> </td>
                 </tr>
             </tbody>
         </table>

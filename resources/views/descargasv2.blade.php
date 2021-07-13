@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+<head>
+    <title>Descargas SAT Contarapp</title>
+</head>
+
 @section('content')
 
     @php
@@ -97,9 +101,9 @@
                     </div>
                     <br>
                     <div class="text-right">
-                        <a href="#" id="bottomR" class="btn btn-primary excelR-export"
+                        <a href="#" class="btn btn-primary excelR-export"
                             download="{{ $rfc }}_{{ $diaDescarga }}_cfdi_recibidos.xls">Exportar a Excel</a>
-                        <button type="submit" class="btn btn-success">Descargar seleccionados</button>
+                        <button id="bottomR" type="submit" class="btn btn-success">Descargar seleccionados</button>
                     </div>
                 </form>
             </div>
@@ -138,9 +142,9 @@
                     </div>
                     <br>
                     <div class="text-right">
-                        <a href="#" id="bottomE" class="btn btn-primary excelE-export"
+                        <a href="#" class="btn btn-primary excelE-export"
                             download="{{ $rfc }}_{{ $diaDescarga }}_cfdi_emitidos.xls">Exportar a Excel</a>
-                        <button type="submit" class="btn btn-success">Descargar seleccionados</button>
+                        <button id="bottomE" type="submit" class="btn btn-success">Descargar seleccionados</button>
                     </div>
                 </form>
             </div>
