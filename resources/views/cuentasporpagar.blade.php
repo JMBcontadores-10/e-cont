@@ -6,7 +6,7 @@ use App\Models\ListaNegra;
 @endphp
 
 <head>
-    <title>Cuentas por pagar Contarapp </title>
+    <title>Cuentas por pagar Contarapp</title>
 </head>
 
 @section('content')
@@ -16,7 +16,7 @@ use App\Models\ListaNegra;
                 << Regresar</a>
         </div>
         <div class="float-md-right">
-            <p class="label2">Descargas</p>
+            <p class="label2">Cuentas por pagar</p>
         </div>
         <br>
         <hr style="border-color:black; width:100%;">
@@ -27,18 +27,18 @@ use App\Models\ListaNegra;
             <hr style="border-color:black; width:100%;">
         </div>
 
-        {{-- <div class="row justify-content-end">
+        <div class="row justify-content-end">
             <div>
-                <form action="/" method="get">
+                <form action="{{ url('cheques-transferencias') }}">
                     <button class="button2">Módulo: Cheques y Transferencias</button>
                 </form>
             </div>
             <div>
-                <form action="/" method="get">
+                <form action="/">
                     <button class="button2">Vincular Varios Proveedores</button>
                 </form>
             </div>
-        </div> --}}
+        </div>
 
         <div class="input-group">
             <span class="input-group-text">Buscar</span>
