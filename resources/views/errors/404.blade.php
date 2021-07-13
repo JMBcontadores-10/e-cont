@@ -13,7 +13,10 @@
         <div class="err">4</div>
         <i class="far fa-question-circle fa-spin"></i>
         <div class="err2">4</div>
-        <div class="msg">Página no encontrada.<p><a href="{{url('/')}}">Regresar</a></p></div>
+        <div class="msg">Página no encontrada.
+            <br>
+            <a href="{{ url('/') }}">Regresar</a>
+        </div>
         <div align="center">
             <img class="logo" src="{{ asset('img/logo-contarapp-01.png') }}">
         </div>

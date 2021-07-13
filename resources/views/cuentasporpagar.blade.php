@@ -2,6 +2,7 @@
 
 @php
 use App\Models\MetadataR;
+use App\Models\ListaNegra;
 @endphp
 
 <head>
@@ -63,7 +64,15 @@ use App\Models\MetadataR;
                         <td class="text-center">{{ ++$n }}</td>
                         <td class="text-center">{{ $i['emisorRfc'] }}</td>
                         <td>{{ $i['emisorNombre'] }}</td>
-                        <td class="td1 text-center"><img src="{{ asset('img/ima.png') }}" alt=""></td>
+                        @php
+                            $colLN = ListaNegra::where(['RFC' => $i['emisorRfc']]);
+                            $cget = $colLN->get()->first();
+                        @endphp
+                        @if ($cget == null)
+                            <td class="td1 text-center"><img src="{{ asset('img/ima.png') }}" alt=""></td>
+                        @else
+                            <td class="td1 text-center"><img src="{{ asset('img/ima2.png') }}" alt=""></td>
+                        @endif
                         @php
                             $sum = 0;
                             $nXml = 0;

@@ -46,7 +46,7 @@ use App\Models\XmlR;
                     <th class="text-center">N°</th>
                     <th class="text-center">Check <input type="checkbox" id="allcheck" name="allcheck" /></th>
                     <th class="text-center">UUID</th>
-                    <th class="text-center">Fecha Fiscal</th>
+                    <th class="text-center">Fecha Emisión</th>
                     <th class="text-center">Concepto</th>
                     <th class="text-center">Metodo-Pago</th>
                     <th class="text-center">UUID-Referencial</th>
@@ -61,7 +61,7 @@ use App\Models\XmlR;
                 @foreach ($colM as $i)
                     @php
                         $folioF = $i->folioFiscal;
-                        $fechaC = $i->fechaCertificacion;
+                        $fechaE = $i->fechaEmision;
                         $efecto = $i->efecto;
                         $total = $i->total;
                         $estado = $i->estado;
@@ -75,10 +75,10 @@ use App\Models\XmlR;
                         <td class="text-center allcheck"><input class="mis-checkboxes" tu-attr-precio='{{ $total }}'
                                 type="checkbox" id="allcheck" name="allcheck" /></td>
                         <td class="text-center">{{ $folioF }}</td>
-                        <td class="text-center">{{ $fechaC }}</td>
+                        <td class="text-center">{{ $fechaE }}</td>
                         @php
-                            $anio = substr($fechaC, 0, 4);
-                            $mes = (string) (int) substr($fechaC, 5, 2);
+                            $anio = substr($fechaE, 0, 4);
+                            $mes = (string) (int) substr($fechaE, 5, 2);
                             $rutaXml = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML/$folioF.xml";
                             $rutaPdf = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF/$folioF.pdf";
                             $concepto = '-';
