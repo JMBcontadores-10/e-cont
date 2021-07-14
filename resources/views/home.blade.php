@@ -55,7 +55,8 @@
                         </form>
                     </div>
                     <div class="col">
-                        <form action="{{ url('cheques-transferencias') }}">
+                        <form action="{{ url('cheques-transferencias') }}" method="GET">
+                            {{-- @csrf --}}
                             <button class="btnModulo" type="submit" value="Cheques y Transferencias"
                                 style="height:55px; font-size: 9pt">
                                 <img style="float:left;" src="img/cheque.png" width="20px" height="20px" alt=""> Cheques y

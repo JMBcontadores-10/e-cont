@@ -12,7 +12,7 @@ use App\Models\ListaNegra;
 @section('content')
     <div class="container">
         <div class="float-md-left">
-            <a class="b3" href="{{ url('/') }}">
+            <a class="b3" href="{{ url()->previous() }}">
                 << Regresar</a>
         </div>
         <div class="float-md-right">
@@ -28,16 +28,12 @@ use App\Models\ListaNegra;
         </div>
 
         <div class="row justify-content-end">
-            <div>
-                <form action="{{ url('cheques-transferencias') }}">
-                    <button class="button2">Módulo: Cheques y Transferencias</button>
-                </form>
-            </div>
-            <div>
-                <form action="/">
-                    <button class="button2">Vincular Varios Proveedores</button>
-                </form>
-            </div>
+            <form action="{{ url('cheques-transferencias') }}">
+                <button class="button2">Módulo: Cheques y Transferencias</button>
+            </form>
+            {{-- <form action="/">
+                <button class="button2">Vincular Varios Proveedores</button>
+            </form> --}}
         </div>
 
         <div class="input-group">
