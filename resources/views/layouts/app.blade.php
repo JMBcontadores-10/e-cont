@@ -13,6 +13,7 @@
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/code.js')}}" defer></script>
+    <script src="{{ asset('js/numeros.js')}}" defer></script>
     {{-- <script src="{{ asset('js/jquery-3.1.1.min.js')}}" defer></script> --}}
 
     <!-- Fonts -->
