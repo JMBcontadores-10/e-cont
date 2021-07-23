@@ -82,6 +82,10 @@
                 </div>
                 <br><br>
                 <div class="row" style="justify-content: center;">
+                    <form action="{{ url('monitoreo') }}">
+                    </form>
+                </div>
+                <div class="row" style="justify-content: center;">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <input class="cerrarSesion" type="submit" value="Cerrar Sesión"
