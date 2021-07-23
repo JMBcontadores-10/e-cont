@@ -76,7 +76,7 @@
                     <div style="overflow:auto">
                         <table class="table table-sm table-bordered table-hover " id="tabla-recibidos">
                             <thead>
-                                <tr>
+                                <tr class="table-primary">
                                     <th class="text-center">N°</th>
                                     <th class="text-center">XML <input type="checkbox" checked id="allxml" name="allxml" />
                                     </th>
@@ -116,7 +116,7 @@
                     <div style="overflow:auto">
                         <table class="table table-sm table-bordered table-hover" id="tabla-emitidos">
                             <thead>
-                                <tr>
+                                <tr class="table-primary">
                                     <th class="text-center">N°</th>
                                     <th class="text-center">XML <input type="checkbox" checked id="eallxml"
                                             name="eallxml" /></th>

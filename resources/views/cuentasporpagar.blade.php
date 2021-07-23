@@ -12,7 +12,7 @@ use App\Models\ListaNegra;
 @section('content')
     <div class="container">
         <div class="float-md-left">
-            <a class="b3" href="{{ url()->previous() }}">
+            <a class="b3" href="{{ url('/') }}">
                 << Regresar</a>
         </div>
         <div class="float-md-right">
@@ -44,7 +44,7 @@ use App\Models\ListaNegra;
 
         <table class="table table-sm table-hover table-bordered">
             <thead>
-                <tr>
+                <tr class="table-primary">
                     <th class="text-center">N°</th>
                     <th class="text-center">RFC Emisor</th>
                     <th class="text-center">Razón Social</th>

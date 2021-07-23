@@ -13,4 +13,8 @@ class MetadataR extends Model
     protected $primaryKey = '_id';
 
     protected $collection = 'metadata_r';
+
+    public function cheques(){
+        return $this->belongsTo(Cheques::class);
+    }
 }
