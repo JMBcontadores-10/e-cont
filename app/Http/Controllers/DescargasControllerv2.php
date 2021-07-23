@@ -13,7 +13,6 @@ class DescargasControllerv2 extends Controller
 
     public function index()
     {
-
         return view('descargasv2');
     }
 }

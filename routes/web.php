@@ -36,3 +36,4 @@ Route::post('/archivo-pagar', [App\Http\Controllers\ChequesYTransferenciasContro
 
 Route::get('/consultas', [App\Http\Controllers\ConsultasController::class, 'index'])->name('consultas');
 Route::get('/volumetrico', [App\Http\Controllers\VolumetricoController::class, 'index'])->name('volumetrico');
+Route::get('/convertirXML', [App\Http\Controllers\IngresoDatosController::class, 'index']);
