@@ -23,11 +23,11 @@ class CuentasPorPagar extends Controller
         $tXml = 0;
         $tTabla = 0;
 
-        $col = DB::table('metadata_r')
+        $col = DB::collection('metadata_r')
             ->select('emisorNombre', 'emisorRfc')
             ->where('receptorRfc', $rfc)
             ->groupBy('emisorRfc')
-            ->orderBy('emisorNombre', 'asc')
+            ->orderBy('emisorRfc', 'asc')
             ->get();
 
         return view('cuentasporpagar')
@@ -61,7 +61,9 @@ class CuentasPorPagar extends Controller
         $emisorNombre = $req->emisorNombre;
         $n = 0;
 
-        $colM = MetadataR::where(['receptorRfc' => $rfc, 'emisorRfc' => $emisorRfc])->orderBy('folioFiscal')->get();
+        $colM = MetadataR::where(['receptorRfc' => $rfc, 'emisorRfc' => $emisorRfc])
+            ->orderBy('folioFiscal')
+            ->get();
 
         return view('detalles')
             ->with('meses', $meses)

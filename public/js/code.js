@@ -407,3 +407,39 @@ function calcular() {
     var totalParts = parseFloat(tot.val()).toFixed(2).split('.');
     tot.val('$' + totalParts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.' + (totalParts.length > 1 ? totalParts[1] : '00'));
 }
+
+$("#form-editar").hide();
+
+$('#alerta-archivo-si').on('click', function() {
+    $("#alerta-archivo").hide();
+    $('#form-editar').show();
+    return false;
+});
+
+$('#alerta-archivo-no').on('click', function() {
+    $("#alerta-archivo").hide();
+    $('#form-editar').show();
+    $("#subir-archivo").hide();
+    return false;
+});
+
+$('#vinct').on('click', function() {
+    var lenght = $('div.checkbox-group :checkbox:checked').length
+    if (!lenght > 0) {
+        alert('Favor de seleccionar al menos un XML.')
+        return false;
+    }
+});
+
+$("#form-crear").hide();
+
+$('#alerta-crear-si').on('click', function() {
+    $("#alerta-crear").hide();
+    $('#form-crear').show();
+    return false;
+});
+
+$('#alerta-crear-no').on('click', function() {
+    $("#alerta-crear").hide();
+    return false;
+});

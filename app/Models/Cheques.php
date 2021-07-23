@@ -12,5 +12,28 @@ class Cheques extends Model
 
     protected $primaryKey = '_id';
 
+    protected $fillable = [
+        'Id',
+        'tipomov',
+        'numcheque',
+        'fecha',
+        'importecheque',
+        'Beneficiario',
+        'tipoopera',
+        'rfc',
+        'nombrec',
+        'rnfcrep',
+        'importexml',
+        'verificado',
+        'faltaxml',
+        'conta',
+        'pendi',
+        'lista',
+    ];
+
     protected $collection = 'cheques';
+
+    public function metadata_r(){
+        return $this->hasMany(MetadataR::class);
+    }
 }
