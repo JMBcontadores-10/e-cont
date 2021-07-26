@@ -28,12 +28,13 @@ Route::get('/cuentasporpagar', [App\Http\Controllers\CuentasPorPagar::class, 'in
 Route::post('/detalles', [App\Http\Controllers\CuentasPorPagar::class, 'detalles'])->name('detalles');
 Route::get('/cheques-transferencias', [App\Http\Controllers\ChequesYTransferenciasController::class, 'index'])->name('cheques-transferencias');
 Route::post('/cheques-transferencias', [App\Http\Controllers\ChequesYTransferenciasController::class, 'index'])->name('cheques-transferencias');
-// Route::get('/vincular-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'vincularCheque'])->name('vincular-cheque');
 Route::post('/vincular-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'vincularCheque'])->name('vincular-cheque');
 Route::post('/delete-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'deleteCheque'])->name('delete-cheque');
-Route::post('/archivo-pagar', [App\Http\Controllers\ChequesYTransferenciasController::class, 'archivoPagar'])->name('archivo-pagar');
+Route::post('/archivo-pagar', [App\Http\Controllers\ChequesYTransferenciasController::class, 'createUpdateCheque'])->name('archivo-pagar');
 Route::post('/agregar-xml-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'agregarXmlCheque'])->name('agregar-xml-cheque');
 Route::post('/detallesCT', [App\Http\Controllers\ChequesYTransferenciasController::class, 'detallesCT'])->name('detallesCT');
+Route::post('/desvincular-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'desvincularCheque'])->name('desvincular-cheque');
+
 
 
 

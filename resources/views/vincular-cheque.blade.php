@@ -117,7 +117,8 @@
                         <br><br>Fecha <input type=date required name="fechaCheque">
                         <br><br>Importe Cheque/Transferencia: <input id="number" required name="importeCheque">
                         <br><br>Importe Total: <input type=text required readonly name="importeT"
-                            value="{{ $vincular ? $totalXml : '0' }}">
+                            {{-- value="{{ $vincular ? $totalXml : '0' }}" --}}
+                            value="0">
                         <br><br>Beneficiario: <input type=text required name=" beneficiario">
                         <br><br>Tipo de operación: &nbsp;
                         <select name="tipoOperacion">
