@@ -63,7 +63,7 @@ class CuentasPorPagar extends Controller
 
         $colM = MetadataR::where(['receptorRfc' => $rfc, 'emisorRfc' => $emisorRfc])
             ->whereNull('cheques_id')
-            ->orderBy('folioFiscal')
+            ->orderBy('fechaEmision')
             ->get();
 
         return view('detalles')
