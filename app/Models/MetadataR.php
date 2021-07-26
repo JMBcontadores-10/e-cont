@@ -12,10 +12,6 @@ class MetadataR extends Model
 
     protected $primaryKey = '_id';
 
-    protected $fillable = [
-        'vinculado',
-    ];
-
     protected $collection = 'metadata_r';
 
     public function cheques(){
