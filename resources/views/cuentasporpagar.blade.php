@@ -73,6 +73,7 @@ use App\Models\ListaNegra;
                             $sum = 0;
                             $nXml = 0;
                             $colT = MetadataR::where(['receptorRfc' => $rfc, 'emisorRfc' => $i['emisorRfc']])
+                                ->whereNull('cheques_id')
                                 ->orderBy('emisorNombre', 'asc')
                                 ->get();
                             foreach ($colT as $v) {

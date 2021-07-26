@@ -99,7 +99,7 @@
                     if ($tipoO == 'Impuestos' or $tipoO == 'Parcialidad') {
                         $diferencia = 0;
                     } else {
-                        $diferencia = $importeC - $sumaxml;
+                        $diferencia = $importeC - abs($sumaxml);
                     }
                     $verificado = $i['verificado'];
                     $contabilizado = $i['conta'];

@@ -131,7 +131,31 @@ class ChequesYTransferenciasController extends Controller
         }
     }
 
-    public function archivoPagar(Request $r)
+    public function desvincularCheque(Request $r)
+    {
+        $allcheck = $r->allcheck;
+        $cheques_id = $r->cheques_id;
+        $totalXml = $r->totalXml;
+        $totalXml = substr($totalXml, 1);
+        $totalXml = (float)str_replace(',', '', $totalXml);
+        $cheque_tXml = Cheques::find($cheques_id);
+        $importeXml = $cheque_tXml->importexml - $totalXml;
+        $cheque_tXml->update([
+            'importexml' => $importeXml,
+        ]);
+        foreach ($allcheck as $i) {
+            MetadataR::where('folioFiscal', $i)
+                ->update([
+                    'cheques_id' => null,
+                ]);
+        }
+
+        $alerta = 'CFDI(s) desvinculado(s) exitosamente.';
+        $ruta = 'cheques-transferencias';
+        $this->alerta($alerta, $ruta);
+    }
+
+    public function createUpdateCheque(Request $r)
     {
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
@@ -147,7 +171,7 @@ class ChequesYTransferenciasController extends Controller
         $beneficiario = $r->beneficiario;
         $tipoOperacion = $r->tipoOperacion;
         $rnfcrep = '0';
-        $importeT = (float)$r->importeT;
+        $importeT = (float)str_replace(',', '', $r->importeT);
         $verificado = 0;
         $faltaxml = 0;
         $conta = 0;
@@ -215,8 +239,14 @@ class ChequesYTransferenciasController extends Controller
 
     public function agregarXmlCheque(Request $r)
     {
-        $totalXml = $r->totalXml;
+        $totalXml = (float)str_replace(',', '', $r->totalXml);
         $cheque_id = $r->selectCheque;
+        $cheque_tXml = Cheques::find($cheque_id);
+        $importeXml = $cheque_tXml->importexml + $totalXml;
+        $cheque_tXml->update([
+            'importexml' => $importeXml,
+        ]);
+
         $allcheck = $r->allcheck;
         $arrcheck = json_decode($allcheck, true);
         foreach ($arrcheck as $i) {
@@ -252,6 +282,7 @@ class ChequesYTransferenciasController extends Controller
         $colM = $c->metadata_r;
         $n = 0;
         return view('detallesCT')
+            ->with('id', $cheque_id)
             ->with('meses', $meses)
             ->with('rfc', $rfc)
             ->with('colM', $colM)
@@ -264,9 +295,18 @@ class ChequesYTransferenciasController extends Controller
         $rutaArchivo = $r->rutaArchivo;
         File::delete($rutaArchivo);
         $cheque = Cheques::where(['_id' => $id])->get()->first();
+        $colM = $cheque->metadata_r;
+        foreach ($colM as $i) {
+            MetadataR::where('cheques_id', $i->cheques_id)
+                ->update([
+                    'cheques_id' => null,
+                ]);
+        }
         $cheque->delete();
 
-        return back();
+        $alerta = 'Cheque eliminado exitosamente.';
+        $ruta = 'cheques-transferencias';
+        $this->alerta($alerta, $ruta);
     }
 
     public function alerta($mensaje, $ruta)
