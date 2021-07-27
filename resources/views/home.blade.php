@@ -44,7 +44,7 @@
                         </form>
                     </div>
                 </div>
-                {{-- <br> --}}
+
                 <div class="row" style="justify-content: center;">
                     <div class="col">
                         <form action="{{ url('cuentasporpagar') }}">
@@ -55,8 +55,7 @@
                         </form>
                     </div>
                     <div class="col">
-                        <form action="{{ url('cheques-transferencias') }}" method="GET">
-                            {{-- @csrf --}}
+                        <form action="{{ url('cheques-transferencias') }}">
                             <button class="btnModulo" type="submit" value="Cheques y Transferencias"
                                 style="height:55px; font-size: 9pt">
                                 <img style="float:left;" src="img/cheque.png" width="20px" height="20px" alt=""> Cheques y
@@ -89,6 +88,10 @@
                     </form>
                 </div>
                 <br><br>
+                <div class="row" style="justify-content: center;">
+                    <form action="{{ url('monitoreo') }}">
+                    </form>
+                </div>
                 <div class="row" style="justify-content: center;">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf

@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use CFDItoJson;
+use Cleaner;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -44,5 +46,4 @@ class ConsultasController extends Controller
 
   }
 
-  
 }

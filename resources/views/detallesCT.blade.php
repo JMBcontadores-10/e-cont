@@ -12,7 +12,7 @@ use App\Models\XmlR;
 @section('content')
     <div class="container">
         <div class="float-md-left">
-            <a class="b3" href="{{ url('/cuentasporpagar') }}">
+            <a class="b3" href="{{ url('/cheques-transferencias') }}">
                 << Regresar</a>
         </div>
         <div class="float-md-right">
@@ -21,32 +21,31 @@ use App\Models\XmlR;
         <br>
         <hr style="border-color:black; width:100%;">
         <div class="justify-content-start">
-            <label class="label1" style="font-weight: bold">Cuentas por pagar de:</label>
-            <h1 style="font-weight: bold">{{ $emisorNombre }}</h1>
-            <h5 style="font-weight: bold">{{ $emisorRfc }}</h5>
+            <label class="label1" style="font-weight: bold"> Sesión de: </label>
+            <h1 style="font-weight: bold">{{ Auth::user()->nombre }}</h1>
+            <h5 style="font-weight: bold">{{ Auth::user()->RFC }}</h5>
+            <h1 align="center">Cheque y/o transferencia para Multi-Cheques</h1>
             <hr style="border-color:black; width:100%;">
         </div>
 
-
-        <form action="{{ url('vincular-cheque') }}" method="POST">
+        <form action="{{ url('desvincular-cheque') }}" method="POST">
             @csrf
             <table class="table table-sm table-hover table-bordered">
                 <thead>
                     <tr class="table-primary">
                         <th class="text-center">N°</th>
-                        <th class="text-center">Vincular CFDI's <input type="checkbox" id="allcheck" name="allcheck" /></th>
+                        <th class="text-center">Desvincular CFDI's <input type="checkbox" id="allcheck" name="allcheck" /></th>
                         <th class="text-center">RFC Emisor</th>
-                        {{-- <th class="text-center">Razón Social Emisor</th> --}}
+                        <th class="text-center">Razón Social Emisor</th>
                         <th class="text-center">UUID</th>
                         <th class="text-center">Fecha Emisión</th>
                         <th class="text-center">Concepto</th>
-                        <th class="text-center">Metodo - Pago</th>
-                        <th class="text-center">UUID - Referencial</th>
                         <th class="text-center">Folio</th>
                         <th class="text-center">Efecto</th>
                         <th class="text-center">Total</th>
                         <th class="text-center">Estado</th>
                         <th class="text-center">Descargar</th>
+                        <th class="text-center">Archivo</th>
                     </tr>
                 </thead>
                 <tbody class="buscar">
@@ -67,15 +66,13 @@ use App\Models\XmlR;
                         <tr>
                             <td class="text-center">{{ ++$n }}</td>
                             <td class="text-center allcheck">
-                                @if ($estado != 'Cancelado')
-                                    <div id="checkbox-group" class="checkbox-group">
-                                        <input class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"
-                                            id="allcheck" name="allcheck[]" value="{{ $folioF }}" />
-                                    </div>
-                                @endif
+                                <div id="checkbox-group" class="checkbox-group">
+                                    <input class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"
+                                        id="allcheck" name="allcheck[]" value="{{ $folioF }}" />
+                                </div>
                             </td>
                             <td class="text-center">{{ $emisorRfc }}</td>
-                            {{-- <td class="text-center">{{ $emisorNombre }}</td> --}}
+                            <td class="text-center">{{ $emisorNombre }}</td>
                             <td class="text-center">{{ $folioF }}</td>
                             <td class="text-center">{{ $fechaE }}</td>
                             @php
@@ -91,51 +88,32 @@ use App\Models\XmlR;
                                 $colX = XmlR::where(['UUID' => $folioF])->get();
                                 foreach ($colX as $v) {
                                     $concepto = $v['0.Conceptos.Concepto.0.Descripcion'];
-                                    $metodoPago = $v['0.MetodoPago'];
                                     $folio = $v['0.Folio'];
-                                    if ($efecto == 'Pago') {
-                                        $uuidRef = $v['0.Complemento.0.Pagos.Pago.0.DoctoRelacionado.0.IdDocumento'];
-                                    }
                                 }
                             @endphp
                             <td class="text-center">{{ $concepto }}</td>
-                            <td class="text-center">{{ $metodoPago }}</td>
-                            <td class="text-center">{{ $uuidRef }}</td>
                             <td class="text-center">{{ $folio }}</td>
                             <td class="text-center">{{ $efecto }}</td>
                             <td class="text-center">${{ number_format($total, 2) }}</td>
                             <td class="text-center">{{ $estado }}</td>
                             <td class="text-center">
-                                @if ($estado != 'Cancelado')
-                                    <a class="btn btn-primary m-1" href="{{ $rutaXml }}"
-                                        download="{{ $folioF }}.xml">XML</a>
-                                    <a class="btn btn-danger m-1" href="{{ $rutaPdf }}" target="_blank">PDF</a>
-                                @endif
+                                <a class="btn btn-primary m-1" href="{{ $rutaXml }}"
+                                    download="{{ $folioF }}.xml">XML</a>
+                                <a class="btn btn-danger m-1" href="{{ $rutaPdf }}" target="_blank">PDF</a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="btn btn-secondary">Subir Archivo</a>
                             </td>
                         </tr>
                     @endforeach
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        {{-- <td></td> --}}
-                        <td class="text-center text-bold">Total:</td>
-                        <td> <input readonly id="total" name="totalXml" type="text" placeholder="$0.00" /></td>
-                    </tr>
                 </tbody>
             </table>
             <div class="d-flex justify-content-center">
-                <input id="vinct" type="submit" value="Vincular Cheque/Transferencia"
+                <input readonly name="cheques_id" type="hidden" value="{{ $id }}" />
+                <input readonly id="total" name="totalXml" type="hidden" value="0" />
+                <input id="vinct" type="submit" value="Desvincular Cheque/Transferencia"
                     style="color:#0055ff; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #FFFFFF">
             </div>
         </form>
     </div>
-
-
 @endsection
