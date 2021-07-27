@@ -5,6 +5,8 @@ use CFDItoJson;
 use Cleaner;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ConsultasController extends Controller
 {
@@ -17,78 +19,31 @@ class ConsultasController extends Controller
     return view('consultas');
   }
 
-  public function consultasi()
+  public function consultas()
   {
-    $host = 'localhost';
-    $puerto = '27017';
-    $conexion = new \MongoDB\Driver\Manager("mongodb://$host:$puerto");
-
-    $filtrar = array();
-    $options = array();
-
-    $query = new \MongoDB\Driver\Query($filtrar, $options);
-    $leerPreferencia = new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY);
-
-    $tabla= 'ingreso';
-    // $col = Ingreso::where(['tipoco'=>$i])->get();
-    $datos = $conexion->executeQuery("contarappv1.{$tabla}", $query, $leerPreferencia);
-    return view('ingreso', compact('datos'));
+    return view('consultas1');
   }
 
-  public function consultase()
-  {
-    $host = 'localhost';
-    $puerto = '27017';
-    $conexion = new \MongoDB\Driver\Manager("mongodb://$host:$puerto");
 
-    $filtrar = array();
-    $options = array();
+  public function historial(){
+    $rfc = Auth::user()->RFC;
+    $n=0;
+    $tXml=0;
+    $tTabla=0;
 
-    $query = new \MongoDB\Driver\Query($filtrar, $options);
-    $leerPreferencia = new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY);
-    $tabla= 'egreso';
+    $col = DB::table('calendario_e')
+        ->select('fechaDescarga', 'rfc', 'descargasEmitidos', 'erroresEmitidos')
+        ->where('rfc', $rfc)
+        ->orderBy('fechaDescarga', 'asc')
+        ->get();
 
-    // $col = Ingreso::where(['tipoco'=>$i])->get();
+    return view('historial')
+        ->with('n', $n)
+        ->with('tXml', $tXml)
+        ->with('tTabla', $tTabla)
+        ->with('rfc', $rfc)
+        ->with('col', $col);
 
-    $datos = $conexion->executeQuery("contarappv1.{$tabla}", $query, $leerPreferencia);
-    return view('egreso', compact('datos'));
-  }
-
-  public function consultasn()
-  {
-    $host = 'localhost';
-    $puerto = '27017';
-    $conexion = new \MongoDB\Driver\Manager("mongodb://$host:$puerto");
-
-    $filtrar = array();
-    $options = array();
-
-    $query = new \MongoDB\Driver\Query($filtrar, $options);
-    $leerPreferencia = new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY);
-    $tabla= 'nomina';
-
-    // $col = Ingreso::where(['tipoco'=>$i])->get();
-
-    $datos = $conexion->executeQuery("contarappv1.{$tabla}", $query, $leerPreferencia);
-    return view('nomina', compact('datos'));
-  }
-  public function consultasp()
-  {
-    $host = 'localhost';
-    $puerto = '27017';
-    $conexion = new \MongoDB\Driver\Manager("mongodb://$host:$puerto");
-
-    $filtrar = array();
-    $options = array();
-
-    $query = new \MongoDB\Driver\Query($filtrar, $options);
-    $leerPreferencia = new \MongoDB\Driver\ReadPreference(\MongoDB\Driver\ReadPreference::RP_PRIMARY);
-    $tabla= 'pago';
-
-    // $col = Ingreso::where(['tipoco'=>$i])->get();
-
-    $datos = $conexion->executeQuery("contarappv1.{$tabla}", $query, $leerPreferencia);
-    return view('pago', compact('datos'));
   }
 
 }
