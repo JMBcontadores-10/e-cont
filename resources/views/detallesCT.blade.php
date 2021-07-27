@@ -34,7 +34,7 @@ use App\Models\XmlR;
                 <thead>
                     <tr class="table-primary">
                         <th class="text-center">N°</th>
-                        <th class="text-center">Check <input type="checkbox" id="allcheck" name="allcheck" /></th>
+                        <th class="text-center">Desvincular CFDI's <input type="checkbox" id="allcheck" name="allcheck" /></th>
                         <th class="text-center">RFC Emisor</th>
                         <th class="text-center">Razón Social Emisor</th>
                         <th class="text-center">UUID</th>

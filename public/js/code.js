@@ -443,3 +443,25 @@ $('#alerta-crear-no').on('click', function() {
     $("#alerta-crear").hide();
     return false;
 });
+
+$("#vinp").hide();
+$('input[id="vinpsub"]').hide();
+$('th[id="vinp"]').hide();
+$('td[id="vinp"]').hide();
+
+
+$('#vinpbtn').on('click', function() {
+    $("#vinp").show();
+    $('input[id="vinpsub"]').show();
+    $('th[id="vinp"]').show();
+    $('td[id="vinp"]').show();
+    return false;
+});
+
+$('#vinpsub').on('click', function() {
+    var lenght = $('div.checkbox-group :checkbox:checked').length
+    if (!lenght > 0) {
+        alert('Favor de seleccionar al menos un proveedor.')
+        return false;
+    }
+});
