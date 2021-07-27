@@ -405,7 +405,7 @@ class Async extends Controller
             $fileExt = $fileinfo->getExtension();
             $fileBaseName = $fileinfo->getBasename(".$fileExt");
             $rutaGuardar = dirname(dirname($filePathname)) . "/";
-            
+
             if (!$fileinfo->isDot()) {
                 if ($fileSize > 2000) {
                     if ($fileExt == 'pdf') {
@@ -414,7 +414,7 @@ class Async extends Controller
                         $var = "$rutaGuardar"."XML/$fileName";
                         rename($filePathname, $var);
                         // // // prueba de cfditojson
-                        
+
 
                         $contents = file_get_contents($var);
                         Log::debug($contents);
@@ -423,7 +423,7 @@ class Async extends Controller
                         $array = json_decode($json, true);
 
                         if ($tipoF == 'recibidos') {
-                            
+
                             XmlR::where(['UUID' => $fileBaseName])
                                 ->update(
                                     [$array],
@@ -550,15 +550,4 @@ class Async extends Controller
         // return floatval($val);
     }
 
-    public function xml_json($rutaXml, $fileBaseName)
-    {
-        $fileContents = file_get_contents($rutaXml);
-        $json = JsonConverter::convertToJson($fileContents);
-        $jsonArr = json_decode($json, true);
-        XmlR::where(['UUID' => $fileBaseName])
-            ->update(
-                [$jsonArr],
-                ['upsert' => true]
-            );
-    }
 }
