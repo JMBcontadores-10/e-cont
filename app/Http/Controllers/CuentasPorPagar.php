@@ -61,10 +61,22 @@ class CuentasPorPagar extends Controller
         $emisorNombre = $req->emisorNombre;
         $n = 0;
 
-        $colM = MetadataR::where(['receptorRfc' => $rfc, 'emisorRfc' => $emisorRfc])
-            ->whereNull('cheques_id')
-            ->orderBy('fechaEmision')
-            ->get();
+        if ($req->has('allcheck')) {
+            $emisorRfc = '';
+            $emisorNombre = "Varios Proveedores";
+            $allch = $req->allcheck;
+            $colM = MetadataR::where(['receptorRfc' => $rfc])
+                ->whereIn('emisorRfc', $allch)
+                ->whereNull('cheques_id')
+                ->orderBY('emisorRfc')
+                ->orderBy('fechaEmision')
+                ->get();
+        } else {
+            $colM = MetadataR::where(['receptorRfc' => $rfc, 'emisorRfc' => $emisorRfc])
+                ->whereNull('cheques_id')
+                ->orderBy('fechaEmision')
+                ->get();
+        }
 
         return view('detalles')
             ->with('meses', $meses)

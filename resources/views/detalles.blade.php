@@ -27,18 +27,21 @@ use App\Models\XmlR;
             <hr style="border-color:black; width:100%;">
         </div>
 
+
         <form action="{{ url('vincular-cheque') }}" method="POST">
             @csrf
             <table class="table table-sm table-hover table-bordered">
                 <thead>
                     <tr class="table-primary">
                         <th class="text-center">N°</th>
-                        <th class="text-center">Check <input type="checkbox" id="allcheck" name="allcheck" /></th>
+                        <th class="text-center">Vincular CFDI's <input type="checkbox" id="allcheck" name="allcheck" /></th>
+                        <th class="text-center">RFC Emisor</th>
+                        {{-- <th class="text-center">Razón Social Emisor</th> --}}
                         <th class="text-center">UUID</th>
                         <th class="text-center">Fecha Emisión</th>
                         <th class="text-center">Concepto</th>
-                        <th class="text-center">Metodo-Pago</th>
-                        <th class="text-center">UUID-Referencial</th>
+                        <th class="text-center">Metodo - Pago</th>
+                        <th class="text-center">UUID - Referencial</th>
                         <th class="text-center">Folio</th>
                         <th class="text-center">Efecto</th>
                         <th class="text-center">Total</th>
@@ -49,6 +52,8 @@ use App\Models\XmlR;
                 <tbody class="buscar">
                     @foreach ($colM as $i)
                         @php
+                            $emisorRfc = $i->emisorRfc;
+                            $emisorNombre = $i->emisorNombre;
                             $folioF = $i->folioFiscal;
                             $fechaE = $i->fechaEmision;
                             $efecto = $i->efecto;
@@ -62,11 +67,15 @@ use App\Models\XmlR;
                         <tr>
                             <td class="text-center">{{ ++$n }}</td>
                             <td class="text-center allcheck">
-                                <div id="checkbox-group" class="checkbox-group">
-                                    <input class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"
-                                        id="allcheck" name="allcheck[]" value="{{ $folioF }}" />
-                                </div>
+                                @if ($estado != 'Cancelado')
+                                    <div id="checkbox-group" class="checkbox-group">
+                                        <input class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"
+                                            id="allcheck" name="allcheck[]" value="{{ $folioF }}" />
+                                    </div>
+                                @endif
                             </td>
+                            <td class="text-center">{{ $emisorRfc }}</td>
+                            {{-- <td class="text-center">{{ $emisorNombre }}</td> --}}
                             <td class="text-center">{{ $folioF }}</td>
                             <td class="text-center">{{ $fechaE }}</td>
                             @php
@@ -85,7 +94,7 @@ use App\Models\XmlR;
                                     $metodoPago = $v['0.MetodoPago'];
                                     $folio = $v['0.Folio'];
                                     if ($efecto == 'Pago') {
-                                        $uuid = $v['0.Complemento.0.Pagos.Pago.0.DoctoRelacionado.0.IdDocumento'];
+                                        $uuidRef = $v['0.Complemento.0.Pagos.Pago.0.DoctoRelacionado.0.IdDocumento'];
                                     }
                                 }
                             @endphp
@@ -97,9 +106,11 @@ use App\Models\XmlR;
                             <td class="text-center">${{ number_format($total, 2) }}</td>
                             <td class="text-center">{{ $estado }}</td>
                             <td class="text-center">
-                                <a class="btn btn-primary m-1" href="{{ $rutaXml }}"
-                                    download="{{ $folioF }}.xml">XML</a>
-                                <a class="btn btn-danger m-1" href="{{ $rutaPdf }}" target="_blank">PDF</a>
+                                @if ($estado != 'Cancelado')
+                                    <a class="btn btn-primary m-1" href="{{ $rutaXml }}"
+                                        download="{{ $folioF }}.xml">XML</a>
+                                    <a class="btn btn-danger m-1" href="{{ $rutaPdf }}" target="_blank">PDF</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach
@@ -112,6 +123,8 @@ use App\Models\XmlR;
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
+                        {{-- <td></td> --}}
                         <td class="text-center text-bold">Total:</td>
                         <td> <input readonly id="total" name="totalXml" type="text" placeholder="$0.00" /></td>
                     </tr>
@@ -122,6 +135,7 @@ use App\Models\XmlR;
                     style="color:#0055ff; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #FFFFFF">
             </div>
         </form>
-
     </div>
+
+
 @endsection

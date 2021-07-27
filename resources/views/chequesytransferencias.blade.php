@@ -154,20 +154,18 @@
                             </form>
                         @endif
                     </td>
-                    @if ($verificado == 0)
-                        <td class="text-center">
+                    <td class="text-center">
+                        @if ($verificado == 0)
                             <form action="{{ url('cheques-transferencias') }}" method="post">
                                 @csrf
                                 <input type="hidden" id="id" name="id" value="{{ $id }}">
                                 <input type="checkbox" name="revisado" required> Revisado
                                 <input type="submit" name="Aceptar" value="Aceptar">
                             </form>
-                        </td>
-                    @else
-                        <td class="td1 text-center">
+                        @else
                             <img src="{{ asset('img/veri.png') }}" alt="">
-                        </td>
-                    @endif
+                        @endif
+                    </td>
                     <td class="text-center">
                         @if ($verificado == 1 and $contabilizado == 0)
                             <form action="{{ url('cheques-transferencias') }}" method="POSt">
