@@ -20,6 +20,7 @@ class User extends Authenticatable
     protected $primaryKey = '_id';
 
     protected $fillable = [
+        
         'name',
         'email',
         'password',

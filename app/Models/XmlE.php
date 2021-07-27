@@ -12,5 +12,5 @@ class XmlE extends Model
 
     protected $primaryKey = '_id';
 
-    protected $collection = 'xml_e';
+    protected $collection = 'xmlemitidos';
 }

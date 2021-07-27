@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- CSRF Token -->
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="_token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
     <link rel="shortcut icon" href="{{ asset('img/logo-contarapp-03.png') }}" type="image/png" />
@@ -33,6 +33,7 @@
     <script src="{{ asset ('js/moment.min.js')}}" defer></script>
     <script src="{{ asset ('js/fullcalendar.js')}}" defer></script>
     <script src="{{ asset ('js/es.js')}}"></script>
+    <script src="{{ asset('js/calendar.js')}}" defer></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="{{ asset ('css/toastr.min.css')}}" rel="stylesheet" />

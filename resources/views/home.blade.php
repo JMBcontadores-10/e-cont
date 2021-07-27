@@ -44,7 +44,7 @@
                         </form>
                     </div>
                 </div>
-                {{-- <br> --}}
+
                 <div class="row" style="justify-content: center;">
                     <div class="col">
                         <form action="{{ url('cuentasporpagar') }}">
@@ -55,8 +55,7 @@
                         </form>
                     </div>
                     <div class="col">
-                        <form action="{{ url('cheques-transferencias') }}" method="GET">
-                            {{-- @csrf --}}
+                        <form action="{{ url('cheques-transferencias') }}">
                             <button class="btnModulo" type="submit" value="Cheques y Transferencias"
                                 style="height:55px; font-size: 9pt">
                                 <img style="float:left;" src="img/cheque.png" width="20px" height="20px" alt=""> Cheques y
@@ -80,7 +79,19 @@
                         </form>
                     </div>
                 </div>
+                <br>
+                <div class="row" style="justify-content: center;">
+                    <form action="{{ route('monitoreo')}}">
+                        <button class="btnModulo" type="submit" value="Nomina" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
+                            <img style="float:left;" src="img/monitoreo.png" width="25px" height="25px" alt=""> Monitoreo Facturación
+                        </button>
+                    </form>
+                </div>
                 <br><br>
+                <div class="row" style="justify-content: center;">
+                    <form action="{{ url('monitoreo') }}">
+                    </form>
+                </div>
                 <div class="row" style="justify-content: center;">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf

@@ -7,25 +7,22 @@
     $nombre = Auth::user()->nombre;
     @endphp
 
-    <div>
-        <form class="navbar-form navbar-left" action="{{ url('/') }}">
-
-          <button class="b3"><< Regresar</button>
-        </form>
-
-        <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown" style="padding: 10px 20px;">
-          <label class="label2">Control Volumétrico</a></label>
-        </li>
-      </ul><br>
-      <hr style="border-color:black; width:100%;">
-      <div align="left">
-          <label class="label1"> Sesión de: </label>
-          <h1>{{Auth::user()->nombre}}</h1>
-          <label>{{Auth::user()->RFC}}</label>
-          <!--datos de la descarga-->
-          <hr style="border-color:black; width:100%;">
-      </div>
+    <div class="container">
+      <div class="float-md-left">
+        <a class="b3" href="{{ url()->previous() }}">
+            << Regresar</a>
+    </div>
+    <div class="float-md-right">
+        <p class="label2">Control Volumétrico</p>
+    </div>
+    <br>
+    <hr style="border-color:black; width:100%;">
+    <div class="justify-content-start">
+        <label class="label1" style="font-weight: bold"> Sesión de: </label>
+        <h1 style="font-weight: bold">{{ Auth::user()->nombre }}</h1>
+        <h5 style="font-weight: bold">{{ Auth::user()->RFC }}</h5>
+        <hr style="border-color:black; width:100%;">
+    </div>
 
       <div class="container">
           <div class="row">
@@ -56,19 +53,40 @@
                 &nbsp;<input type="date" name="id2" min=2020-01-01 required>
                 <br><br><input type="submit" value="Enviar" style="color:white; BORDER : #0055FF 1px solid; FONT-SIZE:13pt; background-color: #0055ff;">
               </div>
-          </div>
+       
+          <div class="col-8">
 
+           <br>
+           <br>
+
+            <div id="calender"></div>
+
+            {{-- aqui falta completar --}}
+            {{-- <div class="modal fade" id="saveEventModal" tabindex="-1" aria-labelledby="exampleModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"></h5>
+                                <button type="button" class="close" data-dismiss="modal" >
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <input type="text" id="title" class="form-control">
+                            <textarea id="content" class="form-control"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            
+                            <button id="addEvent" class="btn btn-success"><i class="fa fa-plus"></i>Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div> --}}
+    </div>
+</div>
       </div>
-      <div class="col-8">
 
-<div class="container">
-
-<div id="calendar"></div>
-
-  </div>
-
-
-</div>
-</div>
 
 @endsection
