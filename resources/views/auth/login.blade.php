@@ -13,8 +13,9 @@
                             <h5 style="color:#0055ff;">_____________________________________________________</h5>
                         </div>
                         <br>
+                        
                         <form method="POST" action="{{ route('login') }}">
-                            @csrf
+                            {!! csrf_field()!!}
                             <div class="form-group row">
                                 <label for="RFC" class="col-md-4 col-form-label text-md-right">{{ __('RFC: ') }}</label>
 

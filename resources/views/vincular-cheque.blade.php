@@ -7,6 +7,7 @@ use App\Models\ListaNegra;
 
 <head>
     <title>Cheques y Transferencias Contarapp</title>
+    
 </head>
 
 @section('content')

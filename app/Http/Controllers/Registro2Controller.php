@@ -13,15 +13,15 @@ class Registro2Controller extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    // public function index()
-    // {
-    //     return view("auth.registro");
+    // public function __construct()
+    //  {
+    //     $this->middleware('auth');
     // }
+
+    public function index()
+    {
+        return view("auth.registro");
+    }
 
     /**
      * Store a newly created resource in storage.

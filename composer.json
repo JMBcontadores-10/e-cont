@@ -12,7 +12,8 @@
         "jenssegers/mongodb": "^3.8",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.2",
+        "laravel/ui": "^3.3",
+        "phpcfdi/cfdi-cleaner": "^1.1.2",
         "phpcfdi/cfdi-to-json": "^0.2.1"
     },
     "require-dev": {

@@ -18,8 +18,8 @@ Auth::routes(['register'=>false]);
 
 // Rutas Octavio
 
-// Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
-// Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
+Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
+Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/descargasv2', [App\Http\Controllers\DescargasControllerv2::class, 'index'])->name('descargasv2');
 Route::post('/async', [App\Http\Controllers\Async::class, 'index'])->name('async');
@@ -35,4 +35,11 @@ Route::post('/archivo-pagar', [App\Http\Controllers\ChequesYTransferenciasContro
 // Rutas Ana
 
 Route::get('/consultas', [App\Http\Controllers\ConsultasController::class, 'index'])->name('consultas');
+Route::get('/consulta', [App\Http\Controllers\ConsultasController::class, 'consultas'])->name('consulta');
+Route::get('/historial', [App\Http\Controllers\ConsultasController::class, 'historial'])->name('historial');
 Route::get('/volumetrico', [App\Http\Controllers\VolumetricoController::class, 'index'])->name('volumetrico');
+Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
+Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
+// Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
