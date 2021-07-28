@@ -71,6 +71,15 @@ class ChequesYTransferenciasController extends Controller
             return back();
         }
 
+        if ($r->has('ajuste')) {
+            $id = $r->id;
+            $ajuste = (float)str_replace(',', '', $r->ajuste);
+            Cheques::where('_id', $id)->update([
+                'ajuste' => $ajuste
+            ]);
+            return back();
+        }
+
         return view('chequesytransferencias')
             ->with('rutaDescarga', $rutaDescarga)
             ->with('n', $n)
@@ -135,20 +144,25 @@ class ChequesYTransferenciasController extends Controller
     {
         $allcheck = $r->allcheck;
         $cheques_id = $r->cheques_id;
-        $totalXml = $r->totalXml;
-        $totalXml = substr($totalXml, 1);
-        $totalXml = (float)str_replace(',', '', $totalXml);
-        $cheque_tXml = Cheques::find($cheques_id);
-        $importeXml = $cheque_tXml->importexml - $totalXml;
-        $cheque_tXml->update([
-            'importexml' => $importeXml,
-        ]);
+        $nXml = 0;
         foreach ($allcheck as $i) {
+            $nXml++;
             MetadataR::where('folioFiscal', $i)
                 ->update([
                     'cheques_id' => null,
                 ]);
         }
+
+        $totalXml = $r->totalXml;
+        $totalXml = substr($totalXml, 1);
+        $totalXml = (float)str_replace(',', '', $totalXml);
+        $cheque_tXml = Cheques::find($cheques_id);
+        $importeXml = $cheque_tXml->importexml - $totalXml;
+        $faltaxml = $cheque_tXml->faltaxml - $nXml;
+        $cheque_tXml->update([
+            'importexml' => $importeXml,
+            'faltaxml' => $faltaxml,
+        ]);
 
         $alerta = 'CFDI(s) desvinculado(s) exitosamente.';
         $ruta = 'cheques-transferencias';
@@ -177,6 +191,7 @@ class ChequesYTransferenciasController extends Controller
         $conta = 0;
         $pendi = 0;
         $lista = 0;
+        $ajuste = 0;
         $ruta = 'cheques-transferencias';
 
         if ($r->has('id')) {
@@ -230,6 +245,7 @@ class ChequesYTransferenciasController extends Controller
                 'conta' => $conta,
                 'pendi' => $pendi,
                 'lista' => $lista,
+                'ajuste' => $ajuste,
             ]);
 
             $alerta = 'Cheque creado exitosamente.';
@@ -239,21 +255,25 @@ class ChequesYTransferenciasController extends Controller
 
     public function agregarXmlCheque(Request $r)
     {
-        $totalXml = (float)str_replace(',', '', $r->totalXml);
         $cheque_id = $r->selectCheque;
-        $cheque_tXml = Cheques::find($cheque_id);
-        $importeXml = $cheque_tXml->importexml + $totalXml;
-        $cheque_tXml->update([
-            'importexml' => $importeXml,
-        ]);
-
         $allcheck = $r->allcheck;
         $arrcheck = json_decode($allcheck, true);
+        $nXml = 0;
         foreach ($arrcheck as $i) {
+            $nXml++;
             $metar = MetadataR::where('folioFiscal', $i)->first();
             $cheque = Cheques::find($cheque_id);
             $cheque->metadata_r()->save($metar);
         }
+
+        $cheque_tXml = Cheques::find($cheque_id);
+        $totalXml = (float)str_replace(',', '', $r->totalXml);
+        $importeXml = $cheque_tXml->importexml + $totalXml;
+        $faltaxml = $cheque_tXml->faltaxml + $nXml;
+        $cheque_tXml->update([
+            'importexml' => $importeXml,
+            'faltaxml' => $faltaxml,
+        ]);
 
         $alerta = 'Cheque vinculado exitosamente.';
         $ruta = 'cheques-transferencias';
@@ -277,11 +297,13 @@ class ChequesYTransferenciasController extends Controller
             '11' => 'Noviembre',
             '12' => 'Diciembre'
         );
+        $verificado = $r->verificado;
         $cheque_id = $r->id;
         $c = Cheques::find($cheque_id);
         $colM = $c->metadata_r;
         $n = 0;
         return view('detallesCT')
+            ->with('verificado', $verificado)
             ->with('id', $cheque_id)
             ->with('meses', $meses)
             ->with('rfc', $rfc)

@@ -34,7 +34,10 @@ use App\Models\XmlR;
                 <thead>
                     <tr class="table-primary">
                         <th class="text-center">N°</th>
-                        <th class="text-center">Desvincular CFDI's <input type="checkbox" id="allcheck" name="allcheck" /></th>
+                        @if ($verificado == 0)
+                            <th class="text-center">Desvincular CFDI's <input type="checkbox" id="allcheck"
+                                    name="allcheck" /></th>
+                        @endif
                         <th class="text-center">RFC Emisor</th>
                         <th class="text-center">Razón Social Emisor</th>
                         <th class="text-center">UUID</th>
@@ -45,7 +48,6 @@ use App\Models\XmlR;
                         <th class="text-center">Total</th>
                         <th class="text-center">Estado</th>
                         <th class="text-center">Descargar</th>
-                        <th class="text-center">Archivo</th>
                     </tr>
                 </thead>
                 <tbody class="buscar">
@@ -65,12 +67,14 @@ use App\Models\XmlR;
                         @endphp
                         <tr>
                             <td class="text-center">{{ ++$n }}</td>
-                            <td class="text-center allcheck">
-                                <div id="checkbox-group" class="checkbox-group">
-                                    <input class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"
-                                        id="allcheck" name="allcheck[]" value="{{ $folioF }}" />
-                                </div>
-                            </td>
+                            @if ($verificado == 0)
+                                <td class="text-center allcheck">
+                                    <div id="checkbox-group" class="checkbox-group">
+                                        <input class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"
+                                            id="allcheck" name="allcheck[]" value="{{ $folioF }}" />
+                                    </div>
+                                </td>
+                            @endif
                             <td class="text-center">{{ $emisorRfc }}</td>
                             <td class="text-center">{{ $emisorNombre }}</td>
                             <td class="text-center">{{ $folioF }}</td>
@@ -101,19 +105,18 @@ use App\Models\XmlR;
                                     download="{{ $folioF }}.xml">XML</a>
                                 <a class="btn btn-danger m-1" href="{{ $rutaPdf }}" target="_blank">PDF</a>
                             </td>
-                            <td class="text-center">
-                                <a href="#" class="btn btn-secondary">Subir Archivo</a>
-                            </td>
                         </tr>
                     @endforeach
                 </tbody>
             </table>
-            <div class="d-flex justify-content-center">
-                <input readonly name="cheques_id" type="hidden" value="{{ $id }}" />
-                <input readonly id="total" name="totalXml" type="hidden" value="0" />
-                <input id="vinct" type="submit" value="Desvincular Cheque/Transferencia"
-                    style="color:#0055ff; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #FFFFFF">
-            </div>
+            @if ($verificado == 0)
+                <div class="d-flex justify-content-center">
+                    <input readonly name="cheques_id" type="hidden" value="{{ $id }}" />
+                    <input readonly id="total" name="totalXml" type="hidden" value="0" />
+                    <input id="vinct" type="submit" value="Desvincular Cheque/Transferencia"
+                        style="color:#0055ff; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #FFFFFF">
+                </div>
+            @endif
         </form>
     </div>
 @endsection

@@ -59,13 +59,14 @@
             </div>
         </div>
 
-        <div class="input-group">
+        {{-- <div class="input-group">
             <span class="input-group-text">Buscar</span>
             <input id="filtrar" type="text" class="form-control" placeholder="Buscar palabra clave">
-            {{-- <a href="#bottom" class="btn btn-primary ml-2">Ir abajo</a> --}}
-        </div><br>
-    </div>
+            <a href="#bottom" class="btn btn-primary ml-2">Ir abajo</a>
+        </div>
+        <br> --}}
 
+    </div>
     <table class="table table-sm table-hover table-bordered ml-3 mr-3">
         <thead>
             <tr class="table-primary">
@@ -76,6 +77,7 @@
                 <th class="text-center">Tipo de operación</th>
                 <th class="text-center">Importe Total</th>
                 <th class="text-center">Importe CFDI</th>
+                <th class="text-center">Ajuste</th>
                 <th class="text-center">Diferencia</th>
                 <th class="text-center">Cheque / Transferencia PDF</th>
                 <th class="text-center">Acciones</th>
@@ -96,19 +98,30 @@
                     $tipoO = $i['tipoopera'];
                     $importeC = $i['importecheque'];
                     $sumaxml = $i['importexml'];
+                    $ajuste = $i['ajuste'];
                     if ($tipoO == 'Impuestos' or $tipoO == 'Parcialidad') {
                         $diferencia = 0;
                     } else {
                         $diferencia = $importeC - abs($sumaxml);
+                        $diferencia = $diferencia - $ajuste;
+                        $diferencia = number_format($diferencia, 2);
+                    }
+                    if ($diferencia != 0) {
+                        $diferenciaP = 0;
+                    } else {
+                        $diferenciaP = 1;
                     }
                     $verificado = $i['verificado'];
+                    $faltaxml = $i['faltaxml'];
                     $contabilizado = $i['conta'];
                     $pendiente = $i['pendi'];
                     $nombreCheque = $i['nombrec'];
                     if ($nombreCheque == '0') {
                         $subirArchivo = true;
+                        $nombreChequeP = 0;
                     } else {
                         $subirArchivo = false;
+                        $nombreChequeP = 1;
                     }
                     $rutaArchivo = $rutaDescarga . $nombreCheque;
                 @endphp
@@ -120,20 +133,28 @@
                     <td class="text-center">{{ $tipoO }}</td>
                     <td class="text-center">${{ number_format($importeC, 2) }}</td>
                     <td class="text-center">${{ number_format($sumaxml, 2) }}</td>
-                    <td class="text-center">${{ number_format($diferencia, 2) }}</td>
-                    @if ($nombreCheque == '0')
-                        <td class="td1 text-center"><img src="{{ asset('img/ima2.png') }}" alt=""></td>
-                    @else
-                        <td class="td1 text-center">
+                    <td class="text-center">
+                        <form action="{{ url('cheques-transferencias') }}">
+                            <input type="hidden" name="id" value="{{ $id }}">
+                            <input type="number" min="0" step="any" name="ajuste" class="mb-2" style="width: 65px">
+                            <input type="submit" value="Enviar">
+                        </form>
+                    </td>
+                    <td class="text-center">${{ $diferencia }}</td>
+                    <td class="td1 text-center">
+                        @if ($nombreCheque == '0')
+                            <img src="{{ asset('img/ima2.png') }}" alt="">
+                        @else
                             <a href="{{ $rutaArchivo }}" target="_blank">
                                 <img src="{{ asset('img/ima.png') }}" alt="">
                             </a>
-                        </td>
-                    @endif
+                        @endif
+                    </td>
                     <td class="text-center">
                         <form action="{{ url('detallesCT') }}" method="POST">
                             @csrf
                             <input type="hidden" name="id" value="{{ $id }}">
+                            <input type="hidden" name="verificado" value="{{ $verificado }}">
                             <input type="submit" value="Ver">
                         </form>
                         @if ($verificado == 0)
@@ -155,11 +176,16 @@
                         @endif
                     </td>
                     <td class="text-center">
-                        @if ($verificado == 0)
+                        @if ($diferencia != 0 or $faltaxml == 0 or $nombreCheque == '0')
+                            <img src="{{ asset('img/warning.png') }}" alt="" class="mb-2">
+                            <input type="submit" name="Pendientes" value="Pendientes"
+                                onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
+                        @elseif ($verificado == 0)
                             <form action="{{ url('cheques-transferencias') }}" method="post">
                                 @csrf
                                 <input type="hidden" id="id" name="id" value="{{ $id }}">
-                                <input type="checkbox" name="revisado" required> Revisado
+                                <input type="checkbox" name="revisado" required class="mb-2"> Revisado
+                                <br>
                                 <input type="submit" name="Aceptar" value="Aceptar">
                             </form>
                         @else
@@ -171,7 +197,7 @@
                             <form action="{{ url('cheques-transferencias') }}" method="POSt">
                                 @csrf
                                 <input type="hidden" id="id" name="id" value="{{ $id }}">
-                                <input type="checkbox" name="conta" required> Contabilizado
+                                <input type="checkbox" name="conta" required class="mb-2"> Contabilizado
                                 <input type="submit" name="Aceptar" value="Aceptar">
                             </form>
                         @elseif ($verificado == 1 and $contabilizado == 1)
@@ -195,5 +221,4 @@
             @endforeach
         </tbody>
     </table>
-
 @endsection
