@@ -50,7 +50,7 @@ use App\Models\ListaNegra;
                         <th class="text-center">RFC Emisor</th>
                         <th class="text-center">Razón Social</th>
                         <th class="text-center">Lista Negra</th>
-                        <th class="text-center">N° de XML</th>
+                        <th class="text-center">N° de CFDI's</th>
                         <th class="text-center">Total</th>
                         <th class="text-center">Detalles</th>
                     </tr>

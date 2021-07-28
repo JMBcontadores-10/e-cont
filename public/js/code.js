@@ -465,3 +465,21 @@ $('#vinpsub').on('click', function() {
         return false;
     }
 });
+
+function alertaP(a, b, c) {
+    var nl = "\r\n"
+    var msg = ''
+    if (b == 0) {
+        msg += "- No tiene CFDI's vinculados.";
+        msg += nl;
+    }
+    if (c == 0) {
+        msg += "- No tiene pdf asociado.";
+        msg += nl;
+    }
+    if (a == 0) {
+        msg += "- Existe diferencia con el importe total.";
+        msg += nl;
+    }
+    alert(msg);
+}
