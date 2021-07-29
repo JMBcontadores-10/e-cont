@@ -134,11 +134,15 @@
                     <td class="text-center">${{ number_format($importeC, 2) }}</td>
                     <td class="text-center">${{ number_format($sumaxml, 2) }}</td>
                     <td class="text-center">
-                        <form action="{{ url('cheques-transferencias') }}">
-                            <input type="hidden" name="id" value="{{ $id }}">
-                            <input type="number" min="0" step="any" name="ajuste" class="mb-2" style="width: 65px">
-                            <input type="submit" value="Enviar">
-                        </form>
+                        @if ($verificado == 0)
+                            <form action="{{ url('cheques-transferencias') }}">
+                                <input type="hidden" name="id" value="{{ $id }}">
+                                <input type="number" min="0" step="any" name="ajuste" class="mb-2" style="width: 65px">
+                                <input type="submit" value="Enviar">
+                            </form>
+                        @else
+                            <img src="{{ asset('img/veri.png') }}" alt="">
+                        @endif
                     </td>
                     <td class="text-center">${{ $diferencia }}</td>
                     <td class="td1 text-center">
