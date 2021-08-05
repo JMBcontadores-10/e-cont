@@ -44,8 +44,9 @@
         <h1>Calendario Descargas</h1>
         <br>
         <br>
-        <div id='calendar'></div>
-        <br><br>
+        <div id="calender">
+                
+        </div>
     </div>
 
     <h2 class="ml-4">Descarga</h2>
