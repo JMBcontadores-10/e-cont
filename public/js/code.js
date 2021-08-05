@@ -379,7 +379,7 @@ $('#eallpdf').change(function() {
 });
 
 $('#allcheck').change(function() {
-    $('tbody tr td[class="text-center allcheck"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    $('tbody tr td[class="text-center align-middle allcheck"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
     calcular();
 });
 

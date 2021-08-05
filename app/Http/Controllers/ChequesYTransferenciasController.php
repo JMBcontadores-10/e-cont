@@ -9,7 +9,6 @@ use App\Models\MetadataR;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Redirect;
 
 class ChequesYTransferenciasController extends Controller
 {
@@ -49,9 +48,14 @@ class ChequesYTransferenciasController extends Controller
             $fechaF = "$anio-$mes-";
             $colCheques = Cheques::where('rfc', $rfc)
                 ->where('fecha', 'like', $fechaF . '%')
-                ->orderBy('fecha', 'desc')->get();
+                ->orderBy('fecha', 'desc')
+                // ->paginate(50);
+                ->get();
         } else {
-            $colCheques = Cheques::where(['rfc' => $rfc])->orderBy('fecha', 'desc')->get();
+            $colCheques = Cheques::where(['rfc' => $rfc])
+                ->orderBy('fecha', 'desc')
+                // ->paginate(50);
+                ->get();
         }
 
         if ($r->has('revisado')) {
@@ -118,7 +122,10 @@ class ChequesYTransferenciasController extends Controller
             if ($r->has('totalXml')) {
                 $vincular = true;
                 $rfc = Auth::user()->RFC;
-                $colCheques = Cheques::where(['rfc' => $rfc])->orderBy('fecha', 'desc')->get();
+                $colCheques = Cheques::where(['rfc' => $rfc])
+                    ->where('verificado', '=', 0)
+                    ->orderBy('fecha', 'desc')
+                    ->get();
                 $totalXml = $r->totalXml;
                 $totalXml = substr($totalXml, 1);
                 $allcheck = $r->allcheck;
@@ -299,7 +306,11 @@ class ChequesYTransferenciasController extends Controller
         $verificado = $r->verificado;
         $cheque_id = $r->id;
         $c = Cheques::find($cheque_id);
-        $colM = $c->metadata_r;
+        $colM = $c->metadata_r
+            ->sortBy([
+                ['emisorRfc', 'asc'],
+                ['fechaEmision', 'desc'],
+            ]);
         $n = 0;
         return view('detallesCT')
             ->with('verificado', $verificado)
