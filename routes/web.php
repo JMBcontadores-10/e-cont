@@ -18,13 +18,16 @@ Auth::routes(['register'=>false]);
 
 // Rutas Octavio
 
+
+
 // Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
 // Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
-Route::post('/prueba', [App\Http\Controllers\Prueba::class, 'index'])->name('prueba');
+Route::get('/prueba', [App\Http\Controllers\Prueba::class, 'index'])->name('prueba');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/descargasv2', [App\Http\Controllers\DescargasControllerv2::class, 'index'])->name('descargasv2');
 Route::post('/async', [App\Http\Controllers\Async::class, 'index'])->name('async');
 Route::get('/cuentasporpagar', [App\Http\Controllers\CuentasPorPagar::class, 'index'])->name('cuentasporpagar');
+Route::get('/detalles', [App\Http\Controllers\CuentasPorPagar::class, 'detalles'])->name('detalles');
 Route::post('/detalles', [App\Http\Controllers\CuentasPorPagar::class, 'detalles'])->name('detalles');
 Route::get('/cheques-transferencias', [App\Http\Controllers\ChequesYTransferenciasController::class, 'index'])->name('cheques-transferencias');
 Route::post('/cheques-transferencias', [App\Http\Controllers\ChequesYTransferenciasController::class, 'index'])->name('cheques-transferencias');
@@ -36,10 +39,18 @@ Route::post('/detallesCT', [App\Http\Controllers\ChequesYTransferenciasControlle
 Route::post('/desvincular-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'desvincularCheque'])->name('desvincular-cheque');
 
 
-
-
 // Rutas Ana
 
 Route::get('/consultas', [App\Http\Controllers\ConsultasController::class, 'index'])->name('consultas');
+Route::get('/consulta', [App\Http\Controllers\ConsultasController::class, 'consultas'])->name('consulta');
+Route::get('/historial', [App\Http\Controllers\ConsultasController::class, 'historial'])->name('historial');
 Route::get('/volumetrico', [App\Http\Controllers\VolumetricoController::class, 'index'])->name('volumetrico');
-Route::get('/convertirXML', [App\Http\Controllers\IngresoDatosController::class, 'index']);
+Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
+Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
+
+Route::post('/consultas1', [App\Http\Controllers\ConsultasController::class, 'store'])->name('consultas1');
+// Route::post('/consultas1', [App\Http\Controllers\ConsultasController::class, 'ingreso'])->name('ingreso');
+
+Route::get('/script', [App\Http\Controllers\Scriptp::class, 'xmlLeer'])->name('xmlLeer');
+
+

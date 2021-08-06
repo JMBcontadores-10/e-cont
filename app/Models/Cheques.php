@@ -29,6 +29,7 @@ class Cheques extends Model
         'conta',
         'pendi',
         'lista',
+        'ajuste',
     ];
 
     protected $collection = 'cheques';

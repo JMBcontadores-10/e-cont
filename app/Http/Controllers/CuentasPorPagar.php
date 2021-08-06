@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\MetadataR;
-use App\Models\XmlR;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -69,13 +68,15 @@ class CuentasPorPagar extends Controller
                 ->whereIn('emisorRfc', $allch)
                 ->whereNull('cheques_id')
                 ->orderBY('emisorRfc')
-                ->orderBy('fechaEmision')
-                ->get();
+                ->orderBy('fechaEmision', 'desc')
+                ->paginate(50);
+            // ->get();
         } else {
             $colM = MetadataR::where(['receptorRfc' => $rfc, 'emisorRfc' => $emisorRfc])
                 ->whereNull('cheques_id')
-                ->orderBy('fechaEmision')
-                ->get();
+                ->orderBy('fechaEmision', 'desc')
+                ->paginate(50);
+            // ->get();
         }
 
         return view('detalles')

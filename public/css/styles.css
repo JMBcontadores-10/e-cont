@@ -244,3 +244,36 @@ h5 {
 .text-bold {
     font-weight: bold;
 }
+
+
+/* Chrome, Safari, Edge, Opera */
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+/* Firefox */
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.fabutton {
+    background-color: transparent;
+    /* Mouse pointer on hover */
+    cursor: pointer;
+    width: auto;
+    height: auto;
+}
+
+.mainbox2 {
+    width: 650px;
+}
+
+.pf {
+    font-weight: bold;
+    font-size: medium;
+}

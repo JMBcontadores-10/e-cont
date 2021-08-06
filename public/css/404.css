@@ -1,11 +1,11 @@
-/* body {
+body {
     background-color: #95c2de;
-} */
+}
 
 .mainbox {
-    background-color: #95c2de;
+    /* background-color: #dfe4e7; */
     margin: auto;
-    height: 600px;
+    height: 630px;
     width: 600px;
     position: relative;
     border-radius: 10px;

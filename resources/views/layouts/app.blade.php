@@ -14,6 +14,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/code.js')}}" defer></script>
     <script src="{{ asset('js/numeros.js')}}" defer></script>
+    <script src="https://kit.fontawesome.com/4b9ba14b0f.js" crossorigin="anonymous"></script>
     {{-- <script src="{{ asset('js/jquery-3.1.1.min.js')}}" defer></script> --}}
 
     <!-- Fonts -->
@@ -33,7 +34,6 @@
     <script src="{{ asset ('js/moment.min.js')}}" defer></script>
     <script src="{{ asset ('js/fullcalendar.js')}}" defer></script>
     <script src="{{ asset ('js/es.js')}}"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="{{ asset ('css/toastr.min.css')}}" rel="stylesheet" />
 

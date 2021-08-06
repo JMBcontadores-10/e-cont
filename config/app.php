@@ -227,9 +227,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'CFDItoJSON' => PhpCfdi\CfdiToJson\JsonConverter::class,
-        'Cleaner' => PhpCfdi\CfdiCleaner\Cleaner::class,
-        'MongoDB' => Jenssegers\Mongodb\MongodbServiceProvider::class,
+
     ],
 
 ];

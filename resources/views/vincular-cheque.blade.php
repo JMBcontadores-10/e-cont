@@ -2,6 +2,7 @@
 
 <head>
     <title>Cheques y Transferencias Contarapp</title>
+    
 </head>
 
 @section('content')
@@ -39,40 +40,89 @@
                         @csrf
                         <input type="hidden" name="id" value="{{ $id }}">
                         <input type="hidden" name="nombrec" value="{{ $nombrec }}">
-                        Seleccione el tipo: &nbsp;
-                        <select name="tipo">
-                            <option {{ $tipo == 'Cheque' ? 'selected' : '' }}>Cheque</option>
-                            <option {{ $tipo == 'Transferencia' ? 'selected' : '' }}>Transferencia</option>
-                            <option {{ $tipo == 'Domiciliación' ? 'selected' : '' }}>Domiciliación</option>
-                            <option {{ $tipo == 'Efectivo' ? 'selected' : '' }}>Efectivo</option>
-                        </select>
-                        <br><br>#Cheque/#Transferencia: <input type=text required name="numCheque"
-                            value="{{ $numCheque }}">
-                        <br><br>Fecha <input type=date required name="fechaCheque" value="{{ $fechaCheque }}">
-                        <br><br>Importe Cheque/Transferencia: <input id="number" required name="importeCheque"
-                            value="{{ $importeCheque }}">
-                        <br><br>Importe Total: <input type=text required readonly name="importeT"
-                            value="{{ $importeT }}">
-                        <br><br>Beneficiario: <input type=text required name="beneficiario" value="{{ $beneficiario }}">
-                        <br><br>Tipo de operación: &nbsp;
-                        <select name="tipoOperacion">
-                            <option {{ $tipoOperacion == 'Impuestos' ? 'selected' : '' }}>Impuestos</option>
-                            <option {{ $tipoOperacion == 'Nómina' ? 'selected' : '' }}>Nómina</option>
-                            <option {{ $tipoOperacion == 'Gasto y/o compra' ? 'selected' : '' }}>Gasto y/o compra
-                            </option>
-                            <option {{ $tipoOperacion == 'Sin CFDI' ? 'selected' : '' }}>Sin CFDI</option>
-                            <option {{ $tipoOperacion == 'Parcialidad' ? 'selected' : '' }}>Parcialidad</option>
-                            <option {{ $tipoOperacion == 'Otro' ? 'selected' : '' }}>Otro</option>
-                        </select>
-                        <br>
-                        <br>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Seleccione el tipo:</p>
+                            </div>
+                            <div class="col-4">
+                                <select name="tipo" class="form-control">
+                                    <option {{ $tipo == 'Cheque' ? 'selected' : '' }}>Cheque</option>
+                                    <option {{ $tipo == 'Transferencia' ? 'selected' : '' }}>Transferencia</option>
+                                    <option {{ $tipo == 'Domiciliación' ? 'selected' : '' }}>Domiciliación</option>
+                                    <option {{ $tipo == 'Efectivo' ? 'selected' : '' }}>Efectivo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">#Cheque/#Transferencia:</p>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" type=text required name="numCheque"
+                                    value="{{ $numCheque }}">
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Fecha:</p>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" type=date required name="fechaCheque"
+                                    value="{{ $fechaCheque }}">
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Importe Cheque/Transferencia:</p>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" id="number" required name="importeCheque"
+                                    value="{{ $importeCheque }}">
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Importe Total:</p>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" type=text required readonly name="importeT"
+                                    value="{{ $importeT }}">
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Beneficiario:</p>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" type=text required name="beneficiario"
+                                    value="{{ $beneficiario }}">
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Tipo de operación:</p>
+                            </div>
+                            <div class="col-4">
+                                <select class="form-control" name="tipoOperacion">
+                                    <option {{ $tipoOperacion == 'Impuestos' ? 'selected' : '' }}>Impuestos</option>
+                                    <option {{ $tipoOperacion == 'Nómina' ? 'selected' : '' }}>Nómina</option>
+                                    <option {{ $tipoOperacion == 'Gasto y/o compra' ? 'selected' : '' }}>Gasto y/o compra
+                                    </option>
+                                    <option {{ $tipoOperacion == 'Sin CFDI' ? 'selected' : '' }}>Sin CFDI</option>
+                                    <option {{ $tipoOperacion == 'Parcialidad' ? 'selected' : '' }}>Parcialidad</option>
+                                    <option {{ $tipoOperacion == 'Otro' ? 'selected' : '' }}>Otro</option>
+                                </select>
+                            </div>
+                        </div>
                         <div id="{{ !$subirArchivo ? 'subir-archivo' : '' }}">
+                            <br>
                             <input type="hidden" name="MAX_FILE_SIZE" value="512000" />
-                            <p> Subir Archivo (solo PDF): <input name="subir_archivo" type="file" accept=".pdf" />
+                            <p class="pf"> Subir Archivo (solo PDF):
+                                <input name="subir_archivo" type="file" accept=".pdf" />
                             </p>
                         </div>
-                        <button class="btn btn-linkj">Registrar Cheque/Transferencia</button>
-
+                        <br>
+                        <button class="btn btn-linkj">Actualizar Cheque/Transferencia</button>
                     </form>
                 </div>
             @else
@@ -82,10 +132,11 @@
                             @csrf
                             <label for="selectCheque" class="text-bold">Selecciona un Cheque/Transferencia previo:</label>
                             <select name="selectCheque" id="selectCheque" class="ml-2">
-                                <option value="0">#Fecha - Beneficiario - Monto</option>
+                                <option value="0">#Fecha - #Cheque - Beneficiario - Monto</option>
                                 @foreach ($colCheques as $i)
                                     <option value="{{ $i->_id }}">
-                                        {{ $i->fecha }} - {{ $i->Beneficiario }} - ${{ $i->importecheque }}
+                                        {{ $i->fecha }} - {{ $i->numcheque }} - {{ $i->Beneficiario }} -
+                                        ${{ $i->importecheque }}
                                     </option>
                                 @endforeach
                             </select>
@@ -106,32 +157,82 @@
                     <h1 style="color:#035CAB">Añadir Cheque/Transferencia</h1><br>
                     <form enctype="multipart/form-data" action="{{ url('archivo-pagar') }}" method="POST">
                         @csrf
-                        Seleccione el tipo: &nbsp;
-                        <select name="tipo">
-                            <option>Cheque</option>
-                            <option>Transferencia</option>
-                            <option>Domiciliación</option>
-                            <option>Efectivo</option>
-                        </select>
-                        <br><br>#Cheque/#Transferencia: <input type=text required name="numCheque">
-                        <br><br>Fecha <input type=date required name="fechaCheque">
-                        <br><br>Importe Cheque/Transferencia: <input id="number" required name="importeCheque">
-                        <br><br>Importe Total: <input type=text required readonly name="importeT"
-                            {{-- value="{{ $vincular ? $totalXml : '0' }}" --}}
-                            value="0">
-                        <br><br>Beneficiario: <input type=text required name=" beneficiario">
-                        <br><br>Tipo de operación: &nbsp;
-                        <select name="tipoOperacion">
-                            <option>Impuestos</option>
-                            <option>Nómina</option>
-                            <option>Gasto y/o compra</option>
-                            <option>Sin CFDI</option>
-                            <option>Parcialidad</option>
-                            <option>Otro</option>
-                        </select>
-                        <input type="hidden" name="MAX_FILE_SIZE" value="512000" />
-                        <br><br>
-                        <p> Subir Archivo (solo PDF): <input name="subir_archivo" type="file" accept=".pdf" /></p><br>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Seleccione el tipo:</p>
+                            </div>
+                            <div class="col-4">
+                                <select name="tipo" class="form-control">
+                                    <option>Cheque</option>
+                                    <option>Transferencia</option>
+                                    <option>Domiciliación</option>
+                                    <option>Efectivo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">#Cheque/#Transferencia:</p>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" type=text required name="numCheque">
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Fecha:</p>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" type=date required name="fechaCheque">
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Importe Cheque/Transferencia:</p>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" id="number" required name="importeCheque">
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Importe Total:</p>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" type=text required readonly name="importeT"
+                                    {{-- value="{{ $vincular ? $totalXml : '0' }}" --}} value="0">
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Beneficiario:</p>
+                            </div>
+                            <div class="col-4">
+                                <input class="form-control" type=text required name="beneficiario">
+                            </div>
+                        </div>
+                        <div class="mainbox2 row">
+                            <div class="col-6 d-flex justify-content-end mt-2">
+                                <p class="pf">Tipo de operación:</p>
+                            </div>
+                            <div class="col-4">
+                                <select class="form-control" name="tipoOperacion">
+                                    <option>Impuestos</option>
+                                    <option>Nómina</option>
+                                    <option>Gasto y/o compra</option>
+                                    <option>Sin CFDI</option>
+                                    <option>Parcialidad</option>
+                                    <option>Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="mainbox2 row justify-content-center mt-1">
+                            <input type="hidden" name="MAX_FILE_SIZE" value="512000" />
+                            <p class="pf mr-2">Subir Archivo (solo PDF):</p>
+                            <input name="subir_archivo" type="file" accept=".pdf" />
+                        </div>
+                        <br>
                         <button class="btn btn-linkj">Registrar Cheque/Transferencia</button>
                     </form>
                 </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\XmlR;
+use App\Models\XmlE;
 use DirectoryIterator;
 use App\Models\MetadataE;
 use App\Models\MetadataR;
@@ -17,6 +18,8 @@ use App\Http\Classes\BusquedaRecibidos;
 use App\Http\Classes\DescargaAsincrona;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Classes\DescargaMasivaCfdi;
+use Illuminate\Support\Facades\Log;
+use PhpCfdi\CfdiCleaner\Cleaner;
 
 class Async extends Controller
 {
@@ -32,9 +35,11 @@ class Async extends Controller
 
         $rutaApp = "C:/laragon/www/contarappv1/public";
         $dc = Storage::url(Auth::user()->dircer);
-        $dircer = $rutaApp . $dc;
+        $dircer = "storage/" . Auth::user()->dircer;
+        // $dircer = $rutaApp . $dc;
         $dk = Storage::url(Auth::user()->dirkey);
-        $dirkey = $rutaApp . $dk;
+        $dirkey = "storage/" . Auth::user()->dirkey;
+        // $dirkey = $rutaApp . $dk;
         $pwd = Auth::user()->pass;
         $rfc = Auth::user()->RFC;
         $meses = array(
@@ -84,6 +89,7 @@ class Async extends Controller
                 }
 
                 if (!empty($dircer) && !empty($dirkey) && !empty($pwd)) {
+
 
                     // preparar certificado para inicio de sesion
                     $certificado = new UtilCertificado();
@@ -185,6 +191,8 @@ class Async extends Controller
                 }
             } elseif ($accion == 'descargar-recibidos') {
 
+                $tipoF = "recibidos";
+
                 $anio = $_POST['anio'];
                 $mes = $_POST['mes'];
                 $dia = $_POST['dia'];
@@ -274,13 +282,15 @@ class Async extends Controller
                     'sesion' => $descargaCfdi->obtenerSesion()
                 ));
 
-                $this->filtroArchivos($rutaDescarga);
+                $this->filtroArchivos($rutaDescarga, $tipoF);
                 $fecha = "$anio-$mes-$dia";
                 $totalDR = $descarga->totalDescargados();
                 $totalER = $descarga->totalErrores();
                 $this->updateRecibidos($rfc, $fecha, $totalDR, $totalER);
             } elseif ($accion == 'descargar-emitidos') {
 
+                // variable
+                $tipoF = "emitidos";
                 $anio = $_POST['anio_i'];
                 $mes = $_POST['mes_i'];
                 $dia = $_POST['dia_i'];
@@ -374,7 +384,7 @@ class Async extends Controller
                     'sesion' => $descargaCfdi->obtenerSesion()
                 ));
 
-                $this->filtroArchivos($rutaDescarga);
+                $this->filtroArchivos($rutaDescarga, $tipoF);
                 $fecha = "$anio-$mes-$dia";
                 $fechaF = "$aniof-$mesf-$diaf";
                 $totalDE = $descarga->totalDescargados();
@@ -384,7 +394,7 @@ class Async extends Controller
         }
     }
 
-    public function filtroArchivos($rutaDescarga)
+    public function filtroArchivos($rutaDescarga, $tipoF)
     {
         $dir = new DirectoryIterator($rutaDescarga);
         foreach ($dir as $fileinfo) {
@@ -392,14 +402,36 @@ class Async extends Controller
             $filePathname = $fileinfo->getPathname();
             $fileSize = filesize($filePathname);
             $fileExt = $fileinfo->getExtension();
+            $fileBaseName = $fileinfo->getBasename(".$fileExt");
             $rutaGuardar = dirname(dirname($filePathname)) . "/";
+
             if (!$fileinfo->isDot()) {
                 if ($fileSize > 2000) {
                     if ($fileExt == 'pdf') {
                         rename($filePathname, $rutaGuardar . 'PDF/' . $fileName);
                     } else {
-                        rename($filePathname, $rutaGuardar . 'XML/' . $fileName);
+                        $var = "$rutaGuardar"."XML/$fileName";
+                        rename($filePathname, $var);
+                        // // // prueba de cfditojson
+                        $contents = file_get_contents($var);
+                        $cleaner = Cleaner::staticClean($contents);
+                        $json = JsonConverter::convertToJson($cleaner);
+                        $array = json_decode($json, true);
 
+                        if ($tipoF == 'recibidos') {
+
+                            XmlR::where(['UUID' => $fileBaseName])
+                                ->update(
+                                    $array,
+                                    ['upsert' => true]
+                                );
+                        } else {
+                            XmlE::where(['UUID' => $fileBaseName])
+                                ->update(
+                                    $array,
+                                    ['upsert' => true]
+                                );
+                        }
                     }
                 }
             }
@@ -514,15 +546,6 @@ class Async extends Controller
         // return floatval($val);
     }
 
-    public function xml_json($rutaXml, $fileBaseName)
-    {
-        $fileContents = file_get_contents($rutaXml);
-        $json = JsonConverter::convertToJson($fileContents);
-        $jsonArr = json_decode($json, true);
-        XmlR::where(['UUID' => $fileBaseName])
-            ->update(
-                [$jsonArr],
-                ['upsert' => true]
-            );
-    }
+
+
 }

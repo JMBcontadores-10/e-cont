@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cheques;
-use App\Models\MetadataR;
 use DirectoryIterator;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class Prueba extends Controller
 {

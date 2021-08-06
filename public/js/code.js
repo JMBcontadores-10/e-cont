@@ -379,7 +379,7 @@ $('#eallpdf').change(function() {
 });
 
 $('#allcheck').change(function() {
-    $('tbody tr td[class="text-center allcheck"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    $('tbody tr td[class="text-center align-middle allcheck"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
     calcular();
 });
 
@@ -426,7 +426,7 @@ $('#alerta-archivo-no').on('click', function() {
 $('#vinct').on('click', function() {
     var lenght = $('div.checkbox-group :checkbox:checked').length
     if (!lenght > 0) {
-        alert('Favor de seleccionar al menos un XML.')
+        alert('Favor de seleccionar al menos un CFDI.')
         return false;
     }
 });
@@ -465,3 +465,21 @@ $('#vinpsub').on('click', function() {
         return false;
     }
 });
+
+function alertaP(a, b, c) {
+    var nl = "\r\n"
+    var msg = ''
+    if (b == 0) {
+        msg += "- No tiene CFDI's vinculados.";
+        msg += nl;
+    }
+    if (c == 0) {
+        msg += "- No tiene pdf asociado.";
+        msg += nl;
+    }
+    if (a == 0) {
+        msg += "- Existe diferencia con el importe total.";
+        msg += nl;
+    }
+    alert(msg);
+}
