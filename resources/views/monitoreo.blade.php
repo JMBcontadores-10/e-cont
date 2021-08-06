@@ -13,7 +13,7 @@
             << Regresar</a>
     </div>
     <div class="float-md-right">
-        <p class="label2">Cuentas por pagar</p>
+        <p class="label2">Monitoreo de Facturación</p>
     </div>
     <br>
     <hr style="border-color:black; width:100%;">
@@ -62,6 +62,8 @@
         @endphp</h1>
     </div>
     <br>
+    <h1>Exportar</h1>
+    <br>
     <div class="row">
         <a class="" href="{{ url('/') }}">
             <img src="img/pdf.png" width="30px">
@@ -94,11 +96,11 @@
             </table>
 
         </div>
-        <div class="col-5">
+        <div class="col-1">
 
         </div>
 
-        <div class="col-5">
+        <div class="col-9">
             <table class="table table-striped">
                 <tr>
                     <th>RFC</th>
@@ -109,6 +111,7 @@
                 </tr>
                 @foreach ($col as $i)
                 <tr>
+
                     <td>{{$i['receptorRfc']}}</td>
                     <td>{{$i['receptorNombre']}}</td>
                     @php
@@ -130,7 +133,7 @@
                         $sum = $sum + $i['total'];
                     @endphp
                     <td></td>
-                    <td>{{$sum}}</td>
+                    <td>$ {{$sum}}</td>
                     <td>
                         <form action="{{ route('detallesfactura')}}" method="POST">
                             @csrf
