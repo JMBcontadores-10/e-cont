@@ -41,64 +41,64 @@ use App\Models\ListaNegra;
             <input id="filtrar" type="text" class="form-control" placeholder="Buscar proveedor">
             <a id="vinp" href="#bottom" class="btn btn-primary ml-2">Ir a vincular proveedores</a>
         </div><br>
-        <form action="{{ url('detalles') }}" method="POST">
+        <form action="{{ url('detalles') }}" method="GET">
             <table class="table table-sm table-hover table-bordered">
                 <thead>
                     <tr class="table-primary">
-                        <th class="text-center">N°</th>
-                        <th id="vinp" class="text-center">Vincular Proveedores</th>
-                        <th class="text-center">RFC Emisor</th>
-                        <th class="text-center">Razón Social</th>
-                        <th class="text-center">Lista Negra</th>
-                        <th class="text-center">N° de XML</th>
-                        <th class="text-center">Total</th>
-                        <th class="text-center">Detalles</th>
+                        <th class="text-center align-middle">N°</th>
+                        <th id="vinp" class="text-center align-middle">Vincular Proveedores</th>
+                        <th class="text-center align-middle">RFC Emisor</th>
+                        <th class="text-center align-middle">Razón Social</th>
+                        <th class="text-center align-middle">Lista Negra</th>
+                        <th class="text-center align-middle">N° de CFDI's</th>
+                        <th class="text-center align-middle">Total</th>
+                        <th class="text-center align-middle">Detalles</th>
                     </tr>
                 </thead>
                 <tbody class="buscar">
                     @foreach ($col as $i)
                         <tr>
-                            <td class="text-center">{{ ++$n }}</td>
-                            <td id="vinp" class="text-center">
+                            <td class="text-center align-middle">{{ ++$n }}</td>
+                            <td id="vinp" class="text-center align-middle">
                                 <div id="checkbox-group" class="checkbox-group">
                                     <input class="mis-checkboxes" type="checkbox" id="allcheck" name="allcheck[]"
                                         value="{{ $i['emisorRfc'] }}" />
                                 </div>
                             </td>
-                            <td class="text-center">{{ $i['emisorRfc'] }}</td>
-                            <td>{{ $i['emisorNombre'] }}</td>
-                            @php
-                                $colLN = ListaNegra::where(['RFC' => $i['emisorRfc']]);
-                                $cget = $colLN->get()->first();
-                            @endphp
-                            @if ($cget == null)
-                                <td class="td1 text-center"><img src="{{ asset('img/ima.png') }}" alt=""></td>
+                            <td class="text-center align-middle">{{ $i['emisorRfc'] }}</td>
+                            <td class="align-middle">{{ $i['emisorNombre'] }}</td>
+                            @if (!DB::collection('lista_negra')->select('RFC')->where(['RFC' => $i['emisorRfc']])->exists())
+                                <td class="td1 text-center align-middle"><img src="{{ asset('img/ima.png') }}" alt="">
+                                </td>
                             @else
-                                <td class="td1 text-center"><img src="{{ asset('img/ima2.png') }}" alt=""></td>
+                                <td class="td1 text-center align-middle"><img src="{{ asset('img/ima2.png') }}" alt="">
+                                </td>
                             @endif
                             @php
                                 $sum = 0;
                                 $nXml = 0;
-                                $colT = MetadataR::where(['receptorRfc' => $rfc, 'emisorRfc' => $i['emisorRfc']])
+                                $colT = DB::collection('metadata_r')
+                                    ->select('total', 'efecto')
+                                    ->where('receptorRfc', $rfc)
+                                    ->where('emisorRfc', $i['emisorRfc'])
                                     ->whereNull('cheques_id')
-                                    ->orderBy('emisorNombre', 'asc')
                                     ->get();
+                                $nXml = $colT->count();
                                 foreach ($colT as $v) {
-                                    $var = (float) $v->total;
-                                    if ($v->efecto == 'Egreso') {
+                                    $var = (float) $v['total'];
+                                    if ($v['efecto'] == 'Egreso') {
                                         $var = -1 * abs($var);
                                     }
                                     $sum = $sum + $var;
-                                    $nXml++;
                                 }
                                 $tXml = $tXml + $nXml;
                                 $tTabla = $tTabla + $sum;
                             @endphp
-                            <td class="text-center">{{ $nXml }}</td>
-                            <td class="text-center">${{ number_format($sum, 2) }}</td>
-                            <td class="text-center">
-                                <form action="detalles" method="POST">
-                                    @csrf
+                            <td class="text-center align-middle">{{ $nXml }}</td>
+                            <td class="text-center align-middle">${{ number_format($sum, 2) }}</td>
+                            <td class="text-center align-middle">
+                                <form action="detalles" method="GET">
+                                    {{-- @csrf --}}
                                     <input type="hidden" name="emisorRfc" value="{{ $i['emisorRfc'] }}">
                                     <input type="hidden" name="emisorNombre" value="{{ $i['emisorNombre'] }}">
                                     <input type=submit value=Ver>
@@ -111,7 +111,7 @@ use App\Models\ListaNegra;
                         <td></td>
                         <td></td>
                         <td id="vinp"></td>
-                        <td class="text-bold" align="right">Total:</td>
+                        <td class="text-bold " align="right">Total:</td>
                         <td class="text-center text-bold">{{ $tXml }}</td>
                         <td id="bottom" class="text-center text-bold">${{ number_format($tTabla, 2) }}</td>
                     </tr>
