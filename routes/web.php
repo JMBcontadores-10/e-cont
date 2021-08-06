@@ -19,6 +19,7 @@ Auth::routes(['register'=>false]);
 // Rutas Octavio
 
 
+
 // Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
 // Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
 Route::get('/prueba', [App\Http\Controllers\Prueba::class, 'index'])->name('prueba');
@@ -46,7 +47,10 @@ Route::get('/historial', [App\Http\Controllers\ConsultasController::class, 'hist
 Route::get('/volumetrico', [App\Http\Controllers\VolumetricoController::class, 'index'])->name('volumetrico');
 Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
 Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
-// Auth::routes();
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/consultas1', [App\Http\Controllers\ConsultasController::class, 'store'])->name('consultas1');
+// Route::post('/consultas1', [App\Http\Controllers\ConsultasController::class, 'ingreso'])->name('ingreso');
+
+Route::get('/script', [App\Http\Controllers\Scriptp::class, 'xmlLeer'])->name('xmlLeer');
+
 

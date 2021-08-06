@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MetadataE;
+use DateTimeZone;
 
 class MonitoreoController extends Controller
 {
@@ -16,8 +17,12 @@ class MonitoreoController extends Controller
 
   public function index()
   {
+
+    date_default_timezone_set("America/Mexico_City");
     $hoy = date("d-M-Y");
+    dd($hoy);
     $ayer = date("d-M-Y", strtotime($hoy."- 1 days"));
+
     $rfc = Auth::user()->RFC;
     $n=0;
     $tXml=0;
@@ -31,7 +36,11 @@ class MonitoreoController extends Controller
         ->groupBy('receptorRfc', 'receptorNombre')
         ->orderBy('receptorRfc', 'asc')
         ->get();
-  
+
+        foreach($col as $i){
+            $nXml++;
+        }
+
 
     return view('monitoreo')
         ->with('n', $n)
@@ -39,8 +48,8 @@ class MonitoreoController extends Controller
         ->with('tTabla', $tTabla)
         ->with('rfc', $rfc)
         ->with('col', $col);
-    
-    
+
+
   }
 
   public function detallesfactura(Request $req)
@@ -79,4 +88,5 @@ class MonitoreoController extends Controller
             ->with('receptorRfc', $receptorRfc)
             ->with('receptorNombre', $receptorNombre);
     }
+
 }

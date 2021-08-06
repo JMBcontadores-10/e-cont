@@ -41,7 +41,6 @@ class ChequesYTransferenciasController extends Controller
         $n = 0;
         $rutaDescarga = "storage/contarappv1_descargas/$rfc/$anio/Cheques_Transferencias/";
 
-
         if ($r->has('mes')) {
             $mes = $r->mes;
             $anio = $r->anio;

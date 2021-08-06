@@ -53,7 +53,7 @@
                 &nbsp;<input type="date" name="id2" min=2020-01-01 required>
                 <br><br><input type="submit" value="Enviar" style="color:white; BORDER : #0055FF 1px solid; FONT-SIZE:13pt; background-color: #0055ff;">
               </div>
-       
+
           <div class="col-8">
 
            <br>
@@ -62,28 +62,36 @@
             <div id="calender"></div>
 
             {{-- aqui falta completar --}}
-            {{-- <div class="modal fade" id="saveEventModal" tabindex="-1" aria-labelledby="exampleModal">
+            <div class="modal fade" id="saveEventModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title"></h5>
-                                <button type="button" class="close" data-dismiss="modal" >
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                         </div>
+
                         <div class="modal-body">
+
+                            <button id="removeEvent" class="btn btn-sm btn-danger float-right"><i class="fa fa-trash"></i></button>
+                            <br>
+
+                            <label class="d-block"><input type="checkbox" id="allDay">A partir de:</label>
+                            <input type="time" id="time" class="form-control mb-3 d-none">
 
                             <input type="text" id="title" class="form-control">
                             <textarea id="content" class="form-control"></textarea>
                         </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                            
+
                             <button id="addEvent" class="btn btn-success"><i class="fa fa-plus"></i>Agregar</button>
                         </div>
                     </div>
                 </div>
-            </div> --}}
+            </div>
     </div>
 </div>
       </div>
