@@ -37,7 +37,7 @@ class MonitoreoController extends Controller
     $fecha2 = $fechaF."T23:59:59";
 
     date_default_timezone_set("America/Mexico_City");
-    $hoy = date("d-M-Y");
+    $hoy = date("d-M-Y");<<<<<<< monitoreo
 
     $ayer = date("d-M-Y", strtotime($hoy."- 1 days"));
 
