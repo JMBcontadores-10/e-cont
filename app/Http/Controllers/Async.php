@@ -398,7 +398,6 @@ class Async extends Controller
     {
         $dir = new DirectoryIterator($rutaDescarga);
         foreach ($dir as $fileinfo) {
-            // $fileBaseName = $fileinfo->getBasename(.$fileExt);
             $fileName = $fileinfo->getFilename();
             $filePathname = $fileinfo->getPathname();
             $fileSize = filesize($filePathname);
@@ -423,13 +422,13 @@ class Async extends Controller
 
                             XmlR::where(['UUID' => $fileBaseName])
                                 ->update(
-                                    [$array],
+                                    $array,
                                     ['upsert' => true]
                                 );
                         } else {
                             XmlE::where(['UUID' => $fileBaseName])
                                 ->update(
-                                    [$array],
+                                    $array,
                                     ['upsert' => true]
                                 );
                         }

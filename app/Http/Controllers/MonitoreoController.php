@@ -20,7 +20,6 @@ class MonitoreoController extends Controller
 
     date_default_timezone_set("America/Mexico_City");
     $hoy = date("d-M-Y");
-    dd($hoy);
     $ayer = date("d-M-Y", strtotime($hoy."- 1 days"));
 
     $rfc = Auth::user()->RFC;
