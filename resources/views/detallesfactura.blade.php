@@ -3,6 +3,7 @@
 @php
 use App\Models\MetadataR;
 use App\Models\XmlR;
+use App\Models\XmlE;
 @endphp
 
 <head>
@@ -12,17 +13,18 @@ use App\Models\XmlR;
 @section('content')
     <div class="container">
         <div class="float-md-left">
-            <a class="b3" href="{{ url()->previous() }}">
+            <a class="b3" href="{{ url('/') }}">
                 << Regresar</a>
         </div>
         <div class="float-md-right">
-            <p class="label2">Descargas</p>
+            <p class="label2">Facturas</p>
         </div>
         <br>
         <hr style="border-color:black; width:100%;">
         <div class="justify-content-start">
             <label class="label1" style="font-weight: bold">Facturas de</label>
             <h1>{{$receptorNombre}}</h1>
+            <h1>{{$receptorRfc}}</h1>
             <hr style="border-color:black; width:100%;">
         </div>
 
@@ -52,16 +54,35 @@ use App\Models\XmlR;
                 @foreach ($colF as $te)
                 <tr>
                     <td>{{$te['estado']}}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    @php
 
+                    $fecha = $te['fechaCertificacion'];
+                    $fech = substr($fecha,0, 10);
+                    $folio = $te['folioFiscal'];
+
+                    $colD = XmlE::where('UUID', $folio)
+                          ->get();
+
+                    foreach($colD as $d){
+                        $serie = $d['Serie'];
+                        // $folios = $d['Folio'];
+                        $lugare = $d['LugarExpedicion'];
+                        $formap = $d['FormaPago'];
+                        $tipoc = $d['TipoDeComprobante'];
+                    }
+                    @endphp
+                    <td></td>
+                    <td>{{$fech}}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{$te['folioFiscal']}}</td>
+                    <td></td>
+                    <td>{{$te['receptorRfc']}}</td>
+                    <td>{{$te['receptorNombre']}}</td>
+                    <td>${{$te['total']}}</td>
+                    <td></td>
+                    <td></td>
                 </tr>
-
                 @endforeach
             </tbody>
         </table>

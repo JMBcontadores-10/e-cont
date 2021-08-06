@@ -32,30 +32,30 @@ class Scriptp extends Controller
         $num = 0;
         $rfcs = [
             'AHF060131G59',
-            'AFU1809135Y4',
-            'AIJ161001UD1',
-            'AAE160217C36',
-            'CDI1801116Y9',
-            'COB191129AZ2',
-            'DOT1911294F3',
-            'DRO191104EZ0',
-            'DRO191129DK5',
-            'ERO1911044L4',
-            // // 'PERE9308105X4',
-            'FGA980316918',
-            'GPA161202UG8',
-            'GEM190507UW8',
-            'GPR020411182',
-            'HRU121221SC2',
-            'IAB0210236I7',
-            'JQU191009699',
-            'JCO171102SI9',
-            'MEN171108IG6',
-            'MAR191104R53',
-            'MCA130429FM8',
-            'MCA130827V4A',
-            // 'MOP18022474A',
-            'MOBJ8502058A4'
+            // 'AFU1809135Y4',
+            // 'AIJ161001UD1',
+            // 'AAE160217C36',
+            // 'CDI1801116Y9',
+            // 'COB191129AZ2',
+            // 'DOT1911294F3',
+            // 'DRO191104EZ0',
+            // 'DRO191129DK5',
+            // 'ERO1911044L4',
+            // // // 'PERE9308105X4',
+            // 'FGA980316918',
+            // 'GPA161202UG8',
+            // 'GEM190507UW8',
+            // 'GPR020411182',
+            // 'HRU121221SC2',
+            // 'IAB0210236I7',
+            // 'JQU191009699',
+            // 'JCO171102SI9',
+            // 'MEN171108IG6',
+            // 'MAR191104R53',
+            // 'MCA130429FM8',
+            // 'MCA130827V4A',
+            // // 'MOP18022474A',
+            // 'MOBJ8502058A4'
             // 'PEM180224742',
             // 'PEMJ7110258J3',
             // 'PML170329AZ9',
@@ -88,14 +88,14 @@ class Scriptp extends Controller
         ];
         foreach ($rfcs as $e) {
             $meses = [
-                '1.Enero',
-                '2.Febrero',
-                '3.Marzo',
-                '4.Abril',
-                '5.Mayo',
-                '6.Junio',
-                '7.Julio',
-                // '8.Agosto',
+                // '1.Enero',
+                // '2.Febrero',
+                // '3.Marzo',
+                // '4.Abril',
+                // '5.Mayo',
+                // '6.Junio',
+                // '7.Julio',
+                '8.Agosto',
                 // '9.Septiembre',
                 // '10.Octubre',
                 // '11.Noviembre',
@@ -104,7 +104,7 @@ class Scriptp extends Controller
             foreach ($meses as $m) {
                 $rutas = [
                     'Emitidos',
-                    'Recibidos'
+                    // 'Recibidos'
                 ];
                 foreach ($rutas as $r) {
                     $num++;
