@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MetadataE;
 use DateTimeZone;
+use DateTime;
+use DateInterval;
 
 class MonitoreoController extends Controller
 {
@@ -17,10 +19,26 @@ class MonitoreoController extends Controller
 
   public function index()
   {
+    $dtz= new DateTimeZone("America/Mexico_City");
+    $dt = new DateTime("now", $dtz);
+
+    if(isset($argv[1])){
+        $dt->sub(new DateInterval($argv[1]));
+
+    } else {
+        $dt-> sub(new DateInterval('P1D'));
+    }
+
+    $anio = $dt->format('Y');
+    $mes = $dt->format('m');
+    $dia= $dt->format('d');
+    $fechaF = "$anio-$mes-$dia";
+    $fecha1 = $fechaF."T00:00:00";
+    $fecha2 = $fechaF."T23:59:59";
 
     date_default_timezone_set("America/Mexico_City");
     $hoy = date("d-M-Y");
-    dd($hoy);
+
     $ayer = date("d-M-Y", strtotime($hoy."- 1 days"));
 
     $rfc = Auth::user()->RFC;
@@ -32,7 +50,8 @@ class MonitoreoController extends Controller
 
     $col = DB::table('metadata_e')
         ->select('emisorRfc', 'emisorNombre', 'receptorNombre', 'receptorRfc','total', 'fechaEmision')
-        ->where('emisorRfc',$rfc, 'fechaEmision', $ayer)
+        ->where('emisorRfc',$rfc)
+        ->whereBetween('fechaEmision', array($fecha1,$fecha2))
         ->groupBy('receptorRfc', 'receptorNombre')
         ->orderBy('receptorRfc', 'asc')
         ->get();
@@ -40,7 +59,6 @@ class MonitoreoController extends Controller
         foreach($col as $i){
             $nXml++;
         }
-
 
     return view('monitoreo')
         ->with('n', $n)
