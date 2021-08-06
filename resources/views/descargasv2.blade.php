@@ -102,8 +102,9 @@
                     </div>
                     <br>
                     <div class="text-right">
-                        <a href="#" class="btn btn-primary excelR-export"
-                            download="{{ $rfc }}_{{ $diaDescarga }}_cfdi_recibidos.xls">Exportar a Excel</a>
+                        <i id="loading" class="fas fa-2x fa-spinner fa-pulse mr-3"></i>
+                        {{-- <a href="#" class="btn btn-primary excelR-export"
+                            download="{{ $rfc }}_{{ $diaDescarga }}_cfdi_recibidos.xls">Exportar a Excel</a> --}}
                         <button id="bottomR" type="submit" class="btn btn-success">Descargar seleccionados</button>
                     </div>
                 </form>
@@ -143,8 +144,9 @@
                     </div>
                     <br>
                     <div class="text-right">
-                        <a href="#" class="btn btn-primary excelE-export"
-                            download="{{ $rfc }}_{{ $diaDescarga }}_cfdi_emitidos.xls">Exportar a Excel</a>
+                        <i id="loadingE" class="fas fa-2x fa-spinner fa-pulse mr-3"></i>
+                        {{-- <a href="#" class="btn btn-primary excelE-export"
+                            download="{{ $rfc }}_{{ $diaDescarga }}_cfdi_emitidos.xls">Exportar a Excel</a> --}}
                         <button id="bottomE" type="submit" class="btn btn-success">Descargar seleccionados</button>
                     </div>
                 </form>

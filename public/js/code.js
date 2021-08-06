@@ -1,3 +1,12 @@
+$("#form-editar").hide();
+$("#form-crear").hide();
+$("#vinp").hide();
+$('input[id="vinpsub"]').hide();
+$('th[id="vinp"]').hide();
+$('td[id="vinp"]').hide();
+$('#loading').hide();
+$('#loadingE').hide();
+
 function disableInputs() {
     $(':input[type="submit"]').prop('disabled', true);
     $('a[class="btn btn-primary excelR-export"]').addClass('disabled');
@@ -280,6 +289,7 @@ $('.descargaR-form').on('submit', function() {
     formData.append('dia', dia);
 
     disableInputs();
+    $('#loading').show();
 
     $.post({
         url: "async",
@@ -302,6 +312,7 @@ $('.descargaR-form').on('submit', function() {
         }
     }).always(function() {
         enableInputs();
+        $('#loading').hide();
         var tablaBody = $('#tabla-recibidos tbody');
         tablaBody.empty();
     });
@@ -333,6 +344,7 @@ $('.descargaE-form').on('submit', function() {
     formData.append('dia_f', dia_f);
 
     disableInputs();
+    $('#loadingE').show();
 
     $.post({
         url: "async",
@@ -355,6 +367,7 @@ $('.descargaE-form').on('submit', function() {
         }
     }).always(function() {
         enableInputs();
+        $('#loadingE').hide();
         var tablaBody = $('#tabla-emitidos tbody');
         tablaBody.empty();
     });
@@ -408,8 +421,6 @@ function calcular() {
     tot.val('$' + totalParts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.' + (totalParts.length > 1 ? totalParts[1] : '00'));
 }
 
-$("#form-editar").hide();
-
 $('#alerta-archivo-si').on('click', function() {
     $("#alerta-archivo").hide();
     $('#form-editar').show();
@@ -424,14 +435,17 @@ $('#alerta-archivo-no').on('click', function() {
 });
 
 $('#vinct').on('click', function() {
+    var total = document.getElementById("total").value
     var lenght = $('div.checkbox-group :checkbox:checked').length
     if (!lenght > 0) {
         alert('Favor de seleccionar al menos un CFDI.')
         return false;
     }
+    if (total == 0) {
+        alert('El valor total es 0, favor de seleccionar nuevamente los CFDI.')
+        return false;
+    }
 });
-
-$("#form-crear").hide();
 
 $('#alerta-crear-si').on('click', function() {
     $("#alerta-crear").hide();
@@ -443,12 +457,6 @@ $('#alerta-crear-no').on('click', function() {
     $("#alerta-crear").hide();
     return false;
 });
-
-$("#vinp").hide();
-$('input[id="vinpsub"]').hide();
-$('th[id="vinp"]').hide();
-$('td[id="vinp"]').hide();
-
 
 $('#vinpbtn').on('click', function() {
     $("#vinp").show();
