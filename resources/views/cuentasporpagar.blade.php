@@ -98,7 +98,6 @@ use App\Models\ListaNegra;
                             <td class="text-center align-middle">${{ number_format($sum, 2) }}</td>
                             <td class="text-center align-middle">
                                 <form action="detalles" method="GET">
-                                    {{-- @csrf --}}
                                     <input type="hidden" name="emisorRfc" value="{{ $i['emisorRfc'] }}">
                                     <input type="hidden" name="emisorNombre" value="{{ $i['emisorNombre'] }}">
                                     <input type=submit value=Ver>
