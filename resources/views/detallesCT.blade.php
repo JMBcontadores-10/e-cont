@@ -87,10 +87,7 @@ use App\Models\XmlR;
                             $mes = (string) (int) substr($fechaE, 5, 2);
                             $rutaXml = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML/$folioF.xml";
                             $rutaPdf = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF/$folioF.pdf";
-                            $concepto = '-';
-                            $metodoPago = '-';
-                            $uuidRef = '-';
-                            $folio = '-';
+                            $nUR = 0;
                             $totalX = 0;
                             $colX = XmlR::where(['UUID' => $folioF])->get();
                             foreach ($colX as $v) {
@@ -98,7 +95,7 @@ use App\Models\XmlR;
                                 $metodoPago = $v['MetodoPago'];
                                 $folio = $v['Folio'];
                                 if ($efecto == 'Pago') {
-                                    $uuidRef = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado.0.IdDocumento'];
+                                    $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
                                     $metodoPago = '-';
                                 }
                             }
@@ -106,7 +103,15 @@ use App\Models\XmlR;
                         <td class="text-center align-middle">{{ $concepto }}</td>
                         <td class="text-center align-middle">{{ $folio }}</td>
                         <td class="text-center align-middle">{{ $metodoPago }}</td>
-                        <td class="text-center align-middle">{{ $uuidRef }}</td>
+                        <td class="text-center align-middle">
+                            @if ($efecto == 'Pago')
+                                @foreach ($docRel as $d)
+                                    {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
+                                @endforeach
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td class="text-center align-middle">{{ $efecto }}</td>
                         <td class="text-center align-middle">${{ number_format($total, 2) }}</td>
                         <td class="text-center align-middle">{{ $estado }}</td>

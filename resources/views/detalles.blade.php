@@ -82,26 +82,30 @@ use App\Models\XmlR;
                             $mes = (string) (int) substr($fechaE, 5, 2);
                             $rutaXml = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML/$folioF.xml";
                             $rutaPdf = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF/$folioF.pdf";
-                            $concepto = '-';
-                            $metodoPago = '-';
-                            $uuidRef = '-';
-                            $folio = '-';
                             $totalX = 0;
+                            $nUR = 0;
                             $colX = XmlR::where(['UUID' => $folioF])->get();
                             foreach ($colX as $v) {
                                 $concepto = $v['Conceptos.Concepto.0.Descripcion'];
                                 $metodoPago = $v['MetodoPago'];
                                 $folio = $v['Folio'];
                                 if ($efecto == 'Pago') {
-                                    $uuidRef = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado.0.IdDocumento'];
+                                    $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
                                     $metodoPago = '-';
-                                    $folio = '-';
                                 }
                             }
                         @endphp
                         <td class="text-center align-middle">{{ $concepto }}</td>
                         <td class="text-center align-middle">{{ $metodoPago }}</td>
-                        <td class="text-center align-middle">{{ $uuidRef }}</td>
+                        <td class="text-center align-middle">
+                            @if ($efecto == 'Pago')
+                                @foreach ($docRel as $d)
+                                    {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
+                                @endforeach
+                            @else
+                                -
+                            @endif
+                        </td>
                         <td class="text-center align-middle">{{ $folio }}</td>
                         <td class="text-center align-middle">{{ $efecto }}</td>
                         <td class="text-center align-middle">${{ number_format($total, 2) }}</td>
@@ -130,7 +134,7 @@ use App\Models\XmlR;
                     <td></td>
                     <td></td>
                     <td class="text-center text-bold">Total:</td>
-                    <td> <input readonly id="total" name="totalXml" type="text" placeholder="$0.00" /></td>
+                    <td> <input readonly id="total" name="totalXml" type="text" placeholder="$0.00" value=0 /></td>
                 </tr>
             </tbody>
         </table>
