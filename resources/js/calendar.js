@@ -11,6 +11,8 @@ import {Calendar} from '@fullcalendar/core'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 
+// let addEventModal = new bootstrap.Modal(document.querySelector("#saveEventModal"))
+// let infoEvent;
 
 window.onload = function(){
 
@@ -19,6 +21,8 @@ window.onload = function(){
     var calendar = new Calendar(calendarE1, {
         selectable:true,
         editable:true,
+        locale: 'es',
+
 
         plugins: [dayGridPlugin, interactionPlugin],
         events: [{
@@ -37,12 +41,8 @@ window.onload = function(){
 
     select: function(arg){
 
-        calendar.addEvent({
-            title:'Evento prueba',
-            start : arg.start,
-            end: arg.end,
-            color: '#18D915'
-        })
+        let infoEvent = arg
+        addEventModal.show()
     },
 
     eventClick:function(info){
@@ -64,24 +64,24 @@ window.onload = function(){
         console.log("eventDragStop" +info)
         console.log("eventDragStop" +info.event.title)
         console.log("eventDragStop" +info.event.start)
-        
+
     },
 
     eventDrop:function(info){
         console.log("eventDrop" +info)
         console.log("eventDrop" +info.event.title)
         console.log("eventDrop" +info.event.start)
-        
+
     },
 
     eventResize:function(info){
         console.log("eventResize" +info.event.start)
         console.log("eventResize" +info.event.end)
-        
+
         if(!confirm("Esta ok?")){
             info.revert()
         }
-        
+
     },
 
     })
@@ -99,8 +99,8 @@ window.onload = function(){
     document.getElementById("addEvent").addEventListener('click', ()=>{
         calendar.addEvent({
             title:'Evento prueba',
-            start : '2021-07-20',
-            end: '2021-07-22',
+            start : infoEvent.start,
+            end: infoEvent.end,
             color: '#18D915'
         })
     })

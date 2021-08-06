@@ -1,14 +1,15 @@
 @extends('layouts.app')
 
 @php
- use App\Models\MetadataE;   
+ use App\Models\MetadataE;
+ use Illuminate\Support\Facades\DB;
 @endphp
 
 @section('content')
 
 <div class="container">
     <div class="float-md-left">
-        <a class="b3" href="{{ url()->previous() }}">
+        <a class="b3" href="{{ url('/')}}">
             << Regresar</a>
     </div>
     <div class="float-md-right">
@@ -23,11 +24,38 @@
         <hr style="border-color:black; width:100%;">
     </div>
     <div class="row" style="justify-content: center;">
-        
+
         @php
+            $rfc = Auth::user()->RFC;
             $hoy = date("d-M-Y");
             $ayer = date("d-M-Y", strtotime($hoy."- 1 days"));
+
+            $dtz= new DateTimeZone("America/Mexico_City");
+            $dt = new DateTime("now", $dtz);
+
+            if(isset($argv[1])){
+                $dt->sub(new DateInterval($argv[1]));
+
+            } else {
+                $dt-> sub(new DateInterval('P1D'));
+            }
+
+            $anio = $dt->format('Y');
+            $mes = $dt->format('m');
+            $dia= $dt->format('d');
+            $fechaF = "$anio-$mes-$dia";
+            $fecha1 = $fechaF."T00:00:00";
+            $fecha2 = $fechaF."T23:59:59";
+
+
+            $colM = DB::table('metadata_e')
+                ->select('fechaEmision', 'folioFiscal', 'receptorNombre', 'receptorRfc', 'total')
+                ->where('emisorRfc', $rfc)
+                ->whereBetweeen('fechaEmision', array($fecha1, $fecha2))
+                ->orderBy('folioFiscal')->get();
+
         @endphp
+
         <br>
         <h1>Facturación @php
              echo $ayer;
@@ -54,12 +82,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                
+
                 @for ($i = 0; $i <24; $i++)
                 <tr>
                     <td>{{ $i }}</td>
                     <td></td>
-                    <td></td>   
+                    <td></td>
                 </tr>
                 @endfor
                 </tbody>
@@ -67,7 +95,7 @@
 
         </div>
         <div class="col-5">
-    
+
         </div>
 
         <div class="col-5">
@@ -80,23 +108,34 @@
                     <th>Ver</th>
                 </tr>
                 @foreach ($col as $i)
-                @php
-                    $sum=0;
-                    $nXml = 0;
-                @endphp
                 <tr>
                     <td>{{$i['receptorRfc']}}</td>
                     <td>{{$i['receptorNombre']}}</td>
+                    @php
+                        $sum=0;
+
+                    @endphp
+                        {{-- $colC = MetadataE::where(['receptorRfc' => $rfc, 'emisorRfc' => $i['emisorRfc']])
+                        ->orderBy('emisorNombre', 'asc')
+                        ->get();
+
+                        foreach ($colC as $k) {
+                            $var = (float) $k->total;
+                            $sum = $sum + $var;
+                            $nXml++;
+                        } --}}
+
+                    {{-- <td>{{$nXml}}</td> --}}
                     @php
                         $sum = $sum + $i['total'];
                     @endphp
                     <td></td>
                     <td>{{$sum}}</td>
                     <td>
-                        <form action="detallesfactura" method="POST">
+                        <form action="{{ route('detallesfactura')}}" method="POST">
                             @csrf
-                            <input type="hidden" name="emisorRfc" value="{{ $i['receptorRfc'] }}">
-                            <input type="hidden" name="emisorNombre" value="{{ $i['receptorNombre'] }}">
+                            <input type="hidden" name="receptorRfc" value="{{ $i['receptorRfc'] }}">
+                            <input type="hidden" name="receptorNombre" value="{{ $i['receptorNombre'] }}">
                             <input type=submit value=Ver>
                         </form>
                     </td>

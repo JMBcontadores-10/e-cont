@@ -22,15 +22,14 @@ use App\Models\XmlR;
         <hr style="border-color:black; width:100%;">
         <div class="justify-content-start">
             <label class="label1" style="font-weight: bold">Facturas de</label>
-            <h1 style="font-weight: bold">{{ $receptorNombre }}</h1>
-            <h5 style="font-weight: bold">{{ $receptorRfc }}</h5>
+            <h1>{{$receptorNombre}}</h1>
             <hr style="border-color:black; width:100%;">
         </div>
 
         <div class="input-group">
             <span class="input-group-text">Buscar</span>
             <input id="filtrar" type="text" class="form-control" placeholder="Buscar">
-        </div><br> 
+        </div><br>
 
         <table class="table table-sm table-hover table-bordered">
             <thead>
@@ -60,9 +59,9 @@ use App\Models\XmlR;
                     <td></td>
                     <td></td>
                     <td></td>
-                
+
                 </tr>
-                    
+
                 @endforeach
             </tbody>
         </table>

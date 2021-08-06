@@ -33,7 +33,7 @@ class Async extends Controller
         $rutaDescarga = $config['rutaDescarga'];
         $maxDescargasSimultaneas = $config['maxDescargasSimultaneas'];
 
-        $rutaApp = "C:/laragon/www/final/public";
+        $rutaApp = "C:/laragon/www/contarappv1/public";
         $dc = Storage::url(Auth::user()->dircer);
         $dircer = "storage/" . Auth::user()->dircer;
         // $dircer = $rutaApp . $dc;
@@ -414,10 +414,7 @@ class Async extends Controller
                         $var = "$rutaGuardar"."XML/$fileName";
                         rename($filePathname, $var);
                         // // // prueba de cfditojson
-
-
                         $contents = file_get_contents($var);
-                        Log::debug($contents);
                         $cleaner = Cleaner::staticClean($contents);
                         $json = JsonConverter::convertToJson($cleaner);
                         $array = json_decode($json, true);
@@ -549,5 +546,7 @@ class Async extends Controller
         return $val;
         // return floatval($val);
     }
+
+
 
 }

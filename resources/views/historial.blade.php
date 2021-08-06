@@ -3,14 +3,14 @@
 @php
     use App\Models\CalendarioE;
     use App\Models\CalendarioR;
-    
+
 @endphp
 
 @section('content')
 
 <div class="container">
     <div class="float-md-left">
-        <a class="b3" href="{{ url()->previous() }}">
+        <a class="b3" href="{{ url('/')}}">
             << Regresar</a>
     </div>
     <div class="float-md-right">
@@ -36,12 +36,12 @@
             <h3 class="text-center">Historial Emitidos</h3>
             <table class="table table-stripered">
                 <tr>
-                    <th>#</th> 
+                    <th>#</th>
                     <th>RFC</th>
                     <th>Fecha</th>
                     <th>Tipo de Factura</th>
                     <th>Total Descargados</th>
-                    <th>Total Error</th> 
+                    <th>Total Error</th>
                 </tr>
                 <tbody class="buscar">
                     @foreach ($col as $i)
@@ -54,12 +54,12 @@
                             @php
                                 $error= $i['erroresEmitidos']
                             @endphp
-                        @if ($error >0)
+                        @if ($error != 0)
                             <td style="color: #F10E04">{{$error}}</td>
                         @else
                             <td>{{$error}}</td>
                         @endif
-                        
+
                     </tr>
                     @endforeach
                 </tbody>
@@ -74,12 +74,12 @@
             <h3 class="text-center">Historial Recibidos</h3>
             <table class="table table-stripered">
                 <tr>
-                    <th>#</th> 
+                    <th>#</th>
                     <th>RFC</th>
                     <th>Fecha</th>
                     <th>Tipo de Factura</th>
                     <th>Total Descargados</th>
-                    <th>Total Error</th> 
+                    <th>Total Error</th>
                 </tr>
                 @php
                     $rfc = Auth::user()->RFC;

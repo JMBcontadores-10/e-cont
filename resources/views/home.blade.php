@@ -81,17 +81,14 @@
                 </div>
                 <br>
                 <div class="row" style="justify-content: center;">
-                    <form action="{{ route('monitoreo')}}">
+                    <form action="{{ url('monitoreo')}}">
                         <button class="btnModulo" type="submit" value="Nomina" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
                             <img style="float:left;" src="img/monitoreo.png" width="25px" height="25px" alt=""> Monitoreo Facturación
                         </button>
                     </form>
                 </div>
                 <br><br>
-                <div class="row" style="justify-content: center;">
-                    <form action="{{ url('monitoreo') }}">
-                    </form>
-                </div>
+
                 <div class="row" style="justify-content: center;">
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
