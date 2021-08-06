@@ -35,8 +35,8 @@ use App\Models\XmlR;
                     <th class="text-center align-middle">N°</th>
                     <th class="text-center align-middle">Vincular CFDI's <input type="checkbox" id="allcheck"
                             name="allcheck" /></th>
-                    <th class="text-center align-middle">RFC Emisor</th>
-                    <th class="text-center align-middle">Razón Social Emisor</th>
+                    {{-- <th class="text-center align-middle">RFC Emisor</th> --}}
+                    {{-- <th class="text-center align-middle">Razón Social Emisor</th> --}}
                     <th class="text-center align-middle">UUID</th>
                     <th class="text-center align-middle">Fecha Emisión</th>
                     <th class="text-center align-middle">Concepto</th>
@@ -73,8 +73,8 @@ use App\Models\XmlR;
                                 </div>
                             @endif
                         </td>
-                        <td class="text-center align-middle">{{ $emisorRfc }}</td>
-                        <td class="text-center align-middle">{{ $emisorNombre }}</td>
+                        {{-- <td class="text-center align-middle">{{ $emisorRfc }}</td> --}}
+                        {{-- <td class="text-center align-middle">{{ $emisorNombre }}</td> --}}
                         <td class="text-center align-middle">{{ $folioF }}</td>
                         <td class="text-center align-middle">{{ $fechaE }}</td>
                         @php
@@ -89,11 +89,13 @@ use App\Models\XmlR;
                             $totalX = 0;
                             $colX = XmlR::where(['UUID' => $folioF])->get();
                             foreach ($colX as $v) {
-                                $concepto = $v['0.Conceptos.Concepto.0.Descripcion'];
-                                $metodoPago = $v['0.MetodoPago'];
-                                $folio = $v['0.Folio'];
+                                $concepto = $v['Conceptos.Concepto.0.Descripcion'];
+                                $metodoPago = $v['MetodoPago'];
+                                $folio = $v['Folio'];
                                 if ($efecto == 'Pago') {
-                                    $uuidRef = $v['0.Complemento.0.TimbreFiscalDigital.UUID'];
+                                    $uuidRef = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado.0.IdDocumento'];
+                                    $metodoPago = '-';
+                                    $folio = '-';
                                 }
                             }
                         @endphp

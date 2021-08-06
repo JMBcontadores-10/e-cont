@@ -94,10 +94,12 @@ use App\Models\XmlR;
                             $totalX = 0;
                             $colX = XmlR::where(['UUID' => $folioF])->get();
                             foreach ($colX as $v) {
-                                $concepto = $v['0.Conceptos.Concepto.0.Descripcion'];
-                                $folio = $v['0.Folio'];
+                                $concepto = $v['Conceptos.Concepto.0.Descripcion'];
+                                $metodoPago = $v['MetodoPago'];
+                                $folio = $v['Folio'];
                                 if ($efecto == 'Pago') {
-                                    $uuidRef = $v['0.Complemento.0.TimbreFiscalDigital.UUID'];
+                                    $uuidRef = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado.0.IdDocumento'];
+                                    $metodoPago = '-';
                                 }
                             }
                         @endphp

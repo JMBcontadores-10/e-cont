@@ -426,7 +426,7 @@ $('#alerta-archivo-no').on('click', function() {
 $('#vinct').on('click', function() {
     var lenght = $('div.checkbox-group :checkbox:checked').length
     if (!lenght > 0) {
-        alert('Favor de seleccionar al menos un XML.')
+        alert('Favor de seleccionar al menos un CFDI.')
         return false;
     }
 });
