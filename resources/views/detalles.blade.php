@@ -35,8 +35,10 @@ use App\Models\XmlR;
                     <th class="text-center align-middle">N°</th>
                     <th class="text-center align-middle">Vincular CFDI <input type="checkbox" id="allcheck"
                             name="allcheck" /></th>
-                    {{-- <th class="text-center align-middle">RFC Emisor</th> --}}
-                    {{-- <th class="text-center align-middle">Razón Social Emisor</th> --}}
+                    @if ($emisorNombre == 'Varios Proveedores')
+                        <th class="text-center align-middle">RFC Emisor</th>
+                        <th class="text-center align-middle">Razón Social Emisor</th>
+                    @endif
                     <th class="text-center align-middle">UUID</th>
                     <th class="text-center align-middle">Fecha Emisión</th>
                     <th class="text-center align-middle">Concepto</th>
@@ -50,6 +52,9 @@ use App\Models\XmlR;
                 </tr>
             </thead>
             <tbody class="buscar">
+                @php
+                    $varios = $emisorNombre;
+                @endphp
                 @foreach ($colM as $i)
                     @php
                         $emisorRfc = $i->emisorRfc;
@@ -73,8 +78,10 @@ use App\Models\XmlR;
                                 </div>
                             @endif
                         </td>
-                        {{-- <td class="text-center align-middle">{{ $emisorRfc }}</td> --}}
-                        {{-- <td class="text-center align-middle">{{ $emisorNombre }}</td> --}}
+                        @if ($varios == 'Varios Proveedores')
+                            <td class="text-center align-middle">{{ $emisorRfc }}</td>
+                            <td class="text-center align-middle">{{ $emisorNombre }}</td>
+                        @endif
                         <td class="text-center align-middle">{{ $folioF }}</td>
                         <td class="text-center align-middle">{{ $fechaE }}</td>
                         @php
@@ -88,7 +95,6 @@ use App\Models\XmlR;
                             $colX = XmlR::where(['UUID' => $folioF])->get();
                             if (!$colX->isEmpty()) {
                                 foreach ($colX as $v) {
-                                    // $concepto0 = $v['Conceptos.Concepto.0.Descripcion'];
                                     $concepto = $v['Conceptos.Concepto'];
                                     $metodoPago = $v['MetodoPago'];
                                     $folio = $v['Folio'];
@@ -109,7 +115,6 @@ use App\Models\XmlR;
                                 @foreach ($concepto as $c)
                                     {{ ++$nCon }}. {{ $c['Descripcion'] }}<br>
                                 @endforeach
-                                {{-- {{ $concepto0 }} --}}
                             @else
                                 {{ $concepto }}
                             @endif
@@ -153,8 +158,10 @@ use App\Models\XmlR;
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td></td>
-                    <td></td>
+                    @if ($emisorNombre == 'Varios Proveedores')
+                        <td></td>
+                        <td></td>
+                    @endif
                     <td class="text-center text-bold">Total:</td>
                     <td> <input readonly id="total" name="totalXml" type="text" placeholder="$0.00" value=0 /></td>
                 </tr>
