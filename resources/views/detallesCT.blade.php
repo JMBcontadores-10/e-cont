@@ -34,13 +34,13 @@ use App\Models\XmlR;
         <table class="table table-sm table-hover table-bordered mx-2">
             <thead>
                 <tr class="table-primary">
-                    <th class="text-center align-middle">N°</th>
+                    <th class="text-center align-middle">No.</th>
                     @if ($verificado == 0)
                         <th class="text-center align-middle">Desvincular CFDI <input type="checkbox" id="allcheck"
                                 name="allcheck" /></th>
                     @endif
-                    <th class="text-center align-middle">RFC Emisor</th>
-                    <th class="text-center align-middle">Razón Social Emisor</th>
+                    {{-- <th class="text-center align-middle">RFC Emisor</th> --}}
+                    {{-- <th class="text-center align-middle">Razón Social Emisor</th> --}}
                     <th class="text-center align-middle">UUID</th>
                     <th class="text-center align-middle">Fecha Emisión</th>
                     <th class="text-center align-middle">Concepto</th>
@@ -78,8 +78,8 @@ use App\Models\XmlR;
                                 </div>
                             </td>
                         @endif
-                        <td class="text-center align-middle">{{ $emisorRfc }}</td>
-                        <td class="text-center align-middle">{{ $emisorNombre }}</td>
+                        {{-- <td class="text-center align-middle">{{ $emisorRfc }}</td> --}}
+                        {{-- <td class="text-center align-middle">{{ $emisorNombre }}</td> --}}
                         <td class="text-center align-middle">{{ $folioF }}</td>
                         <td class="text-center align-middle">{{ $fechaE }}</td>
                         @php
@@ -90,7 +90,7 @@ use App\Models\XmlR;
                             $nUR = 0;
                             $nCon = 0;
                             $totalX = 0;
-                            $colX = XmlR::where(['UUID' => ''])->get();
+                            $colX = XmlR::where(['UUID' => $folioF])->get();
                             if (!$colX->isEmpty()) {
                                 foreach ($colX as $v) {
                                     // $concepto0 = $v['Conceptos.Concepto.0.Descripcion'];
