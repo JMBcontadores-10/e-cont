@@ -33,7 +33,7 @@ use App\Models\XmlR;
             <thead>
                 <tr class="table-primary">
                     <th class="text-center align-middle">N°</th>
-                    <th class="text-center align-middle">Vincular CFDI's <input type="checkbox" id="allcheck"
+                    <th class="text-center align-middle">Vincular CFDI <input type="checkbox" id="allcheck"
                             name="allcheck" /></th>
                     {{-- <th class="text-center align-middle">RFC Emisor</th> --}}
                     {{-- <th class="text-center align-middle">Razón Social Emisor</th> --}}
@@ -84,26 +84,48 @@ use App\Models\XmlR;
                             $rutaPdf = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF/$folioF.pdf";
                             $totalX = 0;
                             $nUR = 0;
+                            $nCon = 0;
                             $colX = XmlR::where(['UUID' => $folioF])->get();
-                            foreach ($colX as $v) {
-                                $concepto = $v['Conceptos.Concepto.0.Descripcion'];
-                                $metodoPago = $v['MetodoPago'];
-                                $folio = $v['Folio'];
-                                if ($efecto == 'Pago') {
-                                    $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
-                                    $metodoPago = '-';
+                            if (!$colX->isEmpty()) {
+                                foreach ($colX as $v) {
+                                    // $concepto0 = $v['Conceptos.Concepto.0.Descripcion'];
+                                    $concepto = $v['Conceptos.Concepto'];
+                                    $metodoPago = $v['MetodoPago'];
+                                    $folio = $v['Folio'];
+                                    if ($efecto == 'Pago') {
+                                        $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
+                                        $metodoPago = '-';
+                                    }
                                 }
+                            } else {
+                                $concepto = 'X';
+                                $metodoPago = 'X';
+                                $folio = 'X';
+                                $uuidRef = 'X';
                             }
                         @endphp
-                        <td class="text-center align-middle">{{ $concepto }}</td>
+                        <td class="text-center align-middle">
+                            @if (!$colX->isEmpty())
+                                @foreach ($concepto as $c)
+                                    {{ ++$nCon }}. {{ $c['Descripcion'] }}<br>
+                                @endforeach
+                                {{-- {{ $concepto0 }} --}}
+                            @else
+                                {{ $concepto }}
+                            @endif
+                        </td>
                         <td class="text-center align-middle">{{ $metodoPago }}</td>
                         <td class="text-center align-middle">
-                            @if ($efecto == 'Pago')
-                                @foreach ($docRel as $d)
-                                    {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
-                                @endforeach
+                            @if (!$colX->isEmpty())
+                                @if ($efecto == 'Pago')
+                                    @foreach ($docRel as $d)
+                                        {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
+                                    @endforeach
+                                @else
+                                    -
+                                @endif
                             @else
-                                -
+                                {{ $uuidRef }}
                             @endif
                         </td>
                         <td class="text-center align-middle">{{ $folio }}</td>

@@ -70,13 +70,13 @@ class CuentasPorPagar extends Controller
                 ->orderBY('emisorRfc')
                 ->orderBy('fechaEmision', 'desc')
                 ->paginate(50);
-            // ->get();
+                // ->get();
         } else {
             $colM = MetadataR::where(['receptorRfc' => $rfc, 'emisorRfc' => $emisorRfc])
                 ->whereNull('cheques_id')
                 ->orderBy('fechaEmision', 'desc')
                 ->paginate(50);
-            // ->get();
+                // ->get();
         }
 
         return view('detalles')

@@ -6,7 +6,6 @@ use DateTime;
 use DateTimeZone;
 use App\Models\Cheques;
 use App\Models\MetadataR;
-use App\Models\XmlR;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -273,6 +272,7 @@ class ChequesYTransferenciasController extends Controller
             //     $docRel = $xmlr['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
             //     foreach ($docRel as $d) {
             //         $uuidRef = $d['IdDocumento'];
+            //         echo "$uuidRef <br>";
             //     }
             // }
             // dd($docRel);
