@@ -93,7 +93,6 @@ use App\Models\XmlR;
                             $colX = XmlR::where(['UUID' => $folioF])->get();
                             if (!$colX->isEmpty()) {
                                 foreach ($colX as $v) {
-                                    // $concepto0 = $v['Conceptos.Concepto.0.Descripcion'];
                                     $concepto = $v['Conceptos.Concepto'];
                                     $metodoPago = $v['MetodoPago'];
                                     $folio = $v['Folio'];
@@ -115,7 +114,6 @@ use App\Models\XmlR;
                                 @foreach ($concepto as $c)
                                     {{ ++$nCon }}. {{ $c['Descripcion'] }}<br>
                                 @endforeach
-                                {{-- {{ $concepto0 }} --}}
                             @else
                                 {{ $concepto }}
                             @endif
