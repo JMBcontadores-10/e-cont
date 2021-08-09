@@ -36,7 +36,7 @@ use App\Models\XmlR;
                 <tr class="table-primary">
                     <th class="text-center align-middle">N°</th>
                     @if ($verificado == 0)
-                        <th class="text-center align-middle">Desvincular CFDI's <input type="checkbox" id="allcheck"
+                        <th class="text-center align-middle">Desvincular CFDI <input type="checkbox" id="allcheck"
                                 name="allcheck" /></th>
                     @endif
                     <th class="text-center align-middle">RFC Emisor</th>
@@ -88,28 +88,51 @@ use App\Models\XmlR;
                             $rutaXml = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML/$folioF.xml";
                             $rutaPdf = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF/$folioF.pdf";
                             $nUR = 0;
+                            $nCon = 0;
                             $totalX = 0;
-                            $colX = XmlR::where(['UUID' => $folioF])->get();
-                            foreach ($colX as $v) {
-                                $concepto = $v['Conceptos.Concepto.0.Descripcion'];
-                                $metodoPago = $v['MetodoPago'];
-                                $folio = $v['Folio'];
-                                if ($efecto == 'Pago') {
-                                    $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
-                                    $metodoPago = '-';
+                            $colX = XmlR::where(['UUID' => ''])->get();
+                            if (!$colX->isEmpty()) {
+                                foreach ($colX as $v) {
+                                    // $concepto0 = $v['Conceptos.Concepto.0.Descripcion'];
+                                    $concepto = $v['Conceptos.Concepto'];
+                                    $metodoPago = $v['MetodoPago'];
+                                    $folio = $v['Folio'];
+                                    if ($efecto == 'Pago') {
+                                        $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
+                                        $metodoPago = '-';
+                                    }
                                 }
+                            } else {
+                                $concepto = 'X';
+                                $metodoPago = 'X';
+                                $folio = 'X';
+                                $uuidRef = 'X';
                             }
+
                         @endphp
-                        <td class="text-center align-middle">{{ $concepto }}</td>
+                        <td class="text-center align-middle">
+                            @if (!$colX->isEmpty())
+                                @foreach ($concepto as $c)
+                                    {{ ++$nCon }}. {{ $c['Descripcion'] }}<br>
+                                @endforeach
+                                {{-- {{ $concepto0 }} --}}
+                            @else
+                                {{ $concepto }}
+                            @endif
+                        </td>
                         <td class="text-center align-middle">{{ $folio }}</td>
                         <td class="text-center align-middle">{{ $metodoPago }}</td>
                         <td class="text-center align-middle">
-                            @if ($efecto == 'Pago')
-                                @foreach ($docRel as $d)
-                                    {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
-                                @endforeach
+                            @if (!$colX->isEmpty())
+                                @if ($efecto == 'Pago')
+                                    @foreach ($docRel as $d)
+                                        {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
+                                    @endforeach
+                                @else
+                                    -
+                                @endif
                             @else
-                                -
+                                {{ $uuidRef }}
                             @endif
                         </td>
                         <td class="text-center align-middle">{{ $efecto }}</td>

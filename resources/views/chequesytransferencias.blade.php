@@ -58,30 +58,28 @@
                 </form>
             </div>
         </div>
-        {{-- <div class="input-group">
+        <div class="input-group">
             <span class="input-group-text">Buscar</span>
             <input id="filtrar" type="text" class="form-control" placeholder="Buscar palabra clave">
-            <a href="#bottom" class="btn btn-primary ml-2">Ir abajo</a>
         </div>
-        <br> --}}
+        <br>
     </div>
     <table class="table table-sm table-hover table-bordered mx-2">
         <thead>
             <tr class="table-primary">
-                <th class="text-center align-middle">N°</th>
-                <th class="text-center align-middle">Fecha</th>
-                <th class="text-center align-middle">#Cheque / #Transferencia</th>
+                <th class="text-center align-middle">No.</th>
+                <th class="text-center align-middle">Fecha cheque</th>
+                <th class="text-center align-middle">Núm cheque o transferencia</th>
                 <th class="text-center align-middle">Beneficiario</th>
                 <th class="text-center align-middle">Tipo de operación</th>
-                <th class="text-center align-middle">Importe Total</th>
-                <th class="text-center align-middle">Importe CFDI</th>
+                <th class="text-center align-middle">Total</th>
+                <th class="text-center align-middle">Total CFDI</th>
+                <th class="text-center align-middle">Por comprobar</th>
                 <th class="text-center align-middle">Ajuste</th>
-                <th class="text-center align-middle">Diferencia</th>
-                <th class="text-center align-middle">Cheque / Transferencia (PDF)</th>
+                <th class="text-center align-middle">PDF cheque o transferencia</th>
                 <th class="text-center align-middle">Acciones</th>
                 <th class="text-center align-middle">Verificación</th>
                 <th class="text-center align-middle">Contabilizado</th>
-                <th class="text-center align-middle">Borrar</th>
             </tr>
         </thead>
         <tbody class="buscar">
@@ -131,17 +129,17 @@
                     <td class="text-center align-middle">{{ $tipoO }}</td>
                     <td class="text-center align-middle">${{ number_format($importeC, 2) }}</td>
                     <td class="text-center align-middle">${{ number_format($sumaxml, 2) }}</td>
+                    <td class="text-center align-middle">${{ $diferencia }}</td>
                     <td class="text-center align-middle">
                         ${{ $ajuste }}
                         @if ($verificado == 0)
                             <form action="{{ url('cheques-transferencias') }}">
                                 <input type="hidden" name="id" value="{{ $id }}">
-                                <input type="number" min="0" step="any" name="ajuste" style="width: 55px">
+                                <input type="number" min="0" step="any" name="ajuste" style="width: 66px">
                                 <input class="mt-2" type="submit" value="Ajustar">
                             </form>
                         @endif
                     </td>
-                    <td class="text-center align-middle">${{ $diferencia }}</td>
                     <td class="text-center align-middle">
                         @if ($nombreCheque == '0')
                             <i class="fas fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
@@ -160,7 +158,7 @@
                                         <input type="hidden" name="id" value="{{ $id }}">
                                         <input type="hidden" name="verificado" value="{{ $verificado }}">
                                         <button type="submit" class="fabutton">
-                                            <i class="fas fa-eye fa-lg" style="color: rgb(8, 8, 8)"></i>
+                                            <i class="fas fa-eye fa-lg mt-3" style="color: rgb(8, 8, 8)"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -186,28 +184,66 @@
                                     </form>
                                 </div>
                             @endif
+                            @if ($verificado == 0)
+                                <div class="col align-self-center">
+                                    <form action="{{ url('delete-cheque') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" id="id" name="id" value="{{ $id }}">
+                                        <input type="hidden" name="rutaArchivo" value="{{ $rutaArchivo }}">
+                                        <button
+                                            onclick="return confirm('¿Seguro que deseas eliminar el cheque/transferencia?')"
+                                            type="submit" class="fabutton">
+                                            <i class="fas fa-trash-alt fa-lg" style="color: rgb(8, 8, 8)"></i>
+                                        </button>
+                                    </form>
+                                </div>
+
+                            @endif
                         </div>
                     </td>
                     <td class="text-center align-middle">
-                        @if ($diferencia != 0 or $faltaxml == 0 or $nombreCheque == '0')
-                            <span class="fa-stack mb-1">
-                                <i class="fas fa-circle fa-stack-1x fa-lg mt-1" style="color: rgb(8, 8, 8)"></i>
-                                <i class="fas fa-exclamation-triangle fa-stack-1x fa-2x"
-                                    style="color: rgb(240, 229, 73)"></i>
-                            </span>
-                            <input type="submit" name="Pendientes" value="Pendientes"
-                                onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
-                        @elseif ($verificado == 0)
-                            <form action="{{ url('cheques-transferencias') }}" method="post">
-                                @csrf
-                                <input type="hidden" id="id" name="id" value="{{ $id }}">
-                                <input type="checkbox" name="revisado" required class="mb-2"> Revisado
-                                <br>
-                                <input type="submit" name="Aceptar" value="Aceptar">
-                            </form>
-                        @else
-                            <img src="{{ asset('img/veri.png') }}" alt="">
-                        @endif
+                        <div class="row align-items-center mx-1">
+                            <div class="col">
+                                @if ($diferencia != 0 or $faltaxml == 0 or $nombreCheque == '0')
+                                    <div class="row d-flex justify-content-center">
+                                        <span class="fa-stack mb-1">
+                                            <i class="fas fa-circle fa-stack-1x fa-lg mt-1" style="color: rgb(8, 8, 8)"></i>
+                                            <i class="fas fa-exclamation-triangle fa-stack-1x fa-2x"
+                                                style="color: rgb(240, 229, 73)"></i>
+                                        </span>
+                                    </div>
+                                    <div class="row d-flex justify-content-center">
+                                        <input type="submit" name="Pendientes" value="Pendientes"
+                                            onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
+                                    </div>
+                                @elseif ($verificado == 0)
+                                    <form action="{{ url('cheques-transferencias') }}" method="post">
+                                        @csrf
+                                        <input type="hidden" id="id" name="id" value="{{ $id }}">
+                                        <input type="checkbox" name="revisado" required class="mb-2"> Revisado
+                                        <input type="submit" name="Aceptar" value="Aceptar">
+                                    </form>
+                                @else
+                                    {{-- <img src="{{ asset('img/veri.png') }}" alt=""> --}}
+                                    <i class="far fa-check-circle fa-2x" style="color: green"></i>
+                                @endif
+                            </div>
+                            {{-- <div class="col" style="background-color: khaki">
+                                @if ($verificado == 1 and $contabilizado == 0)
+                                    <form action="{{ url('cheques-transferencias') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" id="id" name="id" value="{{ $id }}">
+                                        <input type="checkbox" name="conta" required class="mb-2"> Contabilizado
+                                        <br>
+                                        <input type="submit" name="Aceptar" value="Aceptar">
+                                    </form>
+                                @elseif ($verificado == 1 and $contabilizado == 1)
+                                    <img src="{{ asset('img/CONTABILIZADO.png') }}" alt="" style="width: 40PX">
+                                @elseif ($verificado == 0 and $contabilizado == 0)
+                                    <img src="{{ asset('img/espera.png') }}" alt="">
+                                @endif
+                            </div> --}}
+                        </div>
                     </td>
                     <td class="text-center align-middle">
                         @if ($verificado == 1 and $contabilizado == 0)
@@ -218,31 +254,13 @@
                                 <input type="submit" name="Aceptar" value="Aceptar">
                             </form>
                         @elseif ($verificado == 1 and $contabilizado == 1)
-                            {{-- <i class="fas fa-calculator fa-lg" style="color: rgb(27, 187, 147)"></i> --}}
                             <img src="{{ asset('img/CONTABILIZADO.png') }}" alt="" style="width: 40PX">
                         @elseif ($verificado == 0 and $contabilizado == 0)
                             <img src="{{ asset('img/espera.png') }}" alt="">
-                        @endif
-                    </td>
-                    <td class="text-center align-middle">
-                        @if ($verificado == 0)
-                            <form action="{{ url('delete-cheque') }}" method="POST" class="mt-3">
-                                @csrf
-                                <input type="hidden" id="id" name="id" value="{{ $id }}">
-                                <input type="hidden" name="rutaArchivo" value="{{ $rutaArchivo }}">
-                                <div>
-                                    <button onclick="return confirm('¿Seguro que deseas eliminar el cheque/transferencia?')"
-                                        type="submit" class="fabutton">
-                                        <i class="fas fa-trash-alt fa-lg" style="color: rgb(8, 8, 8)"></i>
-                                    </button>
-                                </div>
-
-                            </form>
                         @endif
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-    {{-- {{ $colCheques->links('pagination::bootstrap-4') }} --}}
 @endsection
