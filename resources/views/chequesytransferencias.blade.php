@@ -77,6 +77,7 @@
                 <th class="text-center align-middle">Por comprobar</th>
                 <th class="text-center align-middle">Ajuste</th>
                 <th class="text-center align-middle">PDF cheque o transferencia</th>
+                <th class="text-center align-middle">Documentos adicionales</th>
                 <th class="text-center align-middle">Acciones</th>
                 <th class="text-center align-middle">Verificación</th>
                 <th class="text-center align-middle">Contabilizado</th>
@@ -120,6 +121,9 @@
                         $nombreChequeP = 1;
                     }
                     $rutaArchivo = $rutaDescarga . $nombreCheque;
+                    if (!empty($i['doc_relacionados'])) {
+                        $docAdi = $i['doc_relacionados'];
+                    }
                 @endphp
                 <tr>
                     <td class="text-center align-middle">{{ ++$n }}</td>
@@ -142,11 +146,29 @@
                     </td>
                     <td class="text-center align-middle">
                         @if ($nombreCheque == '0')
-                            <i class="fas fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
+                            <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
                         @else
                             <a href="{{ $rutaArchivo }}" target="_blank">
                                 <i class="fas fa-file-pdf fa-2x" style="color: rgb(202, 19, 19)"></i>
                             </a>
+                        @endif
+                    </td>
+                    <td class="text-center align-middle">
+                        @if (empty($i['doc_relacionados']))
+                            <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
+                        @else
+                            @if (!$docAdi['0'] == '')
+                                <select id="{{ "docs-adicionales$n" }}" name="docs-adicionales" class="form-control mb-2">
+                                    @foreach ($docAdi as $d)
+                                        <option value="{{ $d }}"> {{ $d }}</option>
+                                    @endforeach
+                                </select>
+                                <input id="ruta-adicionales" name="ruta-adicionales" type="hidden"
+                                    value="{{ $rutaDescarga . 'Documentos_Relacionados/' }}">
+                                <input id="{{ $n }}" onclick="verAdicional(this.id)" type="submit" value="Ver">
+                            @else
+                                <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
+                            @endif
                         @endif
                     </td>
                     <td class="text-center align-middle">
@@ -206,7 +228,7 @@
                             <div class="col">
                                 @if ($diferencia != 0 or $faltaxml == 0 or $nombreCheque == '0')
                                     <div class="row d-flex justify-content-center">
-                                        <span class="fa-stack mb-1">
+                                        <span class="fa-stack mb-2">
                                             <i class="fas fa-circle fa-stack-1x fa-lg mt-1" style="color: rgb(8, 8, 8)"></i>
                                             <i class="fas fa-exclamation-triangle fa-stack-1x fa-2x"
                                                 style="color: rgb(240, 229, 73)"></i>
