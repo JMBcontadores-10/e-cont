@@ -2,7 +2,6 @@
 
 <head>
     <title>Cheques y Transferencias Contarapp</title>
-    
 </head>
 
 @section('content')
@@ -114,15 +113,23 @@
                                 </select>
                             </div>
                         </div>
-                        <div id="{{ !$subirArchivo ? 'subir-archivo' : '' }}">
-                            <br>
-                            <input type="hidden" name="MAX_FILE_SIZE" value="512000" />
-                            <p class="pf"> Subir Archivo (solo PDF):
+                        <div id="{{ !$subirArchivo ? 'subir-archivo' : '' }}" class="mainbox2 row mt-3">
+                            <div class="col-6 d-flex justify-content-end">
+                                <p class="pf">Subir Archivo (solo PDF):</p>
+                            </div>
+                            <div class="col-4">
                                 <input name="subir_archivo" type="file" accept=".pdf" />
-                            </p>
+                            </div>
                         </div>
-                        <br>
-                        <button class="btn btn-linkj">Actualizar Cheque/Transferencia</button>
+                        <div id="{{ !$subirArchivo ? 'doc-relacionados' : '' }}" class="mainbox2 row mt-3">
+                            <div class="col-6 d-flex justify-content-end">
+                                <p class="pf">Documentos adicionales (solo PDF):</p>
+                            </div>
+                            <div class="col-4">
+                                <input name="doc_relacionados[]" type="file" accept=".pdf" multiple />
+                            </div>
+                        </div>
+                        <button class="btn btn-linkj mt-3">Actualizar Cheque/Transferencia</button>
                     </form>
                 </div>
             @else
@@ -226,14 +233,23 @@
                                 </select>
                             </div>
                         </div>
-                        <br>
-                        <div class="mainbox2 row justify-content-center mt-1">
-                            <input type="hidden" name="MAX_FILE_SIZE" value="512000" />
-                            <p class="pf mr-2">Subir Archivo (solo PDF):</p>
-                            <input name="subir_archivo" type="file" accept=".pdf" />
+                        <div class="mainbox2 row mt-3">
+                            <div class="col-6 d-flex justify-content-end">
+                                <p class="pf">Subir Archivo (solo PDF):</p>
+                            </div>
+                            <div class="col-4">
+                                <input name="subir_archivo" type="file" accept=".pdf" />
+                            </div>
                         </div>
-                        <br>
-                        <button class="btn btn-linkj">Registrar Cheque/Transferencia</button>
+                        <div class="mainbox2 row mt-3">
+                            <div class="col-6 d-flex justify-content-end">
+                                <p class="pf">Documentos adicionales (solo PDF):</p>
+                            </div>
+                            <div class="col-4">
+                                <input name="doc_relacionados[]" type="file" accept=".pdf" multiple />
+                            </div>
+                        </div>
+                        <button class="btn btn-linkj mt-3">Registrar Cheque/Transferencia</button>
                     </form>
                 </div>
             @endif

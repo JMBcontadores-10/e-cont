@@ -198,6 +198,21 @@ class ChequesYTransferenciasController extends Controller
         $lista = 0;
         $ajuste = 0;
         $ruta = 'cheques-transferencias';
+        $files = $_FILES['doc_relacionados']['name'];
+        $rutaDescargaDR = "storage/contarappv1_descargas/$rfc/$anio/Cheques_Transferencias/Documentos_Relacionados/";
+
+        if (!$files['0'] == '') {
+            $n = 0;
+            foreach ($files as $f) {
+                $nombreArchivo = preg_replace('/[^A-z0-9.]+/', '', $f);
+                $nombreArchivo = "$Id-$nombreArchivo";
+                $r->doc_relacionados[$n]->move($rutaDescargaDR, $nombreArchivo);
+                $n++;
+                $pushArchivos[] = $nombreArchivo;
+            }
+        } else {
+            $pushArchivos = '';
+        }
 
         if ($r->has('id')) {
 
@@ -210,18 +225,30 @@ class ChequesYTransferenciasController extends Controller
             }
 
             $_id = $r->id;
-            Cheques::where('_id', $_id)
-                ->update([
-                    'Id' => $Id,
-                    'tipomov' => $tipo,
-                    'numcheque' => $numCheque,
-                    'fecha' => $fechaCheque,
-                    'importecheque' => $importeCheque,
-                    'importexml' => $importeT,
-                    'Beneficiario' => $beneficiario,
-                    'tipoopera' => $tipoOperacion,
-                    'nombrec' => $nombrec,
-                ]);
+            $cheque = Cheques::where('_id', $_id);
+            $cheque->update([
+                'Id' => $Id,
+                'tipomov' => $tipo,
+                'numcheque' => $numCheque,
+                'fecha' => $fechaCheque,
+                'importecheque' => $importeCheque,
+                'importexml' => $importeT,
+                'Beneficiario' => $beneficiario,
+                'tipoopera' => $tipoOperacion,
+                'nombrec' => $nombrec,
+            ]);
+
+            if (!$files['0'] == '') {
+                $chequef = $cheque->first();
+                if (!$chequef->doc_relacionados == null) {
+                    foreach ($chequef->doc_relacionados as $c) {
+                        $rutaArchivo =  $rutaDescargaDR . $c;
+                        File::delete($rutaArchivo);
+                    }
+                }
+                $cheque->unset('doc_relacionados');
+                $cheque->push('doc_relacionados', $pushArchivos);
+            }
 
             $alerta = 'Cheque actualizado exitosamente.';
             $this->alerta($alerta, $ruta);
@@ -253,7 +280,7 @@ class ChequesYTransferenciasController extends Controller
                 'pendi' => $pendi,
                 'lista' => $lista,
                 'ajuste' => $ajuste,
-            ]);
+            ])->push('doc_relacionados', $pushArchivos);
 
             $alerta = 'Cheque creado exitosamente.';
             $this->alerta($alerta, $ruta);
@@ -334,10 +361,18 @@ class ChequesYTransferenciasController extends Controller
 
     public function deleteCheque(Request $r)
     {
+        $rfc = Auth::user()->RFC;
+        $rutaDescargaDR = "storage/contarappv1_descargas/$rfc/2021/Cheques_Transferencias/Documentos_Relacionados/";
         $id = $r->id;
         $rutaArchivo = $r->rutaArchivo;
         File::delete($rutaArchivo);
         $cheque = Cheques::where(['_id' => $id])->get()->first();
+        if (!$cheque->doc_relacionados == null) {
+            foreach ($cheque->doc_relacionados as $c) {
+                $rutaArchivo =  $rutaDescargaDR . $c;
+                File::delete($rutaArchivo);
+            }
+        }
         $colM = $cheque->metadata_r;
         foreach ($colM as $i) {
             MetadataR::where('cheques_id', $i->cheques_id)

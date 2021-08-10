@@ -6,6 +6,7 @@ $('th[id="vinp"]').hide();
 $('td[id="vinp"]').hide();
 $('#loading').hide();
 $('#loadingE').hide();
+$("#doc-relacionados").hide();
 
 function disableInputs() {
     $(':input[type="submit"]').prop('disabled', true);
@@ -424,6 +425,7 @@ function calcular() {
 $('#alerta-archivo-si').on('click', function() {
     $("#alerta-archivo").hide();
     $('#form-editar').show();
+    $("#doc-relacionados").show();
     return false;
 });
 
@@ -490,4 +492,12 @@ function alertaP(a, b, c) {
         msg += nl;
     }
     alert(msg);
+}
+
+function verAdicional(btn_id) {
+    var ra = document.getElementById("ruta-adicionales").value;
+    var vda = document.getElementById("docs-adicionales" + btn_id);
+    var da = vda.options[vda.selectedIndex].value;
+    var rutaArchivo = ra + da;
+    window.open(rutaArchivo, '_blank');
 }
