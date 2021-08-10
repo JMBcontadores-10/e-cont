@@ -55,6 +55,7 @@ class MonitoreoController extends Controller
             ->get();
         $nXml = $col->count();
 
+
         foreach ($col as $i) {
             $rfcR = $i['receptorRfc'];
         }
@@ -63,7 +64,7 @@ class MonitoreoController extends Controller
             ->with('n', $n)
             ->with('tXml', $tXml)
             ->with('nXml', $nXml)
-            ->with('receptorRfc', $rfcR)
+            // ->with('receptorRfc', $rfcR)
             ->with('tTabla', $tTabla)
             ->with('rfc', $rfc)
             ->with('col', $col)

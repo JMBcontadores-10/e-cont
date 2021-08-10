@@ -27,8 +27,6 @@ use Illuminate\Support\Facades\DB;
 
             @php
                 $rfc = Auth::user()->RFC;
-                $hoy = date('d-M-Y');
-                $ayer = date('d-M-Y', strtotime($hoy . '- 1 days'));
 
                 $dtz = new DateTimeZone('America/Mexico_City');
                 $dt = new DateTime('now', $dtz);
@@ -46,18 +44,11 @@ use Illuminate\Support\Facades\DB;
                 $fecha1 = $fechaF . 'T00:00:00';
                 $fecha2 = $fechaF . 'T23:59:59';
 
-                $colM = DB::table('metadata_e')
-                    ->select('fechaEmision', 'folioFiscal', 'receptorNombre', 'receptorRfc', 'total')
-                    ->where('emisorRfc', $rfc)
-                    ->whereBetweeen('fechaEmision', [$fecha1, $fecha2])
-                    ->orderBy('folioFiscal')
-                    ->get();
-
             @endphp
 
             <br>
             <h1>Facturación @php
-                echo $ayer;
+                echo $fechaF;
             @endphp</h1>
         </div>
         <br>
@@ -79,14 +70,26 @@ use Illuminate\Support\Facades\DB;
                         </tr>
                     </thead>
                     <tbody>
+                            @for ($m = 0; $m < 24; $m++)
+                                <tr>
+                                    <td>{{ $m }}</td>
+                                    {{-- @php
+                                        $fac = MetadataE::where('emisorRfc', $rfc)
+                                                ->whereBetween('fechaEmision', array($fecha1,$fecha2))
+                                                ->get();
 
-                        @for ($i = 0; $i < 24; $i++)
-                            <tr>
-                                <td>{{ $i }}</td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        @endfor
+                                            foreach ($fac as $fa) {
+                                                $fechaF = $fa['fechaEmision'];
+                                            }
+                                    @endphp --}}
+
+
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+
+                            @endfor
+
                     </tbody>
                 </table>
 
@@ -112,12 +115,12 @@ use Illuminate\Support\Facades\DB;
                                 $rfc = Auth::user()->RFC;
                                 $rfcR = $i['receptorRfc'];
                                 $cant = MetadataE::where('receptorRfc', $rfcR)
-                                    ->whereBetween('fechaEmision', array($fecha1, $fecha2))
+                                    ->whereBetween('fechaEmision', [$fecha1, $fecha2])
                                     ->count();
 
                             @endphp
                             <td>{{ $cant }}</td>
-                            <td>$ {{ $i['total']}}</td>
+                            <td>$ {{ $i['total'] }}</td>
                             <td>
                                 <form action="{{ route('detallesfactura') }}" method="POST">
                                     @csrf

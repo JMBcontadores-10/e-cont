@@ -18,10 +18,8 @@ Auth::routes(['register'=>false]);
 
 // Rutas Octavio
 
-
-
-// Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
-// Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
+//Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
+//Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
 Route::get('/prueba', [App\Http\Controllers\Prueba::class, 'index'])->name('prueba');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/descargasv2', [App\Http\Controllers\DescargasControllerv2::class, 'index'])->name('descargasv2');

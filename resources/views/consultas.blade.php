@@ -47,7 +47,7 @@
                             <input type="radio" required name="tipoFac" value="N"> Nómina
                         </p>
                         <br><br>
-                        <label for=pwd> Eliga el Periodo: </label>
+                        <label for=pwd> Elija el Periodo: </label>
                         <input type="date" name="fecha1" min="2020-01-01" required> a
                         &nbsp;<input type="date" name="fecha2" min="2020-01-01" required>
                         <input class="btn-linkj" type="submit" value="Enviar"><br>

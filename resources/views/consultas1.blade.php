@@ -43,9 +43,9 @@ use App\Models\XmlE;
         @switch($tipoFac)
             @case('I')
                 <div id="div1">
-                    <table border="1" class="table table-striped">
+                    <table border="1" class="table table-sm table-hover table-bordered">
                         <thead>
-                            <tr>
+                            <tr class="table-primary">
                                 <th scope="col">Fecha</th>
                                 <th scope="col">Folio</th>
                                 <th scope="col">FormaPago</th>
@@ -141,7 +141,6 @@ use App\Models\XmlE;
                                     <td>{{ $i['Complemento.0.TimbreFiscalDigital.Version'] }}</td>
                                 </tr>
                             @endforeach
-
                         </tbody>
                     </table>
                 </div>
