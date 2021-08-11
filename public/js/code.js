@@ -501,3 +501,4 @@ function verAdicional(btn_id) {
     var rutaArchivo = ra + da;
     window.open(rutaArchivo, '_blank');
 }
+

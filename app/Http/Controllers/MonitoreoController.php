@@ -19,6 +19,7 @@ class MonitoreoController extends Controller
 
     public function index()
     {
+        $rfcC = Auth::user()->RFC;
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
 
@@ -35,10 +36,6 @@ class MonitoreoController extends Controller
         $fecha1 = $fechaF . "T00:00:00";
         $fecha2 = $fechaF . "T23:59:59";
 
-        date_default_timezone_set("America/Mexico_City");
-        $hoy = date("d-M-Y");
-
-        $ayer = date("d-M-Y", strtotime($hoy . "- 1 days"));
 
         $rfc = Auth::user()->RFC;
         $n = 0;
@@ -117,7 +114,6 @@ class MonitoreoController extends Controller
             ->whereBetween('fechaEmision', array($fecha1, $fecha2))
             ->orderBy('folioFiscal')->get();
 
-
         return view('detallesfactura')
             ->with('meses', $meses)
             ->with('rfc', $rfc)
@@ -125,5 +121,33 @@ class MonitoreoController extends Controller
             ->with('n', $n)
             ->with('receptorRfc', $receptorRfc)
             ->with('receptorNombre', $receptorNombre);
+    }
+
+    public function horas()
+    {
+        $rfc = Auth::user()->RFC;
+        $dtz = new DateTimeZone("America/Mexico_City");
+        $dt = new DateTime("now", $dtz);
+
+        if (isset($argv[1])) {
+            $dt->sub(new DateInterval($argv[1]));
+        } else {
+            $dt->sub(new DateInterval('P1D'));
+        }
+
+        $anio = $dt->format('Y');
+        $mes = $dt->format('m');
+        $dia = $dt->format('d');
+        $fechaF = "$anio-$mes-$dia";
+        $fecha1 = $fechaF . "T00:00:00";
+        $fecha2 = $fechaF . "T23:59:59";
+
+        $fac = MetadataE::where('emisorRfc', $rfc)
+            ->whereBetween('fechaEmision', array($fecha1, $fecha2))
+            ->get();
+
+        foreach ($fac as $fa) {
+            $fechaF = $fa['fechaEmision'];
+        }
     }
 }

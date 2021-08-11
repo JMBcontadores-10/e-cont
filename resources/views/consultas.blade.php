@@ -32,7 +32,7 @@
             <div align="left">
                 <form  method="POST" action="{{route('consultas1')}}">
                     @csrf
-                    &nbsp;<label class="label1" for="consultas"> Consultas </label><br>
+
                     <br>
                         <p>
                             &nbsp;<input type="radio" required name="tipodes" value="Recibidas"> Consulta de Recibidas
