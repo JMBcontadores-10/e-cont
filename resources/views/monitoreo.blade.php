@@ -73,15 +73,7 @@ use Illuminate\Support\Facades\DB;
                             @for ($m = 0; $m < 24; $m++)
                                 <tr>
                                     <td>{{ $m }}</td>
-                                    {{-- @php
-                                        $fac = MetadataE::where('emisorRfc', $rfc)
-                                                ->whereBetween('fechaEmision', array($fecha1,$fecha2))
-                                                ->get();
 
-                                            foreach ($fac as $fa) {
-                                                $fechaF = $fa['fechaEmision'];
-                                            }
-                                    @endphp --}}
 
 
                                     <td></td>
@@ -117,7 +109,6 @@ use Illuminate\Support\Facades\DB;
                                 $cant = MetadataE::where('receptorRfc', $rfcR)
                                     ->whereBetween('fechaEmision', [$fecha1, $fecha2])
                                     ->count();
-
                             @endphp
                             <td>{{ $cant }}</td>
                             <td>$ {{ $i['total'] }}</td>

@@ -34,6 +34,7 @@
     <link  href="{{ asset ('css/fullcalendar.css') }}" rel="stylesheet" />
     <script src="{{ asset ('js/moment.min.js')}}" defer></script>
     <script src="{{ asset ('js/fullcalendar.js')}}" defer></script>
+    <script src="{{ asset ('js/excel.js')}}" defer></script>
     <script src="{{ asset ('js/es.js')}}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="{{ asset ('css/toastr.min.css')}}" rel="stylesheet" />

@@ -14,11 +14,11 @@ use App\Models\XmlE;
     <div class="container">
         <div class="container">
             <div class="float-md-left">
-                <a class="b3" href="{{ url('/') }}">
+                <a class="b3" href="javascript:javascript:history.go(-1)">
                     << Regresar</a>
             </div>
             <div class="float-md-right">
-                <p class="label2">Consultas {{ Auth::user()->nombre }}</p>
+                <p class="label2">Consultas</p>
             </div>
             <br>
             <hr style="border-color:black; width:100%;">
@@ -29,7 +29,9 @@ use App\Models\XmlE;
                 <hr style="border-color:black; width:100%;">
             </div>
         </div>
-
+        @php
+            $rfc = Auth::user()->RFC;
+        @endphp
 
         <h1>Facturas {{ $tipodes }} </h1>
         <h1>Tipo {{ $tipoFac }}</h1>
@@ -43,7 +45,8 @@ use App\Models\XmlE;
         @switch($tipoFac)
             @case('I')
                 <div id="div1">
-                    <table border="1" class="table table-sm table-hover table-bordered">
+                    <form method="POST" class="descargaR-form">
+                    <table border="1" id="tabla" class="table table-sm table-hover table-bordered">
                         <thead>
                             <tr class="table-primary">
                                 <th scope="col">Fecha</th>
@@ -143,11 +146,14 @@ use App\Models\XmlE;
                             @endforeach
                         </tbody>
                     </table>
+                </form>
                 </div>
+                <input type="button" name="btnExportar" id="btnExportar"  class="btn btn-primary" value="Exportar a Excel"
+                onclick="ExportToExcel(jQuery('#tabla').prop('outerHTML'))"/>
             @break
             @case('E')
                 <div id="div1">
-                    <table border="1" class="table table-striped">
+                    <table border="1" id="tabla" class="table table-striped">
                         <thead>
                             <tr>
                                 <th scope="col">Fecha</th>
@@ -239,13 +245,15 @@ use App\Models\XmlE;
 
                         </tbody>
                     </table>
+                    <input type="button" name="btnExportar" id="btnExportar" class="btn btn-primary" value="Exportar a Excel"
+                onclick="ExportToExcel(jQuery('#tabla').prop('outerHTML'))"/>
                     <div>
 
             @break
             @case('P')
 
                 <div id="div1">
-                    <table border="1" class="table table-striped">
+                    <table border="1" id="tabla" class="table table-striped">
                         <thead>
                             <tr>
                                 {{-- <th scope="col">ID</th> --}}
@@ -337,13 +345,14 @@ use App\Models\XmlE;
                             @endforeach
                         </tbody>
                     </table>
-
+                    <input type="button" name="btnExportar" id="btnExportar" class="btn btn-primary" value="Exportar a Excel"
+                    onclick="ExportToExcel(jQuery('#tabla').prop('outerHTML'))"/>
                 </div>
 
             @break
             @case('N')
             <div id="div1">
-                <table border="1" class="table table-striped" >
+                <table border="1"  id="tabla" class="table table-striped" >
                     <thead>
                         {{-- <th scope="col">ID</th> --}}
                         <th scope="col">Versión</th>
@@ -503,7 +512,8 @@ use App\Models\XmlE;
                         @endforeach
                     </tbody>
                 </table>
-
+                <input type="button" name="btnExportar" id="btnExportar" class="btn btn-primary" value="Exportar a Excel"
+                onclick="ExportToExcel(jQuery('#tabla').prop('outerHTML'))"/>
             </div>
 
             @break
