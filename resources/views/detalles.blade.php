@@ -26,15 +26,24 @@ use App\Models\XmlR;
             <h5 style="font-weight: bold">{{ $emisorRfc }}</h5>
             <hr style="border-color:black; width:100%;">
         </div>
+
+        <div class="input-group">
+            <span class="input-group-text">Buscar</span>
+            <input id="filtrar" type="text" class="form-control" placeholder="Buscar proveedor">
+        </div>
+        <br>
+
     </div>
+
+
+
     <form action="{{ url('vincular-cheque') }}" method="POST">
         @csrf
         <table class="table table-sm table-hover table-bordered mx-3">
             <thead>
                 <tr class="table-primary">
                     <th class="text-center align-middle">N°</th>
-                    <th class="text-center align-middle">Vincular CFDI <input type="checkbox" id="allcheck"
-                            name="allcheck" /></th>
+                    <th class="text-center align-middle">Vincular CFDI</th>
                     @if ($emisorNombre == 'Varios Proveedores')
                         <th class="text-center align-middle">RFC Emisor</th>
                         <th class="text-center align-middle">Razón Social Emisor</th>
@@ -74,7 +83,7 @@ use App\Models\XmlR;
                             @if ($estado != 'Cancelado')
                                 <div id="checkbox-group" class="checkbox-group">
                                     <input class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"
-                                        id="allcheck" name="allcheck[]" value="{{ $folioF }}" />
+                                        name="allcheck[]" value="{{ $folioF }}" />
                                 </div>
                             @endif
                         </td>
@@ -101,6 +110,10 @@ use App\Models\XmlR;
                                     if ($efecto == 'Pago') {
                                         $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
                                         $metodoPago = '-';
+                                    } elseif ($efecto == 'Egreso') {
+                                        $docRel = $v['CfdiRelacionados.CfdiRelacionado.0.UUID'];
+                                    }elseif($efecto == 'Ingreso'){
+                                        // $docRel = $v['CfdiRelacionados.CfdiRelacionado.0.UUID'];
                                     }
                                 }
                             } else {
@@ -126,6 +139,10 @@ use App\Models\XmlR;
                                     @foreach ($docRel as $d)
                                         {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
                                     @endforeach
+                                @elseif ($efecto == 'Egreso' and !$docRel == null)
+                                    {{ $docRel }}
+                                {{-- @elseif ($efecto == 'Ingreso' and !$docRel == null)
+                                    {{ $docRel }} --}}
                                 @else
                                     -
                                 @endif
