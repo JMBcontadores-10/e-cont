@@ -103,7 +103,7 @@
                         $diferencia = $diferencia - $ajuste;
                         $diferencia = number_format($diferencia, 2);
                     }
-                    if ($diferencia != 0) {
+                    if ($diferencia > 1 or $diferencia < -1) {
                         $diferenciaP = 0;
                     } else {
                         $diferenciaP = 1;
@@ -158,7 +158,8 @@
                             <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
                         @else
                             @if (!$docAdi['0'] == '')
-                                <select id="{{ "docs-adicionales$n" }}" name="docs-adicionales" class="form-control mb-2">
+                                <select id="{{ "docs-adicionales$n" }}" name="docs-adicionales"
+                                    class="form-control mb-2">
                                     @foreach ($docAdi as $d)
                                         <option value="{{ $d }}"> {{ $d }}</option>
                                     @endforeach
@@ -226,7 +227,7 @@
                     <td class="text-center align-middle">
                         <div class="row align-items-center mx-1">
                             <div class="col">
-                                @if ($diferencia != 0 or $faltaxml == 0 or $nombreCheque == '0')
+                                @if ($tipoO == 'Impuestos'?($diferenciaP != 1 or $nombreCheque == '0'):($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0'))
                                     <div class="row d-flex justify-content-center">
                                         <span class="fa-stack mb-2">
                                             <i class="fas fa-circle fa-stack-1x fa-lg mt-1" style="color: rgb(8, 8, 8)"></i>

@@ -10,41 +10,6 @@ class Prueba extends Controller
 {
     public function index(Request $r)
     {
-        // $cheque = Cheques::find('61129680633400009b002644');
-        // $files = ['a', 'b', 'd'];
-        // $f = null;
-        // $files = '';
-        // $cheque->push('archivos', $files, true);
-
-        // Cheques::create([
-        //     'Id' => 'IdPrueba2',
-        // ])->push('archivos', $files, true);
-
-        // $cheque =  Cheques::where('_id', '6111419bc4450000a1005856');
-        // $cheque2 =  Cheques::where('_id', '6112c83f633400009b00264e');
-        // $chequef = $cheque2->first();
-        // if (!$chequef->doc_relacionados == null) {
-        //     echo "Si";
-        // } else{
-        //     echo "No";
-        // }
-        // foreach ($chequef->doc_relacionados as $c) {
-        //     echo "$c<br>";
-        // }
-        // dd($chequef);
-        // $cheque2 =  Cheques::where('_id', '6112c438633400009b00264b')->first();
-        // $dd = $cheque->archivos['0'];
-        // if (!empty($dd)) {
-        //     echo "Si";
-        // } else{
-        //     echo "No";
-        // }
-        // dd($dd);
-        // $cheque->update([
-        //     'Id' => 'IdPrueba3',
-        // ]);
-        // $cheque->unset('archivos');
-        // $cheque->push('archivos', $files);
     }
 
     public function renombrarXml()
