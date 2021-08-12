@@ -126,6 +126,7 @@ class ChequesYTransferenciasController extends Controller
                 $colCheques = Cheques::where(['rfc' => $rfc])
                     ->where('verificado', '=', 0)
                     ->orderBy('fecha', 'desc')
+                    ->orderBy('updated_at', 'desc')
                     ->get();
                 $totalXml = $r->totalXml;
                 $totalXml = substr($totalXml, 1);

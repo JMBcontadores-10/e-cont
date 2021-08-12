@@ -12,16 +12,7 @@ class Prueba extends Controller
 {
     public function index(Request $r)
     {
-        $Id = 'Identificador';
-        $pushArchivos = ['a', 'b', 'c'];
-        $chequeCreado = Cheques::create([
-            'Id' => $Id,
-            'rfc' => 'RFC',
-        ]);
 
-        $chequeCreado->push('doc_relacionados', $pushArchivos);
-
-        dd($chequeCreado->_id);
     }
 
     public function renombrarXml()
