@@ -26,7 +26,6 @@ use App\Models\XmlR;
             <h5 style="font-weight: bold">{{ $emisorRfc }}</h5>
             <hr style="border-color:black; width:100%;">
         </div>
-
         <div class="input-group">
             <span class="input-group-text">Buscar</span>
             <input id="filtrar" type="text" class="form-control" placeholder="Buscar proveedor">
@@ -34,9 +33,6 @@ use App\Models\XmlR;
         <br>
 
     </div>
-
-
-
     <form action="{{ url('vincular-cheque') }}" method="POST">
         @csrf
         <table class="table table-sm table-hover table-bordered mx-3">
@@ -111,9 +107,9 @@ use App\Models\XmlR;
                                         $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
                                         $metodoPago = '-';
                                     } elseif ($efecto == 'Egreso') {
-                                        $docRel = $v['CfdiRelacionados.CfdiRelacionado.0.UUID'];
-                                    }elseif($efecto == 'Ingreso'){
-                                        // $docRel = $v['CfdiRelacionados.CfdiRelacionado.0.UUID'];
+                                        $docRel = $v['CfdiRelacionados.CfdiRelacionado'];
+                                    } elseif ($efecto == 'Ingreso') {
+                                        $docRel = $v['CfdiRelacionados.CfdiRelacionado'];
                                     }
                                 }
                             } else {
@@ -140,9 +136,13 @@ use App\Models\XmlR;
                                         {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
                                     @endforeach
                                 @elseif ($efecto == 'Egreso' and !$docRel == null)
-                                    {{ $docRel }}
-                                {{-- @elseif ($efecto == 'Ingreso' and !$docRel == null)
-                                    {{ $docRel }} --}}
+                                    @foreach ($docRel as $d)
+                                        {{ ++$nUR }}. {{ $d['UUID'] }}<br>
+                                    @endforeach
+                                @elseif ($efecto == 'Ingreso' and !$docRel == null)
+                                    @foreach ($docRel as $d)
+                                        {{ ++$nUR }}. {{ $d['UUID'] }}<br>
+                                    @endforeach
                                 @else
                                     -
                                 @endif

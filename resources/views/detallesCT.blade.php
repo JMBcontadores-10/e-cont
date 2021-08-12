@@ -39,7 +39,7 @@ use App\Models\XmlR;
                         <th class="text-center align-middle">Desvincular CFDI <input type="checkbox" id="allcheck"
                                 name="allcheck" /></th>
                     @endif
-                    {{-- <th class="text-center align-middle">RFC Emisor</th> --}}
+                    <th class="text-center align-middle">RFC Emisor</th>
                     {{-- <th class="text-center align-middle">Razón Social Emisor</th> --}}
                     <th class="text-center align-middle">UUID</th>
                     <th class="text-center align-middle">Fecha Emisión</th>
@@ -54,9 +54,13 @@ use App\Models\XmlR;
                 </tr>
             </thead>
             <tbody class="buscar">
+                @php
+                    $arrRfc = [];
+                @endphp
                 @foreach ($colM as $i)
                     @php
                         $emisorRfc = $i->emisorRfc;
+                        $arrRfc[] = $emisorRfc;
                         $emisorNombre = $i->emisorNombre;
                         $folioF = $i->folioFiscal;
                         $fechaE = $i->fechaEmision;
@@ -78,7 +82,7 @@ use App\Models\XmlR;
                                 </div>
                             </td>
                         @endif
-                        {{-- <td class="text-center align-middle">{{ $emisorRfc }}</td> --}}
+                        <td class="text-center align-middle">{{ $emisorRfc }}</td>
                         {{-- <td class="text-center align-middle">{{ $emisorNombre }}</td> --}}
                         <td class="text-center align-middle">{{ $folioF }}</td>
                         <td class="text-center align-middle">{{ $fechaE }}</td>
@@ -99,6 +103,10 @@ use App\Models\XmlR;
                                     if ($efecto == 'Pago') {
                                         $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
                                         $metodoPago = '-';
+                                    } elseif ($efecto == 'Egreso') {
+                                        $docRel = $v['CfdiRelacionados.CfdiRelacionado'];
+                                    } elseif ($efecto == 'Ingreso') {
+                                        $docRel = $v['CfdiRelacionados.CfdiRelacionado'];
                                     }
                                 }
                             } else {
@@ -107,7 +115,6 @@ use App\Models\XmlR;
                                 $folio = 'X';
                                 $uuidRef = 'X';
                             }
-
                         @endphp
                         <td class="text-center align-middle">
                             @if (!$colX->isEmpty())
@@ -125,6 +132,14 @@ use App\Models\XmlR;
                                 @if ($efecto == 'Pago')
                                     @foreach ($docRel as $d)
                                         {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
+                                    @endforeach
+                                @elseif ($efecto == 'Egreso' and !$docRel == null)
+                                    @foreach ($docRel as $d)
+                                        {{ ++$nUR }}. {{ $d['UUID'] }}<br>
+                                    @endforeach
+                                @elseif ($efecto == 'Ingreso' and !$docRel == null)
+                                    @foreach ($docRel as $d)
+                                        {{ ++$nUR }}. {{ $d['UUID'] }}<br>
                                     @endforeach
                                 @else
                                     -
@@ -149,12 +164,20 @@ use App\Models\XmlR;
             </tbody>
         </table>
         @if ($verificado == 0)
-            <div class="d-flex justify-content-center">
+            <div class="row justify-content-center mt-4">
                 <input readonly name="cheques_id" type="hidden" value="{{ $id }}" />
                 <input readonly id="total" name="totalXml" type="hidden" value="0" />
                 <input id="vinct" type="submit" value="Desvincular Cheque/Transferencia"
                     style="color:#0055ff; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #FFFFFF">
             </div>
-        @endif
     </form>
+    <div class="row d-flex justify-content-center mt-4">
+        <form action="{{ url('detalles') }}">
+            <input name='arrRfc' type="hidden" value="{{ json_encode(array_unique($arrRfc)) }}">
+            <input type="submit" value="Ir a vincular Cheque/Transferencia"
+                style="color:#0055ff; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #FFFFFF">
+        </form>
+
+    </div>
+    @endif
 @endsection
