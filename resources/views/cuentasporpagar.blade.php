@@ -114,7 +114,7 @@ use App\Models\ListaNegra;
                         <td></td>
                         <td></td>
                         <td id="vinp"></td>
-                        <td class="text-bold " align="right">Total:</td>
+                        <td class="text-center text-bold">Total:</td>
                         <td class="text-center text-bold">{{ $tXml }}</td>
                         <td id="bottom" class="text-center text-bold">${{ number_format($tTabla, 2) }}</td>
                     </tr>
