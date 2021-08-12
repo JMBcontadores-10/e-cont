@@ -64,6 +64,7 @@ use App\Models\ListaNegra;
                                 ->select('total', 'efecto')
                                 ->where('receptorRfc', $rfc)
                                 ->where('emisorRfc', $i['emisorRfc'])
+                                ->where('estado', '<>', 'Cancelado')
                                 ->whereNull('cheques_id')
                                 ->get();
                             $nXml = $colT->count();

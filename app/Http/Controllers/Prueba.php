@@ -2,14 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Cheques;
 use DirectoryIterator;
+use App\Models\Cheques;
+use App\Models\MetadataR;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Prueba extends Controller
 {
     public function index(Request $r)
     {
+        $Id = 'Identificador';
+        $pushArchivos = ['a', 'b', 'c'];
+        $chequeCreado = Cheques::create([
+            'Id' => $Id,
+            'rfc' => 'RFC',
+        ]);
+
+        $chequeCreado->push('doc_relacionados', $pushArchivos);
+
+        dd($chequeCreado->_id);
     }
 
     public function renombrarXml()

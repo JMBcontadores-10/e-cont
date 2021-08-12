@@ -207,7 +207,7 @@
                             </div>
                             <div class="col-4">
                                 <input class="form-control" type=text required readonly name="importeT"
-                                    {{-- value="{{ $vincular ? $totalXml : '0' }}" --}} value="0">
+                                    value="{{ $vincular ? $totalXml : '0' }}">
                             </div>
                         </div>
                         <div class="mainbox2 row">
@@ -249,6 +249,9 @@
                                 <input name="doc_relacionados[]" type="file" accept=".pdf" multiple />
                             </div>
                         </div>
+                        @if ($vincular)
+                            <input type="hidden" name="allcheck" value="{{ json_encode($allcheck, true) }}">
+                        @endif
                         <button class="btn btn-linkj mt-3">Registrar Cheque/Transferencia</button>
                     </form>
                 </div>
