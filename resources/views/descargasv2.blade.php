@@ -49,8 +49,8 @@
     </div>
 
     <div class="mx-4 mt-4">
-        <h2 class="ml-4">Descarga</h2>
-        <div class="tablas-resultados ml-2 mr-2">
+        <h2>Descarga</h2>
+        <div class="tablas-resultados ">
             <div class="overlay"></div>
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="nav-item active"><a class="nav-link" href="#recibidos" aria-controls="recibidos"
