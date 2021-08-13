@@ -44,15 +44,21 @@ class ChequesYTransferenciasController extends Controller
         if ($r->has('mes')) {
             $mes = $r->mes;
             $anio = $r->anio;
-            $fechaF = "$anio-$mes-";
+            if ($r->mes == '00') {
+                $fechaF = '';
+            }else{
+                $fechaF = "$anio-$mes-";
+            }
             $colCheques = Cheques::where('rfc', $rfc)
                 ->where('fecha', 'like', $fechaF . '%')
                 ->orderBy('fecha', 'desc')
+                ->orderBy('updated_at', 'desc')
                 // ->paginate(50);
                 ->get();
         } else {
             $colCheques = Cheques::where(['rfc' => $rfc])
                 ->orderBy('fecha', 'desc')
+                ->orderBy('updated_at', 'desc')
                 // ->paginate(50);
                 ->get();
         }
@@ -124,6 +130,7 @@ class ChequesYTransferenciasController extends Controller
                 $colCheques = Cheques::where(['rfc' => $rfc])
                     ->where('verificado', '=', 0)
                     ->orderBy('fecha', 'desc')
+                    ->orderBy('updated_at', 'desc')
                     ->get();
                 $totalXml = $r->totalXml;
                 $totalXml = substr($totalXml, 1);
@@ -204,7 +211,7 @@ class ChequesYTransferenciasController extends Controller
         if (!$files['0'] == '') {
             $n = 0;
             foreach ($files as $f) {
-                $nombreArchivo = preg_replace('/[^A-z0-9.]+/', '', $f);
+                $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $f);
                 $nombreArchivo = "$Id-$nombreArchivo";
                 $r->doc_relacionados[$n]->move($rutaDescargaDR, $nombreArchivo);
                 $n++;
@@ -219,7 +226,7 @@ class ChequesYTransferenciasController extends Controller
             if ($subir_archivo == '') {
                 $nombrec = $r->nombrec;
             } else {
-                $subir_archivo = preg_replace('/[^A-z0-9.]+/', '', $subir_archivo);
+                $subir_archivo = preg_replace('/[^A-z0-9.-]+/', '', $subir_archivo);
                 $nombrec = "$Id-$subir_archivo";
                 $r->subir_archivo->move($rutaDescarga, $nombrec);
             }
@@ -257,12 +264,12 @@ class ChequesYTransferenciasController extends Controller
             if ($subir_archivo == '') {
                 $nombrec = '0';
             } else {
-                $subir_archivo = preg_replace('/[^A-z0-9.]+/', '', $subir_archivo);
+                $subir_archivo = preg_replace('/[^A-z0-9.-]+/', '', $subir_archivo);
                 $nombrec = "$Id-$subir_archivo";
                 $r->subir_archivo->move($rutaDescarga, $nombrec);
             }
 
-            Cheques::create([
+            $chequeC = Cheques::create([
                 'Id' => $Id,
                 'tipomov' => $tipo,
                 'numcheque' => $numCheque,
@@ -280,10 +287,34 @@ class ChequesYTransferenciasController extends Controller
                 'pendi' => $pendi,
                 'lista' => $lista,
                 'ajuste' => $ajuste,
-            ])->push('doc_relacionados', $pushArchivos);
+            ]);
 
-            $alerta = 'Cheque creado exitosamente.';
-            $this->alerta($alerta, $ruta);
+            $chequeC->push('doc_relacionados', $pushArchivos);
+
+            if ($r->has('allcheck')) {
+                $cheque_id = $chequeC->_id;
+                $allcheck = $r->allcheck;
+                $arrcheck = json_decode($allcheck, true);
+                $nXml = 0;
+                foreach ($arrcheck as $i) {
+                    $nXml++;
+                    $metar = MetadataR::where('folioFiscal', $i)->first();
+                    $cheque = Cheques::find($cheque_id);
+                    $cheque->metadata_r()->save($metar);
+                }
+
+                $cheque_tXml = Cheques::find($cheque_id);
+                $faltaxml = $cheque_tXml->faltaxml + $nXml;
+                $cheque_tXml->update([
+                    'faltaxml' => $faltaxml,
+                ]);
+
+                $alerta = 'Cheque creado y vinculado exitosamente.';
+                $this->alerta($alerta, $ruta);
+            } else {
+                $alerta = 'Cheque creado exitosamente.';
+                $this->alerta($alerta, $ruta);
+            }
         }
     }
 
@@ -296,16 +327,6 @@ class ChequesYTransferenciasController extends Controller
         foreach ($arrcheck as $i) {
             $nXml++;
             $metar = MetadataR::where('folioFiscal', $i)->first();
-            // if ($metar->efecto == 'Pago') {
-            //     $xmlr = XmlR::where('UUID', $i)->first();
-            //     $docRel = $xmlr['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
-            //     foreach ($docRel as $d) {
-            //         $uuidRef = $d['IdDocumento'];
-            //         echo "$uuidRef <br>";
-            //     }
-            // }
-            // dd($docRel);
-            // dd($metar);
             $cheque = Cheques::find($cheque_id);
             $cheque->metadata_r()->save($metar);
         }

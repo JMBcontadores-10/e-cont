@@ -204,7 +204,7 @@ class Async extends Controller
                 $filtros->establecerFecha($anio, $mes, $dia);
                 $xmlInfoArr = $descargaCfdi->buscar($filtros);
                 if ($xmlInfoArr) {
-                    foreach ($xmlInfoArr as $index => $xmlInfo) {
+                    foreach ($xmlInfoArr as $xmlInfo) {
                         $udx = $xmlInfo->urlDescargaXml;
                         $uda = $xmlInfo->urlDescargaAcuse;
                         $udr = $xmlInfo->urlDescargaRI;
@@ -226,30 +226,67 @@ class Async extends Controller
                         $fcan = $xmlInfo->fechaCancelacion;
                         $ua = $xmlInfo->urlAcuseXml;
 
-                        $meta = MetadataR::where(['folioFiscal' => $ff]);
-                        $meta->update(
-                            [
-                                'urlDescargaXml'            => $udx,
-                                'urlDescargaAcuse'          => $uda,
-                                'urlDescargaRI'             => $udr,
-                                'folioFiscal'               => $ff,
-                                'emisorRfc'                 => $er,
-                                'emisorNombre'              => $en,
-                                'receptorRfc'               => $rr,
-                                'receptorNombre'            => $rn,
-                                'fechaEmision'              => $fe,
-                                'fechaCertificacion'        => $fcer,
-                                'pacCertificado'            => $pc,
-                                'total'                     => $total,
-                                'efecto'                    => $efecto,
-                                'estado'                    => $estado,
-                                'estadoCancelacion'         => $ec,
-                                'estadoProcesoCancelacion'  => $epc,
-                                'fechaCancelacion'          => $fcan,
-                                'urlAcuseXml'               => $ua,
-                            ],
-                            ['upsert' => true]
-                        );
+                        if (!empty($_POST['xml'])) {
+                            foreach ($_POST['xml'] as $folioFiscal => $url) {
+                                if ($folioFiscal == $ff) {
+                                    $meta = MetadataR::where(['folioFiscal' => $ff]);
+                                    $meta->update(
+                                        [
+                                            'urlDescargaXml'            => $udx,
+                                            'urlDescargaAcuse'          => $uda,
+                                            'urlDescargaRI'             => $udr,
+                                            'folioFiscal'               => $ff,
+                                            'emisorRfc'                 => $er,
+                                            'emisorNombre'              => $en,
+                                            'receptorRfc'               => $rr,
+                                            'receptorNombre'            => $rn,
+                                            'fechaEmision'              => $fe,
+                                            'fechaCertificacion'        => $fcer,
+                                            'pacCertificado'            => $pc,
+                                            'total'                     => $total,
+                                            'efecto'                    => $efecto,
+                                            'estado'                    => $estado,
+                                            'estadoCancelacion'         => $ec,
+                                            'estadoProcesoCancelacion'  => $epc,
+                                            'fechaCancelacion'          => $fcan,
+                                            'urlAcuseXml'               => $ua,
+                                        ],
+                                        ['upsert' => true]
+                                    );
+                                }
+                            }
+                        }
+
+                        if (!empty($_POST['ri'])) {
+                            foreach ($_POST['ri'] as $folioFiscal => $url) {
+                                if ($folioFiscal == $ff) {
+                                    $meta = MetadataR::where(['folioFiscal' => $ff]);
+                                    $meta->update(
+                                        [
+                                            'urlDescargaXml'            => $udx,
+                                            'urlDescargaAcuse'          => $uda,
+                                            'urlDescargaRI'             => $udr,
+                                            'folioFiscal'               => $ff,
+                                            'emisorRfc'                 => $er,
+                                            'emisorNombre'              => $en,
+                                            'receptorRfc'               => $rr,
+                                            'receptorNombre'            => $rn,
+                                            'fechaEmision'              => $fe,
+                                            'fechaCertificacion'        => $fcer,
+                                            'pacCertificado'            => $pc,
+                                            'total'                     => $total,
+                                            'efecto'                    => $efecto,
+                                            'estado'                    => $estado,
+                                            'estadoCancelacion'         => $ec,
+                                            'estadoProcesoCancelacion'  => $epc,
+                                            'fechaCancelacion'          => $fcan,
+                                            'urlAcuseXml'               => $ua,
+                                        ],
+                                        ['upsert' => true]
+                                    );
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -265,12 +302,12 @@ class Async extends Controller
                         $descarga->agregarRepImpr($url, $rutaDescarga, $folioFiscal, $folioFiscal);
                     }
                 }
-                if (!empty($_POST['acuse'])) {
-                    foreach ($_POST['acuse'] as $folioFiscal => $url) {
-                        // acuse de resultado de cancelacion
-                        $descarga->agregarAcuse($url, $rutaDescarga, $folioFiscal, $folioFiscal . '-acuse');
-                    }
-                }
+                // if (!empty($_POST['acuse'])) {
+                //     foreach ($_POST['acuse'] as $folioFiscal => $url) {
+                //         // acuse de resultado de cancelacion
+                //         $descarga->agregarAcuse($url, $rutaDescarga, $folioFiscal, $folioFiscal . '-acuse');
+                //     }
+                // }
 
                 $descarga->procesar();
 
@@ -306,7 +343,7 @@ class Async extends Controller
                 $filtros->establecerFechaFinal($aniof, $mesf, $diaf);
                 $xmlInfoArr = $descargaCfdi->buscar($filtros);
                 if ($xmlInfoArr) {
-                    foreach ($xmlInfoArr as $index => $xmlInfo) {
+                    foreach ($xmlInfoArr as $xmlInfo) {
                         $udx = $xmlInfo->urlDescargaXml;
                         $uda = $xmlInfo->urlDescargaAcuse;
                         $udr = $xmlInfo->urlDescargaRI;
@@ -328,30 +365,98 @@ class Async extends Controller
                         $fcan = $xmlInfo->fechaCancelacion;
                         $ua = $xmlInfo->urlAcuseXml;
 
-                        $meta = MetadataE::where(['folioFiscal' => $ff]);
-                        $meta->update(
-                            [
-                                'urlDescargaXml'            => $udx,
-                                'urlDescargaAcuse'          => $uda,
-                                'urlDescargaRI'             => $udr,
-                                'folioFiscal'               => $ff,
-                                'emisorRfc'                 => $er,
-                                'emisorNombre'              => $en,
-                                'receptorRfc'               => $rr,
-                                'receptorNombre'            => $rn,
-                                'fechaEmision'              => $fe,
-                                'fechaCertificacion'        => $fcer,
-                                'pacCertificado'            => $pc,
-                                'total'                     => $total,
-                                'efecto'                    => $efecto,
-                                'estado'                    => $estado,
-                                'estadoCancelacion'         => $ec,
-                                'estadoProcesoCancelacion'  => $epc,
-                                'fechaCancelacion'          => $fcan,
-                                'urlAcuseXml'               => $ua,
-                            ],
-                            ['upsert' => true]
-                        );
+                        if (!empty($_POST['xml'])) {
+                            foreach ($_POST['xml'] as $folioFiscal => $url) {
+                                if ($folioFiscal == $ff) {
+                                    $meta = MetadataE::where(['folioFiscal' => $ff]);
+                                    $meta->update(
+                                        [
+                                            'urlDescargaXml'            => $udx,
+                                            'urlDescargaAcuse'          => $uda,
+                                            'urlDescargaRI'             => $udr,
+                                            'folioFiscal'               => $ff,
+                                            'emisorRfc'                 => $er,
+                                            'emisorNombre'              => $en,
+                                            'receptorRfc'               => $rr,
+                                            'receptorNombre'            => $rn,
+                                            'fechaEmision'              => $fe,
+                                            'fechaCertificacion'        => $fcer,
+                                            'pacCertificado'            => $pc,
+                                            'total'                     => $total,
+                                            'efecto'                    => $efecto,
+                                            'estado'                    => $estado,
+                                            'estadoCancelacion'         => $ec,
+                                            'estadoProcesoCancelacion'  => $epc,
+                                            'fechaCancelacion'          => $fcan,
+                                            'urlAcuseXml'               => $ua,
+                                        ],
+                                        ['upsert' => true]
+                                    );
+                                }
+                            }
+                        }
+
+                        if (!empty($_POST['ri'])) {
+                            foreach ($_POST['ri'] as $folioFiscal => $url) {
+                                if ($folioFiscal == $ff) {
+                                    $meta = MetadataE::where(['folioFiscal' => $ff]);
+                                    $meta->update(
+                                        [
+                                            'urlDescargaXml'            => $udx,
+                                            'urlDescargaAcuse'          => $uda,
+                                            'urlDescargaRI'             => $udr,
+                                            'folioFiscal'               => $ff,
+                                            'emisorRfc'                 => $er,
+                                            'emisorNombre'              => $en,
+                                            'receptorRfc'               => $rr,
+                                            'receptorNombre'            => $rn,
+                                            'fechaEmision'              => $fe,
+                                            'fechaCertificacion'        => $fcer,
+                                            'pacCertificado'            => $pc,
+                                            'total'                     => $total,
+                                            'efecto'                    => $efecto,
+                                            'estado'                    => $estado,
+                                            'estadoCancelacion'         => $ec,
+                                            'estadoProcesoCancelacion'  => $epc,
+                                            'fechaCancelacion'          => $fcan,
+                                            'urlAcuseXml'               => $ua,
+                                        ],
+                                        ['upsert' => true]
+                                    );
+                                }
+                            }
+                        }
+
+                        if (!empty($_POST['acuse'])) {
+                            foreach ($_POST['acuse'] as $folioFiscal => $url) {
+                                if ($folioFiscal == $ff) {
+                                    $meta = MetadataE::where(['folioFiscal' => $ff]);
+                                    $meta->update(
+                                        [
+                                            'urlDescargaXml'            => $udx,
+                                            'urlDescargaAcuse'          => $uda,
+                                            'urlDescargaRI'             => $udr,
+                                            'folioFiscal'               => $ff,
+                                            'emisorRfc'                 => $er,
+                                            'emisorNombre'              => $en,
+                                            'receptorRfc'               => $rr,
+                                            'receptorNombre'            => $rn,
+                                            'fechaEmision'              => $fe,
+                                            'fechaCertificacion'        => $fcer,
+                                            'pacCertificado'            => $pc,
+                                            'total'                     => $total,
+                                            'efecto'                    => $efecto,
+                                            'estado'                    => $estado,
+                                            'estadoCancelacion'         => $ec,
+                                            'estadoProcesoCancelacion'  => $epc,
+                                            'fechaCancelacion'          => $fcan,
+                                            'urlAcuseXml'               => $ua,
+                                        ],
+                                        ['upsert' => true]
+                                    );
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -410,9 +515,9 @@ class Async extends Controller
                     if ($fileExt == 'pdf') {
                         rename($filePathname, $rutaGuardar . 'PDF/' . $fileName);
                     } else {
-                        $var = "$rutaGuardar"."XML/$fileName";
+                        $var = $rutaGuardar . "XML/$fileName";
                         rename($filePathname, $var);
-                        // // // prueba de cfditojson
+                        // prueba de cfditojson
                         $contents = file_get_contents($var);
                         $cleaner = Cleaner::staticClean($contents);
                         $json = JsonConverter::convertToJson($cleaner);
@@ -545,7 +650,4 @@ class Async extends Controller
         return $val;
         // return floatval($val);
     }
-
-
-
 }

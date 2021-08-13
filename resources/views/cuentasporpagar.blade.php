@@ -57,60 +57,64 @@ use App\Models\ListaNegra;
                 </thead>
                 <tbody class="buscar">
                     @foreach ($col as $i)
-                        <tr>
-                            <td class="text-center align-middle">{{ ++$n }}</td>
-                            <td id="vinp" class="text-center align-middle">
-                                <div id="checkbox-group" class="checkbox-group">
-                                    <input class="mis-checkboxes" type="checkbox" id="allcheck" name="allcheck[]"
-                                        value="{{ $i['emisorRfc'] }}" />
-                                </div>
-                            </td>
-                            <td class="text-center align-middle">{{ $i['emisorRfc'] }}</td>
-                            <td class="align-middle">{{ $i['emisorNombre'] }}</td>
-                            @if (!DB::collection('lista_negra')->select('RFC')->where(['RFC' => $i['emisorRfc']])->exists())
-                                <td class="td1 text-center align-middle"><img src="{{ asset('img/ima.png') }}" alt="">
-                                </td>
-                            @else
-                                <td class="td1 text-center align-middle"><img src="{{ asset('img/ima2.png') }}" alt="">
-                                </td>
-                            @endif
-                            @php
-                                $sum = 0;
-                                $nXml = 0;
-                                $colT = DB::collection('metadata_r')
-                                    ->select('total', 'efecto')
-                                    ->where('receptorRfc', $rfc)
-                                    ->where('emisorRfc', $i['emisorRfc'])
-                                    ->whereNull('cheques_id')
-                                    ->get();
-                                $nXml = $colT->count();
-                                foreach ($colT as $v) {
-                                    $var = (float) $v['total'];
-                                    if ($v['efecto'] == 'Egreso') {
-                                        $var = -1 * abs($var);
-                                    }
-                                    $sum = $sum + $var;
+                        @php
+                            $sum = 0;
+                            $nXml = 0;
+                            $colT = DB::collection('metadata_r')
+                                ->select('total', 'efecto')
+                                ->where('receptorRfc', $rfc)
+                                ->where('emisorRfc', $i['emisorRfc'])
+                                ->where('estado', '<>', 'Cancelado')
+                                ->whereNull('cheques_id')
+                                ->get();
+                            $nXml = $colT->count();
+                            foreach ($colT as $v) {
+                                $var = (float) $v['total'];
+                                if ($v['efecto'] == 'Egreso') {
+                                    $var = -1 * abs($var);
                                 }
-                                $tXml = $tXml + $nXml;
-                                $tTabla = $tTabla + $sum;
-                            @endphp
-                            <td class="text-center align-middle">{{ $nXml }}</td>
-                            <td class="text-center align-middle">${{ number_format($sum, 2) }}</td>
-                            <td class="text-center align-middle">
-                                <form action="detalles" method="GET">
-                                    <input type="hidden" name="emisorRfc" value="{{ $i['emisorRfc'] }}">
-                                    <input type="hidden" name="emisorNombre" value="{{ $i['emisorNombre'] }}">
-                                    <input type=submit value=Ver>
-                                </form>
-                            </td>
-                        </tr>
+                                $sum = $sum + $var;
+                            }
+                            $tXml = $tXml + $nXml;
+                            $tTabla = $tTabla + $sum;
+                        @endphp
+                        @if (!$nXml == 0)
+                            <tr>
+                                <td class="text-center align-middle">{{ ++$n }}</td>
+                                <td id="vinp" class="text-center align-middle">
+                                    <div id="checkbox-group" class="checkbox-group">
+                                        <input class="mis-checkboxes" type="checkbox" id="allcheck" name="allcheck[]"
+                                            value="{{ $i['emisorRfc'] }}" />
+                                    </div>
+                                </td>
+                                <td class="text-center align-middle">{{ $i['emisorRfc'] }}</td>
+                                <td class="align-middle">{{ $i['emisorNombre'] }}</td>
+                                @if (!DB::collection('lista_negra')->select('RFC')->where(['RFC' => $i['emisorRfc']])->exists())
+                                    <td class="td1 text-center align-middle"><img src="{{ asset('img/ima.png') }}" alt="">
+                                    </td>
+                                @else
+                                    <td class="td1 text-center align-middle"><img src="{{ asset('img/ima2.png') }}"
+                                            alt="">
+                                    </td>
+                                @endif
+                                <td class="text-center align-middle">{{ $nXml }}</td>
+                                <td class="text-center align-middle">${{ number_format($sum, 2) }}</td>
+                                <td class="text-center align-middle">
+                                    <form action="detalles" method="GET">
+                                        <input type="hidden" name="emisorRfc" value="{{ $i['emisorRfc'] }}">
+                                        <input type="hidden" name="emisorNombre" value="{{ $i['emisorNombre'] }}">
+                                        <input type=submit value=Ver>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                     <tr>
                         <td></td>
                         <td></td>
                         <td></td>
                         <td id="vinp"></td>
-                        <td class="text-bold " align="right">Total:</td>
+                        <td class="text-center text-bold">Total:</td>
                         <td class="text-center text-bold">{{ $tXml }}</td>
                         <td id="bottom" class="text-center text-bold">${{ number_format($tTabla, 2) }}</td>
                     </tr>
