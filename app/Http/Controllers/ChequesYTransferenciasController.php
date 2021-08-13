@@ -211,7 +211,7 @@ class ChequesYTransferenciasController extends Controller
         if (!$files['0'] == '') {
             $n = 0;
             foreach ($files as $f) {
-                $nombreArchivo = preg_replace('/[^A-z0-9.]+/', '', $f);
+                $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $f);
                 $nombreArchivo = "$Id-$nombreArchivo";
                 $r->doc_relacionados[$n]->move($rutaDescargaDR, $nombreArchivo);
                 $n++;
@@ -226,7 +226,7 @@ class ChequesYTransferenciasController extends Controller
             if ($subir_archivo == '') {
                 $nombrec = $r->nombrec;
             } else {
-                $subir_archivo = preg_replace('/[^A-z0-9.]+/', '', $subir_archivo);
+                $subir_archivo = preg_replace('/[^A-z0-9.-]+/', '', $subir_archivo);
                 $nombrec = "$Id-$subir_archivo";
                 $r->subir_archivo->move($rutaDescarga, $nombrec);
             }
@@ -264,7 +264,7 @@ class ChequesYTransferenciasController extends Controller
             if ($subir_archivo == '') {
                 $nombrec = '0';
             } else {
-                $subir_archivo = preg_replace('/[^A-z0-9.]+/', '', $subir_archivo);
+                $subir_archivo = preg_replace('/[^A-z0-9.-]+/', '', $subir_archivo);
                 $nombrec = "$Id-$subir_archivo";
                 $r->subir_archivo->move($rutaDescarga, $nombrec);
             }

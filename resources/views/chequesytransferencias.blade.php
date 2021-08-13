@@ -26,7 +26,7 @@
             <div class="col-sm-7">
                 <form class="form-inline" method="POST">
                     @csrf
-                    <label class="text-bold" for="mes">Seleccione el periodo: </label>
+                    <label class="pf" for="mes">Seleccione el periodo: </label>
                     <div class="form-group">
                         <select class="form-control m-2" id="mes" name="mes">
                             <option value="00">Todos</option>
@@ -42,7 +42,7 @@
                             } ?>
                         </select>
                     </div>
-                    <div class="text-right">
+                    <div>
                         <button type="submit" class="btn btn-primary ml-2">Consultar</button>
                     </div>
                 </form>
@@ -162,7 +162,10 @@
                                     <select id="{{ "docs-adicionales$n" }}" name="docs-adicionales"
                                         class="form-control mb-2">
                                         @foreach ($docAdi as $d)
-                                            <option value="{{ $d }}"> {{ $d }}</option>
+                                            @php
+                                                $newstring = ltrim(stristr($d, '-'), '-');
+                                            @endphp
+                                            <option value="{{ $d }}">{{ $newstring }}</option>
                                         @endforeach
                                     </select>
                                     <input id="ruta-adicionales" name="ruta-adicionales" type="hidden"
@@ -226,9 +229,9 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="text-center align-middle" style="width: 100%">
+                        <td class="text-center align-middle" style="width: 250px">
                             <div class="row align-items-center mx-1">
-                                <div class="col-5">
+                                <div class="col-6">
                                     @if ($tipoO == 'Impuestos' ? ($diferenciaP != 1 or $nombreCheque == '0') : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0'))
                                         <div class="row d-flex justify-content-center">
                                             <span class="fa-stack mb-2">
@@ -253,7 +256,7 @@
                                         <i class="far fa-check-circle fa-2x" style="color: green"></i>
                                     @endif
                                 </div>
-                                <div class="col-7">
+                                <div class="col-6">
                                     @if ($verificado == 1 and $contabilizado == 0)
                                         <form action="{{ url('cheques-transferencias') }}" method="POST">
                                             @csrf
