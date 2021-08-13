@@ -12,14 +12,14 @@ function disableInputs() {
     $(':input[type="submit"]').prop('disabled', true);
     $('a[class="btn btn-primary excelR-export"]').addClass('disabled');
     $('a[class="btn btn-primary excelE-export"]').addClass('disabled');
-    $('a[class="btn btn-primary ml-2"]').addClass('disabled');
+    // $('a[class="btn btn-primary ml-2"]').addClass('disabled');
 }
 
 function enableInputs() {
     $(':input[type="submit"]').prop('disabled', false);
     $('a[class="btn btn-primary excelR-export disabled"]').removeClass('disabled');
     $('a[class="btn btn-primary excelE-export disabled"]').removeClass('disabled');
-    $('a[class="btn btn-primary ml-2 disabled"]').removeClass('disabled');
+    // $('a[class="btn btn-primary ml-2 disabled"]').removeClass('disabled');
 }
 
 var tableToExcel = (function() {
@@ -146,21 +146,21 @@ $('#recibidos-form').on('submit', function() {
                         checkedPdf = 'checked';
                     }
                     html += '<tr>' +
-                        '<td class="text-center">' + i + '</td>' +
-                        '<td class="text-center txml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>' +
-                        '<td class="text-center tpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>' +
-                        '<td class="text-center">' + item.folioFiscal + '</td>' +
-                        '<td class="text-center">' + item.emisorRfc + '</td>' +
-                        '<td class="text-center">' + item.emisorNombre + '</td>' +
-                        '<td class="text-center">' + item.fechaEmision + '</td>' +
-                        '<td class="text-center">' + item.fechaCertificacion + '</td>' +
-                        '<td class="text-center">' + item.total + '</td>' +
-                        '<td class="text-center">' + item.efecto + '</td>' +
-                        '<td class="text-center">' + item.estado + '</td>' +
-                        '<td class="text-center">' + (item.fechaCancelacion || '-') + '</td>' +
-                        '<td class="text-center">' + aprobacion + '</td>' +
-                        '<td class="text-center">' + descargadoXml + '</td>' +
-                        '<td class="text-center">' + descargadoPdf + '</td>'
+                        '<td class="text-center align-middle">' + i + '</td>' +
+                        '<td class="text-center align-middle txml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>' +
+                        '<td class="text-center align-middle tpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>' +
+                        '<td class="text-center align-middle">' + item.folioFiscal + '</td>' +
+                        '<td class="text-center align-middle">' + item.emisorRfc + '</td>' +
+                        '<td class="text-center align-middle">' + item.emisorNombre + '</td>' +
+                        '<td class="text-center align-middle">' + item.fechaEmision + '</td>' +
+                        '<td class="text-center align-middle">' + item.fechaCertificacion + '</td>' +
+                        '<td class="text-center align-middle">' + item.total + '</td>' +
+                        '<td class="text-center align-middle">' + item.efecto + '</td>' +
+                        '<td class="text-center align-middle">' + item.estado + '</td>' +
+                        '<td class="text-center align-middle">' + (item.fechaCancelacion || '-') + '</td>' +
+                        '<td class="text-center align-middle">' + aprobacion + '</td>' +
+                        '<td class="text-center align-middle">' + descargadoXml + '</td>' +
+                        '<td class="text-center align-middle">' + descargadoPdf + '</td>'
                         // + '<td class="text-center">' + item.pacCertifico + '</td>'
                         +
                         '</tr>';
@@ -241,22 +241,22 @@ $('#emitidos-form').on('submit', function() {
                     }
 
                     html += '<tr>' +
-                        '<td class="text-center">' + i + '</td>' +
-                        '<td class="text-center etxml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>' +
-                        '<td class="text-center etpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>' +
-                        '<td class="text-center etpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" ' + checkedAcuse + ' name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>' +
-                        '<td class="text-center">' + item.folioFiscal + '</td>' +
-                        '<td class="text-center">' + item.receptorRfc + '</td>' +
-                        '<td class="text-center">' + item.receptorNombre + '</td>' +
-                        '<td class="text-center">' + item.fechaEmision + '</td>' +
-                        '<td class="text-center">' + item.fechaCertificacion + '</td>' +
-                        '<td class="text-center">' + item.total + '</td>' +
-                        '<td class="text-center">' + item.efecto + '</td>' +
-                        '<td class="text-center">' + item.estado + '</td>' +
-                        '<td class="text-center">' + aprobacion + '</td>' +
-                        '<td class="text-center">' + descargadoXml + '</td>' +
-                        '<td class="text-center">' + descargadoPdf + '</td>' +
-                        '<td class="text-center">' + descargadoAcuse + '</td>'
+                        '<td class="text-center align-middle">' + i + '</td>' +
+                        '<td class="text-center align-middle etxml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>' +
+                        '<td class="text-center align-middle etpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>' +
+                        '<td class="text-center align-middle etpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" ' + checkedAcuse + ' name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>' +
+                        '<td class="text-center align-middle">' + item.folioFiscal + '</td>' +
+                        '<td class="text-center align-middle">' + item.receptorRfc + '</td>' +
+                        '<td class="text-center align-middle">' + item.receptorNombre + '</td>' +
+                        '<td class="text-center align-middle">' + item.fechaEmision + '</td>' +
+                        '<td class="text-center align-middle">' + item.fechaCertificacion + '</td>' +
+                        '<td class="text-center align-middle">' + item.total + '</td>' +
+                        '<td class="text-center align-middle">' + item.efecto + '</td>' +
+                        '<td class="text-center align-middle">' + item.estado + '</td>' +
+                        '<td class="text-center align-middle">' + aprobacion + '</td>' +
+                        '<td class="text-center align-middle">' + descargadoXml + '</td>' +
+                        '<td class="text-center align-middle">' + descargadoPdf + '</td>' +
+                        '<td class="text-center align-middle">' + descargadoAcuse + '</td>'
                         // + '<td class="text-center">' + item.pacCertifico + '</td>'
                         +
                         '</tr>';
@@ -377,19 +377,19 @@ $('.descargaE-form').on('submit', function() {
 });
 
 $('#allxml').change(function() {
-    $('tbody tr td[class="text-center txml"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    $('tbody tr td[class="text-center align-middle txml"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
 $('#allpdf').change(function() {
-    $('tbody tr td[class="text-center tpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    $('tbody tr td[class="text-center align-middle tpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
 $('#eallxml').change(function() {
-    $('tbody tr td[class="text-center etxml"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    $('tbody tr td[class="text-center align-middle etxml"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
 $('#eallpdf').change(function() {
-    $('tbody tr td[class="text-center etpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
+    $('tbody tr td[class="text-center align-middle etpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
 $('#allcheck').change(function() {
@@ -501,4 +501,3 @@ function verAdicional(btn_id) {
     var rutaArchivo = ra + da;
     window.open(rutaArchivo, '_blank');
 }
-

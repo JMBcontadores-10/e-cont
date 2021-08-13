@@ -29,6 +29,7 @@
                     <label class="text-bold" for="mes">Seleccione el periodo: </label>
                     <div class="form-group">
                         <select class="form-control m-2" id="mes" name="mes">
+                            <option value="00">Todos</option>
                             <?php foreach ($meses as $key => $value) {
                                 echo '<option value="' . $key . '">' . $value . '</option>';
                             } ?>
@@ -80,7 +81,6 @@
                     <th class="text-center align-middle">PDF cheque o transferencia</th>
                     <th class="text-center align-middle">Documentos adicionales</th>
                     <th class="text-center align-middle">Acciones</th>
-                    <th class="text-center align-middle">Verificación</th>
                     <th class="text-center align-middle">Contabilizado</th>
                 </tr>
             </thead>
@@ -226,9 +226,9 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="text-center align-middle">
+                        <td class="text-center align-middle" style="width: 100%">
                             <div class="row align-items-center mx-1">
-                                <div class="col">
+                                <div class="col-5">
                                     @if ($tipoO == 'Impuestos' ? ($diferenciaP != 1 or $nombreCheque == '0') : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0'))
                                         <div class="row d-flex justify-content-center">
                                             <span class="fa-stack mb-2">
@@ -250,40 +250,24 @@
                                             <input type="submit" name="Aceptar" value="Aceptar">
                                         </form>
                                     @else
-                                        {{-- <img src="{{ asset('img/veri.png') }}" alt=""> --}}
                                         <i class="far fa-check-circle fa-2x" style="color: green"></i>
                                     @endif
                                 </div>
-                                {{-- <div class="col" style="background-color: khaki">
-                                @if ($verificado == 1 and $contabilizado == 0)
-                                    <form action="{{ url('cheques-transferencias') }}" method="POST">
-                                        @csrf
-                                        <input type="hidden" id="id" name="id" value="{{ $id }}">
-                                        <input type="checkbox" name="conta" required class="mb-2"> Contabilizado
-                                        <br>
-                                        <input type="submit" name="Aceptar" value="Aceptar">
-                                    </form>
-                                @elseif ($verificado == 1 and $contabilizado == 1)
-                                    <img src="{{ asset('img/CONTABILIZADO.png') }}" alt="" style="width: 40PX">
-                                @elseif ($verificado == 0 and $contabilizado == 0)
-                                    <img src="{{ asset('img/espera.png') }}" alt="">
-                                @endif
-                            </div> --}}
+                                <div class="col-7">
+                                    @if ($verificado == 1 and $contabilizado == 0)
+                                        <form action="{{ url('cheques-transferencias') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" id="id" name="id" value="{{ $id }}">
+                                            <input type="checkbox" name="conta" required class="mb-2 mt-4"> Contabilizado
+                                            <input type="submit" name="Aceptar" value="Aceptar">
+                                        </form>
+                                    @elseif ($verificado == 1 and $contabilizado == 1)
+                                        <img src="{{ asset('img/CONTABILIZADO.png') }}" alt="" style="width: 40PX">
+                                    @elseif ($verificado == 0 and $contabilizado == 0)
+                                        <img src="{{ asset('img/espera.png') }}" alt="">
+                                    @endif
+                                </div>
                             </div>
-                        </td>
-                        <td class="text-center align-middle">
-                            @if ($verificado == 1 and $contabilizado == 0)
-                                <form action="{{ url('cheques-transferencias') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" id="id" name="id" value="{{ $id }}">
-                                    <input type="checkbox" name="conta" required class="mb-2"> Contabilizado
-                                    <input type="submit" name="Aceptar" value="Aceptar">
-                                </form>
-                            @elseif ($verificado == 1 and $contabilizado == 1)
-                                <img src="{{ asset('img/CONTABILIZADO.png') }}" alt="" style="width: 40PX">
-                            @elseif ($verificado == 0 and $contabilizado == 0)
-                                <img src="{{ asset('img/espera.png') }}" alt="">
-                            @endif
                         </td>
                     </tr>
                 @endforeach

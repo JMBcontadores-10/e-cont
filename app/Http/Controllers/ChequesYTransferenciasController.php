@@ -44,7 +44,11 @@ class ChequesYTransferenciasController extends Controller
         if ($r->has('mes')) {
             $mes = $r->mes;
             $anio = $r->anio;
-            $fechaF = "$anio-$mes-";
+            if ($r->mes == '00') {
+                $fechaF = '';
+            }else{
+                $fechaF = "$anio-$mes-";
+            }
             $colCheques = Cheques::where('rfc', $rfc)
                 ->where('fecha', 'like', $fechaF . '%')
                 ->orderBy('fecha', 'desc')
