@@ -143,7 +143,7 @@
                                 @foreach ($colCheques as $i)
                                     <option value="{{ $i->_id }}">
                                         {{ $i->fecha }} - {{ $i->numcheque }} - {{ $i->Beneficiario }} -
-                                        ${{ $i->importecheque }}
+                                        ${{ number_format($i->importecheque, 2) }}
                                     </option>
                                 @endforeach
                             </select>

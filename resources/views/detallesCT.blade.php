@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @php
-use App\Models\MetadataR;
 use App\Models\XmlR;
 @endphp
 
