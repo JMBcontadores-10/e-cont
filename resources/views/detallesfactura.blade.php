@@ -65,23 +65,29 @@ use App\Models\XmlE;
 
                     foreach($colD as $d){
                         $serie = $d['Serie'];
-                        // $folios = $d['Folio'];
                         $lugare = $d['LugarExpedicion'];
                         $formap = $d['FormaPago'];
                         $tipoc = $d['TipoDeComprobante'];
+                        $folio =$d['folio'];
+                        $concepto = $d['Conceptos.Concepto'];
+                        $nCon=0;
                     }
                     @endphp
-                    <td></td>
+                    <td>{{$tipoc}}</td>
                     <td>{{$fech}}</td>
-                    <td></td>
-                    <td></td>
+                    <td>{{$serie}}</td>
+                    <td>{{$folio}}</td>
                     <td>{{$te['folioFiscal']}}</td>
-                    <td></td>
+                    <td>{{$lugare}}</td>
                     <td>{{$te['receptorRfc']}}</td>
                     <td>{{$te['receptorNombre']}}</td>
                     <td>${{$te['total']}}</td>
-                    <td></td>
-                    <td></td>
+                    <td>{{$formap}}</td>
+                    <td>
+                        @foreach ($concepto as $id)
+                            {{ ++$nCon }}. {{ $id['Descripcion'] }}<br>
+                        @endforeach
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

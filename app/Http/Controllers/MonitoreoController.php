@@ -52,20 +52,26 @@ class MonitoreoController extends Controller
             ->get();
         $nXml = $col->count();
 
+        $cant = MetadataE::where('receptorRfc', $rfc)
+                    ->whereBetween('fechaEmision', [$fecha1, $fecha2])
+                    ->count();
 
         foreach ($col as $i) {
             $rfcR = $i['receptorRfc'];
+            $fechaE = $i['fechaEmision'];
         }
 
         return view('monitoreo')
             ->with('n', $n)
             ->with('tXml', $tXml)
             ->with('nXml', $nXml)
-            // ->with('receptorRfc', $rfcR)
             ->with('tTabla', $tTabla)
             ->with('rfc', $rfc)
             ->with('col', $col)
+            ->with('fechaEmision', $fechaE)
+            ->with('fechaF', $fechaF)
             ->with('fecha2', $fecha2)
+            ->with('cant', $cant)
             ->with('fecha1', $fecha1);
     }
 
@@ -147,7 +153,7 @@ class MonitoreoController extends Controller
             ->get();
 
         foreach ($fac as $fa) {
-            $fechaF = $fa['fechaEmision'];
+            $fechaI = $fa['fechaEmision'];
         }
     }
 }
