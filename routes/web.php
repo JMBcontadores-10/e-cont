@@ -26,7 +26,6 @@ Route::get('/descargasv2', [App\Http\Controllers\DescargasControllerv2::class, '
 Route::post('/async', [App\Http\Controllers\Async::class, 'index'])->name('async');
 Route::get('/cuentasporpagar', [App\Http\Controllers\CuentasPorPagar::class, 'index'])->name('cuentasporpagar');
 Route::get('/detalles', [App\Http\Controllers\CuentasPorPagar::class, 'detalles'])->name('detalles');
-Route::post('/detalles', [App\Http\Controllers\CuentasPorPagar::class, 'detalles'])->name('detalles');
 Route::get('/cheques-transferencias', [App\Http\Controllers\ChequesYTransferenciasController::class, 'index'])->name('cheques-transferencias');
 Route::post('/cheques-transferencias', [App\Http\Controllers\ChequesYTransferenciasController::class, 'index'])->name('cheques-transferencias');
 Route::post('/vincular-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'vincularCheque'])->name('vincular-cheque');
