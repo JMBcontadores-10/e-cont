@@ -1,55 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="inicio" align="center">
-                <h4>Sesión de:</h4>
-                <h2>{{ Auth::user()->nombre }}</h2>
-                <h4>{{ Auth::user()->RFC }}</h4>
-                <br>
-                @php
-                    $rfc = Auth::user()->RFC;
-                @endphp
-
-                @switch($rfc)
-                    @case('ADMINISTRADOR')
-                        <form method="POST" action="{{route('home2')}}">
-                        @csrf
-                        @php
-                            $clientes = DB::table('clientes')
-                                ->select('RFC', 'nombre', 'Password')
-                                ->where('RFC' != $rfc)
-                                ->orderBy('RFC')
-                                ->get();
-
-                            echo "<select id='sele' name='usuarios'>";
-
-                            foreach ($clientes as $cli) {
-                                $RFCli = $cli['RFC'];
-                                $nombre = $cli['nombre'];
-                                $pass = $cli['Password'];
-
-                                echo "<option id='opt' value=$RFCli>$nombre</option>";
-                            }
-                        @endphp
-
-                        </select>
-                        <br>
-                        <br>
-                        <input class="btnModulo" type="submit" value="Entrar empresa"
-                            style="BORDER: #0055FF 1px solid; FONT-SIZE: 10pt">
-                        </form>
-
-                </div>
-                <br>
-                <br>
-                @break
-                @case('NOMINAS')
-
-                @break
-                @default
-                    <h2>Módulos disponibles</h2>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="inicio" align="center">
+            <h1>{{ Auth::user()->nombre }}</h1>
+            <h2>Esta entrando a la sesión de</h2>
+            <h4>{{$cliente}}</h4>
+            <h2>Módulos disponibles</h2>
                     <br>
 
                     <div class="row" style="justify-content: center;">
@@ -130,7 +88,6 @@
                         </form>
                     </div>
                     <br><br>
-            @endswitch
 
 
             <div class="row" style="justify-content: center;">
@@ -140,8 +97,8 @@
                         style="BORDER: #0055FF 1px solid; FONT-SIZE: 10pt">
                 </form>
             </div>
-
         </div>
     </div>
-    </div>
+</div>
+
 @endsection

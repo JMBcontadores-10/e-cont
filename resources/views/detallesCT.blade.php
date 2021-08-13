@@ -100,6 +100,7 @@ use App\Models\XmlR;
                                         $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
                                         $metodoPago = '-';
                                     }
+
                                 }
                             } else {
                                 $concepto = 'X';
