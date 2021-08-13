@@ -25,27 +25,6 @@ use Illuminate\Support\Facades\DB;
         </div>
         <div class="row" style="justify-content: center;">
 
-            @php
-                $rfc = Auth::user()->RFC;
-
-                $dtz = new DateTimeZone('America/Mexico_City');
-                $dt = new DateTime('now', $dtz);
-
-                if (isset($argv[1])) {
-                    $dt->sub(new DateInterval($argv[1]));
-                } else {
-                    $dt->sub(new DateInterval('P1D'));
-                }
-
-                $anio = $dt->format('Y');
-                $mes = $dt->format('m');
-                $dia = $dt->format('d');
-                $fechaF = "$anio-$mes-$dia";
-                $fecha1 = $fechaF . 'T00:00:00';
-                $fecha2 = $fechaF . 'T23:59:59';
-
-            @endphp
-
             <br>
             <h1>Facturación @php
                 echo $fechaF;
@@ -73,9 +52,6 @@ use Illuminate\Support\Facades\DB;
                             @for ($m = 0; $m < 24; $m++)
                                 <tr>
                                     <td>{{ $m }}</td>
-
-
-
                                     <td></td>
                                     <td></td>
                                 </tr>
@@ -103,14 +79,7 @@ use Illuminate\Support\Facades\DB;
                         <tr>
                             <td>{{ $i['receptorRfc'] }}</td>
                             <td>{{ $i['receptorNombre'] }}</td>
-                            @php
-                                $rfc = Auth::user()->RFC;
-                                $rfcR = $i['receptorRfc'];
-                                $cant = MetadataE::where('receptorRfc', $rfcR)
-                                    ->whereBetween('fechaEmision', [$fecha1, $fecha2])
-                                    ->count();
-                            @endphp
-                            <td>{{ $cant }}</td>
+                            <td></td>
                             <td>$ {{ $i['total'] }}</td>
                             <td>
                                 <form action="{{ route('detallesfactura') }}" method="POST">
