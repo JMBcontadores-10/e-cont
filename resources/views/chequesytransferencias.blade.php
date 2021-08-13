@@ -24,8 +24,7 @@
 
         <div class="row justify-content-end">
             <div class="col-sm-7">
-                <form class="form-inline" method="POST">
-                    @csrf
+                <form class="form-inline">
                     <label class="pf" for="mes">Seleccione el periodo: </label>
                     <div class="form-group">
                         <select class="form-control m-2" id="mes" name="mes">
@@ -246,7 +245,7 @@
                                                 onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
                                         </div>
                                     @elseif ($verificado == 0)
-                                        <form action="{{ url('cheques-transferencias') }}" method="post">
+                                        <form action="{{ url('cheques-transferencias') }}" method="POST">
                                             @csrf
                                             <input type="hidden" id="id" name="id" value="{{ $id }}">
                                             <input type="checkbox" name="revisado" required class="mb-2"> Revisado

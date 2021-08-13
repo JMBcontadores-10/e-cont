@@ -8,7 +8,7 @@
     <div class="container">
 
         <div class="float-md-left">
-            <a class="b3" href="{{ url('cheques-transferencias') }}">
+            <a class="b3" href="{{ url()->previous() }}">
                 << Regresar</a>
         </div>
         <div class="float-md-right">
