@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @php
-use App\Models\MetadataR;
 use App\Models\XmlR;
 @endphp
 
@@ -60,6 +59,7 @@ use App\Models\XmlR;
                     @endphp
                     @foreach ($colM as $i)
                         @php
+
                             $emisorRfc = $i->emisorRfc;
                             $arrRfc[] = $emisorRfc;
                             $emisorNombre = $i->emisorNombre;
@@ -70,6 +70,7 @@ use App\Models\XmlR;
                             $estado = $i->estado;
                             if ($efecto == 'Egreso') {
                                 $total = -1 * abs($total);
+
                             }
 
                         @endphp
