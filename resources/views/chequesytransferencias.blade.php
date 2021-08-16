@@ -80,7 +80,7 @@
                     <th class="text-center align-middle">PDF cheque o transferencia</th>
                     <th class="text-center align-middle">Documentos adicionales</th>
                     <th class="text-center align-middle">Acciones</th>
-                    <th class="text-center align-middle">Contabilizado</th>
+                    <th class="text-center align-middle" colspan="2">Contabilizado</th>
                 </tr>
             </thead>
             <tbody class="buscar">
@@ -101,13 +101,13 @@
                         } else {
                             $diferencia = $importeC - abs($sumaxml);
                             $diferencia = $diferencia - $ajuste;
-                            $diferencia = number_format($diferencia, 2);
                         }
                         if ($diferencia > 1 or $diferencia < -1) {
                             $diferenciaP = 0;
                         } else {
                             $diferenciaP = 1;
                         }
+                        $diferencia = number_format($diferencia, 2);
                         $verificado = $i['verificado'];
                         $faltaxml = $i['faltaxml'];
                         $contabilizado = $i['conta'];
@@ -228,48 +228,45 @@
                                 @endif
                             </div>
                         </td>
-                        <td class="text-center align-middle" style="width: 250px">
-                            <div class="row align-items-center mx-1">
-                                <div class="col-6">
-                                    @if ($tipoO == 'Impuestos' ? ($diferenciaP != 1 or $nombreCheque == '0') : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0'))
-                                        <div class="row d-flex justify-content-center">
-                                            <span class="fa-stack mb-2">
-                                                <i class="fas fa-circle fa-stack-1x fa-lg mt-1"
-                                                    style="color: rgb(8, 8, 8)"></i>
-                                                <i class="fas fa-exclamation-triangle fa-stack-1x fa-2x"
-                                                    style="color: rgb(240, 229, 73)"></i>
-                                            </span>
-                                        </div>
-                                        <div class="row d-flex justify-content-center">
-                                            <input type="submit" name="Pendientes" value="Pendientes"
-                                                onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
-                                        </div>
-                                    @elseif ($verificado == 0)
-                                        <form action="{{ url('cheques-transferencias') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" id="id" name="id" value="{{ $id }}">
-                                            <input type="checkbox" name="revisado" required class="mb-2"> Revisado
-                                            <input type="submit" name="Aceptar" value="Aceptar">
-                                        </form>
-                                    @else
-                                        <i class="far fa-check-circle fa-2x" style="color: green"></i>
-                                    @endif
-                                </div>
-                                <div class="col-6">
-                                    @if ($verificado == 1 and $contabilizado == 0)
-                                        <form action="{{ url('cheques-transferencias') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" id="id" name="id" value="{{ $id }}">
-                                            <input type="checkbox" name="conta" required class="mb-2 mt-4"> Contabilizado
-                                            <input type="submit" name="Aceptar" value="Aceptar">
-                                        </form>
-                                    @elseif ($verificado == 1 and $contabilizado == 1)
-                                        <img src="{{ asset('img/CONTABILIZADO.png') }}" alt="" style="width: 40PX">
-                                    @elseif ($verificado == 0 and $contabilizado == 0)
-                                        <img src="{{ asset('img/espera.png') }}" alt="">
-                                    @endif
-                                </div>
+                        <td class="text-center align-middle" style="border-left:none;border-top:none;border-right:none">
+                            <div class="mx-3">
+                                @if ($tipoO == 'Impuestos' ? ($diferenciaP != 1 or $nombreCheque == '0') : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0'))
+                                    <div class="row d-flex justify-content-center">
+                                        <span class="fa-stack mb-2">
+                                            <i class="fas fa-circle fa-stack-1x fa-lg mt-1" style="color: rgb(8, 8, 8)"></i>
+                                            <i class="fas fa-exclamation-triangle fa-stack-1x fa-2x"
+                                                style="color: rgb(240, 229, 73)"></i>
+                                        </span>
+                                    </div>
+                                    <div class="row d-flex justify-content-center">
+                                        <input type="submit" name="Pendientes" value="Pendientes"
+                                            onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
+                                    </div>
+                                @elseif ($verificado == 0)
+                                    <form action="{{ url('cheques-transferencias') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" id="id" name="id" value="{{ $id }}">
+                                        <input type="checkbox" name="revisado" required class="mb-2"> Revisado
+                                        <input type="submit" name="Aceptar" value="Aceptar">
+                                    </form>
+                                @else
+                                    <i class="far fa-check-circle fa-2x" style="color: green"></i>
+                                @endif
                             </div>
+                        </td>
+                        <td class="text-center align-middle" style="border-left:none;border-top:none;border-right:none">
+                            @if ($verificado == 1 and $contabilizado == 0)
+                                <form action="{{ url('cheques-transferencias') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" id="id" name="id" value="{{ $id }}">
+                                    <input type="checkbox" name="conta" required class="mb-2 mt-4"> Contabilizado
+                                    <input type="submit" name="Aceptar" value="Aceptar">
+                                </form>
+                            @elseif ($verificado == 1 and $contabilizado == 1)
+                                <img src="{{ asset('img/CONTABILIZADO.png') }}" alt="" style="width: 40PX">
+                            @elseif ($verificado == 0 and $contabilizado == 0)
+                                <img src="{{ asset('img/espera.png') }}" alt="">
+                            @endif
                         </td>
                     </tr>
                 @endforeach
