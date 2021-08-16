@@ -46,17 +46,19 @@ class ChequesYTransferenciasController extends Controller
             $anio = $r->anio;
             if ($r->mes == '00') {
                 $fechaF = '';
-            }else{
+            } else {
                 $fechaF = "$anio-$mes-";
             }
             $colCheques = Cheques::where('rfc', $rfc)
                 ->where('fecha', 'like', $fechaF . '%')
+                ->orderBy('verificado')
                 ->orderBy('fecha', 'desc')
                 ->orderBy('updated_at', 'desc')
                 // ->paginate(50);
                 ->get();
         } else {
             $colCheques = Cheques::where(['rfc' => $rfc])
+                ->orderBy('verificado')
                 ->orderBy('fecha', 'desc')
                 ->orderBy('updated_at', 'desc')
                 // ->paginate(50);
@@ -66,7 +68,8 @@ class ChequesYTransferenciasController extends Controller
         if ($r->has('revisado')) {
             $id = $r->id;
             Cheques::where('_id', $id)->update([
-                'verificado' => 1
+                'verificado' => 1,
+                'pendi' => 1,
             ]);
             return back();
         }

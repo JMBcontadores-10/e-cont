@@ -107,9 +107,10 @@ use App\Models\XmlR;
                                         if ($efecto == 'Pago') {
                                             $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
                                             $metodoPago = '-';
-                                        } elseif ($efecto == 'Egreso') {
-                                            $docRel = $v['CfdiRelacionados.CfdiRelacionado'];
-                                        } elseif ($efecto == 'Ingreso') {
+                                            if (!isset($docRel)) {
+                                                $docRel = $v['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'];
+                                            }
+                                        } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso') {
                                             $docRel = $v['CfdiRelacionados.CfdiRelacionado'];
                                         }
                                     }
@@ -133,14 +134,14 @@ use App\Models\XmlR;
                             <td class="text-center align-middle">
                                 @if (!$colX->isEmpty())
                                     @if ($efecto == 'Pago')
-                                        @foreach ($docRel as $d)
-                                            {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
-                                        @endforeach
-                                    @elseif ($efecto == 'Egreso' and !$docRel == null)
-                                        @foreach ($docRel as $d)
-                                            {{ ++$nUR }}. {{ $d['UUID'] }}<br>
-                                        @endforeach
-                                    @elseif ($efecto == 'Ingreso' and !$docRel == null)
+                                        @if (is_array($docRel) || is_object($docRel))
+                                            @foreach ($docRel as $d)
+                                                {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
+                                            @endforeach
+                                        @else
+                                            {{ ++$nUR }}. {{ $docRel }}
+                                        @endif
+                                    @elseif ($efecto == 'Egreso' and !$docRel == null or $efecto == 'Ingreso' and !$docRel == null)
                                         @foreach ($docRel as $d)
                                             {{ ++$nUR }}. {{ $d['UUID'] }}<br>
                                         @endforeach
@@ -181,7 +182,8 @@ use App\Models\XmlR;
                             <td></td>
                         @endif --}}
                         <td class="text-center text-bold align-middle">Total:</td>
-                        <td> <input readonly id="total" name="totalXml" type="text" class="form-control" placeholder="$0.00" value=0 /></td>
+                        <td> <input readonly id="total" name="totalXml" type="text" class="form-control" placeholder="$0.00"
+                                value=0 /></td>
                     </tr>
                 </tbody>
             </table>
