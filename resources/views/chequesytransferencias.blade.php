@@ -76,15 +76,15 @@
                     <th class="text-center align-middle">Total</th>
                     <th class="text-center align-middle">Total CFDI</th>
                     <th class="text-center align-middle">Por comprobar</th>
-                    @if (Auth::user()->tipo == "2")
+                    {{-- @if (Auth::user()->tipo == "2") --}}
                     <th class="text-center align-middle">Ajuste</th>
-                    @endif
+                    {{-- @endif --}}
                     <th class="text-center align-middle">PDF cheque o transferencia</th>
                     <th class="text-center align-middle">Documentos adicionales</th>
                     <th class="text-center align-middle">Acciones</th>
-                    @if (Auth::user()->tipo == "2")
+                    {{-- @if (Auth::user()->tipo == "2") --}}
                     <th class="text-center align-middle">Contabilizado</th>
-                    @endif
+                    {{-- @endif --}}
                 </tr>
             </thead>
             <tbody class="buscar">
@@ -138,7 +138,7 @@
                         <td class="text-center align-middle">${{ number_format($importeC, 2) }}</td>
                         <td class="text-center align-middle">${{ number_format($sumaxml, 2) }}</td>
                         <td class="text-center align-middle">${{ $diferencia }}</td>
-                        @if (Auth::user()->tipo == "2")
+                        {{-- @if (Auth::user()->tipo == "2") --}}
                         <td class="text-center align-middle">
                             ${{ $ajuste }}
                             @if ($verificado == 0)
@@ -149,7 +149,7 @@
                                 </form>
                             @endif
                         </td>
-                        @endif
+                        {{-- @endif --}}
                         <td class="text-center align-middle">
                             @if ($nombreCheque == '0')
                                 <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
@@ -234,7 +234,7 @@
                                 @endif
                             </div>
                         </td>
-                        @if(Auth::user()->tipo == "2")
+                        {{-- @if(Auth::user()->tipo == "2") --}}
                         <td class="text-center align-middle" style="width: 250px">
                             <div class="row align-items-center mx-1">
                                 <div class="col-6">
@@ -278,7 +278,7 @@
                                 </div>
                             </div>
                         </td>
-                        @endif
+                        {{-- @endif --}}
                     </tr>
                 @endforeach
             </tbody>
