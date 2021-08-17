@@ -54,15 +54,15 @@ class ChequesYTransferenciasController extends Controller
                 ->orderBy('verificado')
                 ->orderBy('fecha', 'desc')
                 ->orderBy('updated_at', 'desc')
-                // ->paginate(50);
-                ->get();
+                ->paginate(100);
+            // ->get();
         } else {
             $colCheques = Cheques::where(['rfc' => $rfc])
                 ->orderBy('verificado')
                 ->orderBy('fecha', 'desc')
                 ->orderBy('updated_at', 'desc')
-                // ->paginate(50);
-                ->get();
+                ->paginate(100);
+            // ->get();
         }
 
         if ($r->has('revisado')) {
@@ -101,7 +101,9 @@ class ChequesYTransferenciasController extends Controller
 
     public function vincularCheque(Request $r)
     {
-
+        $dtz = new DateTimeZone("America/Mexico_City");
+        $dt = new DateTime("now", $dtz);
+        $date = $dt->format('Y-m-d');
         if ($r->has('editar')) {
             $editar = $r->editar;
             $id = $r->id;
@@ -115,6 +117,7 @@ class ChequesYTransferenciasController extends Controller
             $subirArchivo = $r->subirArchivo;
             $nombrec = $r->nombrec;
             return view('vincular-cheque')
+                ->with('date', $date)
                 ->with('nombrec', $nombrec)
                 ->with('id', $id)
                 ->with('tipo', $tipo)
@@ -147,6 +150,7 @@ class ChequesYTransferenciasController extends Controller
 
             $editar = false;
             return view('vincular-cheque')
+                ->with('date', $date)
                 ->with('allcheck', $allcheck)
                 ->with('totalXml', $totalXml)
                 ->with('colCheques', $colCheques)

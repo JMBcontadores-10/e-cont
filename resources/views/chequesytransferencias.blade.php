@@ -281,4 +281,7 @@
             </tbody>
         </table>
     </div>
+    <div class="ml-4 mt-3">
+        {{ $colCheques->appends(Request::except('page'))->links('pagination::bootstrap-4') }}
+    </div>
 @endsection
