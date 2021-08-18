@@ -52,15 +52,17 @@ class ChequesYTransferenciasController extends Controller
             $colCheques = Cheques::where('rfc', $rfc)
                 ->where('fecha', 'like', $fechaF . '%')
                 ->orderBy('verificado')
+                ->orderBy('conta')
                 ->orderBy('fecha', 'desc')
-                ->orderBy('updated_at', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(100);
             // ->get();
         } else {
             $colCheques = Cheques::where(['rfc' => $rfc])
                 ->orderBy('verificado')
+                ->orderBy('conta')
                 ->orderBy('fecha', 'desc')
-                ->orderBy('updated_at', 'desc')
+                ->orderBy('created_at', 'desc')
                 ->paginate(100);
             // ->get();
         }
@@ -70,6 +72,7 @@ class ChequesYTransferenciasController extends Controller
             Cheques::where('_id', $id)->update([
                 'verificado' => 1,
                 'pendi' => 1,
+                'revisado_fecha' => $dt->format('Y-m-d\TH:i:s'),
             ]);
             return back();
         }
@@ -77,7 +80,9 @@ class ChequesYTransferenciasController extends Controller
         if ($r->has('conta')) {
             $id = $r->id;
             Cheques::where('_id', $id)->update([
-                'conta' => 1
+                'conta' => 1,
+                'contabilizado_fecha' => $dt->format('Y-m-d\TH:i:s'),
+                'poliza' => $r->poliza,
             ]);
             return back();
         }
@@ -87,6 +92,14 @@ class ChequesYTransferenciasController extends Controller
             $ajuste = (float)str_replace(',', '', $r->ajuste);
             Cheques::where('_id', $id)->update([
                 'ajuste' => $ajuste
+            ]);
+            return back();
+        }
+
+        if ($r->has('comentario')) {
+            $id = $r->id;
+            Cheques::where('_id', $id)->update([
+                'comentario' => $r->comentario
             ]);
             return back();
         }
