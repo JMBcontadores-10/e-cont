@@ -67,7 +67,7 @@
                             </div>
                             <div class="col-4">
                                 <input class="form-control" type=date required name="fechaCheque"
-                                    value="{{ $fechaCheque }}">
+                                    value="{{ $fechaCheque }}" min="2014-01-01" max={{$date}}>
                             </div>
                         </div>
                         <div class="mainbox2 row">
@@ -190,7 +190,7 @@
                                 <p class="pf">Fecha:</p>
                             </div>
                             <div class="col-4">
-                                <input class="form-control" type=date required name="fechaCheque">
+                                <input class="form-control" type=date required name="fechaCheque" min="2014-01-01" max={{$date}}>
                             </div>
                         </div>
                         <div class="mainbox2 row">

@@ -284,3 +284,27 @@ input[type=number] {
     font-weight: bold;
     font-size: medium;
 }
+
+.CellWithComment {
+    position: relative;
+}
+
+.CellComment {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    border: 1px;
+    background-color: rgb(240, 252, 82);
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+    padding: 3px;
+    color: black;
+    top: 20px;
+    left: 10px;
+    width: 200px;
+}
+
+.CellWithComment:hover span.CellComment {
+    display: block;
+}

@@ -20,6 +20,7 @@ Auth::routes(['register'=>false]);
 
 // Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
 // Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
+// Route::get('/renombrarXml', [App\Http\Controllers\Prueba::class, 'renombrarXml'])->name('renombrarXml');
 Route::get('/prueba', [App\Http\Controllers\Prueba::class, 'index'])->name('prueba');
 
 // Route::post('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

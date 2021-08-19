@@ -72,7 +72,7 @@ class Script1 extends Controller
             'ADMINISTRADOR',
         ];
         foreach ($rfcs as $e) {
-            $tipo = array("id" => "1");
+            $tipo = array("tipo" => "1");
 
             User::where(['RFC' => $e])
                 ->update(

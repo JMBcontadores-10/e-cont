@@ -46,27 +46,33 @@ class ChequesYTransferenciasController extends Controller
             $anio = $r->anio;
             if ($r->mes == '00') {
                 $fechaF = '';
-            }else{
+            } else {
                 $fechaF = "$anio-$mes-";
             }
             $colCheques = Cheques::where('rfc', $rfc)
                 ->where('fecha', 'like', $fechaF . '%')
+                ->orderBy('verificado')
+                ->orderBy('conta')
                 ->orderBy('fecha', 'desc')
-                ->orderBy('updated_at', 'desc')
-                // ->paginate(50);
-                ->get();
+                ->orderBy('created_at', 'desc')
+                ->paginate(100);
+            // ->get();
         } else {
             $colCheques = Cheques::where(['rfc' => $rfc])
+                ->orderBy('verificado')
+                ->orderBy('conta')
                 ->orderBy('fecha', 'desc')
-                ->orderBy('updated_at', 'desc')
-                // ->paginate(50);
-                ->get();
+                ->orderBy('created_at', 'desc')
+                ->paginate(100);
+            // ->get();
         }
 
         if ($r->has('revisado')) {
             $id = $r->id;
             Cheques::where('_id', $id)->update([
-                'verificado' => 1
+                'verificado' => 1,
+                'pendi' => 1,
+                'revisado_fecha' => $dt->format('Y-m-d\TH:i:s'),
             ]);
             return back();
         }
@@ -74,7 +80,9 @@ class ChequesYTransferenciasController extends Controller
         if ($r->has('conta')) {
             $id = $r->id;
             Cheques::where('_id', $id)->update([
-                'conta' => 1
+                'conta' => 1,
+                'contabilizado_fecha' => $dt->format('Y-m-d\TH:i:s'),
+                'poliza' => $r->poliza,
             ]);
             return back();
         }
@@ -84,6 +92,14 @@ class ChequesYTransferenciasController extends Controller
             $ajuste = (float)str_replace(',', '', $r->ajuste);
             Cheques::where('_id', $id)->update([
                 'ajuste' => $ajuste
+            ]);
+            return back();
+        }
+
+        if ($r->has('comentario')) {
+            $id = $r->id;
+            Cheques::where('_id', $id)->update([
+                'comentario' => $r->comentario
             ]);
             return back();
         }
@@ -98,7 +114,9 @@ class ChequesYTransferenciasController extends Controller
 
     public function vincularCheque(Request $r)
     {
-
+        $dtz = new DateTimeZone("America/Mexico_City");
+        $dt = new DateTime("now", $dtz);
+        $date = $dt->format('Y-m-d');
         if ($r->has('editar')) {
             $editar = $r->editar;
             $id = $r->id;
@@ -112,6 +130,7 @@ class ChequesYTransferenciasController extends Controller
             $subirArchivo = $r->subirArchivo;
             $nombrec = $r->nombrec;
             return view('vincular-cheque')
+                ->with('date', $date)
                 ->with('nombrec', $nombrec)
                 ->with('id', $id)
                 ->with('tipo', $tipo)
@@ -144,6 +163,7 @@ class ChequesYTransferenciasController extends Controller
 
             $editar = false;
             return view('vincular-cheque')
+                ->with('date', $date)
                 ->with('allcheck', $allcheck)
                 ->with('totalXml', $totalXml)
                 ->with('colCheques', $colCheques)
