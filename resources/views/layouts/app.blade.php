@@ -104,7 +104,7 @@
 
 
         <main class="py-4">
-            @if (Route::is('home', 'login'))
+            @if (Route::is('home', 'login', 'home1'))
             <div class="row justify-content-center mb-3">
                 <img src="{{ asset('img/logo-contarapp-01.png') }}" width="30%">
             </div>

@@ -39,13 +39,8 @@
             <hr style="border-color:black; width:100%;">
         </div>
 
-        <!--calendario-->
-        <h1>Calendario Descargas</h1>
-        <br>
-        <br>
-        <div id="calender">
 
-        </div>
+        <div id="calender"></div>
     </div>
 
     <div class="mx-4 mt-4">

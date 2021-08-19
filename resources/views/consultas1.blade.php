@@ -112,6 +112,7 @@ use App\Models\XmlE;
                                         $concepto = $i['Conceptos.Concepto'];
                                     @endphp
                                     <tr>
+                                        <td></td>
                                         <td>{{ $i['NoCertificado'] }}</td>
                                         <td>{{ $i['TipoDeComprobante'] }}</td>
                                         <td>{{ $i['Fecha'] }}</td>
@@ -130,7 +131,7 @@ use App\Models\XmlE;
                                         <td>{{ $i['Conceptos.Concepto.0.Impuestos.Traslados.Traslado.0.Importe'] }}</td>
                                         <td>
                                             @foreach ($concepto as $c)
-                                                {{ ++$nCon }}. {{ $c['Descripcion'] }}<br>
+                                                {{ ++$nCon }}. {{ $c['Descripcion'] }}/
                                             @endforeach
                                         </td>
                                         <td>{{ $i['FormaPago'] }}</td>
@@ -354,7 +355,7 @@ use App\Models\XmlE;
 
                                     <td>
                                         @foreach ($idrel as $id)
-                                            {{ ++$nCon }}. {{ $id['IdDocumento'] }}<br>
+                                            {{ ++$nCon }}. {{ $id['IdDocumento'] }}/
                                         @endforeach
                                     </td>
 
@@ -383,32 +384,32 @@ use App\Models\XmlE;
                                     @endphp
                                     <td>
                                         @foreach ($concep as $con)
-                                            {{ ++$nCon }}. {{ $con['ClaveProdServ'] }}<br>
+                                            {{ ++$nCon }}. {{ $con['ClaveProdServ'] }}/
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($concep as $con)
-                                            {{ ++$nCon1 }}. {{ $con['Cantidad'] }}<br>
+                                            {{ ++$nCon1 }}. {{ $con['Cantidad'] }}/
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($concep as $con)
-                                            {{ ++$nCon2 }}. {{ $con['ClaveUnidad'] }}<br>
+                                            {{ ++$nCon2 }}. {{ $con['ClaveUnidad'] }}/
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($concep as $con)
-                                            {{ ++$nCon3 }}. {{ $con['Descripcion'] }}<br>
+                                            {{ ++$nCon3 }}. {{ $con['Descripcion'] }}/
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($concep as $con)
-                                            {{ ++$nCon4 }}. {{ $con['ValorUnitario'] }}<br>
+                                            {{ ++$nCon4 }}. {{ $con['ValorUnitario'] }}/
                                         @endforeach
                                     </td>
                                     <td>
                                         @foreach ($concep as $con)
-                                            {{ ++$nCon5 }}. {{ $con['Importe'] }}<br>
+                                            {{ ++$nCon5 }}. {{ $con['Importe'] }}/
                                         @endforeach
                                     </td>
 
