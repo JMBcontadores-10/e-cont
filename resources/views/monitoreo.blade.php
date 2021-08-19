@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\DB;
 
             <br>
             <h1>Facturación @php
-                echo $fechaF;
+                echo $fechaf;
             @endphp</h1>
         </div>
         <br>
@@ -48,10 +48,18 @@ use Illuminate\Support\Facades\DB;
                             <th>Monto</th>
                         </tr>
                     </thead>
+
                     <tbody>
                             @for ($m = 0; $m < 24; $m++)
                                 <tr>
                                     <td>{{ $m }}</td>
+                                    @foreach ($col as $i)
+                                    @if ($m <10)
+
+                                    @else
+
+                                    @endif
+                                    @endforeach
                                     <td></td>
                                     <td></td>
                                 </tr>

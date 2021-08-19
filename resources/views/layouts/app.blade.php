@@ -104,11 +104,13 @@
 
 
         <main class="py-4">
+
             @if (Route::is('home', 'login'))
                 <div class="row justify-content-center mb-3">
                     <img src="{{ asset('img/logo-contarapp-01.png') }}" width="380px">
                 </div>
             @endif
+
             @yield('content')
         </main>
     </div>
