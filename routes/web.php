@@ -50,5 +50,6 @@ Route::post('/consultas1', [App\Http\Controllers\ConsultasController::class, 'st
 // Route::post('/consultas1', [App\Http\Controllers\ConsultasController::class, 'ingreso'])->name('ingreso');
 
 Route::get('/script', [App\Http\Controllers\Scriptp::class, 'xmlLeer'])->name('xmlLeer');
+Route::get('/scriptt', [App\Http\Controllers\Scriptp::class, 'xmlborrar'])->name('xmlborrar');
 Route::post('/home2', [App\Http\Controllers\HomeController::class, 'home2'])->name('home2');
 Route::get('/script1', [App\Http\Controllers\Script1::class, 'tipoUsuarios'])->name('tipoUsuarios');
