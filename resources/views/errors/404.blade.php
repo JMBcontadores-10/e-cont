@@ -1,11 +1,10 @@
-<!-- purple x moss 2020 -->
 @extends('layouts.app')
 
 <head>
     <title>Contarapp Not Found</title>
 </head>
 
-<style>
+{{-- <style>
     @keyframes spinning {
         from {
             transform: rotate(0deg)
@@ -30,12 +29,12 @@
 
     }
 
-    .err {
+    .msg404 {
         color: #0055FF;
         font-size: 85px;
     }
 
-    .err2 {
+    .msg2 {
         color: black;
         font-size: 23px;
         font-family: 'Work Sans', sans-serif
@@ -53,26 +52,22 @@
         background-size: 500px; */
     }
 
-</style>
+</style> --}}
 
-<body>
+@section('content')
     <div class="container">
         <div class="container404">
             <div class="row d-flex justify-content-center">
                 <img src="{{ asset('img/logo-contarapp-01.png') }}" class="logo0">
             </div>
             <div class="row d-flex justify-content-center align-top">
-                <div class="err">4</div>
+                <div class="msg404">4</div>
                 <img class="logo spin mt-4" src="{{ asset('img/logo-contarapp-03.png') }}">
-                <div class="err">4</div>
+                <div class="msg404">4</div>
             </div>
-            <div class="row d-flex justify-content-center err2">
+            <div class="row d-flex justify-content-center msg404-2">
                 <div>Página no encontrada.</div>
-            </div>
-            <div class="row d-flex justify-content-center err2">
-                <a href="{{ url('/') }}" class="btn btn-primary"
-                    style="background-color: #0055FF; border-color: #0055FF">Regresar</a>
             </div>
         </div>
     </div>
-</body>
+@endsection

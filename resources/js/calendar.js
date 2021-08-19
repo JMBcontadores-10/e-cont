@@ -23,21 +23,10 @@ window.onload = function(){
         editable:true,
         locale: 'es',
 
-
         plugins: [dayGridPlugin, interactionPlugin],
-        events: [{
-            title: 'Ingreso Datos',
-            start : '2021-07-26',
-            end: '2021-07-27',
-            color: '#18D915',
-        },
-        {
-            title: 'Falta archivo',
-            start : '2021-07-27',
-            end: '2021-07-28',
-            color:'#F10E04',
-        }
-    ],
+        events: [
+
+        ],
 
     select: function(arg){
 

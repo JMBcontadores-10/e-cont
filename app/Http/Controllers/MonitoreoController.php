@@ -33,9 +33,9 @@ class MonitoreoController extends Controller
         $mes = $dt->format('m');
         $dia = $dt->format('d');
         $fechaF = "$anio-$mes-$dia";
+        $fechaf= "$dia-$mes-$anio";
         $fecha1 = $fechaF . "T00:00:00";
         $fecha2 = $fechaF . "T23:59:59";
-
 
         $rfc = Auth::user()->RFC;
         $n = 0;
@@ -53,8 +53,8 @@ class MonitoreoController extends Controller
         $nXml = $col->count();
 
         $cant = MetadataE::where('receptorRfc', $rfc)
-                    ->whereBetween('fechaEmision', [$fecha1, $fecha2])
-                    ->count();
+            ->whereBetween('fechaEmision', array($fecha1, $fecha2))
+            ->count();
 
         foreach ($col as $i) {
             $rfcR = $i['receptorRfc'];
@@ -70,6 +70,7 @@ class MonitoreoController extends Controller
             ->with('col', $col)
             ->with('fechaEmision', $fechaE)
             ->with('fechaF', $fechaF)
+            ->with('fechaf', $fechaf)
             ->with('fecha2', $fecha2)
             ->with('cant', $cant)
             ->with('fecha1', $fecha1);
@@ -91,6 +92,7 @@ class MonitoreoController extends Controller
             '11' => 'Noviembre',
             '12' => 'Diciembre'
         );
+
         // $config = require dirname(dirname(__FILE__)) . '/Classes' . '/config.php';
         // $rutaDescarga = $config['rutaDescarga'];
         $rfc = Auth::user()->RFC;
@@ -120,6 +122,7 @@ class MonitoreoController extends Controller
             ->whereBetween('fechaEmision', array($fecha1, $fecha2))
             ->orderBy('folioFiscal')->get();
 
+
         return view('detallesfactura')
             ->with('meses', $meses)
             ->with('rfc', $rfc)
@@ -140,7 +143,6 @@ class MonitoreoController extends Controller
         } else {
             $dt->sub(new DateInterval('P1D'));
         }
-
         $anio = $dt->format('Y');
         $mes = $dt->format('m');
         $dia = $dt->format('d');
@@ -152,8 +154,14 @@ class MonitoreoController extends Controller
             ->whereBetween('fechaEmision', array($fecha1, $fecha2))
             ->get();
 
+
         foreach ($fac as $fa) {
             $fechaI = $fa['fechaEmision'];
         }
+
+        return view('monitoreo');
+
+
+
     }
 }

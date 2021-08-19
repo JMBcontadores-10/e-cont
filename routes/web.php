@@ -22,6 +22,8 @@ Auth::routes(['register'=>false]);
 // Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
 // Route::get('/renombrarXml', [App\Http\Controllers\Prueba::class, 'renombrarXml'])->name('renombrarXml');
 Route::get('/prueba', [App\Http\Controllers\Prueba::class, 'index'])->name('prueba');
+
+// Route::post('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/descargasv2', [App\Http\Controllers\DescargasControllerv2::class, 'index'])->name('descargasv2');
 Route::post('/async', [App\Http\Controllers\Async::class, 'index'])->name('async');
@@ -35,6 +37,7 @@ Route::post('/archivo-pagar', [App\Http\Controllers\ChequesYTransferenciasContro
 Route::post('/agregar-xml-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'agregarXmlCheque'])->name('agregar-xml-cheque');
 Route::post('/detallesCT', [App\Http\Controllers\ChequesYTransferenciasController::class, 'detallesCT'])->name('detallesCT');
 Route::post('/desvincular-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'desvincularCheque'])->name('desvincular-cheque');
+Route::get('/construccion', [App\Http\Controllers\ConstruccionController::class, 'index'])->name('construccion');
 
 
 // Rutas Ana
@@ -52,4 +55,4 @@ Route::post('/consultas1', [App\Http\Controllers\ConsultasController::class, 'st
 Route::get('/script', [App\Http\Controllers\Scriptp::class, 'xmlLeer'])->name('xmlLeer');
 Route::get('/scriptt', [App\Http\Controllers\Scriptp::class, 'xmlborrar'])->name('xmlborrar');
 Route::post('/home2', [App\Http\Controllers\HomeController::class, 'home2'])->name('home2');
-Route::get('/script1', [App\Http\Controllers\Script1::class, 'tipoUsuarios'])->name('tipoUsuarios');
+Route::get('/script1', [App\Http\Controllers\Script1::class, 'xmlborrar'])->name('xmlborrar');

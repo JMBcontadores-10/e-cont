@@ -48,7 +48,13 @@
                     <tr>
                         <td>{{++$n}}</td>
                         <td>{{$rfc}}</td>
-                        <td>{{$i['fechaDescarga']}}</td>
+                        @php
+                            $fecha= $i['fechaDescarga'];
+                            $date = strtotime($fecha);
+                            $dia = date('d-M-Y', $date);
+                            $desca = date("d-M-Y", strtotime($dia."-1 days"));
+                        @endphp
+                        <td>{{$desca}}</td>
                         <td>Emitidos</td>
                         <td>{{$i['descargasEmitidos']}}</td>
                             @php
@@ -100,7 +106,13 @@
                     <tr>
                         <td>{{++$n}}</td>
                         <td>{{$rfc}}</td>
-                        <td>{{$r['fechaDescarga']}}</td>
+                        @php
+                            $fechar= $r['fechaDescarga'];
+                            $dater = strtotime($fechar);
+                            $diar = date("d-M-Y", $dater);
+                            $descar = date("d-M-Y", strtotime($diar."-1 days"));
+                        @endphp
+                        <td>{{$descar}}</td>
                         <td>Recibidos</td>
                         <td>{{$r['descargasRecibidos']}}</td>
                         @php
