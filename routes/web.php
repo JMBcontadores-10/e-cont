@@ -37,6 +37,7 @@ Route::post('/archivo-pagar', [App\Http\Controllers\ChequesYTransferenciasContro
 Route::post('/agregar-xml-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'agregarXmlCheque'])->name('agregar-xml-cheque');
 Route::post('/detallesCT', [App\Http\Controllers\ChequesYTransferenciasController::class, 'detallesCT'])->name('detallesCT');
 Route::post('/desvincular-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'desvincularCheque'])->name('desvincular-cheque');
+Route::get('/construccion', [App\Http\Controllers\ConstruccionController::class, 'index'])->name('construccion');
 
 
 // Rutas Ana
