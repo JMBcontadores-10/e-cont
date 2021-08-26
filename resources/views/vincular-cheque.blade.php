@@ -39,7 +39,6 @@
                         @csrf
                         <input type="hidden" name="id" value="{{ $id }}">
                         <input type="hidden" name="nombrec" value="{{ $nombrec }}">
-
                         <div style="overflow: auto">
                             <div class="mainbox2 row">
                                 <div class="col-6 d-flex justify-content-end mt-2">
@@ -134,7 +133,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-linkj mt-3">Actualizar Cheque/Transferencia</button>
+                        <button id="reg-cheque" class="btn btn-linkj mt-3">Actualizar Cheque/Transferencia</button>
                     </form>
                 </div>
             @else
@@ -169,7 +168,6 @@
                     <h1 style="color:#035CAB">Añadir Cheque/Transferencia</h1><br>
                     <form enctype="multipart/form-data" action="{{ url('archivo-pagar') }}" method="POST">
                         @csrf
-
                         <div style="overflow: auto">
                             <div class="mainbox2 row">
                                 <div class="col-6 d-flex justify-content-end mt-2">
@@ -258,13 +256,13 @@
                                 </div>
                             </div>
                         </div>
-
                         @if ($vincular)
                             <input type="hidden" name="allcheck" value="{{ json_encode($allcheck, true) }}">
                         @endif
-                        <button class="btn btn-linkj mt-3">Registrar Cheque/Transferencia</button>
+                        <button id="reg-cheque" class="btn btn-linkj mt-3">Registrar Cheque/Transferencia</button>
                     </form>
                 </div>
             @endif
         </div>
+
     @endsection
