@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\XmlE;
 use App\Models\XmlR;
+use App\Models\Prueba;
 use App\Models\MetadataR;
 use DirectoryIterator;
 use PhpCfdi\CfdiToJson\JsonConverter;
@@ -32,6 +33,7 @@ class Scriptp extends Controller
         set_time_limit(36000);
         $num = 0;
         $rfcs = [
+            // '1',
             'AHF060131G59',
             'AFU1809135Y4',
             'AIJ161001UD1',
@@ -103,14 +105,15 @@ class Scriptp extends Controller
                 // '12.Diciembre',
             ];
             foreach ($meses as $m) {
-                $rutas = [
+                $rutas =
+                [
                     'Emitidos',
                     'Recibidos'
                 ];
                 foreach ($rutas as $r) {
                     $num++;
                     $n = 0;
-                    $ruta = "C:/laragon/www/contarappv1/public/storage/contarappv1_descargas/$e/2021/Descargas/$m/$r/XML/";
+                    $ruta = "C:/laragon/www/contarappv1/public/storage/contarappv1_descargas/$e/2021/Descargas/$m/$r/XML";
                     $dir = new DirectoryIterator($ruta);
                     echo "$num - $ruta <br><br>";
                     foreach ($dir as $fileinfo) {
