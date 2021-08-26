@@ -12,69 +12,45 @@ use DateInterval;
 
 class MonitoreoController extends Controller
 {
-    //   public function index()
-    // {
-    //   return view('monitoreo');
-    // }
 
     public function index()
     {
+        set_time_limit(90);
         $rfcC = Auth::user()->RFC;
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
 
-        if (isset($argv[1])) {
-            $dt->sub(new DateInterval($argv[1]));
-        } else {
-            $dt->sub(new DateInterval('P1D'));
-        }
+        $dt->sub(new DateInterval('P1D'));
 
         $anio = $dt->format('Y');
         $mes = $dt->format('m');
         $dia = $dt->format('d');
         $fechaF = "$anio-$mes-$dia";
-        $fechaf= "$dia-$mes-$anio";
         $fecha1 = $fechaF . "T00:00:00";
         $fecha2 = $fechaF . "T23:59:59";
 
         $rfc = Auth::user()->RFC;
-        $n = 0;
-        $tXml = 0;
-        $tTabla = 0;
-        $nXml = 0;
+
 
         $col = DB::table('metadata_e')
-            ->select('emisorRfc', 'emisorNombre', 'receptorNombre', 'receptorRfc', 'total', 'fechaEmision')
+            ->select('receptorNombre', 'receptorRfc')
             ->where('emisorRfc', $rfc)
             ->whereBetween('fechaEmision', array($fecha1, $fecha2))
-            ->groupBy('receptorRfc', 'receptorNombre')
+            ->groupBy('receptorRfc')
             ->orderBy('receptorRfc', 'asc')
             ->get();
-        $nXml = $col->count();
 
-        $cant = MetadataE::where('receptorRfc', $rfc)
-            ->whereBetween('fechaEmision', array($fecha1, $fecha2))
-            ->count();
 
-        foreach ($col as $i) {
-            $rfcR = $i['receptorRfc'];
-            $fechaE = $i['fechaEmision'];
-        }
 
         return view('monitoreo')
-            ->with('n', $n)
-            ->with('tXml', $tXml)
-            ->with('nXml', $nXml)
-            ->with('tTabla', $tTabla)
+
             ->with('rfc', $rfc)
             ->with('col', $col)
-            ->with('fechaEmision', $fechaE)
             ->with('fechaF', $fechaF)
-            ->with('fechaf', $fechaf)
             ->with('fecha2', $fecha2)
-            ->with('cant', $cant)
             ->with('fecha1', $fecha1);
     }
+
 
     public function detallesfactura(Request $req)
     {

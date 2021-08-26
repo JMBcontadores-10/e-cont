@@ -26,9 +26,7 @@ use Illuminate\Support\Facades\DB;
         <div class="row" style="justify-content: center;">
 
             <br>
-            <h1>Facturación @php
-                echo $fechaf;
-            @endphp</h1>
+            <h1>Facturación {{ $fechaF }}</h1>
         </div>
         <br>
         <h1>Exportar</h1>
@@ -38,72 +36,102 @@ use Illuminate\Support\Facades\DB;
             <button type="submit" id="export_data" value="Excel" class="btn btn-info">Excel</button>
         </div>
         <br>
-        <div class="row">
-            <div class="col-2">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Hora</th>
-                            <th>Facturas</th>
-                            <th>Monto</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                            @for ($m = 0; $m < 24; $m++)
-                                <tr>
-                                    <td>{{ $m }}</td>
-                                    @foreach ($col as $i)
-                                    @if ($m <10)
-
-                                    @else
-
-                                    @endif
-                                    @endforeach
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-
-                            @endfor
-
-                    </tbody>
-                </table>
-
-            </div>
-            <div class="col-1">
-
-            </div>
-
-            <div class="col-9">
-                <table class="table table-striped">
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <table class="table table-striped">
+                <thead>
                     <tr>
-                        <th>RFC</th>
-                        <th>Razón Social</th>
-                        <th># Facturas Emitidas</th>
+                        <th>Hora</th>
+                        <th>Facturas</th>
                         <th>Monto</th>
-                        <th>Ver</th>
                     </tr>
-                    @foreach ($col as $i)
+                </thead>
+
+                <tbody>
+                    @for ($m = 0; $m < 24; $m++)
                         <tr>
-                            <td>{{ $i['receptorRfc'] }}</td>
-                            <td>{{ $i['receptorNombre'] }}</td>
-                            <td></td>
-                            <td>$ {{ $i['total'] }}</td>
-                            <td>
-                                <form action="{{ route('detallesfactura') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="receptorRfc" value="{{ $i['receptorRfc'] }}">
-                                    <input type="hidden" name="receptorNombre" value="{{ $i['receptorNombre'] }}">
-                                    <input type=submit value=Ver>
-                                </form>
-                            </td>
-                    @endforeach
+                            <td>{{ $m }}</td>
+                            @php
+                                if ($m < 10) {
+                                    $hur = '0' . $m;
+                                    $fechaM = $fechaF . 'T' . $hur;
+                                } else {
+                                    $fechaM = $fechaF . 'T' . $m;
+                                }
 
-                </table>
+                                $cons = DB::table('metadata_e')
+                                    ->select('fechaEmision', 'total')
+                                    ->where('emisorRfc', $rfc)
+                                    ->where('fechaEmision', 'like', $fechaM . '%')
+                                    // ->orderBy('fechaEmision')
+                                    ->get();
 
-            </div>
+                                $count = $cons->count();
+                                $suma = $cons->sum('total');
+
+                            @endphp
+
+                            <td>{{ $count }}</td>
+                            <td>${{ $suma }}</td>
+                        </tr>
+
+                    @endfor
+                </tbody>
+            </table>
 
         </div>
+
+        <div class="col-9">
+            <table class="table table-striped">
+                <tr>
+                    <th>#</th>
+                    <th>RFC</th>
+                    <th>Razón Social</th>
+                    <th># Facturas Emitidas</th>
+                    <th>Monto</th>
+                    <th>Ver</th>
+                </tr>
+                @php
+                    $cont = 0;
+                @endphp
+                @foreach ($col as $i)
+                    <tr>
+
+                        @php
+
+                            $colT = DB::collection('metadata_e')
+                                ->select('total')
+                                ->where('emisorRfc', $rfc)
+                                ->where('receptorRfc', $i['receptorRfc'])
+                                ->where('fechaEmision', 'like', $fechaF . '%')
+                                ->get();
+
+                            $countT = $colT->count();
+                            $sumaT = $colT->sum('total');
+
+
+                        @endphp
+                        <td>{{++$cont}}</td>
+                        <td>{{ $i['receptorRfc'] }}</td>
+                        <td>{{ $i['receptorNombre'] }}</td>
+                        <td>{{ $countT }}</td>
+                        <td>$ {{ $sumaT }}</td>
+                        <td>
+                            <form action="{{ route('detallesfactura') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="receptorRfc" value="{{ $i['receptorRfc'] }}">
+                                <input type="hidden" name="receptorNombre" value="{{ $i['receptorNombre'] }}">
+                                <input type=submit value=Ver>
+                            </form>
+                        </td>
+                @endforeach
+
+            </table>
+
+        </div>
+
     </div>
+
 
 @endsection
