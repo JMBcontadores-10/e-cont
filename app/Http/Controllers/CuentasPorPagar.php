@@ -60,6 +60,7 @@ class CuentasPorPagar extends Controller
         $emisorNombre = $req->emisorNombre;
         $n = 0;
 
+        // Si se eligieron varios proveedores
         if ($req->has('allcheck') or $req->has('arrRfc')) {
             $emisorRfc = '';
             $emisorNombre = "Varios Proveedores";
