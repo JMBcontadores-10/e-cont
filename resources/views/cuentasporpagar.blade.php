@@ -61,6 +61,8 @@ use App\Models\ListaNegra;
                             @php
                                 $sum = 0;
                                 $nXml = 0;
+                                // Consulta para obtener el total de monto y cantidad de CFDI por empresa emisora
+                                // Se aplicó un indice para agilizar la velocidad de consulta
                                 $colT = DB::collection('metadata_r')
                                     ->select('total', 'efecto')
                                     ->where('receptorRfc', $rfc)
@@ -69,6 +71,7 @@ use App\Models\ListaNegra;
                                     ->whereNull('cheques_id')
                                     ->get();
                                 $nXml = $colT->count();
+                                // Convierte el campo total en en float y negativo si es egreso
                                 foreach ($colT as $v) {
                                     $var = (float) $v['total'];
                                     if ($v['efecto'] == 'Egreso') {
@@ -79,6 +82,7 @@ use App\Models\ListaNegra;
                                 $tXml = $tXml + $nXml;
                                 $tTabla = $tTabla + $sum;
                             @endphp
+                            {{-- Valida si existe al menos un CFDI para crear la fila --}}
                             @if (!$nXml == 0)
                                 <tr>
                                     <td class="text-center align-middle">{{ ++$n }}</td>
@@ -90,6 +94,7 @@ use App\Models\ListaNegra;
                                     </td>
                                     <td class="text-center align-middle">{{ $i['emisorRfc'] }}</td>
                                     <td class="align-middle">{{ $i['emisorNombre'] }}</td>
+                                    {{-- Valida si existe una coincidencia de RFC en la lista negra --}}
                                     @if (!DB::collection('lista_negra')->select('RFC')->where(['RFC' => $i['emisorRfc']])->exists())
                                         <td class="td1 text-center align-middle"><img src="{{ asset('img/ima.png') }}"
                                                 alt="">

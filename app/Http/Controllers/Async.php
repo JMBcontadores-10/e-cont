@@ -36,10 +36,8 @@ class Async extends Controller
         $rutaApp = "C:/laragon/www/contarappv1/public";
         $dc = Storage::url(Auth::user()->dircer);
         $dircer = "storage/" . Auth::user()->dircer;
-        // $dircer = $rutaApp . $dc;
         $dk = Storage::url(Auth::user()->dirkey);
         $dirkey = "storage/" . Auth::user()->dirkey;
-        // $dirkey = $rutaApp . $dk;
         $pwd = Auth::user()->pass;
         $rfc = Auth::user()->RFC;
         $meses = array(
@@ -60,7 +58,7 @@ class Async extends Controller
         // Instanciar clase principal
         $descargaCfdi = new DescargaMasivaCfdi();
 
-
+        // Función que regresa la sesión y los mensajes o items descargados
         function json_response($data, $success = true)
         {
 
@@ -123,11 +121,13 @@ class Async extends Controller
                     ));
                 }
             } elseif ($accion == 'buscar-recibidos') {
+                // Se instancia la clase que recibirá las fechas enviadas por el usuario
                 $filtros = new BusquedaRecibidos();
                 $filtros->establecerFecha($_POST['anio'], $_POST['mes'], $_POST['dia']);
                 $anio = $_POST['anio'];
                 $mes = $_POST['mes'];
 
+                // Genera el arreglo con los CFDI de la fecha establecida
                 $xmlInfoArr = $descargaCfdi->buscar($filtros);
                 if ($xmlInfoArr) {
                     $items = array();
@@ -144,6 +144,7 @@ class Async extends Controller
                         );
                         $items[] = array_merge($arr[$index], $arr2);
                     }
+                    // Se envia el arreglo $items y la sesión para que se genere la tabla con js
                     echo json_response(array(
                         'items' => $items,
                         'sesion' => $descargaCfdi->obtenerSesion(),
@@ -155,12 +156,14 @@ class Async extends Controller
                     ));
                 }
             } elseif ($accion == 'buscar-emitidos') {
+                // Se instancia la clase que recibirá las fechas enviadas por el usuario
                 $filtros = new BusquedaEmitidos();
                 $filtros->establecerFechaInicial($_POST['anio_i'], $_POST['mes_i'], $_POST['dia_i']);
                 $filtros->establecerFechaFinal($_POST['anio_f'], $_POST['mes_f'], $_POST['dia_f']);
                 $anio = $_POST['anio_i'];
                 $mes = $_POST['mes_i'];
 
+                // Genera el arreglo con los CFDI de la fecha establecida
                 $xmlInfoArr = $descargaCfdi->buscar($filtros);
                 if ($xmlInfoArr) {
                     $items = array();
@@ -179,6 +182,7 @@ class Async extends Controller
                         );
                         $items[] = array_merge($arr[$index], $arr2);
                     }
+                    // Se envia el arreglo $items y la sesión para que se genere la tabla con js
                     echo json_response(array(
                         'items' => $items,
                         'sesion' => $descargaCfdi->obtenerSesion()
@@ -226,6 +230,7 @@ class Async extends Controller
                         $fcan = $xmlInfo->fechaCancelacion;
                         $ua = $xmlInfo->urlAcuseXml;
 
+                        // Almacena la metadata si el archivo fue seleccionado
                         if (!empty($_POST['xml'])) {
                             foreach ($_POST['xml'] as $folioFiscal => $url) {
                                 if ($folioFiscal == $ff) {
@@ -257,6 +262,7 @@ class Async extends Controller
                             }
                         }
 
+                        // Almacena la metadata si el archivo fue seleccionado
                         if (!empty($_POST['ri'])) {
                             foreach ($_POST['ri'] as $folioFiscal => $url) {
                                 if ($folioFiscal == $ff) {
@@ -290,24 +296,21 @@ class Async extends Controller
                     }
                 }
 
+                // Descarga el archivo si fue seleccionado
                 if (!empty($_POST['xml'])) {
                     foreach ($_POST['xml'] as $folioFiscal => $url) {
                         // xml
                         $descarga->agregarXml($url, $rutaDescarga, $folioFiscal, $folioFiscal);
                     }
                 }
+
+                // Descarga el archivo si fue seleccionado
                 if (!empty($_POST['ri'])) {
                     foreach ($_POST['ri'] as $folioFiscal => $url) {
                         // representacion impresa
                         $descarga->agregarRepImpr($url, $rutaDescarga, $folioFiscal, $folioFiscal);
                     }
                 }
-                // if (!empty($_POST['acuse'])) {
-                //     foreach ($_POST['acuse'] as $folioFiscal => $url) {
-                //         // acuse de resultado de cancelacion
-                //         $descarga->agregarAcuse($url, $rutaDescarga, $folioFiscal, $folioFiscal . '-acuse');
-                //     }
-                // }
 
                 $descarga->procesar();
 
@@ -365,6 +368,7 @@ class Async extends Controller
                         $fcan = $xmlInfo->fechaCancelacion;
                         $ua = $xmlInfo->urlAcuseXml;
 
+                        // Almacena la metadata si el archivo fue seleccionado
                         if (!empty($_POST['xml'])) {
                             foreach ($_POST['xml'] as $folioFiscal => $url) {
                                 if ($folioFiscal == $ff) {
@@ -396,6 +400,7 @@ class Async extends Controller
                             }
                         }
 
+                        // Almacena la metadata si el archivo fue seleccionado
                         if (!empty($_POST['ri'])) {
                             foreach ($_POST['ri'] as $folioFiscal => $url) {
                                 if ($folioFiscal == $ff) {
@@ -427,6 +432,7 @@ class Async extends Controller
                             }
                         }
 
+                        // Almacena la metadata si el archivo fue seleccionado
                         if (!empty($_POST['acuse'])) {
                             foreach ($_POST['acuse'] as $folioFiscal => $url) {
                                 if ($folioFiscal == $ff) {
@@ -460,18 +466,23 @@ class Async extends Controller
                     }
                 }
 
+                // Descarga el archivo si fue seleccionado
                 if (!empty($_POST['xml'])) {
                     foreach ($_POST['xml'] as $folioFiscal => $url) {
                         // xml
                         $descarga->agregarXml($url, $rutaDescarga, $folioFiscal, $folioFiscal);
                     }
                 }
+
+                // Descarga el archivo si fue seleccionado
                 if (!empty($_POST['ri'])) {
                     foreach ($_POST['ri'] as $folioFiscal => $url) {
                         // representacion impresa
                         $descarga->agregarRepImpr($url, $rutaDescarga, $folioFiscal, $folioFiscal);
                     }
                 }
+
+                // Descarga el archivo si fue seleccionado
                 if (!empty($_POST['acuse'])) {
                     foreach ($_POST['acuse'] as $folioFiscal => $url) {
                         // acuse de resultado de cancelacion
@@ -499,6 +510,9 @@ class Async extends Controller
         }
     }
 
+    // Verifica los archivos descargados y los renombra en la carpeta correspondiente si es pdf o xml
+    // Si pesa menos de 2000 bytes no es renombrado para evitar archivos corruptos
+    // Si es xml lo inserta en MongoDB por tipo recibido o emitido
     public function filtroArchivos($rutaDescarga, $tipoF)
     {
         $dir = new DirectoryIterator($rutaDescarga);
@@ -543,6 +557,7 @@ class Async extends Controller
         }
     }
 
+    // Recibe la ruta y uuid del archivo xml para verificar si existe almacenado en la carpeta correspondiente
     public function dirIteratorXml($ruta, $uuid)
     {
         $dir = new DirectoryIterator($ruta);
@@ -557,6 +572,7 @@ class Async extends Controller
         return false;
     }
 
+    // Recibe la ruta y uuid del archivo pdf para verificar si existe almacenado en la carpeta correspondiente
     public function dirIteratorPdf($ruta, $uuid)
     {
         $dir = new DirectoryIterator($ruta);
@@ -571,6 +587,7 @@ class Async extends Controller
         return false;
     }
 
+    // Recibe la ruta y uuid del archivo pdf (acuse) para verificar si existe almacenado en la carpeta correspondiente
     public function dirIteratorPdfAcuse($ruta, $uuid)
     {
         $dir = new DirectoryIterator($ruta);
@@ -585,6 +602,7 @@ class Async extends Controller
         return false;
     }
 
+    // Crea o modifica la colección calendario_r con la fecha y el total de descargas y errores
     public function updateRecibidos($rfc, $fecha, $totalD, $totalE)
     {
         $cal = CalendarioR::where(['rfc' => $rfc, 'fechaDescarga' => $fecha, 'fechaDescargaF' => $fecha]);
@@ -614,6 +632,7 @@ class Async extends Controller
         );
     }
 
+    // Crea o modifica la colección calendario_e con la fecha y el total de descargas y errores
     public function updateEmitidos($rfc, $fecha, $fechaF, $totalD, $totalE)
     {
         $cal = CalendarioE::where(['rfc' => $rfc, 'fechaDescarga' => $fecha, 'fechaDescargaF' => $fechaF]);
@@ -643,6 +662,7 @@ class Async extends Controller
         );
     }
 
+    // Elimina las comas de los valores totales
     public function floatvalue($val)
     {
         $val = str_replace(",", ".", $val);
