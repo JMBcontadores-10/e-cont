@@ -9,7 +9,7 @@ $.ajaxSetup({
     }
 });
 
-var calendar = $('#calendar').fullCalendar({
+var calendar = $('#calender').fullCalendar({
 
                     locale: 'es',
                     height: 500,

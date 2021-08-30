@@ -38,9 +38,8 @@
             </form>
             <hr style="border-color:black; width:100%;">
         </div>
-
-
         <div id="calender"></div>
+
     </div>
 
     <div class="mx-4 mt-4">
@@ -151,6 +150,7 @@
     </div>
 
 @endsection
+
 
 @push('calendario')
     <script type="text/javascript" src="{{ URL::asset('js/calendario.js') }}" defer></script>

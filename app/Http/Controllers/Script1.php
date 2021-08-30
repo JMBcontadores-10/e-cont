@@ -85,6 +85,7 @@ class Script1 extends Controller
     public function xmlborrar()
     {
         $cfdi = [
+
             'D1E821DA-86EC-43F9-8D7B-04F9E54498F6',
             'CEB07727-3BD9-4F74-A90A-C4E9FB31FC15',
             'C8276278-D273-4CA0-86F6-FEED9C8B4378',
@@ -92,6 +93,7 @@ class Script1 extends Controller
             'F484A750-A869-4194-B293-A1F91ADA128C',
             '1B8284ED-AFDD-4196-85A0-3E01AE7592B5',
             '5DF88F26-9527-4057-A338-491FD87A3647',
+
             'A71DCA03-DD78-D541-85CF-B9C998B0B339',
             '5AE34F18-8F6A-4CA5-9852-BE1F10543717',
             '291CC673-6DF5-4F97-8978-0DFB8CEF16E9',

@@ -56,22 +56,22 @@ window.onload = function(){
 
     },
 
-    eventDrop:function(info){
-        console.log("eventDrop" +info)
-        console.log("eventDrop" +info.event.title)
-        console.log("eventDrop" +info.event.start)
+    // eventDrop:function(info){
+    //     console.log("eventDrop" +info)
+    //     console.log("eventDrop" +info.event.title)
+    //     console.log("eventDrop" +info.event.start)
 
-    },
+    // },
 
-    eventResize:function(info){
-        console.log("eventResize" +info.event.start)
-        console.log("eventResize" +info.event.end)
+    // eventResize:function(info){
+    //     console.log("eventResize" +info.event.start)
+    //     console.log("eventResize" +info.event.end)
 
-        if(!confirm("Esta ok?")){
-            info.revert()
-        }
+    //     if(!confirm("Esta ok?")){
+    //         info.revert()
+    //     }
 
-    },
+    // },
 
     })
 
@@ -79,10 +79,7 @@ window.onload = function(){
 
     calendar.addEvent({
 
-        title:'Evento prueba',
-        start : '2021-07-20',
-        end: '2021-07-22',
-        color: '#18D915'
+
     })
 
     document.getElementById("addEvent").addEventListener('click', ()=>{

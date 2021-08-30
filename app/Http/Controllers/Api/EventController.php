@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\CalendarioE;
 
 class EventController extends Controller
 {
@@ -24,18 +26,18 @@ class EventController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        $data = $request->all();
+    // public function store(Request $request)
+    // {
+    //     $data = $request->all();
 
-        $validator = Validator::make($data, SaveEvent::rules());
+    //     $validator = Validator::make($data, SaveEvent::rules());
 
-        if($validator->fails())
-        {
-            return response()->json($validator->errors(), 400);
-        }
-        return response()->json(Event::create($data), 200);
-    }
+    //     if($validator->fails())
+    //     {
+    //         return response()->json($validator->errors(), 400);
+    //     }
+    //     return response()->json(Event::create($data), 200);
+    // }
 
     /**
      * Display the specified resource.
@@ -45,7 +47,9 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        //
+        $rfc= Auth::user()->RFC;
+        $con = CalendarioE::where('rfc', $rfc)
+                            ->get();
     }
 
     /**

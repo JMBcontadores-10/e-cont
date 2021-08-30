@@ -7,6 +7,18 @@ $('td[id="vinp"]').hide();
 $('#loading').hide();
 $('#loadingE').hide();
 $("#doc-relacionados").hide();
+$("#login1").hide();
+
+function showLogin1(){
+    $("#login1").show();
+    $("#entrar").hide();
+}
+
+function variableP(){
+    // var selA = document.getElementById("empresas");
+    // var anio = selA.options[selA.selectedIndex].value;
+    // document.getElementById("password").value = document.getElementById("empresas").innerText;
+}
 
 function disableInputs() {
     $(':input[type="submit"]').prop('disabled', true);
