@@ -35,6 +35,7 @@ use App\Models\XmlR;
                 <thead>
                     <tr class="table-primary">
                         <th class="text-center align-middle">No.</th>
+                        {{-- Si el cheque no está verificado se puede desvincular --}}
                         @if ($verificado == 0)
                             <th class="text-center align-middle">Desvincular CFDI <input type="checkbox" id="allcheck"
                                     name="allcheck" /></th>
@@ -71,10 +72,10 @@ use App\Models\XmlR;
                             if ($efecto == 'Egreso') {
                                 $total = -1 * abs($total);
                             }
-
                         @endphp
                         <tr>
                             <td class="text-center align-middle">{{ ++$n }}</td>
+                            {{-- Si el cheque no está verificado se puede desvincular --}}
                             @if ($verificado == 0)
                                 <td class="text-center align-middle allcheck">
                                     <div id="checkbox-group" class="checkbox-group">
@@ -90,11 +91,13 @@ use App\Models\XmlR;
                             @php
                                 $anio = substr($fechaE, 0, 4);
                                 $mes = (string) (int) substr($fechaE, 5, 2);
+                                // Se asignan las rutas donde está almacenado el archivo
                                 $rutaXml = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML/$folioF.xml";
                                 $rutaPdf = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF/$folioF.pdf";
                                 $nUR = 0;
                                 $nCon = 0;
                                 $totalX = 0;
+                                // Se consulta la coincidencia de metadata con el contenido xml para obtener los campos faltantes
                                 $colX = XmlR::where(['UUID' => $folioF])->get();
                                 if (!$colX->isEmpty()) {
                                     foreach ($colX as $v) {
@@ -166,6 +169,7 @@ use App\Models\XmlR;
                 </tbody>
             </table>
         </div>
+        {{-- Si el cheque no está verificado se puede desvincular --}}
         @if ($verificado == 0)
             <div class="row justify-content-center mt-4">
                 <input readonly name="cheques_id" type="hidden" value="{{ $id }}" />
@@ -175,6 +179,7 @@ use App\Models\XmlR;
             </div>
         @endif
     </form>
+    {{-- Si el cheque no está verificado permite visualizar el resto de CFDI recibidos pertenecientes a los RFC ya vinculados --}}
     @if ($verificado == 0)
         <div class="row d-flex justify-content-center mt-4">
             <form action="{{ url('detalles') }}">

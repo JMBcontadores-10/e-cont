@@ -93,11 +93,13 @@ use App\Models\XmlR;
                             @php
                                 $anio = substr($fechaE, 0, 4);
                                 $mes = (string) (int) substr($fechaE, 5, 2);
+                                // Se asignan las rutas donde está almacenado el archivo
                                 $rutaXml = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/XML/$folioF.xml";
                                 $rutaPdf = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/PDF/$folioF.pdf";
                                 $totalX = 0;
                                 $nUR = 0;
                                 $nCon = 0;
+                                // Se consulta la coincidencia de metadata con el contenido xml para obtener los campos faltantes
                                 $colX = XmlR::where(['UUID' => $folioF])->get();
                                 if (!$colX->isEmpty()) {
                                     foreach ($colX as $v) {

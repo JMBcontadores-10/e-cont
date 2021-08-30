@@ -38,7 +38,7 @@
                             </form>
                         </div>
                         <div class="col">
-                            <form action="\expedientedigital\index2.php" method="post">
+                            <form action="{{url('construccion')}}">
                                 <button class="btnModulo" type="submit" value="Expediente Digital" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
                                     <img style="float:left;" src="img/archivo(1).png" width="25px" height="25px" alt="">
                                     Expediente Digital
@@ -76,7 +76,7 @@
                             </form>
                         </div>
                         <div class="col">
-                            <form action="\expedientefiscal\vistas\index.php" method="post">
+                            <form action="{{url('construccion')}}">
                                 <button class="btnModulo" type="submit" value="Expediente Fiscal" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
                                     <img style="float:left;" src="img/fiscal.png" width="25px" height="25px" alt=""> Expediente
                                     Fiscal
@@ -84,7 +84,7 @@
                             </form>
                         </div>
                         <div class="col">
-                            <form action="\nomina\index.php" method="post">
+                            <form action="{{url('construccion')}}">
                                 <button class="btnModulo" type="submit" value="Nomina" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
                                     <img style="float:left;" src="img/salario.png" width="25px" height="25px" alt=""> Nómina
                                 </button>

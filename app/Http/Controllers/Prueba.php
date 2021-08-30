@@ -14,7 +14,6 @@ class Prueba extends Controller
 {
     public function index(Request $r)
     {
-
     }
 
     public function renombrarXml()

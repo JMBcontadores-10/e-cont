@@ -514,6 +514,13 @@ function verAdicional(btn_id) {
     window.open(rutaArchivo, '_blank');
 }
 
+// function submitBlock() {
+//     $('#reg-cheque').on('submit', function() {
+//         // $('#reg-cheque').attr('disabled', true);
+//         alert('Hola');
+//     });
+// }
+
 // function sortTable(n) {
 //     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
 //     var n = 12;
