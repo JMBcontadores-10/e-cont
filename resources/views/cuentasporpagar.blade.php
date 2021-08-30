@@ -12,7 +12,7 @@ use App\Models\ListaNegra;
 @section('content')
     <div class="container">
         <div class="float-md-left">
-            <a class="b3" href="{{ url('/') }}">
+            <a class="b3" href="{{ url('/modules') }}">
                 << Regresar</a>
         </div>
         <div class="float-md-right">
