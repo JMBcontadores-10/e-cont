@@ -9,12 +9,12 @@ $('#loadingE').hide();
 $("#doc-relacionados").hide();
 $("#login1").hide();
 
-function showLogin1(){
+function showLogin1() {
     $("#login1").show();
     $("#entrar").hide();
 }
 
-function variableP(){
+function variableP() {
     // var selA = document.getElementById("empresas");
     // var anio = selA.options[selA.selectedIndex].value;
     // document.getElementById("password").value = document.getElementById("empresas").innerText;
@@ -514,12 +514,10 @@ function verAdicional(btn_id) {
     window.open(rutaArchivo, '_blank');
 }
 
-// function submitBlock() {
-//     $('#reg-cheque').on('submit', function() {
-//         // $('#reg-cheque').attr('disabled', true);
-//         alert('Hola');
-//     });
-// }
+function submitBlock() {
+    $('#reg-cheque').hide()
+    setTimeout("$('#reg-cheque').show()", 250);
+}
 
 // function sortTable(n) {
 //     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;

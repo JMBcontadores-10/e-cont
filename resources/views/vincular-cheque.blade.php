@@ -133,7 +133,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button id="reg-cheque" class="btn btn-linkj mt-3">Actualizar Cheque/Transferencia</button>
+                        <button id="reg-cheque" onclick="submitBlock()" class="btn btn-linkj mt-3">Actualizar Cheque/Transferencia</button>
                     </form>
                 </div>
             @else
@@ -259,7 +259,7 @@
                         @if ($vincular)
                             <input type="hidden" name="allcheck" value="{{ json_encode($allcheck, true) }}">
                         @endif
-                        <button id="reg-cheque" class="btn btn-linkj mt-3">Registrar Cheque/Transferencia</button>
+                        <button id="reg-cheque" onclick="submitBlock()" class="btn btn-linkj mt-3">Registrar Cheque/Transferencia</button>
                     </form>
                 </div>
             @endif
