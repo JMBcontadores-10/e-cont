@@ -29,7 +29,7 @@
                 </div>
             </div>
             <br>
-            <div align="left">
+            <div>
                 <form  method="POST" action="{{route('consultas1')}}">
                     @csrf
 
@@ -56,15 +56,7 @@
         </div>
         <br>
         <br>
-        {{-- <div class="row">
-            <div class="col-md-6">
-                <h1 style="text-align: center">Facturas Emitidas</h1>
-            </div>
-            <div class="col-md-6">
-                <h1 style="text-align: center">Facturas Recibidas</h1>
-            </div>
 
-        </div> --}}
     </div>
 
 

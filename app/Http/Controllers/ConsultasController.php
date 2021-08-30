@@ -106,11 +106,6 @@ class ConsultasController extends Controller
             }
         }
 
-        // $ing= $this->ingreso($data);
-        // // $this->egreso($data);
-        // // $this->pago($data);
-        // // $this->nomina($data);
-
         return view('consultas1')
             ->with('tipodes', $tipodes)
             ->with('tipoFac', $tipoFac)

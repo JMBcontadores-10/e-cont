@@ -36,7 +36,7 @@
                                         class="col-md-4 col-form-label text-md-right">{{ __('Contraseña: ') }}</label>
 
                                     <div class="col-md-6">
-                                        <input placeholder="**********" id="passC" type="passC" class="form-control"
+                                        <input placeholder="**********" id="passC" type="password" class="form-control"
                                             name="passC" required>
 
                                     </div>
