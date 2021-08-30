@@ -108,36 +108,4 @@ class MonitoreoController extends Controller
             ->with('receptorNombre', $receptorNombre);
     }
 
-    public function horas()
-    {
-        $rfc = Auth::user()->RFC;
-        $dtz = new DateTimeZone("America/Mexico_City");
-        $dt = new DateTime("now", $dtz);
-
-        if (isset($argv[1])) {
-            $dt->sub(new DateInterval($argv[1]));
-        } else {
-            $dt->sub(new DateInterval('P1D'));
-        }
-        $anio = $dt->format('Y');
-        $mes = $dt->format('m');
-        $dia = $dt->format('d');
-        $fechaF = "$anio-$mes-$dia";
-        $fecha1 = $fechaF . "T00:00:00";
-        $fecha2 = $fechaF . "T23:59:59";
-
-        $fac = MetadataE::where('emisorRfc', $rfc)
-            ->whereBetween('fechaEmision', array($fecha1, $fecha2))
-            ->get();
-
-
-        foreach ($fac as $fa) {
-            $fechaI = $fa['fechaEmision'];
-        }
-
-        return view('monitoreo');
-
-
-
-    }
 }

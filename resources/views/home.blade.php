@@ -4,6 +4,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="inicio" align="center">
+                @if (Session::get('tipoU') == "2")
+                <h4>Esta entrando como contador a la</h4>
+                @endif
                 <h4>Sesión de:</h4>
                 <h2>{{ Auth::user()->nombre }}</h2>
                 <h4>{{ Auth::user()->RFC }}</h4>
@@ -12,54 +15,20 @@
                     $rfc = Auth::user()->RFC;
                 @endphp
 
-                @switch($rfc)
-                    @case('ADMINISTRADOR')
-                        <form method="POST" action="{{route('home2')}}">
-                        @csrf
-                        @php
-                            $clientes = DB::table('clientes')
-                                ->select('RFC', 'nombre', 'Password')
-                                ->where('RFC' != $rfc)
-                                ->orderBy('RFC')
-                                ->get();
-
-                            echo "<select id='sele' name='usuarios'>";
-
-                            foreach ($clientes as $cli) {
-                                $RFCli = $cli['RFC'];
-                                $nombre = $cli['nombre'];
-                                $pass = $cli['Password'];
-
-                                echo "<option id='opt' value=$RFCli>$nombre</option>";
-                            }
-                        @endphp
-
-                        </select>
-                        <br>
-                        <br>
-                        <input class="btnModulo" type="submit" value="Entrar empresa"
-                            style="BORDER: #0055FF 1px solid; FONT-SIZE: 10pt">
-                        </form>
-
-                </div>
-                <br>
-                <br>
-                @break
-                @case('NOMINAS')
-
-                @break
-                @default
                     <h2>Módulos disponibles</h2>
                     <br>
 
                     <div class="row" style="justify-content: center;">
                         <div class="col">
+
                             <form action="{{ url('descargasv2') }}">
                                 {{-- <input type="hidden" name="accion" value="login_fiel" /> --}}
                                 <button class="btnModulo" type="submit" value="Descargas" style="font-size: 12pt">
                                     <img style="float:left;" src="img/boton.png" width="25px" height="25px" alt=""> Descargas
                                 </button>
                             </form>
+
+
                         </div>
                         <div class="col">
                             <form action="{{ url('consultas') }}">
@@ -85,6 +54,8 @@
                             </form>
                         </div>
                     </div>
+                    <br>
+                    <br>
 
                     <div class="row" style="justify-content: center;">
                         <div class="col">
@@ -130,7 +101,6 @@
                         </form>
                     </div>
                     <br><br>
-            @endswitch
 
 
             <div class="row" style="justify-content: center;">

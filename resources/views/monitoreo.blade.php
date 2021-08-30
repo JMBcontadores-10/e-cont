@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
     <div class="container">
         <div class="float-md-left">
-            <a class="b3" href="{{ url('/') }}">
+            <a class="b3" href="{{ url('/modules') }}">
                 << Regresar</a>
         </div>
         <div class="float-md-right">
@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\DB;
         <br>
     </div>
     <div class="row">
-        <div class="col-2">
+        <div class="col-3">
             <table class="table table-striped">
                 <thead>
                     <tr>
@@ -102,9 +102,9 @@ use Illuminate\Support\Facades\DB;
 
                             $colT = DB::collection('metadata_e')
                                 ->select('total')
-                                ->where('emisorRfc', $rfc)
                                 ->where('receptorRfc', $i['receptorRfc'])
                                 ->where('fechaEmision', 'like', $fechaF . '%')
+                                ->where('emisorRfc', $rfc)
                                 ->get();
 
                             $countT = $colT->count();

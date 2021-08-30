@@ -15,9 +15,14 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/code.js') }}" defer></script>
     <script src="{{ asset('js/numeros.js') }}" defer></script>
+
     <script src="{{ asset('js/calendar.js') }}" defer></script>
     <script src="https://kit.fontawesome.com/4b9ba14b0f.js" crossorigin="anonymous"></script>
-    {{-- <script src="{{ asset('js/jquery-3.1.1.min.js')}}" defer></script> --}}
+
+    <script src="{{ asset('js/fullcalendar.js')}}" defer></script>
+    <script src="{{ asset('js/moment.min.js')}}" defer></script>
+    <script src="{{ asset('js/jquery-3.1.1.min.js')}}" defer></script>
+
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -25,6 +30,8 @@
     {{-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet"> --}}
 
     <!-- Styles -->
+    <link href="{{ asset('css/fullcalendar.css') }}" rel="stylesheet">
+
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 
@@ -32,7 +39,7 @@
     <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />-->
 
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
-    <link href="{{ asset('css/fullcalendar.css') }}" rel="stylesheet" />
+
     <script src="{{ asset('js/moment.min.js') }}" defer></script>
     <script src="{{ asset('js/fullcalendar.js') }}" defer></script>
     <script src="{{ asset('js/excel.js') }}" defer></script>
@@ -44,7 +51,7 @@
 
 <body>
     <div id="app">
-        @if (Auth::check() && !Route::is('home'))
+        @if (Auth::check() && !Route::is('home', 'login', 'modules', 'log'))
             <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
                 <div class="container">
                     <a class="navbar-brand" href="{{ url('/') }}">
@@ -105,7 +112,7 @@
 
         <main class="py-4">
 
-            @if (Route::is('home', 'login'))
+            @if (Route::is('home', 'login', 'modules', 'log'))
                 <div class="row justify-content-center mb-3">
                     <img src="{{ asset('img/logo-contarapp-01.png') }}" width="380px">
                 </div>
