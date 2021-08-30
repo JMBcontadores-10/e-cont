@@ -56,6 +56,8 @@ Route::get('/historial', [App\Http\Controllers\ConsultasController::class, 'hist
 Route::get('/volumetrico', [App\Http\Controllers\VolumetricoController::class, 'index'])->name('volumetrico');
 Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
 Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
+Route::get('/auditoria', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('auditoria');
+Route::post('/auditoria1', [App\Http\Controllers\AuditoriaController::class, 'store'])->name('auditoria1');
 
 Route::get('/', [App\Http\Controllers\Login1Controller::class, 'index'])->name('log');
 // Route::get('/login', [App\Http\Controllers\Login1Controller::class, 'login'])->name('login');
@@ -66,3 +68,4 @@ Route::get('/script', [App\Http\Controllers\Scriptp::class, 'xmlLeer'])->name('x
 Route::get('/scriptt', [App\Http\Controllers\Scriptp::class, 'xmlborrar'])->name('xmlborrar');
 Route::post('/home2', [App\Http\Controllers\HomeController::class, 'home2'])->name('home2');
 Route::get('/script1', [App\Http\Controllers\Script1::class, 'xmlborrar'])->name('xmlborrar');
+

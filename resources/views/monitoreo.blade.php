@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
     <div class="container">
         <div class="float-md-left">
-            <a class="b3" href="{{ url('/modules') }}">
+            <a class="b3" href="{{url()->previous()}}">
                 << Regresar</a>
         </div>
         <div class="float-md-right">

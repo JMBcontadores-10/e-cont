@@ -13,7 +13,7 @@ use App\Models\XmlE;
 @section('content')
     <div class="container">
         <div class="float-md-left">
-            <a class="b3" href="{{ url('/') }}">
+            <a class="b3" href="{{url()->previous() }}">
                 << Regresar</a>
         </div>
         <div class="float-md-right">
@@ -23,8 +23,8 @@ use App\Models\XmlE;
         <hr style="border-color:black; width:100%;">
         <div class="justify-content-start">
             <label class="label1" style="font-weight: bold">Facturas de</label>
-            <h1>{{$receptorNombre}}</h1>
-            <h1>{{$receptorRfc}}</h1>
+            <h1>{{ $receptorNombre }}</h1>
+            <h1>{{ $receptorRfc }}</h1>
             <hr style="border-color:black; width:100%;">
         </div>
 
@@ -52,43 +52,69 @@ use App\Models\XmlE;
             </thead>
             <tbody class="buscar">
                 @foreach ($colF as $te)
-                <tr>
-                    <td>{{$te['estado']}}</td>
-                    @php
+                    <tr>
+                        <td>{{ $te['estado'] }}</td>
+                        @php
 
-                    $fecha = $te['fechaCertificacion'];
-                    $fech = substr($fecha,0, 10);
-                    $folio = $te['folioFiscal'];
+                            $fecha = $te['fechaCertificacion'];
+                            $fech = substr($fecha, 0, 10);
+                            $folio = $te['folioFiscal'];
 
-                    $colD = XmlE::where('UUID', $folio)
-                          ->get();
+                            $colD = XmlE::where('UUID', $folio)->get();
 
-                    foreach($colD as $d){
-                        $serie = $d['Serie'];
-                        $lugare = $d['LugarExpedicion'];
-                        $formap = $d['FormaPago'];
-                        $tipoc = $d['TipoDeComprobante'];
-                        $folio =$d['folio'];
-                        $concepto = $d['Conceptos.Concepto'];
-                        $nCon=0;
-                    }
-                    @endphp
-                    <td>{{$tipoc}}</td>
-                    <td>{{$fech}}</td>
-                    <td>{{$serie}}</td>
-                    <td>{{$folio}}</td>
-                    <td>{{$te['folioFiscal']}}</td>
-                    <td>{{$lugare}}</td>
-                    <td>{{$te['receptorRfc']}}</td>
-                    <td>{{$te['receptorNombre']}}</td>
-                    <td>${{$te['total']}}</td>
-                    <td>{{$formap}}</td>
-                    <td>
-                        @foreach ($concepto as $id)
-                            {{ ++$nCon }}. {{ $id['Descripcion'] }}<br>
-                        @endforeach
-                    </td>
-                </tr>
+                            foreach ($colD as $d) {
+                                $serie = $d['Serie'];
+                                $lugare = $d['LugarExpedicion'];
+                                $formap = $d['FormaPago'];
+                                $tipoc = $d['TipoDeComprobante'];
+                                $folio1 = $d['folio'];
+                                $concepto = $d['Conceptos.Concepto'];
+                                $nCon = 0;
+                            }
+                        @endphp
+                        @if (isset($tipoc))
+                            <td>{{ $tipoc }}</td>
+                        @else
+                            <td>---</td>
+                        @endif
+                        <td>{{ $fech }}</td>
+                        @if (isset($serie))
+                            <td>{{ $serie }}</td>
+                        @else
+                            <td>---</td>
+                        @endif
+                        @if (isset($folio1))
+                            <td>{{ $folio1 }}</td>
+                        @else
+                            <td>---</td>
+                        @endif
+                        <td>{{ $te['folioFiscal'] }}</td>
+                        @if (isset($lugare))
+                            <td>{{ $lugare }}</td>
+                        @else
+                            <td>---</td>
+                        @endif
+
+                        <td>{{ $te['receptorRfc'] }}</td>
+                        <td>{{ $te['receptorNombre'] }}</td>
+                        <td>${{ $te['total'] }}</td>
+                        @if (isset($formap))
+                            <td>{{ $formap }}</td>
+                        @else
+                            <td>---</td>
+                        @endif
+
+
+                        @if (isset($concepto))
+                            @foreach ($concepto as $id)
+                                <td>{{ ++$nCon }}. {{ $id['Descripcion'] }}<br></td>
+                            @endforeach
+                        @else
+                            <td>---</td>
+                        @endif
+
+
+                    </tr>
                 @endforeach
             </tbody>
         </table>
