@@ -56,7 +56,7 @@
 
             <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
                 <div class="container">
-                    <a class="navbar-brand" href="{{ url('/') }}">
+                    <a class="navbar-brand" href="{{ url('/modules') }}">
                         <img src="img/logo-contarapp-01.png" width="200px">
                     </a>
                     {{-- <button class="navbar-toggler" type="button" data-toggle="collapse"

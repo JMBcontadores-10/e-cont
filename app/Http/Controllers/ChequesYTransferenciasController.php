@@ -51,6 +51,7 @@ class ChequesYTransferenciasController extends Controller
             }
             $colCheques = Cheques::where('rfc', $rfc)
                 ->where('fecha', 'like', $fechaF . '%')
+                ->orderBy('pendi', 'desc')
                 ->orderBy('verificado')
                 ->orderBy('conta')
                 ->orderBy('fecha', 'desc')
@@ -59,6 +60,7 @@ class ChequesYTransferenciasController extends Controller
             // ->get();
         } else {
             $colCheques = Cheques::where(['rfc' => $rfc])
+                ->orderBy('pendi', 'desc')
                 ->orderBy('verificado')
                 ->orderBy('conta')
                 ->orderBy('fecha', 'desc')
@@ -71,7 +73,7 @@ class ChequesYTransferenciasController extends Controller
             $id = $r->id;
             Cheques::where('_id', $id)->update([
                 'verificado' => 1,
-                'pendi' => 1,
+                'pendi' => 0,
                 'revisado_fecha' => $dt->format('Y-m-d\TH:i:s'),
             ]);
             return back();
