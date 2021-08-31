@@ -14,7 +14,8 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.3",
         "phpcfdi/cfdi-cleaner": "^1.1.2",
-        "phpcfdi/cfdi-to-json": "^0.2.1"
+        "phpcfdi/cfdi-to-json": "^0.2.1",
+        "phpcfdi/sat-ws-descarga-masiva": "^0.4.2"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

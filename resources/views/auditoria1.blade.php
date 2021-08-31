@@ -28,21 +28,55 @@
         <h1>Facturas {{ $tipoer }} </h1>
         <h1>Periodo del {{ $fecha1er }} al {{ $fecha2er }}</h1>
 
-        <table border="1" id="tabla" class="table table-sm table-hover table-bordered">
-            <thead>
-                <tr class="table-primary">
-                    <th scope="col">Estado SAT</th>
-                    <th scope="col">UUID</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($colA as $a)
-                    <tr>
-                        <td>{{$a['estado']}}</td>
-                        <td>{{$a['folioFiscal']}}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col-6">
+                <table border="1" id="tabla" class="table table-sm table-hover table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th>N°</th>
+                            <th scope="col">Estado SAT</th>
+                            <th scope="col">UUID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($colAu as $a)
+                            <tr>
+                                <td>{{ ++$n }}</td>
+                                <td>{{ $a['estado'] }}</td>
+                                <td>{{ $a['folioFiscal'] }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-6">
+                <table border="1" id="tabla" class="table table-sm table-hover table-bordered">
+                    <thead>
+                        <tr class="table-primary">
+                            <th>N°</th>
+                            <th scope="col">Estado SAT</th>
+                            <th scope="col">UUID</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($metadata as $b)
+                            @php
+                                if ($b->estatus == '1') {
+                                    $b->estatus = 'Vigente';
+                                } else {
+                                    $b->estatus = 'Cancelado';
+                                }
+                            @endphp
+                            <tr>
+                                <td>{{ ++$m }}</td>
+                                <td>{{ $b->estatus }}</td>
+                                <td>{{ $b->uuid }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-        @endsection
+
+    @endsection
