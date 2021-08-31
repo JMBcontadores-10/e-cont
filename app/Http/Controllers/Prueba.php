@@ -130,7 +130,7 @@ class Prueba extends Controller
         $dir = new DirectoryIterator($ruta);
         foreach ($dir as $fileinfo) {
             $fileName = $fileinfo->getFilename();
-            $rutaDir = $ruta . "$fileName/2021/Cheques_Transferencias/Documentos_Relacionados";
+            $rutaDir = $ruta . "$fileName/2021/Auditoria";
             if (!$fileinfo->isDot() and $fileinfo->isDir()) {
                 mkdir($rutaDir);
             }

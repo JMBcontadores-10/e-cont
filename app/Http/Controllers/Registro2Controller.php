@@ -20,7 +20,7 @@ class Registro2Controller extends Controller
 
     public function index()
     {
-        return view("auth.registro");
+        // return view("auth.registro");
     }
 
     /**

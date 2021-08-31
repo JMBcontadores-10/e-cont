@@ -33,10 +33,7 @@ class Async extends Controller
         $rutaDescarga = $config['rutaDescarga'];
         $maxDescargasSimultaneas = $config['maxDescargasSimultaneas'];
 
-        $rutaApp = "C:/laragon/www/contarappv1/public";
-        $dc = Storage::url(Auth::user()->dircer);
         $dircer = "storage/" . Auth::user()->dircer;
-        $dk = Storage::url(Auth::user()->dirkey);
         $dirkey = "storage/" . Auth::user()->dirkey;
         $pwd = Auth::user()->pass;
         $rfc = Auth::user()->RFC;
