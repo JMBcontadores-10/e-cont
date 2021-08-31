@@ -7,6 +7,7 @@ use DateTimeZone;
 use App\Models\MetadataE;
 use App\Models\MetadataR;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use PhpCfdi\SatWsDescargaMasiva\Service;
 use PhpCfdi\SatWsDescargaMasiva\Shared\RequestType;
@@ -23,7 +24,6 @@ class AuditoriaController extends Controller
 {
     public function index()
     {
-
         return view('auditoria');
     }
 
@@ -84,7 +84,6 @@ class AuditoriaController extends Controller
                 ->orderBy('fechaEmision', 'asc')
                 ->get();
         } else {
-            // $tipoer = 'Recibidas';
             $request = QueryParameters::create(
                 DateTimePeriod::createFromValues($periodoI, $periodoF),
                 DownloadType::received(),
@@ -95,6 +94,16 @@ class AuditoriaController extends Controller
                 ->orderBy('fechaEmision', 'asc')
                 ->get();
         }
+
+        if ($colAu->toArray() == null) {
+            $colAuArr[] = "";
+        }
+        // else {
+            // Crea el arreglo con los uuid de la consulta
+            foreach ($colAu->toArray() as $c) {
+                $colAuArr[] = $c['folioFiscal'];
+            }
+        // }
 
         // presentar la consulta
         $query = $service->query($request);
@@ -132,7 +141,6 @@ class AuditoriaController extends Controller
                 echo "La solicitud {$requestId} no se puede completar", PHP_EOL;
                 return;
             }
-
 
             if ($statusRequest->isInProgress() || $statusRequest->isAccepted()) {
                 // echo "La solicitud {$requestId} se está procesando</br>", PHP_EOL;
@@ -174,15 +182,19 @@ class AuditoriaController extends Controller
         try {
             $metadataReader = MetadataPackageReader::createFromFile($ruta);
             // leer todos los registros de metadata dentro de todos los archivos del archivo ZIP
-            // $arr = [];
-            // foreach ($metadataReader->metadata() as $uuid => $metadata) {
-            //     if ($metadata->estatus == '1') {
-            //         $metadata->estatus = "Vigente";
-            //     } else {
-            //         $metadata->estatus = "Cancelado";
-            //     }
-            //     $arr[$uuid] = $metadata->estatus;
-            // }
+            foreach ($metadataReader->metadata() as $uuid => $metadata) {
+                // if ($metadata->estatus == '1') {
+                //     $metadata->estatus = "Vigente";
+                // } else {
+                //     $metadata->estatus = "Cancelado";
+                // }
+
+                //Crea el arreglo de las uuid obtenidas de la metadata
+                $arr[] = $uuid;
+            }
+
+            $uuidDiff = array_diff($arr, $colAuArr);
+            $uuidInter = array_intersect($arr, $colAuArr);
         } catch (OpenZipFileException $exception) {
             echo $exception->getMessage() . "</br>", PHP_EOL;
             return;
@@ -194,7 +206,10 @@ class AuditoriaController extends Controller
             ->with('tipoer', $tipoer)
             ->with('fecha1er', $fecha1er)
             ->with('fecha2er', $fecha2er)
+            ->with('uuidDiff', $uuidDiff)
+            ->with('uuidInter', $uuidInter)
             ->with('colAu', $colAu)
-            ->with('metadata', $metadataReader->metadata());
+            ->with('metadata', $metadataReader->metadata())
+            ->with('metadata2', $metadataReader->metadata());
     }
 }
