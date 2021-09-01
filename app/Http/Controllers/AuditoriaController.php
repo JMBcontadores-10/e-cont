@@ -103,14 +103,15 @@ class AuditoriaController extends Controller
                 ->get();
         }
 
-        if ($colAu->toArray() == null) {
-            $colAuArr[] = "";
-        } else {
-            // Crea el arreglo con los uuid de la consulta
-            foreach ($colAu->toArray() as $c) {
-                $colAuArr[] = $c['folioFiscal'];
-            }
-        }
+        // Verifica si la consulta está vacía
+        // if ($colAu->toArray() == null) {
+        //     $colAuArr[] = "";
+        // } else {
+        //     // Crea el arreglo con los uuid de la consulta
+        //     foreach ($colAu->toArray() as $c) {
+        //         $colAuArr[] = $c['folioFiscal'];
+        //     }
+        // }
 
         // presentar la consulta
         $query = $service->query($request);
@@ -189,7 +190,7 @@ class AuditoriaController extends Controller
         try {
             $metadataReader = MetadataPackageReader::createFromFile($ruta);
             // leer todos los registros de metadata dentro de todos los archivos del archivo ZIP
-            foreach ($metadataReader->metadata() as $uuid => $metadata) {
+            // foreach ($metadataReader->metadata() as $uuid => $metadata) {
                 // if ($metadata->estatus == '1') {
                 //     $metadata->estatus = "Vigente";
                 // } else {
@@ -197,11 +198,11 @@ class AuditoriaController extends Controller
                 // }
 
                 //Crea el arreglo de las uuid obtenidas de la metadata
-                $arr[] = $uuid;
-            }
+                // $arr[] = $uuid;
+            // }
 
-            $uuidDiff = array_diff($arr, $colAuArr);
-            $uuidInter = array_intersect($arr, $colAuArr);
+            // $uuidDiff = array_diff($arr, $colAuArr);
+            // $uuidInter = array_intersect($arr, $colAuArr);
         } catch (OpenZipFileException $exception) {
             echo $exception->getMessage() . "</br>", PHP_EOL;
             return;
@@ -214,8 +215,6 @@ class AuditoriaController extends Controller
             ->with('tipoer', $tipoer)
             ->with('fecha1er', $fecha1er)
             ->with('fecha2er', $fecha2er)
-            ->with('uuidDiff', $uuidDiff)
-            ->with('uuidInter', $uuidInter)
             ->with('colAu', $colAu)
             ->with('metadata', $metadataReader->metadata())
             ->with('metadata2', $metadataReader->metadata());
