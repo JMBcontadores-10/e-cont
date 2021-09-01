@@ -47,11 +47,11 @@
         <div class="tablas-resultados ">
             <div class="overlay"></div>
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="nav-item active"><a class="nav-link" href="#recibidos" aria-controls="recibidos"
-                        role="tab" data-toggle="tab">Recibidos</a>
+                <li role="presentation" class="nav-item active"><a class="nav-link" href="#recibidos"
+                        aria-controls="recibidos" role="tab" data-toggle="tab">Recibidos</a>
                 </li>
-                <li role="presentation" class="nav-item"><a class="nav-link" href="#emitidos" aria-controls="emitidos"
-                        role="tab" data-toggle="tab">Emitidos</a>
+                <li role="presentation" class="nav-item"><a class="nav-link" href="#emitidos"
+                        aria-controls="emitidos" role="tab" data-toggle="tab">Emitidos</a>
                 </li>
             </ul>
             <div class="tab-content">
@@ -73,10 +73,12 @@
                                 <thead>
                                     <tr class="table-primary">
                                         <th class="text-center align-middle">N°</th>
-                                        <th class="text-center align-middle">XML <input type="checkbox" id="allxml" name="allxml" />
+                                        <th class="text-center align-middle">XML <input type="checkbox" id="allxml"
+                                                name="allxml" />
                                         </th>
                                         <th class="text-center align-middle">R. Imp. <input type="checkbox" id="allpdf"
                                                 name="allpdf" /></th>
+                                        <th class="text-center align-middle">Acuse</th>
                                         <th class="text-center align-middle">Folio Fiscal</th>
                                         <th class="text-center align-middle">RFC</th>
                                         <th class="text-center align-middle">Razón Social</th>
@@ -89,6 +91,7 @@
                                         <th class="text-center align-middle">Aprobación</th>
                                         <th class="text-center align-middle">Descargado XML</th>
                                         <th class="text-center align-middle">Descargado PDF</th>
+                                        <th class="text-center align-middle">Descargado Acuse</th>
                                     </tr>
                                 </thead>
                                 <tbody class="buscar"></tbody>

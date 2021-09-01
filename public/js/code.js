@@ -157,10 +157,23 @@ $('#recibidos-form').on('submit', function() {
                         descargadoPdf = "No";
                         checkedPdf = 'checked';
                     }
+                    if (item.urlDescargaAcuse) {
+                        if (item.descargadoAcuse) {
+                            descargadoAcuse = "Si";
+                            checkedAcuse = '';
+                        } else {
+                            descargadoAcuse = "No";
+                            checkedAcuse = 'checked';
+                        }
+                    } else {
+                        descargadoAcuse = "-";
+                    }
+
                     html += '<tr>' +
                         '<td class="text-center align-middle">' + i + '</td>' +
                         '<td class="text-center align-middle txml">' + (item.urlDescargaXml ? '<input type="checkbox" ' + checkedXml + ' name="xml[' + item.folioFiscal + ']" value="' + item.urlDescargaXml + '"/>' : '-') + '</td>' +
                         '<td class="text-center align-middle tpdf">' + (item.urlDescargaRI ? '<input type="checkbox" ' + checkedPdf + ' name="ri[' + item.folioFiscal + ']" value="' + item.urlDescargaRI + '"/>' : '-') + '</td>' +
+                        '<td class="text-center align-middle tpdf">' + (item.urlDescargaAcuse ? '<input type="checkbox" ' + checkedAcuse + ' name="acuse[' + item.folioFiscal + ']" value="' + item.urlDescargaAcuse + '"/>' : '-') + '</td>' +
                         '<td class="text-center align-middle">' + item.folioFiscal + '</td>' +
                         '<td class="text-center align-middle">' + item.emisorRfc + '</td>' +
                         '<td class="text-center align-middle">' + item.emisorNombre + '</td>' +
@@ -172,7 +185,8 @@ $('#recibidos-form').on('submit', function() {
                         '<td class="text-center align-middle">' + (item.fechaCancelacion || '-') + '</td>' +
                         '<td class="text-center align-middle">' + aprobacion + '</td>' +
                         '<td class="text-center align-middle">' + descargadoXml + '</td>' +
-                        '<td class="text-center align-middle">' + descargadoPdf + '</td>'
+                        '<td class="text-center align-middle">' + descargadoPdf + '</td>' +
+                        '<td class="text-center align-middle">' + descargadoAcuse + '</td>'
                         // + '<td class="text-center">' + item.pacCertifico + '</td>'
                         +
                         '</tr>';

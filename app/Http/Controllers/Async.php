@@ -135,9 +135,11 @@ class Async extends Controller
                         $uuid = $xmlInfo->folioFiscal;
                         $pdf = $this->dirIteratorPdf($rutaPdf, $uuid);
                         $xml = $this->dirIteratorXml($rutaXml, $uuid);
+                        $acuse = $this->dirIteratorPdfAcuse($rutaPdf, $uuid);
                         $arr2 = array(
                             'descargadoPdf' => $pdf,
-                            'descargadoXml' => $xml
+                            'descargadoXml' => $xml,
+                            'descargadoAcuse' => $acuse,
                         );
                         $items[] = array_merge($arr[$index], $arr2);
                     }
@@ -290,6 +292,38 @@ class Async extends Controller
                                 }
                             }
                         }
+
+                         // Almacena la metadata si el archivo fue seleccionado
+                         if (!empty($_POST['acuse'])) {
+                            foreach ($_POST['acuse'] as $folioFiscal => $url) {
+                                if ($folioFiscal == $ff) {
+                                    $meta = MetadataR::where(['folioFiscal' => $ff]);
+                                    $meta->update(
+                                        [
+                                            'urlDescargaXml'            => $udx,
+                                            'urlDescargaAcuse'          => $uda,
+                                            'urlDescargaRI'             => $udr,
+                                            'folioFiscal'               => $ff,
+                                            'emisorRfc'                 => $er,
+                                            'emisorNombre'              => $en,
+                                            'receptorRfc'               => $rr,
+                                            'receptorNombre'            => $rn,
+                                            'fechaEmision'              => $fe,
+                                            'fechaCertificacion'        => $fcer,
+                                            'pacCertificado'            => $pc,
+                                            'total'                     => $total,
+                                            'efecto'                    => $efecto,
+                                            'estado'                    => $estado,
+                                            'estadoCancelacion'         => $ec,
+                                            'estadoProcesoCancelacion'  => $epc,
+                                            'fechaCancelacion'          => $fcan,
+                                            'urlAcuseXml'               => $ua,
+                                        ],
+                                        ['upsert' => true]
+                                    );
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -306,6 +340,14 @@ class Async extends Controller
                     foreach ($_POST['ri'] as $folioFiscal => $url) {
                         // representacion impresa
                         $descarga->agregarRepImpr($url, $rutaDescarga, $folioFiscal, $folioFiscal);
+                    }
+                }
+
+                // Descarga el archivo si fue seleccionado
+                if (!empty($_POST['acuse'])) {
+                    foreach ($_POST['acuse'] as $folioFiscal => $url) {
+                        // acuse de resultado de cancelacion
+                        $descarga->agregarAcuse($url, $rutaDescarga, $folioFiscal, $folioFiscal . '-acuse');
                     }
                 }
 
