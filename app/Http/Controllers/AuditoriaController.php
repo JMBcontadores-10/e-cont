@@ -24,11 +24,20 @@ class AuditoriaController extends Controller
 {
     public function index()
     {
-        return view('auditoria');
+        $dtz = new DateTimeZone("America/Mexico_City");
+        $dt = new DateTime("now", $dtz);
+        $hoy = $dt->format('Y-m-d');
+        return view('auditoria')
+            ->with('hoy', $hoy);
     }
 
     public function store(Request $request)
     {
+        if ($request->has('rc')) {
+            $rc = true;
+        } else {
+            $rc = false;
+        }
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
         $anio = $dt->format('Y');
@@ -68,7 +77,6 @@ class AuditoriaController extends Controller
         // Creación del servicio
         $service = new Service($requestBuilder, $webClient);
 
-
         // REALIZAR LA CONSULTA
 
         //división de emitidas y recibidas en la descarga
@@ -97,13 +105,12 @@ class AuditoriaController extends Controller
 
         if ($colAu->toArray() == null) {
             $colAuArr[] = "";
-        }
-        // else {
+        } else {
             // Crea el arreglo con los uuid de la consulta
             foreach ($colAu->toArray() as $c) {
                 $colAuArr[] = $c['folioFiscal'];
             }
-        // }
+        }
 
         // presentar la consulta
         $query = $service->query($request);
@@ -201,6 +208,7 @@ class AuditoriaController extends Controller
         }
 
         return view('auditoria1')
+            ->with('rc', $rc)
             ->with('n', $n)
             ->with('m', $m)
             ->with('tipoer', $tipoer)
