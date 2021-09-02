@@ -89,7 +89,7 @@ use App\Models\Cheques;
                         <th class="text-center align-middle" colspan="2">Contabilizado</th>
                     @endif
                     <th class="text-center align-middle">Comentarios</th>
-
+                    <th class="text-center align-middle">Cheque id</th>
                 </tr>
             </thead>
             <tbody class="buscar">
@@ -333,6 +333,7 @@ use App\Models\Cheques;
                                 @endif
                             </div>
                         </td>
+                        <td class="text-center align-middle">{{ $id }}</td>
                     </tr>
                 @endforeach
             </tbody>

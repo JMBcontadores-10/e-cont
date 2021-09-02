@@ -17,6 +17,7 @@ class ChequesYTransferenciasController extends Controller
         $this->middleware('auth');
     }
 
+    // Método de la vista principal de cheques y transferencias
     public function index(Request $r)
     {
         $dtz = new DateTimeZone("America/Mexico_City");
@@ -41,6 +42,7 @@ class ChequesYTransferenciasController extends Controller
         $n = 0;
         $rutaDescarga = "storage/contarappv1_descargas/$rfc/$anio/Cheques_Transferencias/";
 
+        // Genera la consulta dependiendo el mes y año seleccionado
         if ($r->has('mes')) {
             $mes = $r->mes;
             $anio = $r->anio;
@@ -69,6 +71,7 @@ class ChequesYTransferenciasController extends Controller
             // ->get();
         }
 
+        // Actualiza los valores si el cheque es verificado
         if ($r->has('revisado')) {
             $id = $r->id;
             Cheques::where('_id', $id)->update([
@@ -79,6 +82,7 @@ class ChequesYTransferenciasController extends Controller
             return back();
         }
 
+        // Actualiza los valores si el cheque es contabilizado
         if ($r->has('conta')) {
             $id = $r->id;
             Cheques::where('_id', $id)->update([
@@ -89,6 +93,7 @@ class ChequesYTransferenciasController extends Controller
             return back();
         }
 
+        // Actualiza los valores si el cheque es ajustado
         if ($r->has('ajuste')) {
             $id = $r->id;
             $ajuste = (float)str_replace(',', '', $r->ajuste);
@@ -98,6 +103,7 @@ class ChequesYTransferenciasController extends Controller
             return back();
         }
 
+        // Actualiza los valores si el cheque es comentado
         if ($r->has('comentario')) {
             $id = $r->id;
             Cheques::where('_id', $id)->update([
@@ -114,11 +120,14 @@ class ChequesYTransferenciasController extends Controller
             ->with('meses', $meses);
     }
 
+    // Método para generar la vista de vinculación de cheques
     public function vincularCheque(Request $r)
     {
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
         $date = $dt->format('Y-m-d');
+
+        // Verifica si el cheque será editado o creado
         if ($r->has('editar')) {
             $editar = $r->editar;
             $id = $r->id;
@@ -145,6 +154,7 @@ class ChequesYTransferenciasController extends Controller
                 ->with('subirArchivo', $subirArchivo)
                 ->with('editar', $editar);
         } else {
+            // Verifica si el cheque será creado con una vinculación de proveedores de cuentas por pagar o desde cero
             if ($r->has('totalXml')) {
                 $vincular = true;
                 $rfc = Auth::user()->RFC;
@@ -174,11 +184,13 @@ class ChequesYTransferenciasController extends Controller
         }
     }
 
+    // Método para desvincular los cheques
     public function desvincularCheque(Request $r)
     {
         $allcheck = $r->allcheck;
         $cheques_id = $r->cheques_id;
         $nXml = 0;
+        // Revisa todos los UUID de los CFDI seleccionados y elimina la vinculación con cheques
         foreach ($allcheck as $i) {
             $nXml++;
             MetadataR::where('folioFiscal', $i)
@@ -187,6 +199,7 @@ class ChequesYTransferenciasController extends Controller
                 ]);
         }
 
+        // Actualiza el monto y cantidad de CFDIs desvinculados para actualizar la colección cheques
         $totalXml = $r->totalXml;
         $totalXml = substr($totalXml, 1);
         $totalXml = (float)str_replace(',', '', $totalXml);
@@ -203,6 +216,7 @@ class ChequesYTransferenciasController extends Controller
         $this->alerta($alerta, $ruta);
     }
 
+    // Método para la creación o actualización de cheques
     public function createUpdateCheque(Request $r)
     {
         $dtz = new DateTimeZone("America/Mexico_City");
@@ -230,8 +244,11 @@ class ChequesYTransferenciasController extends Controller
         $files = $_FILES['doc_relacionados']['name'];
         $rutaDescargaDR = "storage/contarappv1_descargas/$rfc/$anio/Cheques_Transferencias/Documentos_Relacionados/";
 
+        // Verifica si existen documentos relacionados
         if (!$files['0'] == '') {
             $n = 0;
+            // Revisa todos los documentos enviados y los almacena eliminado caracteres no alfanuméricos
+            // y concatenando la fecha de creación en el nombre
             foreach ($files as $f) {
                 $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $f);
                 $nombreArchivo = "$Id-$nombreArchivo";
@@ -243,11 +260,14 @@ class ChequesYTransferenciasController extends Controller
             $pushArchivos = '';
         }
 
+        // Verifica si será actualización o creación del cheque a través del id
         if ($r->has('id')) {
 
+            // Verifica si existe el archivo principal
             if ($subir_archivo == '') {
                 $nombrec = $r->nombrec;
             } else {
+                // Almacena eliminado caracteres no alfanuméricos y concatenando la fecha de creación en el nombre
                 $subir_archivo = preg_replace('/[^A-z0-9.-]+/', '', $subir_archivo);
                 $nombrec = "$Id-$subir_archivo";
                 $r->subir_archivo->move($rutaDescarga, $nombrec);
@@ -267,6 +287,8 @@ class ChequesYTransferenciasController extends Controller
                 'nombrec' => $nombrec,
             ]);
 
+            // Si existen documentos adicionales se añaden como arreglo a la colección -
+            // reiniciando el arreglo y eliminando los archivos que estuviesen vinculados anteriormente
             if (!$files['0'] == '') {
                 $chequef = $cheque->first();
                 if (!$chequef->doc_relacionados == null) {
@@ -283,9 +305,11 @@ class ChequesYTransferenciasController extends Controller
             $this->alerta($alerta, $ruta);
         } else {
 
+            // Verifica si existe el archivo principal
             if ($subir_archivo == '') {
                 $nombrec = '0';
             } else {
+                // Almacena eliminado caracteres no alfanuméricos y concatenando la fecha de creación en el nombre
                 $subir_archivo = preg_replace('/[^A-z0-9.-]+/', '', $subir_archivo);
                 $nombrec = "$Id-$subir_archivo";
                 $r->subir_archivo->move($rutaDescarga, $nombrec);
@@ -311,8 +335,11 @@ class ChequesYTransferenciasController extends Controller
                 'ajuste' => $ajuste,
             ]);
 
+            // Añade los documentos relacionados como arreglo a la colección
             $chequeC->push('doc_relacionados', $pushArchivos);
 
+            // Si el cheque es creado con vinculación de proveedores desde cuentas por pagar -
+            // vincula inmediatamente los CFDIs seleccionados
             if ($r->has('allcheck')) {
                 $cheque_id = $chequeC->_id;
                 $allcheck = $r->allcheck;
@@ -340,12 +367,14 @@ class ChequesYTransferenciasController extends Controller
         }
     }
 
+    // Método para vincular los CFDIs a cheque
     public function agregarXmlCheque(Request $r)
     {
         $cheque_id = $r->selectCheque;
         $allcheck = $r->allcheck;
         $arrcheck = json_decode($allcheck, true);
         $nXml = 0;
+        // Obtiene los UUID de los CFDIs seleccionados y vincula cada uno con el cheque elegido
         foreach ($arrcheck as $i) {
             $nXml++;
             $metar = MetadataR::where('folioFiscal', $i)->first();
@@ -353,6 +382,7 @@ class ChequesYTransferenciasController extends Controller
             $cheque->metadata_r()->save($metar);
         }
 
+        // Actualiza el monto y cantidad de CFDIs vinculados para actualizar la colección cheques
         $cheque_tXml = Cheques::find($cheque_id);
         $totalXml = (float)str_replace(',', '', $r->totalXml);
         $importeXml = $cheque_tXml->importexml + $totalXml;
@@ -367,9 +397,10 @@ class ChequesYTransferenciasController extends Controller
         $this->alerta($alerta, $ruta);
     }
 
+    // Método para mostrar la vista detallesCT de CDFIs vinculados
     public function detallesCT(Request $r)
     {
-        $rfc = Auth::user()->RFC;
+        // Obtiene los CFDIs de MetadataR vinculados al cheque
         $meses = array(
             '1' => 'Enero',
             '2' => 'Febrero',
@@ -384,6 +415,7 @@ class ChequesYTransferenciasController extends Controller
             '11' => 'Noviembre',
             '12' => 'Diciembre'
         );
+        $rfc = Auth::user()->RFC;
         $verificado = $r->verificado;
         $cheque_id = $r->id;
         $c = Cheques::find($cheque_id);
@@ -402,6 +434,7 @@ class ChequesYTransferenciasController extends Controller
             ->with('n', $n);
     }
 
+    // Método para eliminar los cheques con archivos y CFDIs vinculados
     public function deleteCheque(Request $r)
     {
         $rfc = Auth::user()->RFC;
@@ -430,6 +463,7 @@ class ChequesYTransferenciasController extends Controller
         $this->alerta($alerta, $ruta);
     }
 
+    // Genera una alerta y cambia la ruta
     public function alerta($mensaje, $ruta)
     {
         echo "<script>alert('$mensaje'); window.location = '$ruta';</script>";

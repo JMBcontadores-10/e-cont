@@ -8,27 +8,12 @@ use Illuminate\Support\Facades\Hash;
 
 class Registro2Controller extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function __construct()
-    //  {
-    //     $this->middleware('auth');
-    // }
-
     public function index()
     {
         // return view("auth.registro");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    // Actualiza las contraseñas de los RFC proporcionados
     public function store(Request $request)
     {
         if ($request->has('RFC')) {

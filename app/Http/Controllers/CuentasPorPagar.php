@@ -15,6 +15,7 @@ class CuentasPorPagar extends Controller
         $this->middleware('auth');
     }
 
+    // Método para generar la vista principal de cuentas por pagar
     public function index()
     {
         $rfc = Auth::user()->RFC;
@@ -37,6 +38,7 @@ class CuentasPorPagar extends Controller
             ->with('col', $col);
     }
 
+    // Método para mostrar los CFDIs pertenecientes a cada proveedor
     public function detalles(Request $req)
     {
         $meses = array(
@@ -60,10 +62,12 @@ class CuentasPorPagar extends Controller
         $emisorNombre = $req->emisorNombre;
         $n = 0;
 
-        // Si se eligieron varios proveedores
+        // Verifica si se eligieron varios proveedores o uno solo
         if ($req->has('allcheck') or $req->has('arrRfc')) {
             $emisorRfc = '';
             $emisorNombre = "Varios Proveedores";
+            // Verifica si se envian los proveedores desde detallesCT en cheques y transferencias -
+            // o directo de cuentas por pagar
             if ($req->has('arrRfc')) {
                 $allch = json_decode($req->arrRfc, true);
             } else {

@@ -16,6 +16,7 @@ class Prueba extends Controller
     {
     }
 
+    // Permite renombrar los XML descargados de MiAdminXML
     public function renombrarXml()
     {
         $num = 0;
@@ -124,6 +125,7 @@ class Prueba extends Controller
         }
     }
 
+    // Crea un directorio en todas las carpetas de las empresas
     public function createDir()
     {
         $ruta = 'C:/laragon/www/contarappv1/public/storage/contarappv1_descargas/';

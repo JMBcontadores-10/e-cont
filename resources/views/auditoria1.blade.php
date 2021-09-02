@@ -47,6 +47,7 @@
                                 <th class="text-center align-middle">Estado SAT Anterior</th>
                                 <th class="text-center align-middle">Estado SAT Actual</th>
                                 <th class="text-center align-middle">Estado cambiado</th>
+                                <th class="text-center align-middle">Cheque vinculado</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,12 +65,17 @@
                                             ->first();
                                     } else {
                                         $colM = DB::table('metadata_r')
-                                            ->select('estado')
+                                            ->select('estado', 'cheques_id')
                                             ->where('folioFiscal', $me->uuid)
                                             ->first();
                                     }
                                     if (isset($colM)) {
                                         $estadoM = $colM['estado'];
+                                        if (isset($colM['cheques_id'])) {
+                                            $cheques_id = $colM['cheques_id'];
+                                        }else {
+                                            $cheques_id = '-';
+                                        }
                                     } else {
                                         $estadoM = 'X';
                                     }
@@ -90,6 +96,7 @@
                                                 <i class="far fa-times-circle fa-2x" style="color: red"></i>
                                             @endif
                                         </td>
+                                        <td class="text-center align-middle">{{ $cheques_id }}</td>
                                     </tr>
                                 @endif
                             @endforeach
