@@ -33,6 +33,7 @@ class AuditoriaController extends Controller
 
     public function store(Request $request)
     {
+        // Verifica si es reporte completo
         if ($request->has('rc')) {
             $rc = true;
         } else {

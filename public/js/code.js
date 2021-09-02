@@ -9,17 +9,13 @@ $('#loadingE').hide();
 $("#doc-relacionados").hide();
 $("#login1").hide();
 
+// Muestra el login de contadores
 function showLogin1() {
     $("#login1").show();
     $("#entrar").hide();
 }
 
-function variableP() {
-    // var selA = document.getElementById("empresas");
-    // var anio = selA.options[selA.selectedIndex].value;
-    // document.getElementById("password").value = document.getElementById("empresas").innerText;
-}
-
+// Desahibilita los botones en descargas
 function disableInputs() {
     $(':input[type="submit"]').prop('disabled', true);
     $('a[class="btn btn-primary excelR-export"]').addClass('disabled');
@@ -27,6 +23,7 @@ function disableInputs() {
     // $('a[class="btn btn-primary ml-2"]').addClass('disabled');
 }
 
+// Habilita los botones en descargas
 function enableInputs() {
     $(':input[type="submit"]').prop('disabled', false);
     $('a[class="btn btn-primary excelR-export disabled"]').removeClass('disabled');
@@ -57,6 +54,7 @@ var tableToExcel = (function() {
     }
 })();
 
+// Exporta la tabla de descargas emitidas a excel
 $('.excelR-export').on('click', function() {
     var $this = $(this);
     var table = $this.closest('.descargaR-form').find('.table').get(0);
@@ -65,6 +63,7 @@ $('.excelR-export').on('click', function() {
     // window.location.href = tableToExcel(table, fn);
 });
 
+// Exporta la tabla de descargas recibidas a excel
 $('.excelE-export').on('click', function() {
     var $this = $(this);
     var table = $this.closest('.descargaE-form').find('.table').get(0);
@@ -73,6 +72,7 @@ $('.excelE-export').on('click', function() {
     // window.location.href = tableToExcel(table, fn);
 });
 
+// Genera el inicio de sesión al SAT desde Async en descargas
 $('.login-form').on('submit', function() {
     var form = $(this);
     var formData = new FormData(form.get(0));
@@ -108,6 +108,7 @@ $('.login-form').on('submit', function() {
     return false;
 });
 
+// Obtiene y genera la tabla de recibidos en descargas
 $('#recibidos-form').on('submit', function() {
     var form = $(this);
     var formData = new FormData(form.get(0));
@@ -205,6 +206,7 @@ $('#recibidos-form').on('submit', function() {
     return false;
 });
 
+// Obtiene y genera la tabla de emitidos en descargas
 $('#emitidos-form').on('submit', function() {
     var form = $(this);
     var formData = new FormData(form.get(0));
@@ -301,6 +303,7 @@ $('#emitidos-form').on('submit', function() {
     return false;
 });
 
+// Genera la descarga de recibidos a través de Async
 $('.descargaR-form').on('submit', function() {
     var form = $(this);
     var formData = new FormData(form.get(0));
@@ -347,6 +350,7 @@ $('.descargaR-form').on('submit', function() {
     return false;
 });
 
+// Genera la descarga de emitidos a través de Async
 $('.descargaE-form').on('submit', function() {
     var form = $(this);
     var formData = new FormData(form.get(0));
@@ -402,27 +406,33 @@ $('.descargaE-form').on('submit', function() {
     return false;
 });
 
+// Modifican los checkboxes cada vez que se seleccionan los encabezados de columna
 $('#allxml').change(function() {
     $('tbody tr td[class="text-center align-middle txml"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
+// Modifican los checkboxes cada vez que se seleccionan los encabezados de columna
 $('#allpdf').change(function() {
     $('tbody tr td[class="text-center align-middle tpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
+// Modifican los checkboxes cada vez que se seleccionan los encabezados de columna
 $('#eallxml').change(function() {
     $('tbody tr td[class="text-center align-middle etxml"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
+// Modifican los checkboxes cada vez que se seleccionan los encabezados de columna
 $('#eallpdf').change(function() {
     $('tbody tr td[class="text-center align-middle etpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
+// Modifican los checkboxes cada vez que se seleccionan los encabezados de columna y suma el monto de su respectivo valor
 $('#allcheck').change(function() {
     $('tbody tr td[class="text-center align-middle allcheck"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
     calcular();
 });
 
+// Filtra las tablas dependiendo su contenido
 $("#filtrar").on("keyup", function() {
     var value = $(this).val().toLowerCase();
     $(".buscar tr").filter(function() {
@@ -430,10 +440,12 @@ $("#filtrar").on("keyup", function() {
     });
 });
 
+// Suma los valores de los checkboxes cada vez que son seleccionados
 $(document).on('click keyup', '.mis-checkboxes,.mis-adicionales', function() {
     calcular();
 });
 
+// Suma los valores de las clases mis-checkboxes y mis-adicionales
 function calcular() {
     var tot = $('#total');
     tot.val(0);
@@ -448,6 +460,7 @@ function calcular() {
     tot.val('$' + totalParts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",") + '.' + (totalParts.length > 1 ? totalParts[1] : '00'));
 }
 
+// Muestra los input file en vincular cheque
 $('#alerta-archivo-si').on('click', function() {
     $("#alerta-archivo").hide();
     $('#form-editar').show();
@@ -455,6 +468,7 @@ $('#alerta-archivo-si').on('click', function() {
     return false;
 });
 
+// Esconde los input file en vincular cheque
 $('#alerta-archivo-no').on('click', function() {
     $("#alerta-archivo").hide();
     $('#form-editar').show();
@@ -462,6 +476,7 @@ $('#alerta-archivo-no').on('click', function() {
     return false;
 });
 
+// Evita vincular CFDIs si ninguno ha sido seleccionado o si existe error en la suma y el valor es 0
 $('#vinct').on('click', function() {
     var total = document.getElementById("total").value
     var lenght = $('div.checkbox-group :checkbox:checked').length
@@ -475,17 +490,20 @@ $('#vinct').on('click', function() {
     }
 });
 
+// Muestra el form de crear cheque en vincluar cheque
 $('#alerta-crear-si').on('click', function() {
     $("#alerta-crear").hide();
     $('#form-crear').show();
     return false;
 });
 
+// Mantiene escondido el form de crear cheque en vincular cheque
 $('#alerta-crear-no').on('click', function() {
     $("#alerta-crear").hide();
     return false;
 });
 
+// Muestra la columna de vinculación a varios proveedores en cuentas por pagar
 $('#vinpbtn').on('click', function() {
     $("#vinp").show();
     $('input[id="vinpsub"]').show();
@@ -494,6 +512,7 @@ $('#vinpbtn').on('click', function() {
     return false;
 });
 
+// Evita vincular proveedores si ninguno ha sido seleccionado
 $('#vinpsub').on('click', function() {
     var lenght = $('div.checkbox-group :checkbox:checked').length
     if (!lenght > 0) {
@@ -502,6 +521,7 @@ $('#vinpsub').on('click', function() {
     }
 });
 
+// Muestra en una alerta los pendientes de los cheques
 function alertaP(a, b, c) {
     var nl = "\r\n"
     var msg = ''
@@ -520,6 +540,7 @@ function alertaP(a, b, c) {
     alert(msg);
 }
 
+// Permite abrir los documentos adicionales de cada cheque
 function verAdicional(btn_id) {
     var ra = document.getElementById("ruta-adicionales").value;
     var vda = document.getElementById("docs-adicionales" + btn_id);
@@ -528,63 +549,8 @@ function verAdicional(btn_id) {
     window.open(rutaArchivo, '_blank');
 }
 
+// Evita registrar múltiples veces cualquier cheque al momento de su creación o actualización
 function submitBlock() {
     $('#reg-cheque').hide()
     setTimeout("$('#reg-cheque').show()", 250);
 }
-
-// function sortTable(n) {
-//     var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-//     var n = 12;
-//     table = document.getElementById("chequesTabla");
-//     switching = true;
-//     // Set the sorting direction to ascending:
-//     dir = "asc";
-//     /* Make a loop that will continue until
-//     no switching has been done: */
-//     while (switching) {
-//         // Start by saying: no switching is done:
-//         switching = false;
-//         rows = table.rows;
-//         /* Loop through all table rows (except the
-//         first, which contains table headers): */
-//         for (i = 1; i < (rows.length - 1); i++) {
-//             // Start by saying there should be no switching:
-//             shouldSwitch = false;
-//             /* Get the two elements you want to compare,
-//             one from current row and one from the next: */
-//             x = rows[i].getElementsByTagName("TD")[n];
-//             y = rows[i + 1].getElementsByTagName("TD")[n];
-//             /* Check if the two rows should switch place,
-//             based on the direction, asc or desc: */
-//             if (dir == "asc") {
-//                 if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-//                     // If so, mark as a switch and break the loop:
-//                     shouldSwitch = true;
-//                     break;
-//                 }
-//             } else if (dir == "desc") {
-//                 if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-//                     // If so, mark as a switch and break the loop:
-//                     shouldSwitch = true;
-//                     break;
-//                 }
-//             }
-//         }
-//         if (shouldSwitch) {
-//             /* If a switch has been marked, make the switch
-//             and mark that a switch has been done: */
-//             rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-//             switching = true;
-//             // Each time a switch is done, increase this count by 1:
-//             switchcount++;
-//         } else {
-//             /* If no switching has been done AND the direction is "asc",
-//             set the direction to "desc" and run the while loop again. */
-//             if (switchcount == 0 && dir == "asc") {
-//                 dir = "desc";
-//                 switching = true;
-//             }
-//         }
-//     }
-// }
