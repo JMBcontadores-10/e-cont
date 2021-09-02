@@ -21,16 +21,22 @@ class Login1Controller extends Controller
         if ($request->has('rfcC')) {
 
             $t = DB::table('clientes')
-                ->select('tipo', 'password')
+                ->select('tipo', 'password', 'Id_Conta')
                 ->where('RFC', $request->rfcC)
                 ->first();
 
             if (!$t == null) {
                 if (Hash::check($request->passC, $t['password'])) {
                     $ti = $t['tipo'];
+                    $co = $t['Id_Conta'];
+                    Session::put('idConta', $co);
                     Session::put('tipoU', $ti);
-                    return view('auth.login')
+                    if (Session::get('tipoU') == '2') {
+                        return view('auth.login')
                         ->with('rfc', $request->rfcC);
+                    } else{
+                        return back();
+                    }
                 } else {
                     return back();
                 }

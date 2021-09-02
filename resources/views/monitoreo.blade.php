@@ -39,7 +39,9 @@ use Illuminate\Support\Facades\DB;
     </div>
     <div class="row">
         <div class="col-3">
-            <table class="table table-striped">
+            <figure class="highcharts-figure">
+                <div id="container1"></div>
+            <table class="table table-striped" id="datatable">
                 <thead>
                     <tr>
                         <th>Hora</th>
@@ -49,6 +51,9 @@ use Illuminate\Support\Facades\DB;
                 </thead>
 
                 <tbody>
+                    @php
+                        $arr = [];
+                    @endphp
                     @for ($m = 0; $m < 24; $m++)
                         <tr>
                             <td>{{ $m }}</td>
@@ -67,8 +72,13 @@ use Illuminate\Support\Facades\DB;
                                     // ->orderBy('fechaEmision')
                                     ->get();
 
+
                                 $count = $cons->count();
+                                $arr[] = $count;
+
+
                                 $suma = $cons->sum('total');
+
 
                             @endphp
 
@@ -79,7 +89,7 @@ use Illuminate\Support\Facades\DB;
                     @endfor
                 </tbody>
             </table>
-
+            </figure>
         </div>
 
         <div class="col-9">
@@ -97,19 +107,16 @@ use Illuminate\Support\Facades\DB;
                 @endphp
                 @foreach ($col as $i)
                     <tr>
-
                         @php
-
                             $colT = DB::collection('metadata_e')
                                 ->select('total')
                                 ->where('receptorRfc', $i['receptorRfc'])
                                 ->where('fechaEmision', 'like', $fechaF . '%')
                                 ->where('emisorRfc', $rfc)
                                 ->get();
-
                             $countT = $colT->count();
-                            $sumaT = $colT->sum('total');
 
+                            $sumaT = $colT->sum('total');
 
                         @endphp
                         <td>{{++$cont}}</td>
@@ -128,10 +135,10 @@ use Illuminate\Support\Facades\DB;
                 @endforeach
 
             </table>
-
         </div>
-
     </div>
 
+    @endsection
 
-@endsection
+
+

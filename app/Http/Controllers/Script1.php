@@ -15,7 +15,7 @@ class Script1 extends Controller
     public function tipoUsuarios()
     {
         $rfcs = [
-            // 'AHF060131G59',
+            'AHF060131G59',
             // 'AFU1809135Y4',
             // 'AIJ161001UD1',
             // 'AAE160217C36',
@@ -25,9 +25,9 @@ class Script1 extends Controller
             // 'DRO191104EZ0',
             // 'DRO191129DK5',
             // 'ERO1911044L4',
-            // 'PERE9308105X4',
-            // 'FGA980316918',
-            'GPA161202UG8',
+            'PERE9308105X4',
+            'FGA980316918',
+            // 'GPA161202UG8',
             // 'GEM190507UW8',
             // 'GPR020411182',
             // 'HRU121221SC2',
@@ -45,16 +45,16 @@ class Script1 extends Controller
             // 'PML170329AZ9',
             // 'PERA0009086X3',
             // 'PER180309RB3',
-            // 'RUCE750317I21',
+            'RUCE750317I21',
             // 'SBE190522I97',
             // 'SGA1905229H3',
-            // 'SGA1410217U4',
-            // 'SGT190523QX8',
-            // 'SGX190523KA4',
+            'SGA1410217U4',
+            'SGT190523QX8',
+            'SGX190523KA4',
             // 'SGX160127MC4',
-            // 'STR9303188X3',
+            'STR9303188X3',
             // 'SVI831123632',
-            // 'SCT150918RC9',
+            //  'SCT150918RC9',
             // 'SAJ161001KC6',
             // 'SPE171102P94',
             // 'SCO1905221P2',
@@ -62,7 +62,7 @@ class Script1 extends Controller
             // 'MGE1602172LA',
             // 'SAE191009dd8',
             // 'SMA180913NK6',
-            // 'SST030407D77',
+            'SST030407D77',
             // 'TEL1911043PA',
             // 'TOVF901004DN5',
             // 'VER191104SP3',
@@ -72,11 +72,11 @@ class Script1 extends Controller
             // 'ADMINISTRADOR',
         ];
         foreach ($rfcs as $e) {
-            $tipo = array("tipo" => "1");
+            $gas = array("diesel" => "1");
 
             User::where(['RFC' => $e])
                 ->update(
-                    $tipo,
+                    $gas,
                     ['upsert' => true]
                 );
         }
