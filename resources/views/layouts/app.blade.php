@@ -16,12 +16,13 @@
     <script src="{{ asset('js/code.js') }}" defer></script>
     <script src="{{ asset('js/numeros.js') }}" defer></script>
 
+
     <script src="{{ asset('js/calendar.js') }}" defer></script>
     <script src="https://kit.fontawesome.com/4b9ba14b0f.js" crossorigin="anonymous"></script>
 
-    <script src="{{ asset('js/fullcalendar.js')}}" defer></script>
-    <script src="{{ asset('js/moment.min.js')}}" defer></script>
-    <script src="{{ asset('js/jquery-3.1.1.min.js')}}" defer></script>
+    <script src="{{ asset('js/fullcalendar.js') }}" defer></script>
+    <script src="{{ asset('js/moment.min.js') }}" defer></script>
+    <script src="{{ asset('js/jquery-3.1.1.min.js') }}" defer></script>
 
 
     <!-- Fonts -->
@@ -35,13 +36,21 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 
+
+    <!--charts-->
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
     <!--calendario-->
     <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />-->
 
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
 
     <script src="{{ asset('js/moment.min.js') }}" defer></script>
-    <script src="{{ asset('js/fullcalendar.js') }}" defer></script>
+    {{-- <script src="{{ asset('js/fullcalendar.js') }}" defer></script> --}}
     <script src="{{ asset('js/excel.js') }}" defer></script>
     <script src="{{ asset('js/es.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -52,7 +61,7 @@
 <body>
     <div id="app">
 
-        @if (Auth::check() && !Route::is('home', 'login', 'modules', 'log' ) && !Route::is('construccion'))
+        @if (Auth::check() && !Route::is('home', 'login', 'modules', 'log') && !Route::is('construccion'))
 
             <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
                 <div class="container">
@@ -65,9 +74,7 @@
                         <span class="navbar-toggler-icon"></span>
                     </button> --}}
 
-                    <div
-                    {{-- class="collapse navbar-collapse"  --}}
-                    id="navbarSupportedContent">
+                    <div {{-- class="collapse navbar-collapse" --}} id="navbarSupportedContent">
                         <!-- Left Side Of Navbar -->
                         <ul class="navbar-nav mr-auto">
 
@@ -100,7 +107,8 @@
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         {{ __('Cerrar Sesión') }}
                                     </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                        class="d-none">
                                         @csrf
                                     </form>
                                 </div>
@@ -121,10 +129,14 @@
             @endif
 
             @yield('content')
+
+
+
         </main>
     </div>
 
     @stack('calendario')
+
 </body>
 <footer style="margin-top: 20px;">
     <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">CONTARAPP {{ date('Y') }} |

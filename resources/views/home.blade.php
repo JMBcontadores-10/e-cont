@@ -45,14 +45,16 @@
                             </button>
                         </form>
                     </div>
-                    <div class="col">
-                        <form action="{{ url('volumetrico') }}">
-                            <button class="btnModulo" type="submit" value="Expediente Digital" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
-                                <img style="float:left;" src="img/estadisticas.png" width="25px" height="25px" alt="">
-                                Control Volumétrico
-                            </button>
-                        </form>
-                    </div>
+                        <div class="col">
+                            <form action="{{ url('volumetrico') }}">
+                                <button class="btnModulo" type="submit" value="Expediente Digital"
+                                    {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
+                                    <img style="float:left;" src="img/estadisticas.png" width="25px" height="25px" alt="">
+                                    Control Volumétrico
+                                </button>
+                            </form>
+                        </div>
+
                 </div>
                 <br>
                 <div class="row" style="justify-content: center;">

@@ -53,6 +53,9 @@ Route::get('/consultas', [App\Http\Controllers\ConsultasController::class, 'inde
 Route::get('/consulta', [App\Http\Controllers\ConsultasController::class, 'consultas'])->name('consulta');
 Route::get('/historial', [App\Http\Controllers\ConsultasController::class, 'historial'])->name('historial');
 Route::get('/volumetrico', [App\Http\Controllers\VolumetricoController::class, 'index'])->name('volumetrico');
+Route::post('/volumetrico1', [App\Http\Controllers\VolumetricoController::class, 'volumetrico1'])->name('volumetrico1');
+Route::post('/volumetrico2', [App\Http\Controllers\VolumetricoController::class, 'insertaDatos'])->name('insertaDatos');
+Route::post('/volumetrico3', [App\Http\Controllers\VolumetricoController::class, 'updateDatos'])->name('updateDatos');
 Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
 Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
 Route::get('/auditoria', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('auditoria');
@@ -66,5 +69,5 @@ Route::post('/consultas1', [App\Http\Controllers\ConsultasController::class, 'st
 Route::get('/script', [App\Http\Controllers\Scriptp::class, 'xmlLeer'])->name('xmlLeer');
 Route::get('/scriptt', [App\Http\Controllers\Scriptp::class, 'xmlborrar'])->name('xmlborrar');
 Route::post('/home2', [App\Http\Controllers\HomeController::class, 'home2'])->name('home2');
-Route::get('/script1', [App\Http\Controllers\Script1::class, 'xmlborrar'])->name('xmlborrar');
+Route::get('/script1', [App\Http\Controllers\Script1::class, 'tipoUsuarios'])->name('tipoUsuarios');
 
