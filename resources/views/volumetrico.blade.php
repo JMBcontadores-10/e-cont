@@ -50,7 +50,8 @@
                 </form>
                 <br>
                 <br>
-                <form action="" method="POST">
+                <form action="{{ route('convolu') }}" method="POST">
+                    @csrf
                     <h4><b>Consulta hist&oacute;rica</b></h4>
                     <h5>Elige la fecha:</h5>
                     <br>
