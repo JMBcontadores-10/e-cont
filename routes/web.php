@@ -54,8 +54,10 @@ Route::get('/consulta', [App\Http\Controllers\ConsultasController::class, 'consu
 Route::get('/historial', [App\Http\Controllers\ConsultasController::class, 'historial'])->name('historial');
 Route::get('/volumetrico', [App\Http\Controllers\VolumetricoController::class, 'index'])->name('volumetrico');
 Route::post('/volumetrico1', [App\Http\Controllers\VolumetricoController::class, 'volumetrico1'])->name('volumetrico1');
+Route::post('/convolumetrico', [App\Http\Controllers\VolumetricoController::class, 'convolu'])->name('convolu');
 Route::post('/volumetrico2', [App\Http\Controllers\VolumetricoController::class, 'insertaDatos'])->name('insertaDatos');
 Route::post('/volumetrico3', [App\Http\Controllers\VolumetricoController::class, 'updateDatos'])->name('updateDatos');
+Route::post('/volumetrico4', [App\Http\Controllers\VolumetricoController::class, 'updatePrecio'])->name('updatePrecio');
 Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
 Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
 Route::get('/auditoria', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('auditoria');

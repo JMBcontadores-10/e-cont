@@ -14,6 +14,7 @@ class Volumetrico extends Model
 
     protected $fillable = [
 
+        'num',
         'idV',
         'RFC',
         'fech1',
