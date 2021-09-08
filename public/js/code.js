@@ -15,6 +15,51 @@ function showLogin1() {
     $("#entrar").hide();
 }
 
+function inventario(){
+     var invM = document.getElementById("invIniM").value;
+     var coM = document.getElementById("comprasM").value;
+     var veM = document.getElementById("ventasM").value;
+
+     var result =  parseFloat(invM) + parseFloat(coM) - parseFloat(veM);
+     document.getElementById("invDeterM").value = result;
+
+     var invP = document.getElementById("invIniP").value;
+     var coP = document.getElementById("comprasP").value;
+     var veP = document.getElementById("ventasP").value;
+
+     var result =  parseFloat(invP) + parseFloat(coP) - parseFloat(veP);
+     document.getElementById("invDeterP").value = result;
+
+     var invD = document.getElementById("invIniD").value;
+     var coD = document.getElementById("comprasD").value;
+     var veD = document.getElementById("ventasD").value;
+
+     var result =  parseFloat(invD) + parseFloat(coD) - parseFloat(veD);
+     document.getElementById("invDeterD").value = result;
+
+    }
+
+function merma(){
+    var autoM = document.getElementById("autoM").value;
+    var invDeterM = document.getElementById("invDeterM").value;
+
+    var result =  parseFloat(invDeterM) - parseFloat(autoM);
+    document.getElementById("mermaM").value = result;
+
+    var autoP = document.getElementById("autoP").value;
+    var invDeterP = document.getElementById("invDeterP").value;
+
+    var result =  parseFloat(invDeterP) - parseFloat(autoP);
+    document.getElementById("mermaP").value = result;
+
+    var autoD = document.getElementById("autoD").value;
+    var invDeterP = document.getElementById("invDeterD").value;
+
+    var result =  parseFloat(invDeterD) - parseFloat(autoD);
+    document.getElementById("mermaD").value = result;
+
+}
+
 // Desahibilita los botones en descargas
 function disableInputs() {
     $(':input[type="submit"]').prop('disabled', true);

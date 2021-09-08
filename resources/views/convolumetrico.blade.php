@@ -32,9 +32,10 @@
                     <th scope="col">Fecha</th>
                     <th scope="col">Inventario Inicial</th>
                     <th scope="col">Compras</th>
-                    <th scope="col">Ventas</th>
-                    <th scope="col">Inventario Real (auto-stick)</th>
+                    <th scope="col">Litros Vendidos</th>
                     <th scope="col">Precio Venta</th>
+                    <th scope="col">Inventario Real (auto-stick)</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -48,8 +49,8 @@
                         <td>{{ $cV['iiM'] }}</td>
                         <td>{{ $cV['cM'] }}</td>
                         <td>{{ $cV['vM'] }}</td>
-                        <td>{{ $cV['aM'] }}</td>
                         <td>${{ $cV['pM'] }}</td>
+                        <td>{{ $cV['aM'] }}</td>
                     </tr>
                 @endforeach
 
@@ -68,9 +69,9 @@
                     <th scope="col">Fecha</th>
                     <th scope="col">Inventario Inicial</th>
                     <th scope="col">Compras</th>
-                    <th scope="col">Ventas</th>
-                    <th scope="col">Inventario Real (auto-stick)</th>
+                    <th scope="col">Litros Vendidos</th>
                     <th scope="col">Precio Venta</th>
+                    <th scope="col">Inventario Real (auto-stick)</th>
                 </tr>
             </thead>
             <tbody>
@@ -84,8 +85,9 @@
                         <td>{{ $cV['iiP'] }}</td>
                         <td>{{ $cV['cP'] }}</td>
                         <td>{{ $cV['vP'] }}</td>
-                        <td>{{ $cV['aP'] }}</td>
                         <td>${{ $cV['pP'] }}</td>
+                        <td>{{ $cV['aP'] }}</td>
+
                     </tr>
                 @endforeach
             </tbody>
@@ -115,9 +117,9 @@
                         <th scope="col">Fecha</th>
                         <th scope="col">Inventario Inicial</th>
                         <th scope="col">Compras</th>
-                        <th scope="col">Ventas</th>
-                        <th scope="col">Inventario Real (auto-stick)</th>
+                        <th scope="col">Litros Vendidos</th>
                         <th scope="col">Precio Venta</th>
+                        <th scope="col">Inventario Real (auto-stick)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -131,8 +133,8 @@
                             <td>{{ $cV['iiD'] }}</td>
                             <td>{{ $cV['cD'] }}</td>
                             <td>{{ $cV['vD'] }}</td>
-                            <td>{{ $cV['aD'] }}</td>
                             <td>${{ $cV['pD'] }}</td>
+                            <td>{{ $cV['aD'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>

@@ -33,6 +33,12 @@ class Volumetrico extends Model
         'pM',
         'pP',
         'pD',
+        'idM',
+        'idP',
+        'idD',
+        'mermaM',
+        'mermaP',
+        'mermaD',
     ];
 
     protected $collection = 'volumetrico';
