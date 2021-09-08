@@ -18,6 +18,7 @@
 
 
     <script src="{{ asset('js/calendar.js') }}" defer></script>
+    <script src="{{ asset('js/calendari.js')}}" defer></script>
     <script src="https://kit.fontawesome.com/4b9ba14b0f.js" crossorigin="anonymous"></script>
 
     <script src="{{ asset('js/fullcalendar.js') }}" defer></script>

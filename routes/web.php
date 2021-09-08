@@ -58,6 +58,7 @@ Route::post('/convolumetrico', [App\Http\Controllers\VolumetricoController::clas
 Route::post('/volumetrico2', [App\Http\Controllers\VolumetricoController::class, 'insertaDatos'])->name('insertaDatos');
 Route::post('/volumetrico3', [App\Http\Controllers\VolumetricoController::class, 'updateDatos'])->name('updateDatos');
 Route::post('/volumetrico4', [App\Http\Controllers\VolumetricoController::class, 'updatePrecio'])->name('updatePrecio');
+Route::get('/volumetrico4', [App\Http\Controllers\VolumetricoController::class, 'updatePrecio'])->name('updatePrecio');
 Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
 Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
 Route::get('/auditoria', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('auditoria');
@@ -72,4 +73,6 @@ Route::get('/script', [App\Http\Controllers\Scriptp::class, 'xmlLeer'])->name('x
 Route::get('/scriptt', [App\Http\Controllers\Scriptp::class, 'xmlborrar'])->name('xmlborrar');
 Route::post('/home2', [App\Http\Controllers\HomeController::class, 'home2'])->name('home2');
 Route::get('/script1', [App\Http\Controllers\Script1::class, 'tipoUsuarios'])->name('tipoUsuarios');
-
+Route::get('/dir', [App\Http\Controllers\Prueba::class, 'createdir'])->name('createdir');
+//Crear directorios en volumetrico
+Route::get('/dir1', [App\Http\Controllers\Prueba::class, 'createDir2'])->name('createDir2');

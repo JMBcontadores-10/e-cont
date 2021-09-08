@@ -61,9 +61,39 @@ class VolumetricoController extends Controller
 
     public function insertaDatos(Request $request)
     {
+        $meses = [
+            '1.Enero',
+            '2.Febrero',
+            '3.Marzo',
+            '4.Abril',
+            '5.Mayo',
+            '6.Junio',
+            '7.Julio',
+            '8.Agosto',
+            '9.Septiembre',
+            '10.Octubre',
+            '11.Noviembre',
+            '12.Diciembre',
+        ];
+
+        $dtz = new DateTimeZone("America/Mexico_City");
+        $dt = new DateTime("now", $dtz);
+        $rfcV = $request->rfc;
+        $anio = $dt->format('Y');
+
+        $subir_archivo = basename($_FILES['archivoVol']['name']);
+        $fech1 = $request->fech1;
+        $f1 = new DateTime($fech1, $dtz);
+        $mes = $f1->format('n');
+        $mes1 = $mes-1;
+        $arr = $meses[$mes1];
+        $ruta = "storage/contarappv1_descargas/$rfcV/$anio/Volumetrico/$arr/";
+
+        $subir_archivo = preg_replace('/[^A-z0-9.-]+/', '', $subir_archivo);
+        $nombrec = "$fech1-$subir_archivo";
+        $request->archivoVol->move($ruta, $nombrec);
         $num = "1";
         $fech1 = $request->fech1;
-        $rfcV = $request->rfc;
         $iiM = $request->invIniM;
         $iiP = $request->invIniP;
         $iiD = $request->invIniD;
@@ -79,6 +109,13 @@ class VolumetricoController extends Controller
         $pM = $request->pventaM;
         $pP = $request->pventaP;
         $pD = $request->pventaD;
+        $idM = $request->invDeterM;
+        $idP = $request->invDeterP;
+        $idD = $request->invDeterD;
+        $mermaM = $request->mermaM;
+        $mermaP = $request->mermaP;
+        $mermaD = $request->mermaD;
+
 
         $idV = $rfcV . "/" . $fech1 . "/1";
 
@@ -103,6 +140,12 @@ class VolumetricoController extends Controller
             'pM' => $pM,
             'pP' => $pP,
             'pD' => $pD,
+            'idM' => $idM,
+            'idP' => $idP,
+            'idD' => $idD,
+            'mermaM' => $mermaM,
+            'mermaP' => $mermaP,
+            'mermaD' => $mermaD,
         ]);
 
         return view('volumetrico')
@@ -131,6 +174,9 @@ class VolumetricoController extends Controller
         $pM = $request->pventaM;
         $pP = $request->pventaP;
         $pD = $request->pventaD;
+        $idM = $request->invDeterM;
+        $idP = $request->invDeterP;
+        $idD = $request->invDeterD;
 
         $volum = Volumetrico::where('idV', $idV);
 
@@ -153,24 +199,12 @@ class VolumetricoController extends Controller
             'pM' => $pM,
             'pP' => $pP,
             'pD' => $pD,
+            'idM' => $idM,
+            'idP' => $idP,
+            'idD' => $idD,
         ]);
 
         return view('volumetrico')
-            // ->with('iiM', $iiM)
-            // ->with('iiP', $iiP)
-            // ->with('iiD', $iiD)
-            // ->with('cM', $cM)
-            // ->with('cP', $cP)
-            // ->with('cD', $cD)
-            // ->with('vM', $vM)
-            // ->with('vP', $vP)
-            // ->with('vD', $vD)
-            // ->with('aM', $aM)
-            // ->with('aP', $aP)
-            // ->with('aD', $aD)
-            // ->with('pM', $pM)
-            // ->with('pP', $pP)
-            // ->with('pD', $pD)
             ->with('volum', $volum);
     }
 
@@ -194,6 +228,9 @@ class VolumetricoController extends Controller
         $pM = $request->pventaM;
         $pP = $request->pventaP;
         $pD = $request->pventaD;
+        $idM = $request->invDeterM;
+        $idP = $request->invDeterP;
+        $idD = $request->invDeterD;
 
         $idV = $rfcV . "/" . $fech1 . "/2";
 
@@ -218,6 +255,9 @@ class VolumetricoController extends Controller
             'pM' => $pM,
             'pP' => $pP,
             'pD' => $pD,
+            'idM' => $idM,
+            'idP' => $idP,
+            'idD' => $idD,
         ]);
 
         return view('volumetrico')
