@@ -111,8 +111,10 @@
                             <th scope="row">Inventario Determinado</th>
                                 <td><input class="form-control" id="invDeterM" name="invDeterM" readonly="true" type="text" value="" required></td>
                                 <td><input class="form-control" id="invDeterP" name="invDeterP" readonly="true" type=text value="" required></td>
+                                @if ($die == '1')
                                 <td><input class="form-control" id="invDeterD" name="invDeterD" readonly="true" type=text value="" required></td>
-                        </tr>
+                                @endif
+                            </tr>
                         <tr id= "invAuto">
                             <th>Diferencia o Merma</th>
                             <td><input class="form-control" id="mermaM" name="mermaM" readonly="true" type="text" value="" required></td>

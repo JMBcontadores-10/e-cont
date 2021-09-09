@@ -468,4 +468,12 @@ class ChequesYTransferenciasController extends Controller
     {
         echo "<script>alert('$mensaje'); window.location = '$ruta';</script>";
     }
+
+    public function borrarArchivo(Request $request){
+
+        $rutaArchivo = $request->rutaArc;
+        File::delete($rutaArchivo);
+        $nombreCheque = 0;
+
+    }
 }
