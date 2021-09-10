@@ -172,16 +172,20 @@ use App\Models\Cheques;
                             @if ($nombreCheque == '0')
                                 <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
                             @else
-                                <a  id="rutArc" href="{{ $rutaArchivo }}" target="_blank">
+                                <a id="rutArc" href="{{ $rutaArchivo }}" target="_blank">
                                     <i class="fas fa-file-pdf fa-2x" style="color: rgb(202, 19, 19)"></i>
                                 </a>
-                                <form action="{{ url('borrarArchivo') }}" method="POST">
-                                    @csrf
-                                    <button type="submit">Borrar</button>
-                                    <input type="hidden" name="rutaArc" value="{{ $rutaArchivo}}">
-                                </form>
+                                <br>
+                                    <form action="{{ url('borrarArchivo') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="id" value="{{ $id }}">
+                                        <button type="submit" style="width: 100px;">Borrar</button>
+                                    </form>
+
+
                             @endif
                         </td>
+
                         <td class="text-center align-middle">
                             @if (empty($i['doc_relacionados']))
                                 <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
