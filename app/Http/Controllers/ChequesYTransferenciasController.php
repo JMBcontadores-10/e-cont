@@ -469,11 +469,21 @@ class ChequesYTransferenciasController extends Controller
         echo "<script>alert('$mensaje'); window.location = '$ruta';</script>";
     }
 
-    public function borrarArchivo(Request $request){
+    public function borrarArchivo(Request $request)
+    {
 
         $rutaArchivo = $request->rutaArc;
         File::delete($rutaArchivo);
-        $nombreCheque = 0;
 
+        $id = $request->id;
+        $cheque = Cheques::where(['_id' => $id])
+                ->update([
+                    'nombrec' => '0',
+                ]);
+
+
+        $alerta = 'PDF borrado.';
+        $ruta = 'cheques-transferencias';
+        $this->alerta($alerta, $ruta);
     }
 }
