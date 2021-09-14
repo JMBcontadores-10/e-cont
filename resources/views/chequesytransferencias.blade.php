@@ -68,7 +68,7 @@ use App\Models\Cheques;
         <br>
     </div>
     <div class="mx-4" style="overflow: auto">
-        <table id="chequesTabla" class="table table-sm table-hover table-bordered">
+        <table class="table table-sm table-hover table-bordered">
             <thead>
                 <tr class="table-primary">
                     <th class="text-center align-middle">No.</th>
