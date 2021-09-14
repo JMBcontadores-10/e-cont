@@ -61,66 +61,66 @@
                                 }
                             @endphp
                             @if ($cIA > 0)
-                                <td><input class="form-control" type=text name="invIniM" id="invIniM" value={{ $iaM }} required></td>
-                                <td><input class="form-control" type=text name="invIniP" id="invIniP" value={{ $iaP }} required></td>
+                                <td><input class="form-control" type=text name="invIniM" id="invIniM" value={{ $iaM }} ></td>
+                                <td><input class="form-control" type=text name="invIniP" id="invIniP" value={{ $iaP }} ></td>
                                 @if ($die == '1')
-                                    <td><input class="form-control" type=text name="invIniD" id="invIniD" value={{ $iaD }} required></td>
+                                    <td><input class="form-control" type=text name="invIniD" id="invIniD" value={{ $iaD }} ></td>
                                 @endif
                             @else
-                                <td><input class="form-control" type=text name="invIniM" id="invIniM" value="" required></td>
-                                <td><input class="form-control" type=text name="invIniP" id="invIniP" value="" required></td>
+                                <td><input class="form-control" type=text name="invIniM" id="invIniM" value="" ></td>
+                                <td><input class="form-control" type=text name="invIniP" id="invIniP" value="" ></td>
                                 @if ($die == '1')
-                                    <td><input class="form-control" type=text name="invIniD" id="invIniD" value="" required></td>
+                                    <td><input class="form-control" type=text name="invIniD" id="invIniD" value="" ></td>
                                 @endif
 
                             @endif
                         </tr>
                         <tr>
                             <th scope="row">Compras</th>
-                            <td><input class="form-control" type=text name="comprasM" id="comprasM" value="" required></td>
-                            <td><input class="form-control" type=text name="comprasP" id="comprasP" value="" required></td>
+                            <td><input class="form-control" type=text name="comprasM" id="comprasM" value="" ></td>
+                            <td><input class="form-control" type=text name="comprasP" id="comprasP" value="" ></td>
                             @if ($die == '1')
-                                <td><input class="form-control" type=text name="comprasD" id="comprasD" value="" required></td>
+                                <td><input class="form-control" type=text name="comprasD" id="comprasD" value="" ></td>
                             @endif
                         </tr>
                         <tr>
                             <th scope="row">Litros Vendidos</th>
-                            <td><input class="form-control" type=text name="ventasM" id="ventasM" value="" required></td>
-                            <td><input class="form-control" type=text name="ventasP" id="ventasP" value="" required></td>
+                            <td><input class="form-control" type=text name="ventasM" id="ventasM" value="" ></td>
+                            <td><input class="form-control" type=text name="ventasP" id="ventasP" value="" ></td>
                             @if ($die == '1')
-                                <td><input class="form-control" type=text name="ventasD" id ="ventasD" value="" required></td>
+                                <td><input class="form-control" type=text name="ventasD" id ="ventasD" value=""></td>
                             @endif
                         </tr>
                         <tr>
                             <th scope="row">Precio Venta</th>
-                            <td><input class="form-control" type=text name="pventaM" value="" required></td>
-                            <td><input class="form-control" type=text name="pventaP" value="" required></td>
+                            <td><input class="form-control" type=text name="pventaM" value=""></td>
+                            <td><input class="form-control" type=text name="pventaP" value=""></td>
                             @if ($die == '1')
-                                <td><input class="form-control" type=text name="pventaD" value="" required></td>
+                                <td><input class="form-control" type=text name="pventaD" value=""></td>
                             @endif
                         </tr>
                         <tr>
                             <th scope="row">Inventario Real (Autostick)</th>
-                            <td><input class="form-control" type=text name="autoM" id="autoM" value="" required></td>
-                            <td><input class="form-control" type=text name="autoP" id="autoP" value="" required></td>
+                            <td><input class="form-control" type=text name="autoM" id="autoM" value="" ></td>
+                            <td><input class="form-control" type=text name="autoP" id="autoP" value="" ></td>
                             @if ($die == '1')
-                                <td><input class="form-control" type=text name="autoD" id="autoD" value="" required></td>
+                                <td><input class="form-control" type=text name="autoD" id="autoD" value="" ></td>
                             @endif
                         </tr>
                         <tr id="invd">
                             <th scope="row">Inventario Determinado</th>
-                                <td><input class="form-control" id="invDeterM" name="invDeterM" readonly="true" type="text" value="" required></td>
-                                <td><input class="form-control" id="invDeterP" name="invDeterP" readonly="true" type=text value="" required></td>
+                                <td><input class="form-control" id="invDeterM" name="invDeterM" readonly="true" type="text" value="" ></td>
+                                <td><input class="form-control" id="invDeterP" name="invDeterP" readonly="true" type=text value="" ></td>
                                 @if ($die == '1')
-                                <td><input class="form-control" id="invDeterD" name="invDeterD" readonly="true" type=text value="" required></td>
+                                <td><input class="form-control" id="invDeterD" name="invDeterD" readonly="true" type=text value="" ></td>
                                 @endif
                             </tr>
                         <tr id= "invAuto">
                             <th>Diferencia o Merma</th>
-                            <td><input class="form-control" id="mermaM" name="mermaM" readonly="true" type="text" value="" required></td>
-                            <td><input class="form-control" id="mermaP" name="mermaP" readonly="true" type="text" value="" required></td>
+                            <td><input class="form-control" id="mermaM" name="mermaM" readonly="true" type="text" value="" ></td>
+                            <td><input class="form-control" id="mermaP" name="mermaP" readonly="true" type="text" value="" ></td>
                             @if ($die == '1')
-                            <td><input class="form-control" id="mermaD" name="mermaD" readonly="true" type="text" value="" required></td>
+                            <td><input class="form-control" id="mermaD" name="mermaD" readonly="true" type="text" value="" ></td>
                             @endif
                         </tr>
                     </tbody>

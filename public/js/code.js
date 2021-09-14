@@ -60,6 +60,57 @@ function merma(){
 
 }
 
+function fun1(){
+    if($('#user').val() == '3'){
+        $('#function1').prop('disabled',true);
+        $('#noDis1').html('No disponible');
+        $('#function2').prop('disabled',true);
+        $('#noDis2').html('No disponible');
+        $('#function3').prop('disabled',true);
+        $('#noDis3').html('No disponible');
+        $('#function4').prop('disabled',true);
+        $('#noDis4').html('No disponible');
+
+    }
+}
+
+$(document).ready(function() {
+    $('#chequesTabla tfoot th').each( function () {
+        var title = $(this).text();
+        $(this).html( '<input type="text" placeholder="Buscar palabra clave...'+title+'" />' );
+    } );
+
+
+    var table = $('#chequesTabla').DataTable({
+"language": {
+        search: 'Buscar:',
+        "lengthMenu": "Mostrando _MENU_ registros por pagina",
+        "zeroRecords": "Sin datos",
+        "info": "Mostrando _PAGE_ de _PAGES_",
+        "infoEmpty": "Sin registros",
+        "infoFiltered": "(filtrados de _MAX_)",
+paginate: {
+    first: 'Primero',
+    previous: 'Anterior',
+    next: 'Siguiente',
+    last: 'Último',
+  }
+    }
+});
+    table.columns().every( function () {
+        var that = this;
+
+        $( 'input', this.footer() ).on( 'keyup change', function () {
+            if ( that.search() !== this.value ) {
+                that
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );
+} );
+
+
 // Desahibilita los botones en descargas
 function disableInputs() {
     $(':input[type="submit"]').prop('disabled', true);

@@ -39,6 +39,7 @@ class Volumetrico extends Model
         'mermaM',
         'mermaP',
         'mermaD',
+        'archivoVol',
     ];
 
     protected $collection = 'volumetrico';
