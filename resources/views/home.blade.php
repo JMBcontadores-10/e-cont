@@ -13,6 +13,7 @@
                 <br>
                 @php
                     $rfc = Auth::user()->RFC;
+                    $tipo = Session::get('tipoU');
                 @endphp
 
                 <h2>Módulos disponibles</h2>
@@ -20,21 +21,22 @@
 
                 <div class="row" style="justify-content: center;">
                     <div class="col">
-
                         <form action="{{ url('descargasv2') }}">
                             {{-- <input type="hidden" name="accion" value="login_fiel" /> --}}
-                            <button class="btnModulo" type="submit" value="Descargas" style="font-size: 12pt">
+                            <input type="hidden" id="user" value="{{$tipo}}">
+                            <button onclick="fun1();" id="function1" class="btnModulo" type="submit" value="Descargas" style="font-size: 12pt">
                                 <img style="float:left;" src="img/boton.png" width="25px" height="25px" alt=""> Descargas
                             </button>
+                            <div id="noDis1"></div>
                         </form>
-
-
                     </div>
                     <div class="col">
                         <form action="{{ url('consultas') }}">
-                            <button class="btnModulo" type="submit" value="Consultas" style="font-size: 12pt">
+                            <input type="hidden" id="user" value="{{$tipo}}">
+                            <button onclick="fun1();" id="function2" class="btnModulo" type="submit" value="Consultas" style="font-size: 12pt">
                                 <img style="float:left;" src="img/lupa.png" width="25px" height="25px" alt=""> Consultas
                             </button>
+                            <div id="noDis2"></div>
                         </form>
                     </div>
                     <div class="col">
@@ -95,18 +97,22 @@
                 <div class="row" style="justify-content: center;">
                     <div class="col">
                         <form action="{{ url('monitoreo') }}">
-                            <button class="btnModulo" type="submit" value="Nomina" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
+                            <input type="hidden" id="user" value="{{$tipo}}">
+                            <button onclick="fun1();" id="function3" class="btnModulo" type="submit" value="Nomina" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
                                 <img style="float:left;" src="img/monitoreo.png" width="25px" height="25px" alt="">
                                 Monitoreo Facturación
                             </button>
+                            <div id="noDis3"></div>
                         </form>
                     </div>
                     <div class="col">
                         <form action="{{ url('auditoria') }}">
-                            <button class="btnModulo" type="submit" value="Nomina" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
+                            <input type="hidden" id="user" value="{{$tipo}}">
+                            <button onclick="fun1();" id="function4" class="btnModulo" type="submit" value="Nomina" {{-- style="border-radius: 10px 10px 10px 10px; color:white; BORDER: #0055FF 1px solid; FONT-SIZE: 10pt; BACKGROUND-COLOR: #0055FF" --}}>
                                 <img style="float:left;" src="img/searcher.png" width="25px" height="25px" alt="">
                                 Auditoría
                             </button>
+                            <div id="noDis4"></div>
                         </form>
                     </div>
                 </div>

@@ -115,6 +115,8 @@ class VolumetricoController extends Controller
         $mermaM = $request->mermaM;
         $mermaP = $request->mermaP;
         $mermaD = $request->mermaD;
+        $name = $_FILES['archivoVol']['name'];
+        $rutaC =$ruta.$name;
 
 
         $idV = $rfcV . "/" . $fech1 . "/1";
@@ -146,6 +148,7 @@ class VolumetricoController extends Controller
             'mermaM' => $mermaM,
             'mermaP' => $mermaP,
             'mermaD' => $mermaD,
+            'archivoVol' => $rutaC,
         ]);
 
         return view('volumetrico')

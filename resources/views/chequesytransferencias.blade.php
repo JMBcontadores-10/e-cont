@@ -76,6 +76,7 @@ use App\Models\Cheques;
                     <th class="text-center align-middle">Núm cheque o transferencia</th>
                     <th class="text-center align-middle">Beneficiario</th>
                     <th class="text-center align-middle">Tipo de operación</th>
+                    <th class="text-center align-middle">Tipo</th>
                     <th class="text-center align-middle">Total</th>
                     <th class="text-center align-middle">Total CFDI</th>
                     <th class="text-center align-middle">Por comprobar</th>
@@ -153,6 +154,7 @@ use App\Models\Cheques;
                         <td class="text-center align-middle">{{ $numCheque }}</td>
                         <td class="text-center align-middle">{{ $beneficiario }}</td>
                         <td class="text-center align-middle">{{ $tipoO }}</td>
+                        <td class="text-center align-middle">{{ $tipo }}</td>
                         <td class="text-center align-middle">${{ number_format($importeC, 2) }}</td>
                         <td class="text-center align-middle">${{ number_format($sumaxml, 2) }}</td>
                         <td class="text-center align-middle">${{ $diferencia }}</td>
@@ -202,7 +204,7 @@ use App\Models\Cheques;
                                     </select>
                                     <input id="ruta-adicionales" name="ruta-adicionales" type="hidden"
                                         value="{{ $rutaDescarga . 'Documentos_Relacionados/' }}">
-                                    <input id="{{ $n }}" onclick="verAdicional(this.id)" type="submit"
+                                     <input id="{{ $n }}" onclick="verAdicional(this.id)" type="submit"
                                         value="Ver">
                                 @else
                                     <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
@@ -346,6 +348,23 @@ use App\Models\Cheques;
                     </tr>
                 @endforeach
             </tbody>
+            <tfoot>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <th></th>
+                </tr>
+            </tfoot>
         </table>
     </div>
     <div class="ml-4 mt-3">

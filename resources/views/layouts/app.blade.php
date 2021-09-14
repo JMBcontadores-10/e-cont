@@ -24,7 +24,9 @@
     <script src="{{ asset('js/fullcalendar.js') }}" defer></script>
     <script src="{{ asset('js/moment.min.js') }}" defer></script>
     <script src="{{ asset('js/jquery-3.1.1.min.js') }}" defer></script>
-
+    <!-- Datatable-->
+    <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" defer></script>
+    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet"/>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -118,6 +120,28 @@
                     </div>
                 </div>
             </nav>
+
+                <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #e3f2fd;">
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                      <div class="navbar-nav">
+                        @if (Session::get('tipoU') == '2')
+                        <a class="nav-item nav-link" href="{{ url('descargasv2') }}">Descargas</a>
+                        <a class="nav-item nav-link" href="{{ url('consultas') }}">Consultas</a>
+                        @endif
+                        <a class="nav-item nav-link" href="{{ url('construccion') }}">Expediente Digital</a>
+                        <a class="nav-item nav-link" href="{{ url('volumetrico') }}">Control Volumétrico</a>
+                        <a class="nav-item nav-link" href="{{ url('cuentasporpagar') }}">Cuentas por pagar</a>
+                        <a class="nav-item nav-link" href="{{ url('cheques-transferencias') }}">Cheques y Transferencias</a>
+                        <a class="nav-item nav-link" href="{{ url('construccion') }}">Expediente Fiscal</a>
+                        <a class="nav-item nav-link" href="{{ url('construccion') }}">Nómina</a>
+                        @if (Session::get('tipoU') == '2')
+                        <a class="nav-item nav-link" href="{{ url('monitoreo') }}">Monitoreo</a>
+                        <a class="nav-item nav-link" href="{{ url('auditoria') }}">Auditoría</a>
+                        @endif
+                      </div>
+                    </div>
+                  </nav>
+
         @endif
 
 
