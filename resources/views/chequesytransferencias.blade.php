@@ -30,7 +30,7 @@ use App\Models\Cheques;
                 <form class="form-inline">
                     <label class="pf" for="mes">Seleccione el periodo: </label>
                     <div class="form-group">
-                        <select class="form-control m-2" id="mes" name="mes">
+                        <select class="form-control m-2" id="mes" name="mes" >
                             <option value="00">Todos</option>
                             <?php foreach ($meses as $key => $value) {
                                 echo '<option value="' . $key . '">' . $value . '</option>';
@@ -53,11 +53,6 @@ use App\Models\Cheques;
                 <form action="{{ url('vincular-cheque') }}" method="POST">
                     @csrf
                     <button class="button2">Registrar Cheque/Transferencia</button>
-                </form>
-            </div>
-            <div>
-                <form action="{{ url('cuentasporpagar') }}">
-                    <button class="button2 ml-3">Módulo: Cuentas por pagar</button>
                 </form>
             </div>
         </div>
@@ -266,7 +261,7 @@ use App\Models\Cheques;
                         @if (Session::get('tipoU') == '2')
                             <td class="text-center align-middle">
                                 <div class="mx-1">
-                                    @if ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0'))
+                                    @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                         @php
                                             Cheques::find($id)->update(['pendi' => 1]);
                                         @endphp
@@ -282,7 +277,7 @@ use App\Models\Cheques;
                                             <input type="submit" name="Pendientes" value="Pendientes"
                                                 onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
                                         </div>
-                                    @elseif ($verificado == 0)
+                                    @elseif ($verificado == 0 )
                                         <form action="{{ url('cheques-transferencias') }}" method="POST">
                                             @csrf
                                             <input type="hidden" id="id" name="id" value="{{ $id }}">
@@ -348,23 +343,6 @@ use App\Models\Cheques;
                     </tr>
                 @endforeach
             </tbody>
-            <tfoot>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <th></th>
-                </tr>
-            </tfoot>
         </table>
     </div>
     <div class="ml-4 mt-3">

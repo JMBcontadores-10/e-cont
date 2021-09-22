@@ -120,8 +120,8 @@
                     </div>
                 </div>
             </nav>
-
-                <nav class="navbar navbar-expand-lg navbar-light " style="background-color: #e3f2fd;">
+            <div>
+                <nav class="navbar navbar-expand-lg navbar-light " style="background-color:; position: absolute; left:10%; ">
                     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                       <div class="navbar-nav">
                         @if (Session::get('tipoU') == '2')
@@ -141,6 +141,9 @@
                       </div>
                     </div>
                   </nav>
+            </div>
+            <br>
+            <br>
 
         @endif
 

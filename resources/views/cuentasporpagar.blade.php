@@ -28,9 +28,6 @@ use App\Models\ListaNegra;
         </div>
 
         <div class="row justify-content-end">
-            <form action="{{ url('cheques-transferencias') }}">
-                <button class="button2">Módulo: Cheques y Transferencias</button>
-            </form>
             <form>
                 <button class="button2" id="vinpbtn">Vincular Varios Proveedores</button>
             </form>
