@@ -32,7 +32,6 @@
             <div>
                 <form  method="POST" action="{{route('consultas1')}}">
                     @csrf
-
                     <br>
                         <p>
                             &nbsp;<input type="radio" required name="tipodes" value="Recibidas"> Consulta de Recibidas

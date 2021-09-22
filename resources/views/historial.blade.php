@@ -37,7 +37,6 @@
             <table class="table table-stripered">
                 <tr>
                     <th>#</th>
-                    <th>RFC</th>
                     <th>Fecha</th>
                     <th>Tipo de Factura</th>
                     <th>Total Descargados</th>
@@ -47,7 +46,6 @@
                     @foreach ($col as $i)
                     <tr>
                         <td>{{++$n}}</td>
-                        <td>{{$rfc}}</td>
                         @php
                             $fecha= $i['fechaDescarga'];
                             $date = strtotime($fecha);
@@ -81,7 +79,6 @@
             <table class="table table-stripered">
                 <tr>
                     <th>#</th>
-                    <th>RFC</th>
                     <th>Fecha</th>
                     <th>Tipo de Factura</th>
                     <th>Total Descargados</th>
@@ -105,7 +102,6 @@
                     @foreach ($colr as $r)
                     <tr>
                         <td>{{++$n}}</td>
-                        <td>{{$rfc}}</td>
                         @php
                             $fechar= $r['fechaDescarga'];
                             $dater = strtotime($fechar);

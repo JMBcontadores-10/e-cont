@@ -36,6 +36,7 @@
                                 foreach ($diesel as $di) {
                                     $die = $di['diesel'];
                                 }
+
                             @endphp
                             <th scope="col"></th>
                             <th scope="col">Magna</th>
@@ -126,6 +127,27 @@
                     </tbody>
                 </table>
                 <br>
+                @php
+                    $archivo = DB::table('volumetrico')
+                                    ->select('archivoVol')
+                                    ->where('RFC', Auth::user()->RFC)
+                                    ->where('fech1', $fech1)
+                                    ->get();
+
+                    if ($archivo > '0') {
+                        foreach ($archivo as $a) {
+                            $archivoV = $a['archivoVol'];
+                        }
+                    }
+
+
+                @endphp
+                @if ($archivoV != 'null')
+                    <h1>Ya existe archivo de este día</h1>
+                    <a id="rutArc" href="{{ $archivoV }}" target="_blank">
+                        <i class="fas fa-file-pdf fa-2x" style="color: rgb(202, 19, 19)"></i>
+                    </a>
+                @else
                 <div class="row">
                     <div class="col-3">
                         <p class="pf">Subir Archivo (solo PDF):</p>
@@ -134,6 +156,8 @@
                         <input id="archivoVol" name="archivoVol" type="file" accept=".pdf" />
                     </div>
                 </div>
+
+                @endif
                 <br>
 
                 <div class="row justify-content center">

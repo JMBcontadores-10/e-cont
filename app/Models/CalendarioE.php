@@ -12,5 +12,12 @@ class CalendarioE extends Model
 
     protected $primaryKey = '_id';
 
+    protected $fillable = [
+        'descargasEmitidos',
+        'erroresEmitidos',
+        'fechaDescarga',
+        'fechaDescargaF'
+    ];
+
     protected $collection = 'calendario_e';
 }

@@ -110,6 +110,7 @@ use App\Models\XmlE;
                                     @php
                                         $nCon = 0;
                                         $concepto = $i['Conceptos.Concepto'];
+                                        $UUID = $i['Complemento.0.TimbreFiscalDigital.UUID'];
                                     @endphp
                                     <tr>
                                         <td></td>
