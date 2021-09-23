@@ -69,8 +69,6 @@ class MonitoreoController extends Controller
             '12' => 'Diciembre'
         );
 
-        // $config = require dirname(dirname(__FILE__)) . '/Classes' . '/config.php';
-        // $rutaDescarga = $config['rutaDescarga'];
         $rfc = Auth::user()->RFC;
         $receptorRfc = $req->receptorRfc;
         $receptorNombre = $req->receptorNombre;
