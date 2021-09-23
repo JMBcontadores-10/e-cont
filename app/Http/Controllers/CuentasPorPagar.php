@@ -55,8 +55,7 @@ class CuentasPorPagar extends Controller
             '11' => 'Noviembre',
             '12' => 'Diciembre'
         );
-        $config = require dirname(dirname(__FILE__)) . '/Classes' . '/config.php';
-        $rutaDescarga = $config['rutaDescarga'];
+        $rutaDescarga = config("descargamasiva.path");
         $rfc = Auth::user()->RFC;
         $emisorRfc = $req->emisorRfc;
         $emisorNombre = $req->emisorNombre;

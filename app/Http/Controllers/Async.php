@@ -25,13 +25,9 @@ class Async extends Controller
 {
     public function index(Request $r)
     {
-
-        // Obtener configuracion
-        $config = require dirname(dirname(__FILE__)) . '/Classes' . '/config.php';
-
         // Preparar variables
-        $rutaDescarga = $config['rutaDescarga'];
-        $maxDescargasSimultaneas = $config['maxDescargasSimultaneas'];
+        $rutaDescarga = config("descargamasiva.path");
+        $maxDescargasSimultaneas = config("descargamasiva.parallel");
 
         $dircer = "storage/" . Auth::user()->dircer;
         $dirkey = "storage/" . Auth::user()->dirkey;
