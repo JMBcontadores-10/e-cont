@@ -23,20 +23,14 @@ Auth::routes(['register'=>false]);
 // Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
 // Route::get('/renombrarXml', [App\Http\Controllers\Prueba::class, 'renombrarXml'])->name('renombrarXml');
 Route::get('/prueba', [App\Http\Controllers\Prueba::class, 'index'])->name('prueba');
-
-// Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-// Route::post('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/home', [App\Http\Controllers\Login1Controller::class, 'login'])->name('home');
-Route::post('/home', [App\Http\Controllers\Login1Controller::class, 'login'])->name('home');
-Route::get('/modules', [App\Http\Controllers\HomeController::class, 'index'])->name('modules');
-Route::post('/modules', [App\Http\Controllers\HomeController::class, 'index'])->name('modules');
+Route::match(['get', 'post'], '/home', [App\Http\Controllers\Login1Controller::class, 'login'])->name('home');
+Route::match(['get', 'post'], '/modules', [App\Http\Controllers\HomeController::class, 'index'])->name('modules');
 
 Route::get('/descargasv2', [App\Http\Controllers\DescargasControllerv2::class, 'index'])->name('descargasv2');
 Route::post('/async', [App\Http\Controllers\Async::class, 'index'])->name('async');
 Route::get('/cuentasporpagar', [App\Http\Controllers\CuentasPorPagar::class, 'index'])->name('cuentasporpagar');
 Route::get('/detalles', [App\Http\Controllers\CuentasPorPagar::class, 'detalles'])->name('detalles');
-Route::get('/cheques-transferencias', [App\Http\Controllers\ChequesYTransferenciasController::class, 'index'])->name('cheques-transferencias');
-Route::post('/cheques-transferencias', [App\Http\Controllers\ChequesYTransferenciasController::class, 'index'])->name('cheques-transferencias');
+Route::match(['get', 'post'], '/cheques-transferencias', [App\Http\Controllers\ChequesYTransferenciasController::class, 'index'])->name('cheques-transferencias');
 Route::post('/vincular-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'vincularCheque'])->name('vincular-cheque');
 Route::post('/delete-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'deleteCheque'])->name('delete-cheque');
 Route::post('/archivo-pagar', [App\Http\Controllers\ChequesYTransferenciasController::class, 'createUpdateCheque'])->name('archivo-pagar');
@@ -57,8 +51,7 @@ Route::post('/volumetrico1', [App\Http\Controllers\VolumetricoController::class,
 Route::post('/convolumetrico', [App\Http\Controllers\VolumetricoController::class, 'convolu'])->name('convolu');
 Route::post('/volumetrico2', [App\Http\Controllers\VolumetricoController::class, 'insertaDatos'])->name('insertaDatos');
 Route::post('/volumetrico3', [App\Http\Controllers\VolumetricoController::class, 'updateDatos'])->name('updateDatos');
-Route::post('/volumetrico4', [App\Http\Controllers\VolumetricoController::class, 'updatePrecio'])->name('updatePrecio');
-Route::get('/volumetrico4', [App\Http\Controllers\VolumetricoController::class, 'updatePrecio'])->name('updatePrecio');
+Route::match(['get', 'post'], '/volumetrico4', [App\Http\Controllers\VolumetricoController::class, 'updatePrecio'])->name('updatePrecio');
 Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
 Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
 Route::get('/auditoria', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('auditoria');
