@@ -66,27 +66,23 @@ use App\Models\XmlE;
                                     <th scope="col">Uso CFDI</th>
                                     <th scope="col">Subtotal</th>
                                     <th scope="col">IVA 16%</th>
-                                    <th scope="col">Descripcion (Conceptos)</th>
-
+                                    <th scope="col">Total</th>
                                     <th scope="col">FormaPago</th>
-
                                     <th scope="col">Método Pago</th>
+                                    <th scope="col">Descripcion (Conceptos)</th>
                                     <th scope="col">Moneda</th>
                                     <th scope="col">Tipo Cambio</th>
                                     <th scope="col">Total</th>
                                     <th scope="col">Versión</th>
                                     {{-- <td scope="col">Sello</td> --}}
-
                                     <th scope="col">Cantidad</th>
                                     <th scope="col">Clave Producto/Servicio</th>
                                     <th scope="col">Clave Unidad</th>
-
                                     <th scope="col">Importe</th>
                                     <th scope="col">No. Identificacion</th>
                                     <th scope="col">Unidad</th>
                                     <th scope="col">Valor Unitario</th>
                                     <th scope="col">Base</th>
-
                                     <th scope="col">Impuesto</th>
                                     <th scope="col">Tasa o Cuota</th>
                                     <th scope="col">Tipo Factor</th>
@@ -96,12 +92,10 @@ use App\Models\XmlE;
                                     <th scope="col">Traslado (TasaOCuota)</th>
                                     <th scope="col">Traslado (Tipo Factor)</th>
                                     {{-- <th scope="col">Timbre Fiscal Digital</th> --}}
-
                                     <th scope="col">Rfc Proveedor Certificado</th>
-
                                     <th scope="col">No. Certificado SAT</th>
                                     {{-- <th scope="col">Sello CFD</th>--}
-                                {{--<th scope="col">Sello SAT</th> --}}
+                                    {{--<th scope="col">Sello SAT</th> --}}
                                     <th scope="col">Versión</th>
                                 </tr>
                             </thead>
@@ -129,30 +123,28 @@ use App\Models\XmlE;
                                         <td>{{ $i['Receptor.Nombre'] }}</td>
                                         <td>{{ $i['Receptor.UsoCFDI'] }}</td>
                                         <td>{{ $i['SubTotal'] }}</td>
+                                        <td></td>
+                                        <td>{{ $i['Total'] }}</td>
+                                        <td>{{ $i['FormaPago'] }}</td>
+                                        <td>{{ $i['MetodoPago'] }}</td>
                                         <td>{{ $i['Conceptos.Concepto.0.Impuestos.Traslados.Traslado.0.Importe'] }}</td>
+                                        <td>{{ $i['Moneda'] }}</td>
+                                        <td>{{ $i['TipoCambio'] }}</td>
                                         <td>
                                             @foreach ($concepto as $c)
                                                 {{ ++$nCon }}. {{ $c['Descripcion'] }}/
                                             @endforeach
                                         </td>
-                                        <td>{{ $i['FormaPago'] }}</td>
-                                        <td>{{ $i['MetodoPago'] }}</td>
-                                        <td>{{ $i['Moneda'] }}</td>
-                                        <td>{{ $i['TipoCambio'] }}</td>
                                         <td>{{ $i['Total'] }}</td>
                                         <td>{{ $i['Version'] }}</td>
-
-
                                         <td>{{ $i['Conceptos.Concepto.0.Cantidad'] }}</td>
                                         <td>{{ $i['Conceptos.Concepto.0.ClaveProdServ'] }}</td>
                                         <td>{{ $i['Conceptos.Concepto.0.ClaveUnidad'] }}</td>
-
                                         <td>{{ $i['Conceptos.Concepto.0.Importe'] }}</td>
                                         <td>{{ $i['Conceptos.Concepto.0.NoIdentificacion'] }}</td>
                                         <td>{{ $i['Conceptos.Concepto.0.Unidad'] }}</td>
                                         <td>{{ $i['Conceptos.Concepto.0.ValorUnitario'] }}</td>
                                         <td>{{ $i['Conceptos.Concepto.0.Impuestos.Traslados.Traslado.0.Base'] }}</td>
-
                                         <td>{{ $i['Conceptos.Concepto.0.Impuestos.Traslados.Traslado.0.Impuesto'] }}</td>
                                         <td>{{ $i['Conceptos.Concepto.0.Impuestos.Traslados.Traslado.0.TasaOCuota'] }}</td>
                                         <td>{{ $i['Conceptos.Concepto.0.Impuestos.Traslados.Traslado.0.TipoFactor'] }}</td>
@@ -161,9 +153,7 @@ use App\Models\XmlE;
                                         <td>{{ $i['Impuestos.Traslados.Traslado.0.Impuesto'] }}</td>
                                         <td>{{ $i['Impuestos.Traslados.Traslado.0.TasaOCuota'] }}</td>
                                         <td>{{ $i['Impuestos.Traslados.Traslado.0.TipoFactor'] }}</td>
-
                                         <td>{{ $i['Complemento.0.TimbreFiscalDigital.RfcProvCertif'] }}</td>
-
                                         <td>{{ $i['Complemento.0.TimbreFiscalDigital.NoCertificadoSAT'] }}</td>
                                         <td>{{ $i['Complemento.0.TimbreFiscalDigital.Version'] }}</td>
                                     </tr>
@@ -233,7 +223,6 @@ use App\Models\XmlE;
                                     <td>{{ $i['SubTotal'] }}</td>
                                     <td>{{ $i['NoCertificado'] }}</td>
                                     <td>{{ $i['FormaPago'] }}</td>
-
                                     <td>{{ $i['Version'] }}</td>
                                     <td>{{ $i['Emisor.Rfc'] }}</td>
                                     <td>{{ $i['Emisor.Nombre'] }}</td>
@@ -257,7 +246,6 @@ use App\Models\XmlE;
                                     <td>{{ $i['Impuestos.Traslados.Traslado.0.TipoFactor'] }}</td>
                                     <td>{{ $i['Impuestos.Traslados.Traslado.0.TasaOCuota'] }}</td>
                                     <td>{{ $i['Impuestos.Traslados.Traslado.0.Importe'] }}</td>
-
                                     <td>{{ $i['Complemento.0.TimbreFiscalDigital.Version'] }}</td>
                                     <td>{{ $i['Complemento.0.TimbreFiscalDigital.UUID'] }}</td>
                                     <td>{{ $i['Complemento.0.TimbreFiscalDigital.FechaTimbrado'] }}</td>
@@ -297,18 +285,13 @@ use App\Models\XmlE;
                                 <th scope="col">Forma Pago</th>
                                 <th scope="col">ID Doc Relacionado</th>
                                 <th scope="col">Lugar Expedición</th>
-
                                 <th scope="col">Total</th>
                                 <th scope="col">Moneda</th>
                                 {{-- <th scope="col">Certificado</th> --}}
                                 <th scope="col">Subtotal</th>
                                 <th scope="col">No. Certificado</th>
-
                                 {{-- <th scope="col">Sello</th> --}}
-
                                 <th scope="col">Regimen Fiscal Emisor</th>
-
-
                                 <th scope="col">Clave Producto/Servicio</th>
                                 <th scope="col">Cantidad</th>
                                 <th scope="col">Clave Unidad</th>
@@ -352,13 +335,20 @@ use App\Models\XmlE;
                                     @php
                                         $nCon = 0;
                                         $idrel = $i['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
+
                                     @endphp
 
+                                        @if ($idrel != null )
                                     <td>
                                         @foreach ($idrel as $id)
                                             {{ ++$nCon }}. {{ $id['IdDocumento'] }}/
                                         @endforeach
                                     </td>
+                                        @else
+                                    <td>--</td>
+
+                                        @endif
+
 
                                     <td>{{ $i['LugarExpedicion'] }}</td>
                                     <td>{{ $i['Total'] }}</td>
@@ -382,37 +372,82 @@ use App\Models\XmlE;
                                         $nCon4 = 0;
                                         $nCon5 = 0;
                                         $concep = $i['Conceptos.Concepto'];
+
+
                                     @endphp
+                                     @if ($idrel != null )
+                                     <td>
+                                         @foreach ($idrel as $id)
+                                             {{ ++$nCon }}. {{ $id['IdDocumento'] }}/
+                                         @endforeach
+                                     </td>
+                                         @else
+                                     <td>--</td>
+
+                                         @endif
+                                      @if ($i['Conceptos.Concepto.ClaveProdServ'] != null )
                                     <td>
                                         @foreach ($concep as $con)
                                             {{ ++$nCon }}. {{ $con['ClaveProdServ'] }}/
                                         @endforeach
                                     </td>
-                                    <td>
-                                        @foreach ($concep as $con)
-                                            {{ ++$nCon1 }}. {{ $con['Cantidad'] }}/
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach ($concep as $con)
-                                            {{ ++$nCon2 }}. {{ $con['ClaveUnidad'] }}/
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach ($concep as $con)
-                                            {{ ++$nCon3 }}. {{ $con['Descripcion'] }}/
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach ($concep as $con)
-                                            {{ ++$nCon4 }}. {{ $con['ValorUnitario'] }}/
-                                        @endforeach
-                                    </td>
-                                    <td>
-                                        @foreach ($concep as $con)
-                                            {{ ++$nCon5 }}. {{ $con['Importe'] }}/
-                                        @endforeach
-                                    </td>
+                                        @else
+                                    <td>--</td>
+
+                                        @endif
+                                        @if ($i['Conceptos.Concepto.Cantidad'] != null )
+                                        <td>
+                                            @foreach ($concep as $con)
+                                                {{ ++$nCon1 }}. {{ $con['Cantidad'] }}/
+                                            @endforeach
+                                        </td>
+                                        @else
+                                    <td>--</td>
+
+                                        @endif
+                                        @if ($i['Conceptos.Concepto.ClaveUnidad'] != null )
+                                        <td>
+                                            @foreach ($concep as $con)
+                                                {{ ++$nCon2 }}. {{ $con['ClaveUnidad'] }}/
+                                            @endforeach
+                                        </td>
+                                        @else
+                                    <td>--</td>
+
+                                        @endif
+                                        @if ($i['Conceptos.Concepto.Descripcion'] != null )
+                                        <td>
+                                            @foreach ($concep as $con)
+                                                {{ ++$nCon3 }}. {{ $con['Descripcion'] }}/
+                                            @endforeach
+                                        </td>
+                                        @else
+                                    <td>--</td>
+
+                                        @endif
+                                        @if ($i['Conceptos.Concepto.ValorUnitario'] != null )
+                                        <td>
+                                            @foreach ($concep as $con)
+                                                {{ ++$nCon4 }}. {{ $con['ValorUnitario'] }}/
+                                            @endforeach
+                                        </td>
+                                        @else
+                                    <td>--</td>
+
+                                        @endif
+                                        @if ($i['Conceptos.Concepto.Importe'] != null )
+                                        <td>
+                                            @foreach ($concep as $con)
+                                                {{ ++$nCon5 }}. {{ $con['Importe'] }}/
+                                            @endforeach
+                                        </td>
+                                        @else
+                                    <td>--</td>
+
+                                        @endif
+
+
+
 
                                     <td>{{ $i['Conceptos.Concepto.0.Impuestos.Traslados.Traslado.0.Base'] }}</td>
                                     <td>{{ $i['Conceptos.Concepto.0.Impuestos.Traslados.Traslado.0.Impuesto'] }}</td>
