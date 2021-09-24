@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container">
+    <div class="container" >
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <div class="row justify-content-center">
+                        <div class="row justify-content-center" >
                             <h2 style="color:#0055ff;"> INICIO DE SESIÓN</h2>
                             <br>
                         </div>
@@ -68,10 +68,10 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-12">
-                                <form action="{{ route('home') }}" method="POST" style="margin-left: 235px;">
+                                <form action="{{ route('home') }}" method="POST" >
                                     @csrf
                                     <input type="hidden" value="3" name="tipo">
-                                    <button onclick="variableSesion()" type="submit" class="btn btn-primary">
+                                    <button onclick="variableSesion()" type="submit" class="btn btn-primary" style=" width: 200px; display: flex; justify-content: center;">
                                         {{ __('Entrar como secretaria') }}
                                     </button>
                                 </form>
