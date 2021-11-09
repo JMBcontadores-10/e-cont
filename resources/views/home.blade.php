@@ -23,7 +23,7 @@
                     <div class="col">
                         <form action="{{ url('descargasv2') }}">
                             {{-- <input type="hidden" name="accion" value="login_fiel" /> --}}
-                            <input type="text" id="user" value="{{$tipo}}">
+                            <input type="hidden" id="user" value="{{$tipo}}">
                             <button onclick="fun1();" id="function1" class="btnModulo" type="submit" value="Descargas" style="font-size: 12pt">
                                 <img style="float:left;" src="img/boton.png" width="25px" height="25px" alt=""> Descargas
                             </button>
