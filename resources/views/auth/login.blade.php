@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 
 @section('content')
 
+<!-- 2do Inicio de sesion (Empresas)-->
+
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8">
@@ -14,7 +16,7 @@ use Illuminate\Support\Facades\DB;
                         <div class="card-body">
                             <div class="row justify-content-center">
 
-                                <h2 style="color:#0055ff;"> INICIO DE SESIÓN</h2>
+                                <h2 style="color:#0055ff;"> DATOS EMPRESA </h2>
                             </div>
                             <div class="row justify-content-center">
                                 <h5 style="color:#0055ff;">_____________________________________________________</h5>

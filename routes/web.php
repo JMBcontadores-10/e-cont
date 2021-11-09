@@ -69,3 +69,6 @@ Route::get('/script1', [App\Http\Controllers\Script1::class, 'tipoUsuarios'])->n
 Route::get('/dir', [App\Http\Controllers\Prueba::class, 'createdir'])->name('createdir');
 //Crear directorios en volumetrico
 Route::get('/dir1', [App\Http\Controllers\Prueba::class, 'createDir2'])->name('createDir2');
+
+
+// Rutas Jose Segura

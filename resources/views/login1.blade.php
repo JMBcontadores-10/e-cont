@@ -72,7 +72,7 @@
                                     @csrf
                                     <input type="hidden" value="3" name="tipo">
                                     <button onclick="variableSesion()" type="submit" class="btn btn-primary" style=" width: 200px; display: flex; justify-content: center;">
-                                        {{ __('Entrar como secretaria') }}
+                                        {{ __('Entrar como Empresa') }}
                                     </button>
                                 </form>
                             </div>
