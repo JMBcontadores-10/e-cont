@@ -84,10 +84,11 @@ use App\Models\XmlR;
                                     </div>
                                 @endif
                             </td>
-                            {{@if ($varios == 'Varios Proveedores')
+                            {{-- @if ($varios == 'Varios Proveedores')
                                 <td class="text-center align-middle">{{ $emisorRfc }}</td>
                                 <td class="text-center align-middle">{{ $emisorNombre }}</td>
-                            @endif }}
+                            @endif --}}
+
                             <td class="text-center align-middle">{{ $folioF }}</td>
                             <td class="text-center align-middle">{{ $fechaE }}</td>
                             @php
