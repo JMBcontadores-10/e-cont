@@ -50,7 +50,7 @@ alert(monthmx);
 
 //funciion simple para  desactivar seccion de pdf pago y relacionados
 var tipo = document.getElementById('tipo');// se obtiene el select mediante getId
-//se obtiene el valor del option con un listener 
+//se obtiene el valor del option con un listener
 tipo.addEventListener('change',
   function(){
     var selectedOption = this.options[tipo.selectedIndex];
