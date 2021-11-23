@@ -15,6 +15,7 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/code.js') }}" defer></script>
     <script src="{{ asset('js/numeros.js') }}" defer></script>
+    <script  src="{{ asset('js/chequesytrasncontrol.js') }}" defer > </script>
 
 
     <script src="{{ asset('js/calendar.js') }}" defer></script>
@@ -41,6 +42,9 @@
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
+
+
+
 
 
     <!--charts-->

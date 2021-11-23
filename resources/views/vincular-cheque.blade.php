@@ -201,7 +201,7 @@
 
                                 <div class="col-4">
                                     <input class="form-control" id="fecha"  type=date required name="fechaCheque"  min="2014-01-01"
-                                        max={{ $date }}   onchange="diaSemana();" >
+                                        max={{ $date }}    >
                                 </div>
 
                             </div>
@@ -253,17 +253,28 @@
                                     <p class="pf">Archivo comprobante de pago (solo PDF):</p>
                                 </div>
                                 <div class="col-4">
-                                    <input name="subir_archivo" type="file"  id="ComPago" required="true" accept=".pdf" />
+                                    <input name="subir_archivo" type="file"  id="ComPago" required  accept=".pdf" />
                                 </div>
                             </div>
-                            <div class="mainbox2 row mt-3" id="pdfRelacionados">
-                                <div class="col-6 d-flex justify-content-end">
-                                    <p class="pf">Documentos adicionales (solo PDF):</p>
-                                </div>
-                                <div class="col-4">
-                                    <input name="doc_relacionados[]"  type="file" accept=".pdf" multiple />
-                                </div>
-                            </div>
+
+
+                            <p class="mt-5 text-center">
+                                <label for="attachment">
+                                    <a class="btn btn-primary text-light fa fa-upload" role="button" id="btnupload"  aria-disabled="false">+ Add</a>
+
+                                </label>
+
+                                <input name="doc_relacionados[]"  type="file" accept=".pdf" id="attachment" style="visibility: hidden; position: absolute;" multiple />
+
+                            </p>
+                            <p id="files-area">
+                                <span id="filesList">
+                                    <span id="files-names"></span>
+                                </span>
+                            </p>
+
+
+
                         </div>
                         @if ($vincular)
                             <input type="hidden" name="allcheck" value="{{ json_encode($allcheck, true) }}">
