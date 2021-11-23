@@ -57,12 +57,13 @@
 
                     </div>
 
-                    <div id="entrar">
+                    <div id="entrar"  >
                         <div class="form-group row">
 
-                            <div class="col-12">
-                                <a onclick="showLogin1()" class="btn btn-primary" style="margin-left: 250px;">
-                                    {{ __('Entrar como contador') }}
+                            <div class="col-12" >
+
+                                <a  onclick="showLogin1()" class=" btn btn-primary" style="margin-left: 250px; width: 200px; display: flex; justify-content: center;">
+                                 {{ __('Contador') }}
                                 </a>
                             </div>
                         </div>
@@ -71,8 +72,8 @@
                                 <form action="{{ route('home') }}" method="POST" >
                                     @csrf
                                     <input type="hidden" value="3" name="tipo">
-                                    <button onclick="variableSesion()" type="submit" class="btn btn-primary" style=" width: 200px; display: flex; justify-content: center;">
-                                        {{ __('Entrar como Empresa') }}
+                                    <button onclick="variableSesion()" type="submit" class="btn btn-primary " style=" width: 200px; display: flex; justify-content: center;">
+                                           {{ __('Empresa') }}
                                     </button>
                                 </form>
                             </div>

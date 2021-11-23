@@ -35,6 +35,8 @@
                 @endif
                 <div id="{{ !$subirArchivo ? 'form-editar' : '' }}" ALIGN="center">
                     <h1 style="color:#035CAB">Editar Cheque/Transferencia</h1><br>
+
+
                     <form enctype="multipart/form-data" action="{{ url('archivo-pagar') }}" method="POST">
                         @csrf
                         <input type="hidden" name="id" value="{{ $id }}">
@@ -76,7 +78,8 @@
                                     <p class="pf">Importe Cheque/Transferencia:</p>
                                 </div>
                                 <div class="col-4">
-                                    <input class="form-control" id="number" required name="importeCheque"
+                                    <!-- id valor que estba por defecto = number   -->
+                                    <input class="form-control" id="" type="number" step="0.01" required name="importeCheque"
                                         value="{{ $importeCheque }}">
                                 </div>
                             </div>
@@ -171,10 +174,10 @@
                         <div style="overflow: auto">
                             <div class="mainbox2 row">
                                 <div class="col-6 d-flex justify-content-end mt-2">
-                                    <p class="pf">Seleccione el tipo:</p>
+                                    <p class="pf">Forma de pago:</p>
                                 </div>
                                 <div class="col-4">
-                                    <select name="tipo" class="form-control">
+                                    <select name="tipo" id="tipo" class="form-control">
                                         <option>Cheque</option>
                                         <option>Transferencia</option>
                                         <option>Domiciliación</option>
@@ -184,7 +187,7 @@
                             </div>
                             <div class="mainbox2 row">
                                 <div class="col-6 d-flex justify-content-end mt-2">
-                                    <p class="pf">#Cheque/#Transferencia:</p>
+                                    <p class="pf">Número de factura:</p>
                                 </div>
                                 <div class="col-4">
                                     <input class="form-control" type=text required name="numCheque">
@@ -192,24 +195,30 @@
                             </div>
                             <div class="mainbox2 row">
                                 <div class="col-6 d-flex justify-content-end mt-2">
-                                    <p class="pf">Fecha:</p>
+                                    <p class="pf">Fecha de pago:</p>
+                                </div>
+
+
+                                <div class="col-4">
+                                    <input class="form-control" id="fecha"  type=date required name="fechaCheque"  min="2014-01-01"
+                                        max={{ $date }}   onchange="diaSemana();" >
+                                </div>
+
+                            </div>
+                            <div class="mainbox2 row">
+                                <div class="col-6 d-flex justify-content-end mt-2">
+                                    <p class="pf">Total pagado:</p>
                                 </div>
                                 <div class="col-4">
-                                    <input class="form-control" type=date required name="fechaCheque" min="2014-01-01"
-                                        max={{ $date }}>
+
+
+                                                     <!-- step="any"  para aceptar mas de dos decimales -->
+                                    <input class="form-control" id="" type="number"  step="0.01" required name="importeCheque">
                                 </div>
                             </div>
                             <div class="mainbox2 row">
                                 <div class="col-6 d-flex justify-content-end mt-2">
-                                    <p class="pf">Importe Cheque/Transferencia:</p>
-                                </div>
-                                <div class="col-4">
-                                    <input class="form-control" id="number" required name="importeCheque">
-                                </div>
-                            </div>
-                            <div class="mainbox2 row">
-                                <div class="col-6 d-flex justify-content-end mt-2">
-                                    <p class="pf">Importe Total:</p>
+                                    <p class="pf">Total factura(s):</p>
                                 </div>
                                 <div class="col-4">
                                     <input class="form-control" type=text required readonly name="importeT"
@@ -239,20 +248,20 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="mainbox2 row mt-3">
+                            <div class="mainbox2 row mt-3" id="pdfPago">
                                 <div class="col-6 d-flex justify-content-end">
-                                    <p class="pf">Subir Archivo (solo PDF):</p>
+                                    <p class="pf">Archivo comprobante de pago (solo PDF):</p>
                                 </div>
                                 <div class="col-4">
-                                    <input name="subir_archivo" type="file" accept=".pdf" />
+                                    <input name="subir_archivo" type="file"  id="ComPago" required="true" accept=".pdf" />
                                 </div>
                             </div>
-                            <div class="mainbox2 row mt-3">
+                            <div class="mainbox2 row mt-3" id="pdfRelacionados">
                                 <div class="col-6 d-flex justify-content-end">
                                     <p class="pf">Documentos adicionales (solo PDF):</p>
                                 </div>
                                 <div class="col-4">
-                                    <input name="doc_relacionados[]" type="file" accept=".pdf" multiple />
+                                    <input name="doc_relacionados[]"  type="file" accept=".pdf" multiple />
                                 </div>
                             </div>
                         </div>

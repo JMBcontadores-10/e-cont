@@ -59,13 +59,13 @@ use App\Models\XmlR;
                 </thead>
                 <tbody class="buscar">
                     @php
-                        $varios = $emisorNombre;
+                         echo $varios = $emisorNombre;
                     @endphp
                     @foreach ($colM as $i)
                         @php
                             $emisorRfc = $i->emisorRfc;
                             $emisorNombre = $i->emisorNombre;
-                            $folioF = $i->folioFiscal;
+                           $folioF = $i->folioFiscal;
                             $fechaE = $i->fechaEmision;
                             $efecto = $i->efecto;
                             $total = $i->total;

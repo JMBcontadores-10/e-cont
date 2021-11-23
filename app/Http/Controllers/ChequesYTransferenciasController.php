@@ -10,6 +10,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 
+
+
+
 class ChequesYTransferenciasController extends Controller
 {
     public function __construct()
@@ -17,10 +20,16 @@ class ChequesYTransferenciasController extends Controller
         $this->middleware('auth');
     }
 
+
+
+
     // Método de la vista principal de cheques y transferencias
     public function index(Request $r)
     {
         $dtz = new DateTimeZone("America/Mexico_City");
+
+
+
         $dt = new DateTime("now", $dtz);
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
@@ -120,6 +129,15 @@ class ChequesYTransferenciasController extends Controller
             ->with('meses', $meses);
     }
 
+
+
+
+
+
+
+
+
+
     // Método para generar la vista de vinculación de cheques
     public function vincularCheque(Request $r)
     {
@@ -184,6 +202,12 @@ class ChequesYTransferenciasController extends Controller
         }
     }
 
+
+
+
+
+
+
     // Método para desvincular los cheques
     public function desvincularCheque(Request $r)
     {
@@ -216,14 +240,63 @@ class ChequesYTransferenciasController extends Controller
         $this->alerta($alerta, $ruta);
     }
 
+
+
     // Método para la creación o actualización de cheques
     public function createUpdateCheque(Request $r)
     {
+
+
+        $fechaUser=$r->fechaCheque;
+        $fechaComoEntero = strtotime($fechaUser);
+        $mes = date("m", $fechaComoEntero);
+// swich para convertir Int mes en String
+        switch ($mes){
+
+         case 1 :
+            $mes="Enero";
+             break;
+         case 2 :
+            $mes="Febrero";
+             break;
+        case  3 :
+            $mes="Marzo";
+            break;
+        case  4 :
+            $mes="Abril";
+            break;
+        case  5 :
+            $mes="Mayo";
+             break;
+        case  6 :
+            $mes="Junio";
+            break;
+        case  7 :
+            $mes="Julio";
+            break;
+        case  8 :
+            $mes="Agosto";
+            break;
+        case  9 :
+            $mes="Septiembre";
+                break;
+        case 10 :
+            $mes="Octubre";
+            break;
+        case 11 :
+            $mes="Noviembre";
+            break;
+        case 12 :
+             $mes="Diciembre";
+            break;
+ }
+
+
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
-        $rutaDescarga = "storage/contarappv1_descargas/$rfc/$anio/Cheques_Transferencias/";
+        $rutaDescarga = "storage/contarappv1_descargas/$rfc/$anio/Cheques_Transferencias/$mes";
         $subir_archivo = basename($_FILES['subir_archivo']['name']);
         $Id = $dt->format('YFd\Hh\Mi\SsA');
         $tipo = $r->tipo;
@@ -242,7 +315,7 @@ class ChequesYTransferenciasController extends Controller
         $ajuste = 0;
         $ruta = 'cheques-transferencias';
         $files = $_FILES['doc_relacionados']['name'];
-        $rutaDescargaDR = "storage/contarappv1_descargas/$rfc/$anio/Cheques_Transferencias/Documentos_Relacionados/";
+        $rutaDescargaDR = "storage/contarappv1_descargas/$rfc/$anio/Cheques_Transferencias/Documentos_Relacionados/$mes/";
 
         // Verifica si existen documentos relacionados
         if (!$files['0'] == '') {
@@ -251,7 +324,7 @@ class ChequesYTransferenciasController extends Controller
             // y concatenando la fecha de creación en el nombre
             foreach ($files as $f) {
                 $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $f);
-                $nombreArchivo = "$Id-$nombreArchivo";
+                $nombreArchivo = "$mes/$Id-$nombreArchivo";
                 $r->doc_relacionados[$n]->move($rutaDescargaDR, $nombreArchivo);
                 $n++;
                 $pushArchivos[] = $nombreArchivo;
@@ -269,7 +342,7 @@ class ChequesYTransferenciasController extends Controller
             } else {
                 // Almacena eliminado caracteres no alfanuméricos y concatenando la fecha de creación en el nombre
                 $subir_archivo = preg_replace('/[^A-z0-9.-]+/', '', $subir_archivo);
-                $nombrec = "$Id-$subir_archivo";
+                $nombrec = "$mes/$Id-$subir_archivo";
                 $r->subir_archivo->move($rutaDescarga, $nombrec);
             }
 
@@ -311,7 +384,7 @@ class ChequesYTransferenciasController extends Controller
             } else {
                 // Almacena eliminado caracteres no alfanuméricos y concatenando la fecha de creación en el nombre
                 $subir_archivo = preg_replace('/[^A-z0-9.-]+/', '', $subir_archivo);
-                $nombrec = "$Id-$subir_archivo";
+                $nombrec = "$mes/$Id-$subir_archivo";
                 $r->subir_archivo->move($rutaDescarga, $nombrec);
             }
 
