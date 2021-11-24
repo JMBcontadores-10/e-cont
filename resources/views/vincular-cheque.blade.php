@@ -257,10 +257,11 @@
                                 </div>
                             </div>
 
-
+                            <div id="drop-zone">
                             <p class="mt-5 text-center">
+                                <p class="pf">Archivos Relacionados (solo PDF):</p>
                                 <label for="attachment">
-                                    <a class="btn btn-primary text-light fa fa-upload" role="button" id="btnupload"  aria-disabled="false">+ Add</a>
+                                    <a class="btn btn-primary text-light " role="button" id="btnupload"  aria-disabled="false">Agregar.. <i class="fa fa-upload"></i></a>
 
                                 </label>
 
@@ -272,6 +273,7 @@
                                     <span id="files-names"></span>
                                 </span>
                             </p>
+                        </div>
 
 
 
