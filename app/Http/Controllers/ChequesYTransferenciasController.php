@@ -29,7 +29,7 @@ class ChequesYTransferenciasController extends Controller
         $dtz = new DateTimeZone("America/Mexico_City");
 
 
-
+        $mesactual="-".date("m")."-";
         $dt = new DateTime("now", $dtz);
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
@@ -70,7 +70,12 @@ class ChequesYTransferenciasController extends Controller
                 ->paginate(100);
             // ->get();
         } else {
+///  Nota: whereMonth() no funcionaba correctamente
+
+
             $colCheques = Cheques::where(['rfc' => $rfc])
+
+            ->where('fecha', 'like','%' .$mesactual.'%')
                 ->orderBy('pendi', 'desc')
                 ->orderBy('verificado')
                 ->orderBy('conta')
@@ -79,6 +84,101 @@ class ChequesYTransferenciasController extends Controller
                 ->paginate(100);
             // ->get();
         }
+
+        // Genera la consulta de busqueda por filtro string usuario
+          if ($r->has('filtro_cheques'))
+          {
+
+            $filtro_cheques= $r->filtro_cheques;
+            $colCheques = Cheques::where('rfc', $rfc)
+                  ->where(function($query) use ( $filtro_cheques){///buscar por mutiples campos
+                            $query->where('Beneficiario', 'like','%'. $filtro_cheques . '%')
+                                  ->orWhere('tipomov', 'like','%'. $filtro_cheques . '%')
+                                  ->orWhere('numcheque', 'like','%'. $filtro_cheques . '%')
+                                  ->orWhere('fecha', 'like','%'. $filtro_cheques . '%')
+                                  ->orWhere('tipoopera', 'like','%'. $filtro_cheques . '%')
+                                  ->orWhere('rfc', 'like','%'. $filtro_cheques . '%')
+                                  ->orWhere('nombrec', 'like','%'. $filtro_cheques . '%')
+                                  ->orWhere('_id', 'like','%'. $filtro_cheques . '%')
+                                  ->orderBy('fecha', 'desc');
+
+
+
+                                })->paginate(100);
+
+                          }
+
+          /// filtros pendientes, revisados y contabilizados
+
+          if($r->has('filtro'))
+          {
+            $filtro =$r->filtro;
+
+            switch ($filtro){
+
+                case 'pendientes':
+
+                    $colCheques = Cheques::where(['rfc' => $rfc])
+
+                    ->where('pendi', 1)
+                        ->orderBy('pendi', 'desc')
+                        ->orderBy('verificado')
+                        ->orderBy('conta')
+                        ->orderBy('fecha', 'desc')
+                        ->orderBy('created_at', 'desc')
+                        ->paginate(100);
+
+                    break;
+                    case 'Sin_revisar':
+
+                        $colCheques = Cheques::where(['rfc' => $rfc])
+
+                        ->where(function($query) {///buscar por mutiples campos
+                            $query->where('pendi', 0)
+                                  ->Where('verificado', 0)
+
+
+
+                                  ->orderBy('fecha', 'desc');
+
+
+
+                                })->paginate(100);
+
+                        break;
+                        case 'Sin_contabilizar':
+
+                            $colCheques = Cheques::where(['rfc' => $rfc])
+
+                            ->where(function($query) {///buscar por mutiples campos
+                                $query->where('pendi', 0)
+                                      ->Where('verificado', 1)
+                                      ->Where('cont', 0)
+
+
+
+                                      ->orderBy('fecha', 'desc');
+
+
+
+                                    })->paginate(100);
+
+                            break;
+
+
+
+            }
+
+
+
+
+          }
+
+
+
+
+
+
 
         // Actualiza los valores si el cheque es verificado
         if ($r->has('revisado')) {
@@ -145,8 +245,10 @@ class ChequesYTransferenciasController extends Controller
         $dt = new DateTime("now", $dtz);
         $date = $dt->format('Y-m-d');
 
+
         // Verifica si el cheque será editado o creado
         if ($r->has('editar')) {
+            $rfc = Auth::user()->RFC;
             $editar = $r->editar;
             $id = $r->id;
             $tipo = $r->tipo;
@@ -158,6 +260,12 @@ class ChequesYTransferenciasController extends Controller
             $tipoOperacion = $r->tipoOperacion;
             $subirArchivo = $r->subirArchivo;
             $nombrec = $r->nombrec;
+            $ruta = $r->ruta;
+            $colCheques = Cheques::where(['numcheque' => $numCheque])
+
+            ->get();
+
+
             return view('vincular-cheque')
                 ->with('date', $date)
                 ->with('nombrec', $nombrec)
@@ -170,7 +278,11 @@ class ChequesYTransferenciasController extends Controller
                 ->with('beneficiario', $beneficiario)
                 ->with('tipoOperacion', $tipoOperacion)
                 ->with('subirArchivo', $subirArchivo)
-                ->with('editar', $editar);
+                ->with('editar', $editar)
+                ->with('colCheques', $colCheques)
+                ->with('ruta',$ruta);
+
+
         } else {
             // Verifica si el cheque será creado con una vinculación de proveedores de cuentas por pagar o desde cero
             if ($r->has('totalXml')) {
@@ -559,4 +671,61 @@ class ChequesYTransferenciasController extends Controller
         $ruta = 'cheques-transferencias';
         $this->alerta($alerta, $ruta);
     }
+
+
+/////funcion consultar asuntos pendientes en cheques y transfeencias
+
+
+
+
+
+
+function pendientes($rfc){
+
+    $rfc=$rfc;
+    $pendientes = Cheques::where(['rfc' => $rfc])
+    ->where('pendi', 1)
+    ->count();
+
+    return $pendientes;
+
+
+}
+
+function verificado ($rfc){
+
+    $rfc=$rfc;
+    $verificado= Cheques::where(['rfc' => $rfc])
+
+    ->where(function($query) {///buscar por mutiples campos
+        $query->where('pendi', 0)
+              ->Where('verificado', 0)
+
+
+
+              ->orderBy('fecha', 'desc');
+
+
+
+            })->count();
+
+   return $verificado;
+}
+
+function contabilizado($rfc){
+
+    $rfc=$rfc;
+ $conta= Cheques::where(['rfc' => $rfc])
+
+          ->Where('conta', 0)
+          ->count();
+
+return $conta;
+
+}
+
+
+
+
+
 }
