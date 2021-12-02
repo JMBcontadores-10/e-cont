@@ -1,3 +1,9 @@
+$( document ).ready(function() {
+    $('#exampleModalCenter').modal('toggle')
+});
+
+
+
 /*
 //Funcion para obtrener la fecha de pago por js
 function diaSemana() {
@@ -29,7 +35,7 @@ alert(monthmx);
 
 */
 
-
+/*
 //funcion simple para  desactivar seccion de pdf pago y relacionados
 var tipo = document.getElementById('tipo');// se obtiene el select mediante getId
 //se obtiene el valor del option con un listener
@@ -62,7 +68,7 @@ $("#drop-zone").fadeIn("slow");
 }
 
   });
-
+*/
 
 //#####  funcion para eliminar archivos pdf del array file-multiple ######
 
@@ -100,3 +106,17 @@ $("#attachment").on('change', function(e){
 		document.getElementById('attachment').files = dt.files;
 	});
 });
+
+
+
+
+/////////////////////
+
+
+
+
+
+
+
+
+

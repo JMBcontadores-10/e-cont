@@ -529,12 +529,16 @@ $('#allcheck').change(function() {
 });
 
 // Filtra las tablas dependiendo su contenido
+/*
 $("#filtrar").on("keyup", function() {
     var value = $(this).val().toLowerCase();
     $(".buscar tr").filter(function() {
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
 });
+//se deshabilita la funcion  filtrar tabla
+*/
+
 
 // Suma los valores de los checkboxes cada vez que son seleccionados
 $(document).on('click keyup', '.mis-checkboxes,.mis-adicionales', function() {

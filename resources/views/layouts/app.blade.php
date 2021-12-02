@@ -35,10 +35,16 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
+    <!-- google fonts / icons-->
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
     {{-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet"> --}}
 
     <!-- Styles -->
     <link href="{{ asset('css/fullcalendar.css') }}" rel="stylesheet">
+
+
 
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
@@ -67,6 +73,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet" />
 
+
+
 </head>
 
 <body>
@@ -77,7 +85,7 @@
             <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
                 <div class="container">
                     <a class="navbar-brand" href="{{ url('/modules') }}">
-                        <img src="img/logo-contarapp-01.png" width="200px">
+                        <img src="img/e-conta-logo-01.png" width="200px">
                     </a>
                     {{-- <button class="navbar-toggler" type="button" data-toggle="collapse"
                         data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"

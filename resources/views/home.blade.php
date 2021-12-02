@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@php
+use App\Models\Cheques;
+use App\Http\Controllers\ChequesYTransferenciasController;
+@endphp
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
@@ -117,6 +121,46 @@
                     </div>
                 </div>
                 <br><br>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="exampleModalLongTitle">Atención:</h4>
+          &nbsp;<h6>Tienes asuntos pendientes en modulo Cheques y Transferencias  </h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            @php
+
+
+
+          @endphp
+              <h4> <img src="img/warning.png" style="width:30px;">  Tienes: @php  $p =new ChequesYTransferenciasController();  echo $p->pendientes($rfc); @endphp pendientes   </h4><br>
+             <h4> <img src="img/sin_verificar.png" style="width:30px;">  Tienes: @php  $verif =new ChequesYTransferenciasController();  echo $verif->verificado($rfc); @endphp sin revisar  </h4><br>
+             <h4> <img src="img/sin_contabilizar.png" style="width:30px;">   Tienes: @php  $cont =new ChequesYTransferenciasController();  echo $cont->contabilizado($rfc); @endphp sin contabilizar  </h4>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+          <form action="{{ url('cheques-transferencias') }}">
+            <button class="btn btn-primary" type="submit" value="Cheques y Transferencias"
+               >Ir al modulo
+            </button>
+        </form>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 
 
                 <div class="row" style="justify-content: center;">

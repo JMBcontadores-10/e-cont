@@ -5,6 +5,7 @@
 </head>
 @php
 use App\Models\Cheques;
+use App\Http\Controllers\ChequesYTransferenciasController;
 @endphp
 
 @section('content')
@@ -24,6 +25,10 @@ use App\Models\Cheques;
             <h5 style="font-weight: bold">{{ Auth::user()->RFC }}</h5>
             <hr style="border-color:black; width:100%;">
         </div>
+        @php
+        $rfc = Auth::user()->RFC;
+
+    @endphp
 
         <div class="row justify-content-end">
             <div class="col-sm-7">
@@ -50,42 +55,81 @@ use App\Models\Cheques;
                 </form>
             </div>
             <div>
+
+
+
                 <form action="{{ url('vincular-cheque') }}" method="POST">
                     @csrf
                     <button class="button2">Registrar Cheque/Transferencia</button>
                 </form>
             </div>
         </div>
+
+        <form >
+
+            <div  class="mw-100" style="text-align: center; " >
+            @php
+            $fechamx = new Cheques();
+            $mes_actual= date("m");
+            @endphp
+            @if ((!empty($_GET['filtro_cheques'])))
+
+             <h5 style="font-weight: bold"> @php echo "Busqueda:&nbsp;".$_GET['filtro_cheques'];@endphp </h5>
+
+             @elseif (!empty($_GET['mes']))
+             <h5 style="font-weight: bold"> @php echo  $fechamx->fecha_es($_GET['mes']);@endphp </h5>
+            @else
+
+            <h5 style="font-weight: bold"> @php echo  $fechamx->fecha_es($mes_actual);@endphp </h5>
+
+          @endif
+
+
+
+
+
+            </div>
+
+
+
         <div class="input-group">
-            <span class="input-group-text">Buscar</span>
-            <input id="filtrar" type="text" class="form-control" placeholder="Buscar palabra clave">
-        </div>
+
+            <span  style ="display: none;" class="input-group-text" >Buscar</span>
+
+            <a class="btn btn-secondary " style="width: 100px;" href="{{ url('cheques-transferencias') }}" >X Filtro</a>
+
+
+            <button type="submit" class="btn btn-primary ml-2">Busca</button>
+            <input id="filtrar" name="filtro_cheques" type="text" class="form-control" placeholder="Filtra por palabra clave fecha/ Num de factura/ etc...	">
+              <!-- se deshabilita la funcion busqueda automatica en tabla por script -->
+         </div>
+        </form>
         <br>
     </div>
-    <div class="mx-4" style="overflow: auto">
-        <table class="table table-sm table-hover table-bordered">
+    <div class="mx-4" style="overflow: auto" >
+        <table  >
             <thead>
-                <tr class="table-primary">
-                    <th class="text-center align-middle">No.</th>
-                    <th class="text-center align-middle">Fecha cheque</th>
-                    <th class="text-center align-middle">Núm cheque o transferencia</th>
-                    <th class="text-center align-middle">Beneficiario</th>
-                    <th class="text-center align-middle">Tipo de operación</th>
-                    <th class="text-center align-middle">Tipo</th>
-                    <th class="text-center align-middle">Total</th>
-                    <th class="text-center align-middle">Total CFDI</th>
-                    <th class="text-center align-middle">Por comprobar</th>
+                <tr class="row100 head" >
+                    <th   class="cell100 column1" scope="col">No.</th>
+                    <th   class="cell100 column1" scope="col">Fecha de pago</th>
+                    <th  class="cell100 column1" scope="col">Núm de factura</th>
+                    <th  class="cell100 column1" scope="col">Beneficiario</th>
+                    <th  class="cell100 column1" scope="col">Tipo de operación</th>
+                    <th  class="cell100 column1" scope="col">Forma de pago</th>
+                    <th  class="cell100 column1" scope="col">Total pagado</th>
+                    <th  class="cell100 column1" scope="col">Total CFDI</th>
+                    <th  class="cell100 column1" scope="col">Por comprobar</th>
                     @if (Session::get('tipoU') == '2')
-                        <th class="text-center align-middle">Ajuste</th>
+                        <th scope="col">Ajuste</th>
                     @endif
-                    <th class="text-center align-middle">PDF cheque o transferencia</th>
-                    <th class="text-center align-middle">Documentos adicionales</th>
-                    <th class="text-center align-middle">Acciones</th>
+                    <th  class="cell100 column1" scope="col">PDF cheque o transferencia</th>
+                    <th  class="cell100 column1" scope="col">Documentos adicionales</th>
+                    <th  class="cell100 column1" scope="col">Acciones</th>
                     @if (Session::get('tipoU') == '2')
-                        <th class="text-center align-middle" colspan="2">Contabilizado</th>
+                        <th scope="col" colspan="2">Contabilizado</th>
                     @endif
-                    <th class="text-center align-middle">Comentarios</th>
-                    <th class="text-center align-middle">Cheque id</th>
+                    <th  class="cell100 column1" scope="col">Comentarios</th>
+                    <th  class="cell100 column1" scope="col">Cheque id</th>
                 </tr>
             </thead>
             <tbody class="buscar">
@@ -139,20 +183,20 @@ use App\Models\Cheques;
                         $comentario = $i['comentario'];
                     @endphp
                     <tr class="CellWithComment">
-                        <td class="text-center align-middle">{{ ++$n }}</td>
-                        <td class="text-center align-middle CellWithComment">
+                        <td data-label="No">{{ ++$n }}</td>
+                        <td data-label="Fecha de pago">
                             {{ $fecha }}
                             @if (isset($comentario) && $verificado == 0)
                                 <span class="CellComment">{{ $comentario }}</span>
                             @endif
                         </td>
-                        <td class="text-center align-middle">{{ $numCheque }}</td>
-                        <td class="text-center align-middle">{{ $beneficiario }}</td>
-                        <td class="text-center align-middle">{{ $tipoO }}</td>
-                        <td class="text-center align-middle">{{ $tipo }}</td>
-                        <td class="text-center align-middle">${{ number_format($importeC, 2) }}</td>
-                        <td class="text-center align-middle">${{ number_format($sumaxml, 2) }}</td>
-                        <td class="text-center align-middle">${{ $diferencia }}</td>
+                        <td data-label="#factura">{{ $numCheque }}</td>
+                        <td data-label="Beneficiario">{{ $beneficiario }}</td>
+                        <td data-label="Operación">{{ $tipoO }}</td>
+                        <td data-label="forma de pago">{{ $tipo }}</td>
+                        <td data-label="Total pagado">${{ number_format($importeC, 2) }}</td>
+                        <td data-label="Total CFDI">${{ number_format($sumaxml, 2) }}</td>
+                        <td data-label="Por Comprobar">${{ $diferencia }}</td>
                         @if (Session::get('tipoU') == '2')
                             <td class="text-center align-middle CellWithComment">
                                 ${{ $ajuste }}
@@ -165,25 +209,27 @@ use App\Models\Cheques;
                                 @endif
                             </td>
                         @endif
-                        <td class="text-center align-middle">
+                        <td data-label="Pdf">
                             @if ($nombreCheque == '0')
                                 <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
                             @else
                                 <a id="rutArc" href="{{ $rutaArchivo }}" target="_blank">
                                     <i class="fas fa-file-pdf fa-2x" style="color: rgb(202, 19, 19)"></i>
                                 </a>
-                                <br>
+                                <br><br>
                                     <form action="{{ url('borrarArchivo') }}" method="POST">
                                         @csrf
                                         <input type="hidden" name="id" value="{{ $id }}">
-                                        <button type="submit" style="width: 100px;">Borrar</button>
+                                        <button  class="fabutton"  onclick="return confirm('¿Seguro que deseas eliminar el Pdf ?')" type="submit" >
+                                            <i class="fas fa-trash-alt fa-lg" style="color: rgb(8, 8, 8)"></i>
+                                        </button>
                                     </form>
 
 
                             @endif
                         </td>
 
-                        <td class="text-center align-middle">
+                        <td data-label="D. adicionales" >
                             @if (empty($i['doc_relacionados']))
                                 <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
                             @else
@@ -206,7 +252,7 @@ use App\Models\Cheques;
                                 @endif
                             @endif
                         </td>
-                        <td class="text-center align-middle">
+                        <td data-label="Acciones">
                             <div class="row align-items-center">
                                 @if ($faltaxml != 0)
                                     <div class="col align-self-center">
@@ -235,6 +281,8 @@ use App\Models\Cheques;
                                             <input type="hidden" name="tipoOperacion" value="{{ $tipoO }}">
                                             <input type="hidden" name="subirArchivo" value="{{ $subirArchivo }}">
                                             <input type="hidden" name="nombrec" value="{{ $nombreCheque }}">
+                                            <input type="hidden" name="ruta" value="{{ $rutaArchivo }}">
+
                                             <button type="submit" class="fabutton">
                                                 <i class="fas fa-edit fa-lg" style="color: rgb(8, 8, 8)"></i>
                                             </button>
@@ -259,7 +307,7 @@ use App\Models\Cheques;
                             </div>
                         </td>
                         @if (Session::get('tipoU') == '2')
-                            <td class="text-center align-middle">
+                            <td >
                                 <div class="mx-1">
                                     @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                         @php
@@ -267,12 +315,11 @@ use App\Models\Cheques;
                                         @endphp
                                         <div class="row d-flex justify-content-center">
                                             <span class="fa-stack mb-2">
-                                                <i class="fas fa-circle fa-stack-1x fa-lg mt-1"
-                                                    style="color: rgb(8, 8, 8)"></i>
-                                                <i class="fas fa-exclamation-triangle fa-stack-1x fa-2x"
-                                                    style="color: rgb(240, 229, 73)"></i>
+
+                                                    <img src="img/warning.png" style="width:50px;">
                                             </span>
-                                        </div>
+
+                                        </div> <br><br>
                                         <div class="row d-flex justify-content-center">
                                             <input type="submit" name="Pendientes" value="Pendientes"
                                                 onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
@@ -321,7 +368,7 @@ use App\Models\Cheques;
                                 </div>
                             </td>
                         @endif
-                        <td class="text-center align-middle">
+                        <td data-label="Comentarios">
                             <div class="mx-1">
                                 @if ($verificado != 0)
                                     @if (isset($comentario))
@@ -339,7 +386,7 @@ use App\Models\Cheques;
                                 @endif
                             </div>
                         </td>
-                        <td class="text-center align-middle">{{ $id }}</td>
+                        <td data-label="cheque id">{{ $id }}</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -348,4 +395,56 @@ use App\Models\Cheques;
     <div class="ml-4 mt-3">
         {{ $colCheques->appends(Request::except('page'))->links('pagination::bootstrap-4') }}
     </div>
+
+    <nav class="nav">
+
+        <li class="nav__link" >
+        <form >
+        <button type="submit" style="width: 60px; height:5px;">
+         <img src="img/warning.png" style="width:20px;"><br>
+         <input type="hidden" name="filtro" value="pendientes" >
+          <span class="nav__text">
+          @php  $p =new ChequesYTransferenciasController();
+            echo $p->pendientes($rfc);
+          @endphp
+              Pendientes</span>
+            </button>
+          </form>
+        </li>
+        <li class="nav__link">
+        <form >
+            <button type="submit" style="width: 60px; height:5px;">
+            <img src="img/sin_verificar.png" style="width:20px;"><br>
+          <span class="nav__text">
+            <input type="hidden" name="filtro" value="Sin_revisar" >
+            @php  $verif =new ChequesYTransferenciasController();
+            echo $verif->verificado($rfc);
+           @endphp
+            Sin Revisar</span>
+        </button>
+          </form>
+        </li>
+
+        <li class="nav__link">
+          <form>
+            <button type="submit" style="width: 60px; height:5px;">
+         <img src="img/sin_contabilizar.png" style="width:20px;"><br>
+          <span class="nav__text">
+            <input type="hidden" name="filtro" value="Sin_contabilizar" >
+            @php  $cont =new ChequesYTransferenciasController();
+             echo $cont->contabilizado($rfc);
+            @endphp
+         Sin contabilizar</span>
+        </button>
+          </form>
+        </li>
+
+      </nav>
+
+
+
+
+
+
+
 @endsection
