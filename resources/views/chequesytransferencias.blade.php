@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.livewire-layout')
 
 <head>
     <title>Cheques y Transferencias Contarapp</title>
@@ -19,6 +19,10 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             <p class="label2">Cheques y Transferencias</p>
         </div>
         <br>
+ @livewire('Modals/Editar')
+        @yield('contenido')
+        @livewireScripts
+
         <hr style="border-color:black; width:100%;">
         <div class="justify-content-start">
             <label class="label1" style="font-weight: bold"> Sesión de: </label>

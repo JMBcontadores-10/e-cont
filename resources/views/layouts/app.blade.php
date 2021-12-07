@@ -72,6 +72,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+@stack('styles')
 
 </head>
 
@@ -181,8 +182,8 @@
 
 </body>
 <footer style="margin-top: 20px;">
-    <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">CONTARAPP {{ date('Y') }} |
+    <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |
         JMB Contadores</p>
 </footer>
-
+@stack('scripts')
 </html>

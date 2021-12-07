@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Livewire\Modals\Editar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -74,4 +75,4 @@ Route::get('/dir1', [App\Http\Controllers\Prueba::class, 'createDir2'])->name('c
 
 // Rutas Jose Segura
 Route::get('/script2', [App\Http\Controllers\RecarpetarCheques::class, 'archivar'])->name('archivar');
-
+Route::get('/editar', Editar::class)->name('editar');
