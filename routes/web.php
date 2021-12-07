@@ -74,3 +74,4 @@ Route::get('/dir1', [App\Http\Controllers\Prueba::class, 'createDir2'])->name('c
 
 // Rutas Jose Segura
 Route::get('/script2', [App\Http\Controllers\RecarpetarCheques::class, 'archivar'])->name('archivar');
+

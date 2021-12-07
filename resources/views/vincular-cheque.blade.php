@@ -43,6 +43,7 @@
 
                     <form enctype="multipart/form-data" action="{{ url('archivo-pagar') }}" method="POST">
                         @csrf
+
                         <input type="hidden" name="id" value="{{ $id }}">
                         <input type="hidden" name="nombrec" value="{{ $nombrec }}">
                         <div style="overflow: auto">
@@ -246,7 +247,6 @@
                           <i id="info" class="fa fa-info-circle" aria-hidden="true"></i>
                           <span id="pago" class="tooltiptext">Como fue que realizó el pago.</span>
                           <p class="pf">Forma de pago:</p>
-
                                 </div>
                                 <div class="col-4">
                                     <select name="tipo" id="tipo" class="form-control">

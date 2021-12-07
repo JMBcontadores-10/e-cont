@@ -64,6 +64,7 @@
     margin: .5em 0 .75em;
   }
 
+
   table tr {
     background-color: #f8f8f8;
     border: 1px solid #ddd;
@@ -72,14 +73,21 @@
 
   table th,
   table td {
-    padding: .625em;
+    padding: .40em;
     text-align: center;
   }
 
-  table th {
-    font-size: .85em;
+  table th
+  {
+    font-size: 8.5pt;
     letter-spacing: .1em;
     text-transform: uppercase;
+  }
+
+  table td {
+
+    font-size: 10pt;
+
   }
 
   /*table tr:hover {
@@ -141,7 +149,7 @@
   }
 
 
-  /* Modal principal*/
+  /* menu fotter tabla cheques y trasnferencias principal*/
 
   .nav {
     position: fixed;
@@ -185,5 +193,4 @@
 
 
 /* modal */
-
 

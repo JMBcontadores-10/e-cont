@@ -3,7 +3,6 @@ $( document ).ready(function() {
 });
 
 
-
 /*
 //Funcion para obtrener la fecha de pago por js
 function diaSemana() {
@@ -112,10 +111,32 @@ $("#attachment").on('change', function(e){
 
 /////////////////////
 
+/// enviar formulario por ajax para evitar la recarga de la pagina///
+
+
+    $('#create-account-button').on('click', function(e) {
+        $.ajaxSetup({
+            headers: {'X-CSRF-Token':$("input[name=_token]").val() }
+        });
+
+        var dataString = $('#create-account-form').serialize();
+
+        $.ajax({
+            type: "POST",
+            url:"/archivo-pagar",
+            data: dataString,
+            success: function(res){
+                $('#respuesta').html(res);
+            }
+        });
 
 
 
 
+
+
+        alert('Datos serializados: '+dataString);
+    });
 
 
 

@@ -550,7 +550,7 @@ class ChequesYTransferenciasController extends Controller
                 $this->alerta($alerta, $ruta);
             }
         }
-    }
+    }/// fin metodo createupadteCheque
 
     // Método para vincular los CFDIs a cheque
     public function agregarXmlCheque(Request $r)

@@ -529,7 +529,7 @@ $('#allcheck').change(function() {
 });
 
 // Filtra las tablas dependiendo su contenido
-/*
+
 $("#filtrar").on("keyup", function() {
     var value = $(this).val().toLowerCase();
     $(".buscar tr").filter(function() {
@@ -537,7 +537,7 @@ $("#filtrar").on("keyup", function() {
     });
 });
 //se deshabilita la funcion  filtrar tabla
-*/
+
 
 
 // Suma los valores de los checkboxes cada vez que son seleccionados

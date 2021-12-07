@@ -8,6 +8,7 @@ use App\Models\Cheques;
 use App\Http\Controllers\ChequesYTransferenciasController;
 @endphp
 
+
 @section('content')
     <div class="container">
         <div class="float-md-left">
@@ -91,7 +92,6 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             </div>
 
 
-
         <div class="input-group">
 
             <span  style ="display: none;" class="input-group-text" >Buscar</span>
@@ -100,7 +100,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
 
             <button type="submit" class="btn btn-primary ml-2">Busca</button>
-            <input id="filtrar" name="filtro_cheques" type="text" class="form-control" placeholder="Filtra por palabra clave fecha/ Num de factura/ etc...	">
+            <input id="" name="filtro_cheques" type="text" class="form-control" placeholder="Filtra por palabra clave fecha/ Num de factura/ etc...	">
               <!-- se deshabilita la funcion busqueda automatica en tabla por script -->
          </div>
         </form>
@@ -110,17 +110,17 @@ use App\Http\Controllers\ChequesYTransferenciasController;
         <table  >
             <thead>
                 <tr class="row100 head" >
-                    <th   class="cell100 column1" scope="col">No.</th>
+                   <!-- <th   class="cell100 column1" scope="col">No.</th>-->
                     <th   class="cell100 column1" scope="col">Fecha de pago</th>
                     <th  class="cell100 column1" scope="col">Núm de factura</th>
-                    <th  class="cell100 column1" scope="col">Beneficiario</th>
+                    <th   >Beneficiario</th>
                     <th  class="cell100 column1" scope="col">Tipo de operación</th>
                     <th  class="cell100 column1" scope="col">Forma de pago</th>
                     <th  class="cell100 column1" scope="col">Total pagado</th>
                     <th  class="cell100 column1" scope="col">Total CFDI</th>
                     <th  class="cell100 column1" scope="col">Por comprobar</th>
                     @if (Session::get('tipoU') == '2')
-                        <th scope="col">Ajuste</th>
+                        <th class="cell100 column1" scope="col">Ajuste</th>
                     @endif
                     <th  class="cell100 column1" scope="col">PDF cheque o transferencia</th>
                     <th  class="cell100 column1" scope="col">Documentos adicionales</th>
@@ -128,8 +128,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                     @if (Session::get('tipoU') == '2')
                         <th scope="col" colspan="2">Contabilizado</th>
                     @endif
-                    <th  class="cell100 column1" scope="col">Comentarios</th>
+                  <!--  <th  class="cell100 column1" scope="col">Comentarios</th>
                     <th  class="cell100 column1" scope="col">Cheque id</th>
+                  -->
                 </tr>
             </thead>
             <tbody class="buscar">
@@ -183,30 +184,61 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                         $comentario = $i['comentario'];
                     @endphp
                     <tr class="CellWithComment">
-                        <td data-label="No">{{ ++$n }}</td>
+                        <!--<td data-label="No">{{ ++$n }}</td>-->
                         <td data-label="Fecha de pago">
                             {{ $fecha }}
-                            @if (isset($comentario) && $verificado == 0)
+                           <!-- @if (isset($comentario) && $verificado == 0)
                                 <span class="CellComment">{{ $comentario }}</span>
-                            @endif
+                            @endif-->
                         </td>
                         <td data-label="#factura">{{ $numCheque }}</td>
                         <td data-label="Beneficiario">{{ $beneficiario }}</td>
+
                         <td data-label="Operación">{{ $tipoO }}</td>
                         <td data-label="forma de pago">{{ $tipo }}</td>
                         <td data-label="Total pagado">${{ number_format($importeC, 2) }}</td>
                         <td data-label="Total CFDI">${{ number_format($sumaxml, 2) }}</td>
                         <td data-label="Por Comprobar">${{ $diferencia }}</td>
                         @if (Session::get('tipoU') == '2')
-                            <td class="text-center align-middle CellWithComment">
-                                ${{ $ajuste }}
-                                @if ($verificado == 0)
-                                    <form action="{{ url('cheques-transferencias') }}">
-                                        <input type="hidden" name="id" value="{{ $id }}">
-                                        <input type="number" step="any" name="ajuste" style="width: 66px">
-                                        <input class="mt-2" type="submit" value="Ajustar">
-                                    </form>
-                                @endif
+
+
+                        <td class="text-center align-middle CellWithComment">
+ @include('modals')
+<!-- seccion ajustes -->
+
+<li  style="list-style:none; "  >
+    @if ($ajuste == 0)
+     <a id="tooltip" href="#" style="text-decoration: none; " class="icons fas fa-balance-scale"
+      data-toggle="modal" data-target="#ajuste{{$n}}">
+     </a>
+     @else
+     <a id="tooltip" href="#" style="text-decoration: none; " class="content_true fas fa-balance-scale"
+      data-toggle="modal" data-target="#ajuste{{$n}}">
+     </a>
+     @endif
+     <span class="tooltip-content">Ajuste</span>
+      </li>
+      <hr>
+
+           <!--fin  seccion ajustes -->
+
+                    <!---icon seccion comentarios -->
+
+                       <li  style="list-style:none; "  >
+
+                        @if (isset($comentario) && $verificado == 0)
+                         <a id="tooltip"  href="#" style="text-decoration: none; " class="content_true fas fa-comments"
+                          data-toggle="modal" data-target="#exampleModal{{$n}}">
+                         </a>
+                         @else
+                         <a id="tooltip"  href="#" style="text-decoration: none; " class="icons fas fa-comments"
+                          data-toggle="modal" data-target="#exampleModal{{$n}}">
+                         </a>
+                         @endif
+                         <span class="tooltip-content">Comentarios</span>
+                          </li>
+                        <!--- fin icon seccion comentarios -->
+
                             </td>
                         @endif
                         <td data-label="Pdf">
@@ -225,30 +257,25 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                                         </button>
                                     </form>
 
-
                             @endif
                         </td>
 
                         <td data-label="D. adicionales" >
                             @if (empty($i['doc_relacionados']))
-                                <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
+                            <a  href="#" style="text-decoration: none; " class="icons fas fa-falder-open"
+                            data-toggle="modal" data-target="#relacionados{{$n}}">
+                           </a>
                             @else
+
                                 @if (!$docAdi['0'] == '')
-                                    <select id="{{ "docs-adicionales$n" }}" name="docs-adicionales"
-                                        class="form-control mb-2">
-                                        @foreach ($docAdi as $d)
-                                            @php
-                                                $newstring = ltrim(stristr($d, '-'), '-');
-                                            @endphp
-                                            <option value="{{ $d }}">{{ $newstring }}</option>
-                                        @endforeach
-                                    </select>
-                                    <input id="ruta-adicionales" name="ruta-adicionales" type="hidden"
-                                        value="{{ $rutaDescarga . 'Documentos_Relacionados/' }}">
-                                     <input id="{{ $n }}" onclick="verAdicional(this.id)" type="submit"
-                                        value="Ver">
+                                <a  href="#" style="text-decoration: none; " class="content_true fas fa-folder-open"
+                                data-toggle="modal" data-target="#relacionados{{$n}}">
+                               </a>
+
                                 @else
-                                    <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
+                                <a  href="#" style="text-decoration: none; " class="icons fas fa-folder-open"
+                                data-toggle="modal" data-target="#relacionados{{$n}}">
+                               </a>
                                 @endif
                             @endif
                         </td>
@@ -284,9 +311,11 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                                             <input type="hidden" name="ruta" value="{{ $rutaArchivo }}">
 
                                             <button type="submit" class="fabutton">
-                                                <i class="fas fa-edit fa-lg" style="color: rgb(8, 8, 8)"></i>
+                                                <i   class="fas fa-edit fa-lg" style="color: rgb(8, 8, 8)"></i>
                                             </button>
                                         </form>
+                                        <a class="fas fa-edit fa-lg"   data-toggle="modal" data-target="#editar{{$n}}"> </a>
+
                                     </div>
                                 @endif
                                 @if ($verificado == 0)
@@ -313,17 +342,12 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                                         @php
                                             Cheques::find($id)->update(['pendi' => 1]);
                                         @endphp
-                                        <div class="row d-flex justify-content-center">
-                                            <span class="fa-stack mb-2">
 
-                                                    <img src="img/warning.png" style="width:50px;">
-                                            </span>
 
-                                        </div> <br><br>
-                                        <div class="row d-flex justify-content-center">
-                                            <input type="submit" name="Pendientes" value="Pendientes"
-                                                onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
-                                        </div>
+                                         <a   style="text-decoration: none; " class="alert parpadea fas fa-exclamation"
+                                          onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
+                                        </a>
+
                                     @elseif ($verificado == 0 )
                                         <form action="{{ url('cheques-transferencias') }}" method="POST">
                                             @csrf
@@ -355,7 +379,8 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                                             <input type="submit" name="Aceptar" value="Aceptar">
                                         </form>
                                     @elseif ($verificado == 1 and $contabilizado == 1)
-                                        <img src="{{ asset('img/CONTABILIZADO.png') }}" alt="" style="width: 40PX">
+                                    <a   style="text-decoration: none; " class="icon_basic fas fa-calculator">
+                                    </a>
                                         @if (isset($contabilizado_fecha))
                                             <div class="mt-1">{{ $contabilizado_fecha }}</div>
                                         @endif
@@ -363,11 +388,14 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                                             <div class="mt-1">Póliza: {{ $poliza }}</div>
                                         @endif
                                     @else
-                                        <img src="{{ asset('img/espera.png') }}" alt="">
+                                    <a   style="text-decoration: none; " class="alert fas fa-file-invoice-dollar">
+                                   </a>
+
                                     @endif
                                 </div>
                             </td>
                         @endif
+                        <!--
                         <td data-label="Comentarios">
                             <div class="mx-1">
                                 @if ($verificado != 0)
@@ -387,6 +415,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                             </div>
                         </td>
                         <td data-label="cheque id">{{ $id }}</td>
+                    se eliminan los campos -->
                     </tr>
                 @endforeach
             </tbody>
@@ -400,42 +429,42 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
         <li class="nav__link" >
         <form >
-        <button type="submit" style="width: 60px; height:5px;">
-         <img src="img/warning.png" style="width:20px;"><br>
-         <input type="hidden" name="filtro" value="pendientes" >
-          <span class="nav__text">
-          @php  $p =new ChequesYTransferenciasController();
-            echo $p->pendientes($rfc);
-          @endphp
-              Pendientes</span>
+        <button type="submit" class="alert parpadea fas fa-exclamation" style="width: 60px; height:5px;">
+
             </button>
+            <input type="hidden" name="filtro" value="pendientes" >
+            <span class="nav__text">
+                @php  $p =new ChequesYTransferenciasController();
+                  echo $p->pendientes($rfc);
+                @endphp
+                    Pendientes</span>
           </form>
         </li>
         <li class="nav__link">
         <form >
-            <button type="submit" style="width: 60px; height:5px;">
-            <img src="img/sin_verificar.png" style="width:20px;"><br>
+            <button type="submit" class="icon_basic fas fa-low-vision" style="width: 60px; height:5px;">
+            </button>
           <span class="nav__text">
             <input type="hidden" name="filtro" value="Sin_revisar" >
             @php  $verif =new ChequesYTransferenciasController();
             echo $verif->verificado($rfc);
            @endphp
             Sin Revisar</span>
-        </button>
+
           </form>
         </li>
 
         <li class="nav__link">
           <form>
-            <button type="submit" style="width: 60px; height:5px;">
-         <img src="img/sin_contabilizar.png" style="width:20px;"><br>
+            <button type="submit"class="icon_basic fas fa-calculator" style="width: 60px; height:5px;">
+            </button>
           <span class="nav__text">
             <input type="hidden" name="filtro" value="Sin_contabilizar" >
             @php  $cont =new ChequesYTransferenciasController();
              echo $cont->contabilizado($rfc);
             @endphp
          Sin contabilizar</span>
-        </button>
+
           </form>
         </li>
 
