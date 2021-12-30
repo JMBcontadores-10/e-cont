@@ -147,7 +147,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-          <form action="{{ url('cheques-transferencias') }}">
+          <form action="{{ url('chequesytransferencias') }}">
             <button class="btn btn-primary" type="submit" value="Cheques y Transferencias"
                >Ir al modulo
             </button>

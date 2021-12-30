@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
+    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -74,9 +74,34 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 @stack('styles')
 
+  <!-- estilos para PIKADAY calendario /para el uso de livewire input-date-->
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+  <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+<!-- cdn para push notifiaciones  -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/0.0.11/push.min.js"></script>
 </head>
 
+
+
 <body>
+    <!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
+<!-- CDN´S para validacion de tamaño filepond</body> -->
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<!-- CDN´S para validacion de tamaño filepond</body> -->
+
+
+    <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
+    <script>
+   $(document).ready(function() {
+    $('#page-loader').fadeOut(500);
+});
+            </script>
+            <div id="page-loader"><span class="preloader-interior"></span></div>
+
     <div id="app">
 
         @if (Auth::check() && !Route::is('home', 'login', 'modules', 'log') && !Route::is('construccion'))

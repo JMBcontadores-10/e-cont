@@ -1,3 +1,5 @@
+
+
 $( document ).ready(function() {
     $('#exampleModalCenter').modal('toggle')
 });
@@ -141,3 +143,178 @@ $("#attachment").on('change', function(e){
 
 
 
+// Get a reference to the file input element
+//const inputElement = document.getElementById("avatar");
+
+// ================Filepond=========================== //
+
+function filepond(id) {
+
+
+
+// registrar plugin validacion filepond  se deben agregar los cdn despues del body 
+FilePond.registerPlugin(FilePondPluginFileValidateType);
+// registrar plugin validacion size filepond  se deben agregar los cdn despues del body
+FilePond.registerPlugin(FilePondPluginFileValidateSize);
+
+const token = document.querySelector('input[name="_token"]');
+ var ID =id;
+
+const ids= document.getElementById("user").value;
+
+const iden = document.getElementById("avatar");
+const ruta= iden;
+
+
+
+// Create a FilePond instance
+ //const pond = FilePond.create(ruta);// creacion simple de filepond
+var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
+    maxFileSize: '1000KB',
+    labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+    labelIdle:'Carga de archivos adicionales <span class="filepond--label-action"> Explorar </span>',
+    labelFileLoading:'Cargando',
+    labelFileProcessing:'Subiendo a E-cont..',
+    labelFileProcessingComplete: 'Carga completa',
+    labelFileProcessingAborted: 'Carga cancelada',
+    labelTapToCancel: 'Presiona para cancelar',
+    allowMultiple: true,
+    //instantUpload: false,
+    acceptedFileTypes: ["application/pdf"],
+    fileValidateTypeDetectType: (source, type) =>
+        new Promise((resolve, reject) => {
+            // Do custom type detection here and return with promise
+
+            resolve(type);
+        }),
+     
+});
+
+FilePond.setOptions({
+    name:'avatar',
+ server: {
+
+       url:'upload/'+ID,
+       headers:{
+           'X-CSRF-TOKEN': token.value
+
+ }
+ 
+}
+
+
+
+});
+
+
+}// fin funcion
+
+
+function filepondEditCheque(id) {
+
+
+
+    // registrar plugin validacion filepond  se deben agregar los cdn despues del body 
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+    // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
+    FilePond.registerPlugin(FilePondPluginFileValidateSize);
+    
+    const token = document.querySelector('input[name="_token"]');
+     var ID =id;
+    
+    const ids= document.getElementById("user").value;
+    
+    const iden = document.getElementById("editCheque"+ID);
+    const ruta= iden;
+    
+    
+    
+    // Create a FilePond instance
+     //const pond = FilePond.create(ruta);// creacion simple de filepond
+    var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
+        maxFileSize: '1000KB',
+        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+        labelIdle:'Carga automatica de pdf <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading:'Cargando',
+        labelFileProcessing:'Subiendo a E-cont..',
+        labelFileProcessingComplete: 'Carga completa',
+        labelFileProcessingAborted: 'Carga cancelada',
+        labelTapToCancel: 'Presiona para cancelar',
+        allowMultiple: true,
+        //instantUpload: false,
+        acceptedFileTypes: ["application/pdf"],
+        fileValidateTypeDetectType: (source, type) =>
+            new Promise((resolve, reject) => {
+                // Do custom type detection here and return with promise
+    
+                resolve(type);
+            }),
+         
+    });
+    
+    FilePond.setOptions({
+        name:'editCheque',
+     server: {
+    
+           url:'uploadEdit/'+ID,
+           headers:{
+               'X-CSRF-TOKEN': token.value
+    
+     }
+     
+    }
+    
+    
+    
+    });
+    
+    
+    
+    //alert(token.value); ID
+    
+    
+    }// fin funcion
+
+//=====================FUNCION FADE DIV RELACIONADOS============================================//
+
+function fade(){
+
+
+
+   // alert(ids);
+
+
+}
+
+function updateDiv(id)
+{
+
+
+    ids="#"+id;
+
+   // $(ids).fadeOut();
+    //$( ids ).load(window.location.href + ids );
+
+   //$("#relacionadosView").load(" #relacionadosView > *");
+   //document.getElementById(ids).innerHTML = document.getElementById(ids).innerHTML ;
+
+   //document.getElementById(ids).innerHTML.reload
+ alert(ids);
+
+
+}
+
+function limpiar(){
+   
+   // alert('limpiar');
+
+  $("#table_refresh").load(" #table_refresh > *");
+
+  //$("#table_refresh").load(location.href + " #table_refresh");
+    
+  
+}
+
+window.addEventListener('say-goodbye', event => {
+    location.reload();
+});

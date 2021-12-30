@@ -649,6 +649,20 @@ function verAdicional(btn_id) {
     window.open(rutaArchivo, '_blank');
 }
 
+// Permite abrir los documentos adicionales de cada cheque sin el input Select
+function verAdicionales(id_button) {
+
+    var ru = document.getElementById("rutaAdicional").value;
+    var iden = document.getElementById("iden" + id_button).value;
+    var ruta= ru + iden;
+
+
+
+    window.open(ruta, '_blank');
+}
+
+
+
 // Evita registrar múltiples veces cualquier cheque al momento de su creación o actualización
 function submitBlock() {
     $('#reg-cheque').hide()

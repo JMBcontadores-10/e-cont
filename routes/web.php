@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UploadController;
+use App\Http\Livewire\Chequesytransferencias;
 use App\Http\Livewire\Modals\Editar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -21,8 +23,8 @@ Auth::routes(['register'=>false]);
 
 // Rutas Octavio
 
-// Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
-// Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
+Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
+//Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
 // Route::get('/renombrarXml', [App\Http\Controllers\Prueba::class, 'renombrarXml'])->name('renombrarXml');
 Route::get('/prueba', [App\Http\Controllers\Prueba::class, 'index'])->name('prueba');
 Route::match(['get', 'post'], '/home', [App\Http\Controllers\Login1Controller::class, 'login'])->name('home');
@@ -75,4 +77,10 @@ Route::get('/dir1', [App\Http\Controllers\Prueba::class, 'createDir2'])->name('c
 
 // Rutas Jose Segura
 Route::get('/script2', [App\Http\Controllers\RecarpetarCheques::class, 'archivar'])->name('archivar');
-Route::get('/editar', Editar::class)->name('editar');
+Route::view('editar','livewire.editar');
+Route::post('/upload/{id}', [App\Http\Controllers\UploadController::class, 'store']);
+Route::post('/uploadEdit/{id}', [App\Http\Controllers\UploadController::class, 'storeEditPdf']);
+Route::get('/chequesytransferencias',Chequesytransferencias::class)->name('cheques');
+
+
+

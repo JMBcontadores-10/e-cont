@@ -1,5 +1,6 @@
 @extends('layouts.livewire-layout')
 
+
 <head>
     <title>Cheques y Transferencias Contarapp</title>
 </head>
@@ -10,7 +11,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
 
 @section('content')
-    <div class="container">
+
+
+    <div class="container" >
         <div class="float-md-left">
             <a class="b3" href="{{ url('/modules') }}">
                 << Regresar</a>
@@ -19,9 +22,13 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             <p class="label2">Cheques y Transferencias</p>
         </div>
         <br>
- @livewire('Modals/Editar')
-        @yield('contenido')
-        @livewireScripts
+         <!-- Your application content -->
+
+
+
+
+
+
 
         <hr style="border-color:black; width:100%;">
         <div class="justify-content-start">
@@ -33,7 +40,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
         @php
         $rfc = Auth::user()->RFC;
 
-    @endphp
+     @endphp
 
         <div class="row justify-content-end">
             <div class="col-sm-7">
@@ -110,8 +117,10 @@ use App\Http\Controllers\ChequesYTransferenciasController;
         </form>
         <br>
     </div>
-    <div class="mx-4" style="overflow: auto" >
-        <table  >
+    <div class="mx-4" style="overflow: auto" id="table_refresh" >
+        <a onclick="limpiar()"> recarga</a>
+    <div >
+        <table  id="tabla" >
             <thead>
                 <tr class="row100 head" >
                    <!-- <th   class="cell100 column1" scope="col">No.</th>-->
@@ -123,9 +132,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                     <th  class="cell100 column1" scope="col">Total pagado</th>
                     <th  class="cell100 column1" scope="col">Total CFDI</th>
                     <th  class="cell100 column1" scope="col">Por comprobar</th>
-                    @if (Session::get('tipoU') == '2')
+                    <!--if (Session::get('tipoU') == '2')-->
                         <th class="cell100 column1" scope="col">Ajuste</th>
-                    @endif
+                    <!--endif-->
                     <th  class="cell100 column1" scope="col">PDF cheque o transferencia</th>
                     <th  class="cell100 column1" scope="col">Documentos adicionales</th>
                     <th  class="cell100 column1" scope="col">Acciones</th>
@@ -139,7 +148,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             </thead>
             <tbody class="buscar">
                 @foreach ($colCheques as $i)
+              
                     @php
+                       
                         $editar = true;
                         $id = $i['_id'];
                         $tipo = $i['tipomov'];
@@ -196,18 +207,18 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                             @endif-->
                         </td>
                         <td data-label="#factura">{{ $numCheque }}</td>
-                        <td data-label="Beneficiario">{{ $beneficiario }}</td>
+                        <td data-label="Beneficiario">{{ $i->Beneficiario}}</td>
 
                         <td data-label="Operación">{{ $tipoO }}</td>
                         <td data-label="forma de pago">{{ $tipo }}</td>
                         <td data-label="Total pagado">${{ number_format($importeC, 2) }}</td>
                         <td data-label="Total CFDI">${{ number_format($sumaxml, 2) }}</td>
                         <td data-label="Por Comprobar">${{ $diferencia }}</td>
+                        <td class="text-center align-middle CellWithComment">
+                            @include('modals')
                         @if (Session::get('tipoU') == '2')
 
 
-                        <td class="text-center align-middle CellWithComment">
- @include('modals')
 <!-- seccion ajustes -->
 
 <li  style="list-style:none; "  >
@@ -223,7 +234,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
      <span class="tooltip-content">Ajuste</span>
       </li>
       <hr>
-
+      @endif
            <!--fin  seccion ajustes -->
 
                     <!---icon seccion comentarios -->
@@ -232,11 +243,11 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
                         @if (isset($comentario) && $verificado == 0)
                          <a id="tooltip"  href="#" style="text-decoration: none; " class="content_true fas fa-comments"
-                          data-toggle="modal" data-target="#exampleModal{{$n}}">
+                          data-toggle="modal" data-target="#comentarios{{$n}}">
                          </a>
                          @else
                          <a id="tooltip"  href="#" style="text-decoration: none; " class="icons fas fa-comments"
-                          data-toggle="modal" data-target="#exampleModal{{$n}}">
+                          data-toggle="modal" data-target="#comentarios{{$n}}">
                          </a>
                          @endif
                          <span class="tooltip-content">Comentarios</span>
@@ -244,7 +255,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                         <!--- fin icon seccion comentarios -->
 
                             </td>
-                        @endif
+
                         <td data-label="Pdf">
                             @if ($nombreCheque == '0')
                                 <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
@@ -267,19 +278,39 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                         <td data-label="D. adicionales" >
                             @if (empty($i['doc_relacionados']))
                             <a  href="#" style="text-decoration: none; " class="icons fas fa-falder-open"
-                            data-toggle="modal" data-target="#relacionados{{$n}}">
+                            data-toggle="modal"  id="{{$id}}" onclick="filepond(this.id)" data-target="#relacionados-{{$id}}">
                            </a>
+                       <hr>
+                           <a  href="#" style="text-decoration: none; " class="icons fas fa-upload"
+                           data-toggle="modal" id="{{$id}}" onclick="filepond(this.id)"  data-target="#uploadRelacionados">
+                          </a>
+
+                           <!--    <a  href="#" style="text-decoration: none; " class="icons fas fa-falder-open"
+                            data-toggle="modal"  id="{{$id}}" onclick="filepond(this.id)" data-target="#relacionados-{{$id}}">
+                           </a> -->
+
+
                             @else
 
                                 @if (!$docAdi['0'] == '')
                                 <a  href="#" style="text-decoration: none; " class="content_true fas fa-folder-open"
-                                data-toggle="modal" data-target="#relacionados{{$n}}">
+                                data-toggle="modal"  id="{{$id}}" onclick="filepond(this.id)" data-target="#relacionados-{{$id}}" >
                                </a>
 
+                               <hr>
+                               <a  href="#" style="text-decoration: none; " class="icons fas fa-upload"
+                               data-toggle="modal" id="{{$id}}" onclick="filepond(this.id)"  data-target="#uploadRelacionados">
+                              </a>
                                 @else
                                 <a  href="#" style="text-decoration: none; " class="icons fas fa-folder-open"
-                                data-toggle="modal" data-target="#relacionados{{$n}}">
+                                data-toggle="modal"  id="{{$id}}" onclick="filepond(this.id)" data-target="#relacionados-{{$id}}" >
                                </a>
+                               <hr>
+                               <a  href="#" style="text-decoration: none; " class="icons fas fa-upload"
+                               data-toggle="modal" id="{{$id}}" onclick="filepond(this.id)"  data-target="#uploadRelacionados">
+                             </a>
+
+
                                 @endif
                             @endif
                         </td>
@@ -318,7 +349,14 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                                                 <i   class="fas fa-edit fa-lg" style="color: rgb(8, 8, 8)"></i>
                                             </button>
                                         </form>
-                                        <a class="fas fa-edit fa-lg"   data-toggle="modal" data-target="#editar{{$n}}"> </a>
+                                       <!-- <a class="fas fa-edit fa-lg"   data-toggle="modal" data-target="#editar{{$n}}"> </a>-->
+
+
+     <!-- MODAL RELACIONADOS-->
+     <livewire:relacionados  :filesrelacionados=$i : key="$i->id" >
+
+       <livewire:editar  :editCheque=$i : key="$i->id">
+        <!--FIN  MODAL RELACIONADOS-->
 
                                     </div>
                                 @endif
@@ -424,6 +462,12 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                 @endforeach
             </tbody>
         </table>
+
+        
+
+        <livewire:uploadrelacionados  >
+
+    </div><!-- Fin del div refresh tabla-->
     </div>
     <div class="ml-4 mt-3">
         {{ $colCheques->appends(Request::except('page'))->links('pagination::bootstrap-4') }}
@@ -474,10 +518,11 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
       </nav>
 
-
-
+      
 
 
 
 
 @endsection
+
+

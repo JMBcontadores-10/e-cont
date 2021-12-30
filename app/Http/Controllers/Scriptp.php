@@ -39,6 +39,9 @@ class Scriptp extends Controller
     public function xmlLeer()
     {
 
+      
+        $anio = date('Y');
+
         set_time_limit(36000);
         $num = 0;
         $rfcs = [
@@ -124,7 +127,7 @@ class Scriptp extends Controller
                 foreach ($rutas as $r) {
                     $num++;
                     $n = 0;
-                    $ruta = "/home/econt/econt/public/storage/contarappv1_descargas/$e/2021/Descargas/$m/$r/XML";
+                    $ruta = "/home/econt/econt/public/storage/contarappv1_descargas/$e/$anio/Descargas/$m/$r/XML";
                     $dir = new DirectoryIterator($ruta);
                     echo "$num - $ruta <br><br>";
                     foreach ($dir as $fileinfo) {

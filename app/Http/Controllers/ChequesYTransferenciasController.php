@@ -67,7 +67,7 @@ class ChequesYTransferenciasController extends Controller
                 ->orderBy('conta')
                 ->orderBy('fecha', 'desc')
                 ->orderBy('created_at', 'desc')
-                ->paginate(100);
+                ->paginate(10);
             // ->get();
         } else {
 ///  Nota: whereMonth() no funcionaba correctamente
@@ -81,7 +81,7 @@ class ChequesYTransferenciasController extends Controller
                 ->orderBy('conta')
                 ->orderBy('fecha', 'desc')
                 ->orderBy('created_at', 'desc')
-                ->paginate(100);
+                ->paginate(50);
             // ->get();
         }
 
@@ -99,12 +99,12 @@ class ChequesYTransferenciasController extends Controller
                                   ->orWhere('tipoopera', 'like','%'. $filtro_cheques . '%')
                                   ->orWhere('rfc', 'like','%'. $filtro_cheques . '%')
                                   ->orWhere('nombrec', 'like','%'. $filtro_cheques . '%')
-                                  ->orWhere('_id', 'like','%'. $filtro_cheques . '%')
+                                  ->orWhere('_id',  $filtro_cheques)
                                   ->orderBy('fecha', 'desc');
 
 
 
-                                })->paginate(100);
+                                })->paginate(50);
 
                           }
 
@@ -126,7 +126,7 @@ class ChequesYTransferenciasController extends Controller
                         ->orderBy('conta')
                         ->orderBy('fecha', 'desc')
                         ->orderBy('created_at', 'desc')
-                        ->paginate(100);
+                        ->paginate(10);
 
                     break;
                     case 'Sin_revisar':
@@ -143,7 +143,7 @@ class ChequesYTransferenciasController extends Controller
 
 
 
-                                })->paginate(100);
+                                })->paginate(10);
 
                         break;
                         case 'Sin_contabilizar':
@@ -161,7 +161,7 @@ class ChequesYTransferenciasController extends Controller
 
 
 
-                                    })->paginate(100);
+                                    })->paginate(10);
 
                             break;
 
@@ -261,7 +261,7 @@ class ChequesYTransferenciasController extends Controller
             $subirArchivo = $r->subirArchivo;
             $nombrec = $r->nombrec;
             $ruta = $r->ruta;
-            $colCheques = Cheques::where(['numcheque' => $numCheque])
+            $colCheques = Cheques::where(['_id' => $id])
 
             ->get();
 

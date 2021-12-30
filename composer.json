@@ -16,7 +16,9 @@
         "livewire/livewire": "^2.8",
         "phpcfdi/cfdi-cleaner": "^1.1.2",
         "phpcfdi/cfdi-to-json": "^0.2.1",
-        "phpcfdi/sat-ws-descarga-masiva": "^0.4.2"
+        "phpcfdi/sat-ws-descarga-masiva": "^0.4.2",
+        "spatie/laravel-mix-preload": "^1.2",
+        "wire-elements/modal": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
