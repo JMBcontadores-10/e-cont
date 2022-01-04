@@ -3,7 +3,9 @@
     @php
 use App\Models\Cheques;
 use App\Http\Controllers\ChequesYTransferenciasController;
+
 @endphp
+
 
     <div class="container" >
         <div class="float-md-left">
@@ -47,9 +49,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                         </select>
                     </div>
                     <div class="form-group">
-                        <select class="form-control" id="anio" name="anio">
+                        <select class="form-control"onchange="funcion(this);" id="anio" id="select" name="anio">
                             <?php foreach (array_reverse($anios) as $value) {
-                                echo '<option value="' . $value . '">' . $value . '</option>';
+                                echo '<option name="valor1" value="' . $value . '">' . $value . '</option>';
                             } ?>
                         </select>
                     </div>
@@ -59,7 +61,17 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                 </form>
             </div>
             <div>
+                <script> 
+function funcion(e) {
+  var option = e.options[e.selectedIndex];
+  var inputAux = document.getElementById('inputAux');
+  alert("Valor Option: " + option.value + ", Texto Option: " + option.text);
+  alert("Valor Input: " + inputAux.value);
+   
 
+}
+                </script>
+        
 
 
                 <form action="{{ url('vincular-cheque') }}" method="POST">
@@ -88,8 +100,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
           @endif
 
-@php $rutaDescarga = "storage/contarappv1_descargas/$rfc/2021/Cheques_Transferencias/";
-@endphp
+
 
 
 
@@ -150,6 +161,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                         $id = $i->_id;
                         $tipo = $i->tipomov;
                         $fecha = $i->fecha;
+                        $dateValue = strtotime($fecha);
+                         $anio = date('Y',$dateValue);
+                        $rutaDescarga = 'storage/contarappv1_descargas/'.$rfc.'/'.$anio.'/Cheques_Transferencias/';
                         $numCheque = $i->numcheque;
                         $beneficiario = $i->Beneficiario;
                         $importeC = $i->importecheque;
@@ -217,16 +231,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
         <!-- seccion ajustes -->
         
         <li  style="list-style:none; "  >
-            @if ($ajuste == 0)
-             <a id="tooltip" href="#" style="text-decoration: none; " class="icons fas fa-balance-scale"
-              data-toggle="modal" data-target="#ajuste{{$n}}">
-             </a>
-             @else
-             <a id="tooltip" href="#" style="text-decoration: none; " class="content_true fas fa-balance-scale"
-              data-toggle="modal" data-target="#ajuste{{$n}}">
-             </a>
-             @endif
-             <span class="tooltip-content">Ajuste</span>
+            <livewire:ajuste  :ajusteCheque=$i : key="$i->id" >
               </li>
               <hr>
               @endif
@@ -236,16 +241,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
                     <li  style="list-style:none; "  >
 
-                        @if (isset($comentario) && $verificado == 0)
-                         <a id="tooltip"  href="#" style="text-decoration: none; " class="content_true fas fa-comments"
-                          data-toggle="modal" data-target="#comentarios{{$n}}">
-                         </a>
-                         @else
-                         <a id="tooltip"  href="#" style="text-decoration: none; " class="icons fas fa-comments"
-                          data-toggle="modal" data-target="#comentarios{{$n}}">
-                         </a>
-                         @endif
-                         <span class="tooltip-content">Comentarios</span>
+                       
+     <livewire:comentarios  :comentarioCheque=$i : key="$i->id" >
+                         
                           </li>
                         <!--- fin icon seccion comentarios -->
 
@@ -256,6 +254,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                                 @if ($nombreCheque == '0')
                                     <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
                                 @else
+                                <a id="tooltip"  href="#" style="text-decoration: none; " class="icons fas fa-file-pdf"
+data-toggle="modal" data-target="#pdfcheque"  wire:click="ver()"> </a>
+
                                     <a id="rutArc" href="{{ $rutaArchivo }}" target="_blank">
                                         <i class="fas fa-file-pdf fa-2x" style="color: rgb(202, 19, 19)"></i>
                                     </a>
@@ -448,6 +449,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
         </table>
 
         <livewire:uploadrelacionados  >
+
+                <!-- MODAL pdfcheeque-->
+     <livewire:pdfcheque   >
 
     </div><!-- Fin del div refresh tabla-->
     </div>

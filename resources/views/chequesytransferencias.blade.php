@@ -463,8 +463,6 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             </tbody>
         </table>
 
-        
-
         <livewire:uploadrelacionados  >
 
     </div><!-- Fin del div refresh tabla-->

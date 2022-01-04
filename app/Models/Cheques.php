@@ -13,6 +13,7 @@ class Cheques extends Model
 
 
     protected $primaryKey = '_id';
+ 
 
     protected $fillable = [
         '_id',
@@ -35,6 +36,8 @@ class Cheques extends Model
         'ajuste',
         'doc_relacionados'
     ];
+
+   
 
     protected $collection = 'cheques';
 

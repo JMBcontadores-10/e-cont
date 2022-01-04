@@ -73,13 +73,15 @@ class Editar extends ModalComponent
         $anio = $dt->format('Y');
         $dateValue = strtotime($this->editCheque->fecha);
         $mesfPago = date('m',$dateValue);
+        $anioValue = strtotime($this->editCheque->fecha);
+        $anioo = date('Y',$dateValue);
         $mesActual=date('m');
         $espa=new Cheques();
         //$espa->fecha_es($mes);
 
         $ruta="contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
         $ruta2="/contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/";
-        $ruta3="/contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
+        $ruta3="/contarappv1_descargas/".$rfc."/".$anioo."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
         $rutaRelacionados="contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/Documentos_Relacionados/".$espa->fecha_es($mesfPago)."/";
 
         
@@ -87,10 +89,11 @@ class Editar extends ModalComponent
         $this->validate();
 
 
-
 /* verifica si existe el pdf en el dir. y lo elimina si se va a remplazar */
 
         if(!empty($this->editChequenombrec)){
+
+            if ($this->editCheque->nombrec!="0"){
 
             $nomfile = explode("/", $this->editCheque->nombrec);
 
@@ -101,6 +104,8 @@ class Editar extends ModalComponent
          unlink($path);
          }
 
+        }
+
         $this->editChequenombrec->storeAs($ruta,  $renameFile ,'public2');
 
         $data=[
@@ -110,10 +115,14 @@ class Editar extends ModalComponent
 
         ];
 
+        $this->editCheque->update($data); // guarda el documento el pdf
+
          }/* fin- verifica si existe el pdfen el dir. y lo elimina si se sube uno nuevo */
       /*====se toma el nombre del pdf de la db para moverlo de carpeta======*/ 
          else{
 
+
+if ($this->editCheque->nombrec!="0"){
             $nomfile = explode("/", $this->editCheque->nombrec);
 
             $file =$ruta3.$nomfile[1];
@@ -129,7 +138,7 @@ class Editar extends ModalComponent
 
       // unlink($file);
     }
-
+           
      
     
        $data=[
@@ -137,14 +146,18 @@ class Editar extends ModalComponent
         'nombrec' => $espa->fecha_es($mesfPago)."/" .$nomfile[1]
        ];
 
+       
 
+       $this->editCheque->update($data); // guarda el documento el pdf
+        
 
          }
+
+        }
    /*==== fin- se toma el nombre del pdf de la db para moverlo de carpeta======*/ 
 
 
-
-         $this->editCheque->update($data); // guarda el documento el pdf
+  
          $this->editCheque->save();// guarda todos los campos
 
 

@@ -56,4 +56,8 @@ class Chequesytransferencias extends Component
 
         $this->emitTo('chequesytransferencia','reviewSectionRefresh');
     }
+
+
+
+    
 }

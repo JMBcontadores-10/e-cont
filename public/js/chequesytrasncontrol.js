@@ -318,3 +318,13 @@ function limpiar(){
 window.addEventListener('say-goodbye', event => {
     location.reload();
 });
+
+
+window.addEventListener('pdf', event => {
+   alert('click pdf');
+});
+
+
+window.addEventListener('ajuste', event => {
+    location.reload();
+});
