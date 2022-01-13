@@ -19,11 +19,6 @@ use App\Http\Controllers\ChequesYTransferenciasController;
          <!-- Your application content -->
 
 
-
-
-
-
-
         <hr style="border-color:black; width:100%;">
         <div class="justify-content-start">
             <label class="label1" style="font-weight: bold"> Sesión de: </label>
@@ -67,12 +62,10 @@ function funcion(e) {
   var inputAux = document.getElementById('inputAux');
   alert("Valor Option: " + option.value + ", Texto Option: " + option.text);
   alert("Valor Input: " + inputAux.value);
-   
 
 }
                 </script>
         
-
 
                 <form action="{{ url('vincular-cheque') }}" method="POST">
                     @csrf
@@ -101,26 +94,53 @@ function funcion(e) {
           @endif
 
 
-
-
-
             </div>
 
-            <div class="input-group">
-
-                <span  style ="display: none;" class="input-group-text" >Buscar</span>
-    
-                <a class="btn btn-secondary " style="width: 100px;" href="{{ url('cheques-transferencias') }}" >X Filtro</a>
-    
-    
-                <button type="submit" class="btn btn-primary ml-2">Busca</button>
-                <input id="" name="filtro_cheques" type="text" class="form-control" placeholder="Filtra por palabra clave fecha/ Num de factura/ etc...	">
-                  <!-- se deshabilita la funcion busqueda automatica en tabla por script -->
-             </div>
+           
             </form>
             <br>
         </div>
         <div class="mx-4" style="overflow: auto" id="table_refresh" >
+            
+<!-- ===========================================================================-->
+<div class="w-full flex pb-10">
+    <div class="w-3/6 mx-1">
+        <input wire:model.debounce.500ms="search" type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"placeholder="Search users...">
+    </div>
+    <div class="w-1/6 relative mx-1">
+        <select wire:model="orderBy" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+            <option value="id">ID</option>
+            <option value="name">Name</option>
+            <option value="email">Email</option>
+            <option value="created_at">Sign Up Date</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+        </div>
+    </div>
+    <div class="w-1/6 relative mx-1">
+        <select wire:model="orderAsc" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+            <option value="1">Ascending</option>
+            <option value="0">Descending</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+        </div>
+    </div>
+    <div class="w-1/6 relative mx-1">
+        <select wire:model="perPage" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+            <option>10</option>
+            <option>25</option>
+            <option>50</option>
+            <option>100</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+        </div>
+    </div>
+</div>
+<!--=========================================================================== -->
+
            
         <div >
 
@@ -224,7 +244,7 @@ function funcion(e) {
                             <td data-label="Total CFDI">${{ number_format($sumaxml, 2) }}</td>
                             <td data-label="Por Comprobar">${{ $diferencia }}</td>
                             <td class="text-center align-middle CellWithComment">
-                                @include('modals')
+                               
                                 @if (Session::get('tipoU') == '2')
         
         
@@ -248,16 +268,17 @@ function funcion(e) {
                         <!--- fin icon seccion comentarios -->
 
                             </td>
-
+           
 
                             <td data-label="Pdf">
-                                @if ($nombreCheque == '0')
-                                    <i class="far fa-times-circle fa-2x" style="color: rgb(255, 44, 44)"></i>
-                                @else
-                                <a id="tooltip"  href="#" style="text-decoration: none; " class="icons fas fa-file-pdf"
-data-toggle="modal" data-target="#pdfcheque"  wire:click="ver()"> </a>
+                                <!-- MODAL pdfcheeque-->
+               <livewire:pdfcheque :pdfcheque=$i : key="$i->id" >
+                                   
+                   <hr>
 
-                                    <a id="rutArc" href="{{ $rutaArchivo }}" target="_blank">
+                   
+
+                                   <!-- <a id="rutArc" href="{{ $rutaArchivo }}" target="_blank">
                                         <i class="fas fa-file-pdf fa-2x" style="color: rgb(202, 19, 19)"></i>
                                     </a>
                                     <br><br>
@@ -267,9 +288,8 @@ data-toggle="modal" data-target="#pdfcheque"  wire:click="ver()"> </a>
                                             <button  class="fabutton"  onclick="return confirm('¿Seguro que deseas eliminar el Pdf ?')" type="submit" >
                                                 <i class="fas fa-trash-alt fa-lg" style="color: rgb(8, 8, 8)"></i>
                                             </button>
-                                        </form>
+                                        </form>-->
     
-                                @endif
                             </td>
 
                             <td data-label="D. adicionales" >
@@ -450,8 +470,7 @@ data-toggle="modal" data-target="#pdfcheque"  wire:click="ver()"> </a>
 
         <livewire:uploadrelacionados  >
 
-                <!-- MODAL pdfcheeque-->
-     <livewire:pdfcheque   >
+ 
 
     </div><!-- Fin del div refresh tabla-->
     </div>
@@ -459,50 +478,6 @@ data-toggle="modal" data-target="#pdfcheque"  wire:click="ver()"> </a>
         {{ $colCheques->appends(Request::except('page'))->links('pagination::bootstrap-4') }}
     </div>
 
-    <nav class="navi">
-
-        <li class="navi__link" >
-        <form >
-        <button type="submit" class="alert parpadea fas fa-exclamation" style="width: 60px; height:5px;">
-
-            </button>
-            <input type="hidden" name="filtro" value="pendientes" >
-            <span class="navi__text">
-                @php  $p =new ChequesYTransferenciasController();
-                  echo $p->pendientes($rfc);
-                @endphp
-                    Pendientes</span>
-          </form>
-        </li>
-        <li class="navi__link">
-        <form >
-            <button type="submit" class="icon_basic fas fa-low-vision" style="width: 60px; height:5px;">
-            </button>
-          <span class="navi__text">
-            <input type="hidden" name="filtro" value="Sin_revisar" >
-            @php  $verif =new ChequesYTransferenciasController();
-            echo $verif->verificado($rfc);
-           @endphp
-            Sin Revisar</span>
-
-          </form>
-        </li>
-
-        <li class="navi__link">
-          <form>
-            <button type="submit"class="icon_basic fas fa-calculator" style="width: 60px; height:5px;">
-            </button>
-          <span class="navi__text">
-            <input type="hidden" name="filtro" value="Sin_contabilizar" >
-            @php  $cont =new ChequesYTransferenciasController();
-             echo $cont->contabilizado($rfc);
-            @endphp
-         Sin contabilizar</span>
-
-          </form>
-        </li>
-
-      </nav>
 
 
 

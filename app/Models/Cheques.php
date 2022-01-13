@@ -95,7 +95,13 @@ return $mes;
 }
 
 
-
+public static function search($search)
+{
+    return empty($search) ? static::query()
+        : static::query()->where('Id', 'like', '%'.$search.'%')
+            ->orWhere('numcheque', 'like', '%'.$search.'%')
+            ->orWhere('Beneficiario', 'like', '%'.$search.'%');
+}
 
 
 

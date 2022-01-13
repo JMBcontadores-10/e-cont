@@ -48,6 +48,8 @@
     <link href="{{ asset('css/seccionRelacionados.css') }}" rel="stylesheet" >
     <link href="{{ asset('css/estilos_generales.css')}}" rel="stylesheet">
 
+  <!-- TailwindCSS --><!--STYLES PARA LAS TABLAS/ FILTROS ETC.. -->
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
 
 
 

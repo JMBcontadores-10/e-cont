@@ -17,6 +17,7 @@
         "phpcfdi/cfdi-cleaner": "^1.1.2",
         "phpcfdi/cfdi-to-json": "^0.2.1",
         "phpcfdi/sat-ws-descarga-masiva": "^0.4.2",
+        "rappasoft/laravel-livewire-tables": "^1.21",
         "spatie/laravel-mix-preload": "^1.2",
         "wire-elements/modal": "^1.0"
     },

@@ -55,6 +55,7 @@ class Editar extends ModalComponent
     public function actualizar(){
 
 
+           
 
 
         
@@ -62,27 +63,27 @@ class Editar extends ModalComponent
         $dtz =new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
         $hora=$dt->format('YFd\Hh\Mi\SsA');
-
-        if(!empty($this->editChequenombrec)){
-        $nombre =$this->editChequenombrec->getClientOriginalName();  
-        $nombreFile=preg_replace('/[^A-z0-9.-]+/', '', $nombre);
-        $renameFile=$hora.$nombreFile;
-        }
-
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
         $dateValue = strtotime($this->editCheque->fecha);
         $mesfPago = date('m',$dateValue);
         $anioValue = strtotime($this->editCheque->fecha);
         $anioo = date('Y',$dateValue);
-        $mesActual=date('m');
+
+        // ================================//
+        // definir ruta origen //
+        $cheque = Cheques::where('_id', $this->editCheque->id)->first(); // se instancia al cheque
+        $valorOrigen=strtotime($cheque->fecha);
+        $anioOrigen= date('Y',$valorOrigen);
+        $mesOrigen= date('m',$valorOrigen);
+       
         $espa=new Cheques();
         //$espa->fecha_es($mes);
 
-        $ruta="contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
-        $ruta2="/contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/";
-        $ruta3="/contarappv1_descargas/".$rfc."/".$anioo."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
-        $rutaRelacionados="contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/Documentos_Relacionados/".$espa->fecha_es($mesfPago)."/";
+       
+        $rutaOrigen="/contarappv1_descargas/".$rfc."/".$anioOrigen."/Cheques_Transferencias/".$espa->fecha_es($mesOrigen)."/";
+        $rutaDestino="/contarappv1_descargas/".$rfc."/".$anioo."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
+// $rutaRelacionados="contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/Documentos_Relacionados/".$espa->fecha_es($mesfPago)."/";
 
         
 
@@ -91,86 +92,23 @@ class Editar extends ModalComponent
 
 /* verifica si existe el pdf en el dir. y lo elimina si se va a remplazar */
 
-        if(!empty($this->editChequenombrec)){
-
-            if ($this->editCheque->nombrec!="0"){
-
-            $nomfile = explode("/", $this->editCheque->nombrec);
-
-            $file =$nomfile[1];
-
-         $path = storage_path('.././public/storage').$ruta3.$nomfile[1];
-         if(file_exists($path)){
-         unlink($path);
-         }
-
-        }
-
-        $this->editChequenombrec->storeAs($ruta,  $renameFile ,'public2');
-
-        $data=[
-
-
-            'nombrec' => $espa->fecha_es($mesfPago)."/" . $renameFile
-
-        ];
-
-        $this->editCheque->update($data); // guarda el documento el pdf
-
-         }/* fin- verifica si existe el pdfen el dir. y lo elimina si se sube uno nuevo */
-      /*====se toma el nombre del pdf de la db para moverlo de carpeta======*/ 
-         else{
-
-
-if ($this->editCheque->nombrec!="0"){
-            $nomfile = explode("/", $this->editCheque->nombrec);
-
-            $file =$ruta3.$nomfile[1];
-            if(Storage::disk('public2')->exists($file)) {
-
-
-
-            }else{
-       //Storage::disk('public2')->copy($ruta2.$this->editCheque->nombrec, $ruta3.$nomfile[1] );
-       // Storage::disk('public2')->writeStream($ruta3.$nomfile[0].".pdf", Storage::readStream($ruta2.$this->editCheque->nombrec));
-       Storage::disk('public2')->move($ruta2.$this->editCheque->nombrec,  $ruta3.$nomfile[1]);
-
-
-      // unlink($file);
-    }
-           
      
-    
-       $data=[
-
-        'nombrec' => $espa->fecha_es($mesfPago)."/" .$nomfile[1]
-       ];
-
-       
-
-       $this->editCheque->update($data); // guarda el documento el pdf
-        
-
-         }
-
-        }
-   /*==== fin- se toma el nombre del pdf de la db para moverlo de carpeta======*/ 
-
-
-  
-         $this->editCheque->save();// guarda todos los campos
+if ($this->editCheque->nombrec!="0"){
 
 
 
-      
 
-        session()->flash('c');
-      // $this->emitTo('chequesytransferencias', 'chequesRefresh');
-      $this->dispatchBrowserEvent('say-goodbye', []);
-
-
+    if (Storage::exists($rutaDestino.$this->editCheque->nombrec)) {
+        Storage::delete($rutaDestino.$this->editCheque->nombrec);
     }
 
+    
+Storage::disk('public2')->move($rutaOrigen.$this->editCheque->nombrec,  $rutaDestino.$this->editCheque->nombrec);
+
+$this->editCheque->save();// guarda todos los campos
+$this->dispatchBrowserEvent('say-goodbye', []);
+
+}
 
 
 
@@ -181,17 +119,4 @@ if ($this->editCheque->nombrec!="0"){
 
 
 
-
-/* 
-
-
-  foreach ($this->relacionadosUp as $file) {
-
-             $cheque = Cheques::where('Id', $this->editCheque->Id);
-             $cheque->push('doc_relacionados',$espa->fecha_es($mesfPago)."/". $file->hashName());
-
-            $file->store($rutaRelacionados, 'public2');
-
-
-        }
-*/
+}

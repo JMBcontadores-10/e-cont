@@ -89,73 +89,34 @@ public function  storeEditPdf(Request $r, $id){
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
         $dateValue = strtotime($cheque->fecha);
-        $mesfPago = date('m',$dateValue);
+        $anio = date('Y',$dateValue);
+        $mesfPago=date('m',$dateValue);
         $mesActual=date('m');
         $espa=new Cheques();
         //$espa->fecha_es($mes);
-        $renameFile=$espa->fecha_es($mesActual).$filename.".pdf";
+        $renameFile=$espa->fecha_es($mesActual)."&".$filename;
 
 
     $ruta="contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
-    $ruta2="/contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/";
-    $ruta3="/contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
-   
-    if(!empty($cheque->nombrec)){
-
-     $path = storage_path('.././public/storage').$ruta2.$cheque->nombrec;
-     if(file_exists($path)){
-     unlink($path);
-     }
-
-
-     $cheque->nombrec->storeAs($ruta, $renameFile ,'public2');
 
    
+        
 
-     }else{
-
-
-        $nomfile = explode("/", $cheque->nombrec);
-
-        $file =$ruta3.$nomfile[1];
-        if(Storage::disk('public2')->exists($file)) {
-
-
-
-        }else{
-   //Storage::disk('public2')->copy($ruta2.$this->editCheque->nombrec, $ruta3.$nomfile[1] );
-   // Storage::disk('public2')->writeStream($ruta3.$nomfile[0].".pdf", Storage::readStream($ruta2.$this->editCheque->nombrec));
-   Storage::disk('public2')->move($ruta2.$cheque->nombrec,  $ruta3.$nomfile[1]);
-
-
-  // unlink($file);
-}
-   $data=[
-
-    'nombrec' => $espa->fecha_es($mesfPago)."/" .$renameFile
-   ];
+        // se guradan los documentos relacionados en la carpeta correspondiente al mes
+       $file->storeAs($ruta, $renameFile,'public2');
+ 
+       $cheque->update([  // actualiza el campo nombrec a 0 
+        'nombrec' => $renameFile,
+       ]);
 
 
 
-     }
+       return "entro en zona de carga".$ID."<br>".$ruta;
+   
 
+    }
 
-    
-
-  // $this->emitTo('chequesytransferencias', 'chequesRefresh');
-
-
-    
-} // fin has
-
-
-}//fin funcion  storeEditPdf
-
-
-
-
-
-
+}// fin funcion edit pdf
 
 
 

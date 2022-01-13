@@ -70,6 +70,7 @@ class ChequesYTransferenciasController extends Controller
                 ->paginate(10);
             // ->get();
         } else {
+
 ///  Nota: whereMonth() no funcionaba correctamente
 
 
@@ -88,25 +89,55 @@ class ChequesYTransferenciasController extends Controller
         // Genera la consulta de busqueda por filtro string usuario
           if ($r->has('filtro_cheques'))
           {
-
+              
             $filtro_cheques= $r->filtro_cheques;
+           
+
+           if(preg_match('#[^0-9]#',$filtro_cheques)){
+
+            $cut = explode(".", $filtro_cheques); 
+           
+
+                $arr = array("$",",",".");
+
+                $filtro_cheques =str_replace($arr, '',$cut[0]);
+                    
+                $filtro_cheques= floatval($filtro_cheques); 
+
+
+           }else{
+
+
+           }
+
+            
+      
+    
+echo $filtro_cheques;
+           
             $colCheques = Cheques::where('rfc', $rfc)
-                  ->where(function($query) use ( $filtro_cheques){///buscar por mutiples campos
-                            $query->where('Beneficiario', 'like','%'. $filtro_cheques . '%')
-                                  ->orWhere('tipomov', 'like','%'. $filtro_cheques . '%')
-                                  ->orWhere('numcheque', 'like','%'. $filtro_cheques . '%')
-                                  ->orWhere('fecha', 'like','%'. $filtro_cheques . '%')
-                                  ->orWhere('tipoopera', 'like','%'. $filtro_cheques . '%')
-                                  ->orWhere('rfc', 'like','%'. $filtro_cheques . '%')
-                                  ->orWhere('nombrec', 'like','%'. $filtro_cheques . '%')
-                                  ->orWhere('_id',  $filtro_cheques)
-                                  ->orderBy('fecha', 'desc');
+            
+            ->where(function($query) use ( $filtro_cheques){///buscar por mutiples campos
+                $query->where('Beneficiario', 'like','%'. $filtro_cheques . '%')
+                      ->orWhere('tipomov', 'like','%'. $filtro_cheques . '%')
+                      ->orWhere('numcheque', 'like','%'. $filtro_cheques . '%')
+                      ->orWhere('fecha', 'like','%'. $filtro_cheques . '%')
+                      ->orWhere('tipoopera', 'like','%'. $filtro_cheques . '%')
+                      ->orWhere('rfc', 'like','%'. $filtro_cheques . '%')
+                      ->orWhere('nombrec', 'like','%'. $filtro_cheques . '%')
+                      ->orWhere('importecheque',  $filtro_cheques )
+                      ->orWhere('_id',  $filtro_cheques)
+                        ->orderBy('fecha', 'desc');
+                                                       
+
+                    })->paginate(40);
 
 
+                         
 
-                                })->paginate(50);
+                 }
+                      
 
-                          }
 
           /// filtros pendientes, revisados y contabilizados
 
@@ -362,6 +393,8 @@ class ChequesYTransferenciasController extends Controller
         $fechaUser=$r->fechaCheque;
         $fechaComoEntero = strtotime($fechaUser);
         $mes = date("m", $fechaComoEntero);
+        $anioComoEntero = strtotime($fechaUser);
+        $anioo = date("Y", $fechaComoEntero);
 // swich para convertir Int mes en String
         switch ($mes){
 
@@ -408,7 +441,7 @@ class ChequesYTransferenciasController extends Controller
         $dt = new DateTime("now", $dtz);
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
-        $rutaDescarga = "storage/contarappv1_descargas/$rfc/$anio/Cheques_Transferencias/$mes";
+        $rutaDescarga = "storage/contarappv1_descargas/$rfc/$anioo/Cheques_Transferencias/$mes";
         $subir_archivo = basename($_FILES['subir_archivo']['name']);
         $Id = $dt->format('YFd\Hh\Mi\SsA');
         $tipo = $r->tipo;

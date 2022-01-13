@@ -5,7 +5,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;"  class="icons fas fa-upload"> Subir Archivos</span></h6>
+                    <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;"  class="icons fas fa-upload"> Subir Archivoss</span></h6>
                     <button type="button"  wire:click.prevent="refresh()"  class="close" data-dismiss="modal" aria-label="Close">
                          <span aria-hidden="true close-btn">×</span>
                     </button>
@@ -25,7 +25,7 @@
                         <!--
                            <input wire:model.defer=""   name="doc_relacionados" type="file" accept=".pdf" id="attachment" style="visibility: hidden; position: absolute;" multiple />
                         -->
-                        <input    name="avatar" type="file" id="avatar"  />
+                        <input   name="avatar" type="file" id="avatar"  />
                         <input type="hidden" id="user" name="user_id" value="">
                         <input type="hidden" name="nombre" value="avatar">
                     

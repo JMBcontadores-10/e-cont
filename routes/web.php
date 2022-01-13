@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\UploadController;
 use App\Http\Livewire\Chequesytransferencias;
+use App\Http\Livewire\Cheques;
 use App\Http\Livewire\Modals\Editar;
+use App\Http\Livewire\Pdfcheque;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -81,6 +83,5 @@ Route::view('editar','livewire.editar');
 Route::post('/upload/{id}', [App\Http\Controllers\UploadController::class, 'store']);
 Route::post('/uploadEdit/{id}', [App\Http\Controllers\UploadController::class, 'storeEditPdf']);
 Route::get('/chequesytransferencias',Chequesytransferencias::class)->name('cheques');
-
 
 

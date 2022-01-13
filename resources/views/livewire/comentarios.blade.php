@@ -13,7 +13,7 @@
 
 
  
-<hr>
+
 <a id="tooltip"  href="#" style="text-decoration: none; " class="{{$class}} fas fa-comments"
 data-toggle="modal" data-target="#comentarios-{{$datos->id}}"> </a>
 

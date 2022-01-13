@@ -214,66 +214,71 @@ function filepondEditCheque(id) {
 
 
 
-    // registrar plugin validacion filepond  se deben agregar los cdn despues del body 
-    FilePond.registerPlugin(FilePondPluginFileValidateType);
-    // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
-    FilePond.registerPlugin(FilePondPluginFileValidateSize);
-    
-    const token = document.querySelector('input[name="_token"]');
-     var ID =id;
-    
-    const ids= document.getElementById("user").value;
-    
-    const iden = document.getElementById("editCheque"+ID);
-    const ruta= iden;
-    
-    
-    
-    // Create a FilePond instance
-     //const pond = FilePond.create(ruta);// creacion simple de filepond
-    var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
-        maxFileSize: '1000KB',
-        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
-        labelIdle:'Carga automatica de pdf <span class="filepond--label-action"> Explorar </span>',
-        labelFileLoading:'Cargando',
-        labelFileProcessing:'Subiendo a E-cont..',
-        labelFileProcessingComplete: 'Carga completa',
-        labelFileProcessingAborted: 'Carga cancelada',
-        labelTapToCancel: 'Presiona para cancelar',
-        allowMultiple: true,
-        //instantUpload: false,
-        acceptedFileTypes: ["application/pdf"],
-        fileValidateTypeDetectType: (source, type) =>
-            new Promise((resolve, reject) => {
-                // Do custom type detection here and return with promise
-    
-                resolve(type);
-            }),
-         
-    });
-    
-    FilePond.setOptions({
-        name:'editCheque',
-     server: {
-    
-           url:'uploadEdit/'+ID,
-           headers:{
-               'X-CSRF-TOKEN': token.value
-    
-     }
+   
+
+// registrar plugin validacion filepond  se deben agregar los cdn despues del body 
+FilePond.registerPlugin(FilePondPluginFileValidateType);
+// registrar plugin validacion size filepond  se deben agregar los cdn despues del body
+FilePond.registerPlugin(FilePondPluginFileValidateSize);
+
+const token = document.querySelector('input[name="_token"]');
+ var ID =id;
+
+const ids= document.getElementById("user").value;
+
+const iden = document.getElementById("editCheque"+ID);
+const ruta= iden;
+
+
+
+// Create a FilePond instance
+ //const pond = FilePond.create(ruta);// creacion simple de filepond
+var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
+    maxFileSize: '1000KB',
+    labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+    labelIdle:'Sube un archivo <span class="filepond--label-action"> Explorar </span>',
+    labelFileLoading:'Cargando',
+    labelFileProcessing:'Subiendo a E-cont..',
+    labelFileProcessingComplete: 'Carga completa',
+    labelFileProcessingAborted: 'Carga cancelada',
+    labelTapToCancel: 'Presiona para cancelar',
+    allowMultiple: false,
+    //instantUpload: false,
+    acceptedFileTypes: ["application/pdf"],
+    fileValidateTypeDetectType: (source, type) =>
+        new Promise((resolve, reject) => {
+            // Do custom type detection here and return with promise
+
+            resolve(type);
+        }),
      
-    }
-    
-    
-    
-    });
-    
-    
-    
-    //alert(token.value); ID
-    
+});
+
+FilePond.setOptions({
+    name:'editCheque',
+ server: {
+
+       url:'uploadEdit/'+ID,
+       headers:{
+           'X-CSRF-TOKEN': token.value
+
+ }
+ 
+}
+
+
+
+});
+
     
     }// fin funcion
+
+
+ 
+    
+
+
+
 
 //=====================FUNCION FADE DIV RELACIONADOS============================================//
 
@@ -321,7 +326,7 @@ window.addEventListener('say-goodbye', event => {
 
 
 window.addEventListener('pdf', event => {
-   alert('click pdf');
+    location.reload();
 });
 
 

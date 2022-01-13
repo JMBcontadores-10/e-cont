@@ -13,6 +13,12 @@
     color:#8CD138;
 }
 
+.content_true_pdf{
+
+    font-size:25px;
+    color:#D33E20;
+}
+
 .alert{
     font-size:25px;
     color:#C81B02;
@@ -105,6 +111,8 @@ font-size:25px;
         width:100px;
         word-wrap: break-word;
         display:inline-block;
+
+       
     }
 
 /*!
