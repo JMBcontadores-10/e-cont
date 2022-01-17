@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 <head>
-    <title>Descargas SAT Contarapp</title>
+    <title>Descargas SAT E-cont</title>
 </head>
 
 @section('content')

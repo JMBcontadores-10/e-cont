@@ -83,5 +83,5 @@ Route::view('editar','livewire.editar');
 Route::post('/upload/{id}', [App\Http\Controllers\UploadController::class, 'store']);
 Route::post('/uploadEdit/{id}', [App\Http\Controllers\UploadController::class, 'storeEditPdf']);
 Route::get('/chequesytransferencias',Chequesytransferencias::class)->name('cheques');
-
+Route::get('/descargascfdi', [App\Http\Controllers\DescargascfdiController::class, 'index'])->name('descargascfdi');
 

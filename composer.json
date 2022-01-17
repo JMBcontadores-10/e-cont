@@ -15,6 +15,7 @@
         "laravel/ui": "^3.3",
         "livewire/livewire": "^2.8",
         "phpcfdi/cfdi-cleaner": "^1.1.2",
+        "phpcfdi/cfdi-sat-scraper": "^2.1",
         "phpcfdi/cfdi-to-json": "^0.2.1",
         "phpcfdi/sat-ws-descarga-masiva": "^0.4.2",
         "rappasoft/laravel-livewire-tables": "^1.21",
@@ -22,6 +23,7 @@
         "wire-elements/modal": "^1.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.6",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",

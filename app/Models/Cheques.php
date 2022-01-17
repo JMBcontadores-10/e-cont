@@ -34,7 +34,7 @@ class Cheques extends Model
         'pendi',
         'lista',
         'ajuste',
-        'doc_relacionados'
+        'doc_relacionados',
     ];
 
    

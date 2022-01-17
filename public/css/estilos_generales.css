@@ -112,7 +112,7 @@ font-size:25px;
         word-wrap: break-word;
         display:inline-block;
 
-       
+
     }
 
 /*!
@@ -371,3 +371,7 @@ font-size:25px;
             transform: rotate(360deg);  /* Firefox 16+, IE 10+, Opera */
         }
     }
+
+
+    /* ===========  seccion search ==========*/
+

@@ -16,19 +16,18 @@ class Tablacheques extends DataTableComponent
     public function columns(): array
     {
         return [
-            Column::make('Fecha','fecha')
+            Column::make('fecha')
+            ->sortable(),
+           
+            Column::make('importecheque')
             ->sortable()
             ->searchable(),
-            Column::make('importe','importecheque')
-            ->sortable()
-            ->searchable(),
-            Column::make('Nombre','numcheque')
-                ->sortable()
-                ->searchable(),
-            Column::make('beneficiario', 'Beneficiario')
-                ->sortable()
-                ->searchable(),
+          
+          
             Column::make('tipo operacion', 'tipoopera')
+                ->sortable(),
+                
+                Column::make('Beneficiario')
                 ->sortable(),
         ];
     }

@@ -46,7 +46,7 @@ data-toggle="modal" data-target="#ajuste{{$datos->id}}">
  <form  wire:submit.prevent="guardar">
     @csrf    
 <input type="hidden" name="id" value="{{ $datos->id }}">
-<input wire:model.defer="ajuste" type="number" step="any" name="ajuste" placeholder="0" class="form-control">
+<input wire:model.defer="ajuste" type="number" step="any" name="ajuste" class="form-control">
 
 <div wire:loading wire:target="guardar" >
     <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">

@@ -13,7 +13,7 @@ use Livewire\WithPagination;
 class Chequesytransferencias extends Component
 {
 
-    
+
 
     public $users, $name, $email, $user_id;
     public $cheque;
@@ -25,7 +25,7 @@ class Chequesytransferencias extends Component
         'chequesRefresh' => '$refresh',
      ];
 
-    
+
 protected function rules(){
 
     return [
@@ -33,7 +33,7 @@ protected function rules(){
         'name' => ''
     ];
 }
-    
+
 
 public function ver_pdf($id ){
     $this->user_id = $id;
@@ -45,10 +45,10 @@ public function ver_pdf($id ){
 
 
 
-   
+
     public function render()
     {
-         
+
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
         $rfc = Auth::user()->RFC;
@@ -56,7 +56,7 @@ public function ver_pdf($id ){
         $cheque = Cheques::
         search($this->search)
         ->where('rfc',$rfc)
-        
+
         ->paginate($this->perPage)
         ;
         $meses = array(
@@ -74,20 +74,26 @@ public function ver_pdf($id ){
             '12' => 'Diciembre'
         );
         $anios = range(2014, date('Y'));
-     
-     
-     
-    
+
+
+
+
         return view('livewire.chequesytransferencias',['colCheques' => $cheque, 'meses'=>$meses,'anios'=>$anios])
-        ->extends('layouts.livewire-layout')
-        
-        ;
+        ->extends('layouts.livewire-layout');
+
+    }
+
+
+
+    public function search(){
+
+
+
     }
 
 
 
 
-    
 
 
     public function actualizar(){

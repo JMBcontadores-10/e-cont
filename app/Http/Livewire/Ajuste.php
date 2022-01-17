@@ -24,6 +24,8 @@ class Ajuste extends ModalComponent
     ];
     }
 
+    
+
 
     
 
