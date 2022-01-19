@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 
+
 <!--AGREGAR STYLOS LIVEWIRE -->
 @push('styles')
 @livewireStyles

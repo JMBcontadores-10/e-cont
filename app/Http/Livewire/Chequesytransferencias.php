@@ -18,7 +18,7 @@ class Chequesytransferencias extends Component
     public $users, $name, $email, $user_id;
     public $cheque;
 
-    public int $perPage=10;
+    public int $perPage=100;
     public $search;
 
     protected $listeners = [
@@ -36,16 +36,13 @@ protected function rules(){
 
     return [
         'user_id' => '',
-        'name' => ''
+        'name' => '',
+       
     ];
 }
 
 
-public function ver_pdf($id ){
-    $this->user_id = $id;
 
-
-}
 
 
 
@@ -110,13 +107,32 @@ public function ver_pdf($id ){
     }
 
 
+    public function editar($id){
+
   
+        $dtz = new DateTimeZone("America/Mexico_City");
+        $dt = new DateTime("now", $dtz);
+        $rfc = Auth::user()->RFC;
+        $anio = $dt->format('Y');
+        $cheque = Cheques::
+      
+        where('_id',$id)->first();
+
+        ;
+
+        $this->user_id = $id;
+        $this->name = $cheque->numcheque;
+        $this->fecha = $cheque->fecha;
+
+ 
+
+    }
 
 
 
     public function actualizar(){
 
-        $this->emitTo('chequesytransferencia','reviewSectionRefresh');
+        $this->emitTo('chequesytransferencia','chequesRefresh');
     }
 
 

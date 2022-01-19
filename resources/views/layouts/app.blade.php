@@ -40,7 +40,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     {{-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet"> --}}
-
+    
     <!-- Styles -->
     <link href="{{ asset('css/fullcalendar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -96,15 +96,6 @@
   
      {{--------- end estilos para el dashbard  ---}}
 
- 
-<!-- Alpine v2 -->
-<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-
-<!-- Alpine v3 -->
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-
-    <!--charts-->
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/data.js"></script>
@@ -177,7 +168,6 @@
 </head>
 
 
-
 <body   class="vertical-layout vertical-menu-modern 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
     <!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
 <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
@@ -196,7 +186,7 @@
 });
             </script>
 
-
+@livewire('livewire-ui-modal')
 <!--================ codigo body=======================================  -->
 
 <!-- begin::preloader-->
@@ -991,8 +981,7 @@
       </footer>
       <!-- END: Footer-->
   
-
-
+      @livewire('livewire-ui-modal')
 </body>
 <footer style="margin-top: 20px;">
     <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |

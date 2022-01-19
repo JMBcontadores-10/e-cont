@@ -8,8 +8,6 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
   
 
-
-        
         @php
         $rfc = Auth::user()->RFC;
        $class='';
@@ -21,6 +19,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
     
     
      @endphp
+
 
           <!-- BEGIN: Content-->
     <div class="app-content content">
@@ -135,7 +134,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
         @endphp
         <tbody>
           <tr>
-           
+       
             <td>
               <a href="app-invoice.html">{{$numCheque}}</a>
             </td>
@@ -147,6 +146,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                  <a  href="#" style="text-decoration: none; " class="icons fas fa-upload"
                                data-toggle="modal" id="{{$id}}" onclick="filepond(this.id)"  data-target="#uploadRelacionados">
                               </a>
+                              <button data-toggle="modal" data-target="#exampleModal" wire:click="editar('{{$id}}')"class="btn btn-primary btn-sm">Edit</button>
                              
             </span></td>
             <td>
@@ -168,11 +168,11 @@ use App\Http\Controllers\ChequesYTransferenciasController;
       </div>
       <!-- END: Content-->
 
-      <livewire:ajuste  :ajusteCheque=$i : key="$i->id" >
+      <livewire:ajuste  :ajusteCheque=$i : key="$i->id">
 
 
-      <livewire:uploadrelacionados  >
+      <livewire:uploadrelacionados >
 
-
-
+   
+        @include('livewire.demo')
 </div><!-- fin div contenedor principal-->
