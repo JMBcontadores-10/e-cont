@@ -45,17 +45,63 @@
     <link href="{{ asset('css/fullcalendar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <!--<link href="{{ asset('css/styles.css') }}" rel="stylesheet">-->
-    <link href="{{ asset('css/seccionRelacionados.css') }}" rel="stylesheet" >
+  <!--  <link href="{{ asset('css/seccionRelacionados.css') }}" rel="stylesheet" >-->
 <link href="{{ asset('css/estilos_generales.css')}}" rel="stylesheet">
   {{--------- estilos para el dashbard  ---}}
-    <link href="{{asset('css/vendors/bundle.css')}}" rel="stylesheet">
-    <link href="{{asset('css/vendors/datepicker/daterangepicker.css')}}" rel="stylesheet">
-       <link href="{{asset('css/vendors/vmap/jqvmap.min.css')}}" rel="stylesheet">
-          <link href="{{asset('css/assets/css/app.min.css')}}" rel="stylesheet">
+  {{--------- estilos para el dashbard  ---}}
+
+   <!-- BEGIN: Vendor CSS-->
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/vendors.min.css') }}">
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/charts/apexcharts.css') }}">
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/extensions/swiper.min.css') }}">
+   <!-- END: Vendor CSS-->
+
+
+       <!-- BEGIN: Vendor CSS-->
+       <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/vendors.min.css')}}">
+       <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css')}}">
+       <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/tables/datatable/responsive.bootstrap4.min.css')}}">
+       <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/tables/datatable/dataTables.checkboxes.css')}}">
+       <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/tables/datatable/buttons.bootstrap4.min.css')}}">
+       <!-- END: Vendor CSS-->
+
+   <!-- BEGIN: Theme CSS-->
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/bootstrap.min.css')}}">
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/bootstrap-extended.min.css')}}">
+   <link rel="stylesheet"  href="{{ asset('app-assets/css/colors.min.css')}}">
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/components.min.css')}}">
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/themes/dark-layout.min.css')}}">
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/themes/semi-dark-layout.min.css')}}">
+   <!-- END: Theme CSS-->
+
+ 
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/pages/app-invoice.min.css')}}">
+   <!-- END: Page CSS-->
+
+   <!-- BEGIN: Page CSS-->
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/core/menu/menu-types/vertical-menu.min.css')}}">
+   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/pages/dashboard-ecommerce.min.css')}}">
+   <!-- END: Page CSS-->
+
+   <!-- BEGIN: Custom CSS-->
+   <link rel="stylesheet"  href="{{ asset('css/assets/css/style.css')}}">
+   <!-- END: Custom CSS-->
+
+   <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
+     {{--------- end estilos para el dashbard  ---}}
+
+
+
+
+  
      {{--------- end estilos para el dashbard  ---}}
 
  
+<!-- Alpine v2 -->
+<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 
+<!-- Alpine v3 -->
+<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
 
     <!--charts-->
@@ -73,57 +119,47 @@
     <script src="{{ asset('js/moment.min.js') }}" defer></script>
     {{-- <script src="{{ asset('js/fullcalendar.js') }}" defer></script> --}}
     <script src="{{ asset('js/excel.js') }}" defer></script>
-    <script src="{{ asset('js/es.js') }}"></script>
+    <script src="{{ asset('js/es.js') }}" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet" />
 
       {{-----------scripts dashboard --------}}
-  <!-- Plugin scripts -->
-<script src="{{asset('js/vendors/bundle.js')}}" defer></script>
 
-<!-- Chartjs -->
-<script src="{{asset('js/vendors/charts/chartjs/chart.min.js')}}"defer></script>
 
-<!-- Apex chart -->
-<script src="{{asset('js/vendors/charts/apex/apexcharts.min.js')}}"defer></script>
+    <!-- BEGIN: Vendor JS-->
+    <script src="{{ asset('js/app-assets/vendors/js/vendors.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.tools.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js') }}" defer></script>
+    <!-- BEGIN Vendor JS-->
 
-<!-- Circle progress -->
-<script src="{{asset('js/vendors/circle-progress/circle-progress.min.js')}}"defer></script>
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js') }}"defer></script>
+    <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/dataTables.bootstrap4.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/datatables.checkboxes.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/buttons.bootstrap4.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/responsive.bootstrap4.min.js') }}" defer></script>
+    <!-- END: Page Vendor JS-->
 
-<!-- Peity -->
-<script src="{{asset('js/vendors/charts/peity/jquery.peity.min.js')}}"defer></script>
-<script src="{{asset('js/assets/js/examples/charts/peity.js')}}"defer></script>
+    <!-- BEGIN: Theme JS-->
+    <script src="{{ asset('js/app-assets/js/scripts/configs/vertical-menu-light.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/js/core/app-menu.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/js/core/app.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/js/scripts/components.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/js/scripts/footer.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/js/scripts/customizer.min.js') }}" defer></script>
+    <!-- END: Theme JS-->
 
-<!-- Datepicker -->
-<script src="{{asset('js/vendors/datepicker/daterangepicker.js')}}"defer></script>
+    <!-- BEGIN: Page JS-->
+    <script src="{{ asset('js/app-assets/js/scripts/pages/app-invoice.min.js') }}" defer></script>
+    <!-- END: Page JS-->
 
-<!-- Slick -->
-<script src="{{asset('js/vendors/slick/slick.min.js')}}"></script>
 
-<!-- Vamp -->
-<script src="{{asset('js/vendors/vmap/jquery.vmap.min.js')}}"defer></script>
-<script src="{{asset('js/vendors/vmap/maps/jquery.vmap.usa.js')}}"defer></script>
-<script src="{{asset('js/assets/js/examples/vmap.js')}}"defer></script>
 
-<!-- Dashboard scripts -->
-<script src="{{asset('js/assets/js/examples/dashboard.js')}}" defer></script>
-<div class="colors"> <!-- To use theme colors with Javascript -->
-    <div class="bg-primary"></div>
-    <div class="bg-primary-bright"></div>
-    <div class="bg-secondary"></div>
-    <div class="bg-secondary-bright"></div>
-    <div class="bg-info"></div>
-    <div class="bg-info-bright"></div>
-    <div class="bg-success"></div>
-    <div class="bg-success-bright"></div>
-    <div class="bg-danger"></div>
-    <div class="bg-danger-bright"></div>
-    <div class="bg-warning"></div>
-    <div class="bg-warning-bright"></div>
-</div>
 
-<!-- App scripts -->
-<script src="{{asset('js/assets/js/app.min.js')}}" defer></script>
+
       
       {{----------- end scripts dashboard    ---}}
 
@@ -142,7 +178,7 @@
 
 
 
-<body>
+<body   class="vertical-layout vertical-menu-modern 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
     <!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
 <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
@@ -162,816 +198,502 @@
 
 
 <!--================ codigo body=======================================  -->
+
 <!-- begin::preloader-->
-<div class="preloader">
-    <div class="preloader-icon"></div>
-</div>
+<div id="page-loader"><span class="preloader-interior"></span></div>
 <!-- end::preloader -->
 
-
-<!-- begin::header -->
-<div class="header">
-
-    <div>
-        <ul class="navbar-nav">
-
-            <!-- begin::navigation-toggler -->
-            <li class="nav-item navigation-toggler">
-                <a href="#" class="nav-link" title="Hide navigation">
-                    <i data-feather="arrow-left"></i>
-                </a>
+<!-- BEGIN: Header-->
+<div class="header-navbar-shadow"></div>
+<nav class="header-navbar main-header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top ">
+  <div class="navbar-wrapper">
+    <div class="navbar-container content">
+      <div class="navbar-collapse" id="navbar-mobile">
+        <div class="mr-auto float-left bookmark-wrapper d-flex align-items-center">
+          <ul class="nav navbar-nav">
+            <li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="javascript:void(0);"><i class="ficon bx bx-menu"></i></a></li>
+          </ul>
+          <ul class="nav navbar-nav bookmark-icons">
+            <li class="nav-item d-none d-lg-block"><a class="nav-link" href="app-email.html" data-toggle="tooltip" data-placement="top" title="Email"><i class="ficon bx bx-envelope"></i></a></li>
+            <li class="nav-item d-none d-lg-block"><a class="nav-link" href="app-chat.html" data-toggle="tooltip" data-placement="top" title="Chat"><i class="ficon bx bx-chat"></i></a></li>
+            <li class="nav-item d-none d-lg-block"><a class="nav-link" href="app-todo.html" data-toggle="tooltip" data-placement="top" title="Todo"><i class="ficon bx bx-check-circle"></i></a></li>
+            <li class="nav-item d-none d-lg-block"><a class="nav-link" href="app-calendar.html" data-toggle="tooltip" data-placement="top" title="Calendar"><i class="ficon bx bx-calendar-alt"></i></a></li>
+          </ul>
+          <ul class="nav navbar-nav">
+            <li class="nav-item d-none d-lg-block"><a class="nav-link bookmark-star"><i class="ficon bx bx-star warning"></i></a>
+              <div class="bookmark-input search-input">
+                <div class="bookmark-input-icon"><i class="bx bx-search primary"></i></div>
+                <input class="form-control input" type="text" placeholder="Explore Frest..." tabindex="0" data-search="template-search">
+                <ul class="search-list"></ul>
+              </div>
             </li>
-            <li class="nav-item navigation-toggler mobile-toggler">
-                <a href="#" class="nav-link" title="Show navigation">
-                    <i data-feather="menu"></i>
-                </a>
-            </li>
-            <!-- end::navigation-toggler -->
-
-            <li class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Create</a>
-                <div class="dropdown-menu">
-                    <a href="#" class="dropdown-item">User</a>
-                    <a href="#" class="dropdown-item">Category</a>
-                    <a href="#" class="dropdown-item">Product</a>
-                    <a href="#" class="dropdown-item">Report</a>
-                </div>
-            </li>
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Apps</a>
-                <div class="dropdown-menu dropdown-menu-big">
-                    <div class="p-3">
-                        <div class="row row-xs">
-                            <div class="col-6">
-                                <a href="chat.html">
-                                    <div class="p-3 border-radius-1 border text-center mb-3">
-                                        <i class="width-23 height-23" data-feather="message-circle"></i>
-                                        <div class="mt-2">Chat</div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="inbox.html">
-                                    <div class="p-3 border-radius-1 border text-center mb-3">
-                                        <i class="width-23 height-23" data-feather="mail"></i>
-                                        <div class="mt-2">Mail</div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="app-todo.html">
-                                    <div class="p-3 border-radius-1 border text-center">
-                                        <i class="width-23 height-23" data-feather="check-circle"></i>
-                                        <div class="mt-2">Todo</div>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-6">
-                                <a href="file-manager.html">
-                                    <div class="p-3 border-radius-1 border text-center">
-                                        <i class="width-23 height-23" data-feather="file"></i>
-                                        <div class="mt-2">File Manager</div>
-                                    </div>
-                                </a>
-                            </div>
+          </ul>
+        </div>
+        <ul class="nav navbar-nav float-right">
+          <li class="dropdown dropdown-language nav-item"><a class="dropdown-toggle nav-link" id="dropdown-flag" href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon flag-icon-us"></i><span class="selected-language">English</span></a>
+            <div class="dropdown-menu" aria-labelledby="dropdown-flag"><a class="dropdown-item" href="javascript:void(0);" data-language="en"><i class="flag-icon flag-icon-us mr-50"></i> English</a><a class="dropdown-item" href="javascript:void(0);" data-language="fr"><i class="flag-icon flag-icon-fr mr-50"></i> French</a><a class="dropdown-item" href="javascript:void(0);" data-language="de"><i class="flag-icon flag-icon-de mr-50"></i> German</a><a class="dropdown-item" href="javascript:void(0);" data-language="pt"><i class="flag-icon flag-icon-pt mr-50"></i> Portuguese</a></div>
+          </li>
+          <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon bx bx-fullscreen"></i></a></li>
+          <li class="nav-item nav-search"><a class="nav-link nav-link-search"><i class="ficon bx bx-search"></i></a>
+            <div class="search-input">
+              <div class="search-input-icon"><i class="bx bx-search primary"></i></div>
+              <input class="input" type="text" placeholder="Explore Frest..." tabindex="-1" data-search="template-search">
+              <div class="search-input-close"><i class="bx bx-x"></i></div>
+              <ul class="search-list"></ul>
+            </div>
+          </li>
+          <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="javascript:void(0);" data-toggle="dropdown"><i class="ficon bx bx-bell bx-tada bx-flip-horizontal"></i><span class="badge badge-pill badge-danger badge-up">5</span></a>
+            <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
+              <li class="dropdown-menu-header">
+                <div class="dropdown-header px-1 py-75 d-flex justify-content-between"><span class="notification-title">7 new Notification</span><span class="text-bold-400 cursor-pointer">Mark all as read</span></div>
+              </li>
+              <li class="scrollable-container media-list"><a class="d-flex justify-content-between" href="javascript:void(0);">
+                  <div class="media d-flex align-items-center">
+                    <div class="media-left pr-0">
+                      <div class="avatar mr-1 m-0"><img src="app-assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="39" width="39"></div>
+                    </div>
+                    <div class="media-body">
+                      <h6 class="media-heading"><span class="text-bold-500">Congratulate Socrates Itumay</span> for work anniversaries</h6><small class="notification-text">Mar 15 12:32pm</small>
+                    </div>
+                  </div></a><a class="d-flex justify-content-between read-notification cursor-pointer" href="javascript:void(0);">
+                  <div class="media d-flex align-items-center">
+                    <div class="media-left pr-0">
+                      <div class="avatar mr-1 m-0"><img src="app-assets/images/portrait/small/avatar-s-16.jpg" alt="avatar" height="39" width="39"></div>
+                    </div>
+                    <div class="media-body">
+                      <h6 class="media-heading"><span class="text-bold-500">New Message</span> received</h6><small class="notification-text">You have 18 unread messages</small>
+                    </div>
+                  </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
+                  <div class="media d-flex align-items-center py-0">
+                    <div class="media-left pr-0"><img class="mr-1" src="app-assets/images/icon/sketch-mac-icon.png" alt="avatar" height="39" width="39"></div>
+                    <div class="media-body">
+                      <h6 class="media-heading"><span class="text-bold-500">Updates Available</span></h6><small class="notification-text">Sketch 50.2 is currently newly added</small>
+                    </div>
+                    <div class="media-right pl-0">
+                      <div class="row border-left text-center">
+                        <div class="col-12 px-50 py-75 border-bottom">
+                          <h6 class="media-heading text-bold-500 mb-0">Update</h6>
                         </div>
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </div>
-
-    <div>
-        <ul class="navbar-nav">
-
-            <li class="nav-item">
-                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                    <img width="18" class="mr-2" src="img/assets/media/image/flags/261-china.png" alt="flag"> China
-                </a>
-                <div class="dropdown-menu">
-                    <a href="#" class="dropdown-item">
-                        <img width="18" src="img/assets/media/image/flags/003-tanzania.png" class="mr-2" alt="flag">
-                        Tanzania
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <img width="18" src="img/assets/media/image/flags/262-united-kingdom.png" class="mr-2"
-                             alt="flag"> United Kingdom
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <img width="18" src="img/assets/media/image/flags/013-tunisia.png" class="mr-2" alt="flag">
-                        Tunisia
-                    </a>
-                    <a href="#" class="dropdown-item">
-                        <img width="18" src="img/assets/media/image/flags/044-spain.png" class="mr-2" alt="flag"> Spain
-                    </a>
-                </div>
-            </li>
-
-            <!-- begin::header search -->
-            <li class="nav-item">
-                <a href="#" class="nav-link" title="Search" data-toggle="dropdown">
-                    <i data-feather="search"></i>
-                </a>
-                <div class="dropdown-menu p-2 dropdown-menu-right">
-                    <form>
-                        <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Search">
-                            <div class="input-group-prepend">
-                                <button class="btn" type="button">
-                                    <i data-feather="search"></i>
-                                </button>
-                            </div>
+                        <div class="col-12 px-50 py-75">
+                          <h6 class="media-heading mb-0">Close</h6>
                         </div>
-                    </form>
-                </div>
-            </li>
-            <!-- end::header search -->
-
-            <!-- begin::header minimize/maximize -->
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link" title="Fullscreen" data-toggle="fullscreen">
-                    <i class="maximize" data-feather="maximize"></i>
-                    <i class="minimize" data-feather="minimize"></i>
-                </a>
-            </li>
-            <!-- end::header minimize/maximize -->
-
-            <!-- begin::header messages dropdown -->
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link nav-link-notify" title="Chats" data-toggle="dropdown">
-                    <i data-feather="message-circle"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-big">
-                    <div class="p-4 text-center d-flex justify-content-between"
-                         data-backround-image="img/assets/media/image/image1.jpg">
-                        <h6 class="mb-0">Chats</h6>
-                        <small class="font-size-11 opacity-7">2 unread chats</small>
+                      </div>
                     </div>
-                    <div>
-                        <ul class="list-group list-group-flush">
-                            <li>
-                                <a href="#" class="list-group-item d-flex hide-show-toggler">
-                                    <div>
-                                        <figure class="avatar avatar-sm m-r-15">
-                                            <img src="img/assets/media/image/user/man_avatar1.jpg"
-                                                 class="rounded-circle" alt="user">
-                                        </figure>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                            Herbie Pallatina
-                                            <i title="Mark as read" data-toggle="tooltip"
-                                               class="hide-show-toggler-item fa fa-circle-o font-size-11"></i>
-                                        </p>
-                                        <div class="small text-muted">
-                                            <span class="mr-2">02:30 PM</span>
-                                            <span>Have you madimage</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                   class="list-group-item d-flex align-items-center hide-show-toggler">
-                                    <div>
-                                        <figure class="avatar avatar-sm m-r-15">
-                                            <img src="img/assets/media/image/user/women_avatar5.jpg"
-                                                 class="rounded-circle" alt="user">
-                                        </figure>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                            Andrei Miners
-                                            <i title="Mark as read" data-toggle="tooltip"
-                                               class="hide-show-toggler-item fa fa-circle-o font-size-11"></i>
-                                        </p>
-                                        <div class="small text-muted">
-                                            <span class="mr-2">08:36 PM</span>
-                                            <span>I have a meetinimage</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="text-divider small pb-2 pl-3 pt-3">
-                                <span>Old chats</span>
-                            </li>
-                            <li>
-                                <a href="#"
-                                   class="list-group-item d-flex align-items-center hide-show-toggler">
-                                    <div>
-                                        <figure class="avatar avatar-sm m-r-15">
-                                            <img src="img/assets/media/image/user/man_avatar3.jpg"
-                                                 class="rounded-circle" alt="user">
-                                        </figure>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                            Kevin added
-                                            <i title="Mark as unread" data-toggle="tooltip"
-                                               class="hide-show-toggler-item fa fa-check font-size-11"></i>
-                                        </p>
-                                        <div class="small text-muted">
-                                            <span class="mr-2">11:09 PM</span>
-                                            <span>Have you madimage</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#" class="list-group-item d-flex hide-show-toggler">
-                                    <div>
-                                        <figure class="avatar avatar-sm m-r-15">
-                                            <img src="img/assets/media/image/user/man_avatar2.jpg"
-                                                 class="rounded-circle" alt="user">
-                                        </figure>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                            Eugenio Carnelley
-                                            <i title="Mark as unread" data-toggle="tooltip"
-                                               class="hide-show-toggler-item fa fa-check font-size-11"></i>
-                                        </p>
-                                        <div class="small text-muted">
-                                            <span class="mr-2">Yesterday</span>
-                                            <span>I have a meetinimage</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                   class="list-group-item d-flex align-items-center hide-show-toggler">
-                                    <div>
-                                        <figure class="avatar avatar-sm m-r-15">
-                                            <img src="img/assets/media/image/user/women_avatar1.jpg"
-                                                 class="rounded-circle" alt="user">
-                                        </figure>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                            Neely Ferdinand
-                                            <i title="Mark as unread" data-toggle="tooltip"
-                                               class="hide-show-toggler-item fa fa-check font-size-11"></i>
-                                        </p>
-                                        <div class="small text-muted">
-                                            <span class="mr-2">Yesterday</span>
-                                            <span>I have a meetinimage</span>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
+                  </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
+                  <div class="media d-flex align-items-center">
+                    <div class="media-left pr-0">
+                      <div class="avatar bg-primary bg-lighten-5 mr-1 m-0 p-25"><span class="avatar-content text-primary font-medium-2">LD</span></div>
                     </div>
-                    <div class="p-2 text-right">
-                        <ul class="list-inline small">
-                            <li class="list-inline-item">
-                                <a href="#">Mark All Read</a>
-                            </li>
-                        </ul>
+                    <div class="media-body">
+                      <h6 class="media-heading"><span class="text-bold-500">New customer</span> is registered</h6><small class="notification-text">1 hrs ago</small>
                     </div>
-                </div>
-            </li>
-            <!-- end::header messages dropdown -->
-
-            <!-- begin::header notification dropdown -->
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link nav-link-notify" title="Notifications" data-toggle="dropdown">
-                    <i data-feather="bell"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-big">
-                    <div class="p-4 text-center d-flex justify-content-between"
-                         data-backround-image="img/assets/media/image/image1.jpg">
-                        <h6 class="mb-0">Notifications</h6>
-                        <small class="font-size-11 opacity-7">1 unread notifications</small>
+                  </div></a><a href="javascript:void(0);">
+                  <div class="media d-flex align-items-center justify-content-between">
+                    <div class="media-left pr-0">
+                      <div class="media-body">
+                        <h6 class="media-heading">New Offers</h6>
+                      </div>
                     </div>
-                    <div>
-                        <ul class="list-group list-group-flush">
-                            <li>
-                                <a href="#" class="list-group-item d-flex hide-show-toggler">
-                                    <div>
-                                        <figure class="avatar avatar-sm m-r-15">
-                                                <span class="avatar-title bg-success-bright text-success rounded-circle">
-                                                    <i class="ti-user"></i>
-                                                </span>
-                                        </figure>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                            New customer registered
-                                            <i title="Mark as read" data-toggle="tooltip"
-                                               class="hide-show-toggler-item fa fa-circle-o font-size-11"></i>
-                                        </p>
-                                        <span class="text-muted small">20 min ago</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="text-divider small pb-2 pl-3 pt-3">
-                                <span>Old notifications</span>
-                            </li>
-                            <li>
-                                <a href="#" class="list-group-item d-flex hide-show-toggler">
-                                    <div>
-                                        <figure class="avatar avatar-sm m-r-15">
-                                                <span class="avatar-title bg-warning-bright text-warning rounded-circle">
-                                                    <i class="ti-package"></i>
-                                                </span>
-                                        </figure>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                            New Order Recieved
-                                            <i title="Mark as unread" data-toggle="tooltip"
-                                               class="hide-show-toggler-item fa fa-check font-size-11"></i>
-                                        </p>
-                                        <span class="text-muted small">45 sec ago</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                   class="list-group-item d-flex align-items-center hide-show-toggler">
-                                    <div>
-                                        <figure class="avatar avatar-sm m-r-15">
-                                                <span class="avatar-title bg-danger-bright text-danger rounded-circle">
-                                                    <i class="ti-server"></i>
-                                                </span>
-                                        </figure>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                            Server Limit Reached!
-                                            <i title="Mark as unread" data-toggle="tooltip"
-                                               class="hide-show-toggler-item fa fa-check font-size-11"></i>
-                                        </p>
-                                        <span class="text-muted small">55 sec ago</span>
-                                    </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                   class="list-group-item d-flex align-items-center hide-show-toggler">
-                                    <div>
-                                        <figure class="avatar avatar-sm m-r-15">
-                                                <span class="avatar-title bg-info-bright text-info rounded-circle">
-                                                    <i class="ti-layers"></i>
-                                                </span>
-                                        </figure>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <p class="mb-0 line-height-20 d-flex justify-content-between">
-                                            Apps are ready for update
-                                            <i title="Mark as unread" data-toggle="tooltip"
-                                               class="hide-show-toggler-item fa fa-check font-size-11"></i>
-                                        </p>
-                                        <span class="text-muted small">Yesterday</span>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
+                    <div class="media-right">
+                      <div class="custom-control custom-switch">
+                        <input class="custom-control-input" type="checkbox" checked id="notificationSwtich">
+                        <label class="custom-control-label" for="notificationSwtich"></label>
+                      </div>
                     </div>
-                    <div class="p-2 text-right">
-                        <ul class="list-inline small">
-                            <li class="list-inline-item">
-                                <a href="#">Mark All Read</a>
-                            </li>
-                        </ul>
+                  </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
+                  <div class="media d-flex align-items-center">
+                    <div class="media-left pr-0">
+                      <div class="avatar bg-danger bg-lighten-5 mr-1 m-0 p-25"><span class="avatar-content"><i class="bx bxs-heart text-danger"></i></span></div>
                     </div>
-                </div>
-            </li>
-            <!-- end::header notification dropdown -->
-
-            <!-- begin::user menu -->
-            <li class="nav-item dropdown">
-                <a href="#" class="nav-link" title="User menu" data-toggle="dropdown">
-                    <i data-feather="settings"></i>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right dropdown-menu-big">
-                    <div class="p-4 text-center d-flex justify-content-between"
-                         data-backround-image="img/assets/media/image/image1.jpg">
-                        <h6 class="mb-0">Settings</h6>
+                    <div class="media-body">
+                      <h6 class="media-heading"><span class="text-bold-500">Application</span> has been approved</h6><small class="notification-text">6 hrs ago</small>
                     </div>
-                    <div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch1" checked>
-                                    <label class="custom-control-label" for="customSwitch1">Allow notifications.</label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch2">
-                                    <label class="custom-control-label" for="customSwitch2">Hide user requests</label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch3" checked>
-                                    <label class="custom-control-label" for="customSwitch3">Speed up demands</label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch4" checked>
-                                    <label class="custom-control-label" for="customSwitch4">Hide menus</label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch5">
-                                    <label class="custom-control-label" for="customSwitch5">Remember next visits</label>
-                                </div>
-                            </li>
-                            <li class="list-group-item">
-                                <div class="custom-control custom-switch">
-                                    <input type="checkbox" class="custom-control-input" id="customSwitch6">
-                                    <label class="custom-control-label" for="customSwitch6">Enable report generation.</label>
-                                </div>
-                            </li>
-                        </ul>
+                  </div></a><a class="d-flex justify-content-between read-notification cursor-pointer" href="javascript:void(0);">
+                  <div class="media d-flex align-items-center">
+                    <div class="media-left pr-0">
+                      <div class="avatar mr-1 m-0"><img src="app-assets/images/portrait/small/avatar-s-4.jpg" alt="avatar" height="39" width="39"></div>
                     </div>
-                </div>
-            </li>
-            <!-- end::user menu -->
+                    <div class="media-body">
+                      <h6 class="media-heading"><span class="text-bold-500">New file</span> has been uploaded</h6><small class="notification-text">4 hrs ago</small>
+                    </div>
+                  </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
+                  <div class="media d-flex align-items-center">
+                    <div class="media-left pr-0">
+                      <div class="avatar bg-rgba-danger m-0 mr-1 p-25">
+                        <div class="avatar-content"><i class="bx bx-detail text-danger"></i></div>
+                      </div>
+                    </div>
+                    <div class="media-body">
+                      <h6 class="media-heading"><span class="text-bold-500">Finance report</span> has been generated</h6><small class="notification-text">25 hrs ago</small>
+                    </div>
+                  </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
+                  <div class="media d-flex align-items-center border-0">
+                    <div class="media-left pr-0">
+                      <div class="avatar mr-1 m-0"><img src="app-assets/images/portrait/small/avatar-s-16.jpg" alt="avatar" height="39" width="39"></div>
+                    </div>
+                    <div class="media-body">
+                      <h6 class="media-heading"><span class="text-bold-500">New customer</span> comment recieved</h6><small class="notification-text">2 days ago</small>
+                    </div>
+                  </div></a></li>
+              <li class="dropdown-menu-footer"><a class="dropdown-item p-50 text-primary justify-content-center" href="javascript:void(0)">Read all notifications</a></li>
+            </ul>
+          </li>
+          <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0);" data-toggle="dropdown">
+              <div class="user-nav d-sm-flex d-none"><span class="user-name">John Doe</span><span class="user-status text-muted">Available</span></div><span><img class="round" src="app-assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="40" width="40"></span></a>
+            <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item" href="page-user-profile.html"><i class="bx bx-user mr-50"></i> Edit Profile</a><a class="dropdown-item" href="app-email.html"><i class="bx bx-envelope mr-50"></i> My Inbox</a><a class="dropdown-item" href="app-todo.html"><i class="bx bx-check-square mr-50"></i> Task</a><a class="dropdown-item" href="app-chat.html"><i class="bx bx-message mr-50"></i> Chats</a>
+              <div class="dropdown-divider mb-0"></div><a class="dropdown-item" href="auth-login.html"><i class="bx bx-power-off mr-50"></i> Logout</a>
+            </div>
+          </li>
         </ul>
-
-        <!-- begin::mobile header toggler -->
-        <ul class="navbar-nav d-flex align-items-center">
-            <li class="nav-item header-toggler">
-                <a href="#" class="nav-link">
-                    <i data-feather="arrow-down"></i>
-                </a>
-            </li>
-        </ul>
-        <!-- end::mobile header toggler -->
+      </div>
     </div>
+  </div>
+</nav>
+<!-- END: Header-->
 
+
+<!-- BEGIN: Main Menu-->
+<div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
+  <div class="navbar-header">
+    <ul class="nav navbar-nav flex-row">
+      <li class="nav-item mr-auto"><a class="navbar-brand" href="index.html">
+          <div class="brand-logo">
+            <svg class="logo" width="26px" height="26px" viewbox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+              <title>icon</title>
+              <defs>
+                <lineargradient id="linearGradient-1" x1="50%" y1="0%" x2="50%" y2="100%">
+                  <stop stop-color="#5A8DEE" offset="0%"></stop>
+                  <stop stop-color="#699AF9" offset="100%"></stop>
+                </lineargradient>
+                <lineargradient id="linearGradient-2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop stop-color="#FDAC41" offset="0%"></stop>
+                  <stop stop-color="#E38100" offset="100%"></stop>
+                </lineargradient>
+              </defs>
+              <g id="Sprite" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                <g id="sprite" transform="translate(-69.000000, -61.000000)">
+                  <g id="Group" transform="translate(17.000000, 15.000000)">
+                    <g id="icon" transform="translate(52.000000, 46.000000)">
+                      <path id="Combined-Shape" d="M13.5909091,1.77272727 C20.4442608,1.77272727 26,7.19618701 26,13.8863636 C26,20.5765403 20.4442608,26 13.5909091,26 C6.73755742,26 1.18181818,20.5765403 1.18181818,13.8863636 C1.18181818,13.540626 1.19665566,13.1982714 1.22574292,12.8598734 L6.30410592,12.859962 C6.25499466,13.1951893 6.22958398,13.5378796 6.22958398,13.8863636 C6.22958398,17.8551125 9.52536149,21.0724191 13.5909091,21.0724191 C17.6564567,21.0724191 20.9522342,17.8551125 20.9522342,13.8863636 C20.9522342,9.91761479 17.6564567,6.70030817 13.5909091,6.70030817 C13.2336969,6.70030817 12.8824272,6.72514561 12.5388136,6.77314791 L12.5392575,1.81561642 C12.8859498,1.78721495 13.2366963,1.77272727 13.5909091,1.77272727 Z"></path>
+                      <path id="Combined-Shape" d="M13.8863636,4.72727273 C18.9447899,4.72727273 23.0454545,8.82793741 23.0454545,13.8863636 C23.0454545,18.9447899 18.9447899,23.0454545 13.8863636,23.0454545 C8.82793741,23.0454545 4.72727273,18.9447899 4.72727273,13.8863636 C4.72727273,13.5378966 4.74673291,13.1939746 4.7846258,12.8556254 L8.55057141,12.8560055 C8.48653249,13.1896162 8.45300462,13.5340745 8.45300462,13.8863636 C8.45300462,16.887125 10.8856023,19.3197227 13.8863636,19.3197227 C16.887125,19.3197227 19.3197227,16.887125 19.3197227,13.8863636 C19.3197227,10.8856023 16.887125,8.45300462 13.8863636,8.45300462 C13.529522,8.45300462 13.180715,8.48740462 12.8430777,8.55306931 L12.8426531,4.78608796 C13.1851829,4.7472336 13.5334422,4.72727273 13.8863636,4.72727273 Z" fill="#4880EA"></path>
+                      <path id="Combined-Shape" d="M13.5909091,1.77272727 C20.4442608,1.77272727 26,7.19618701 26,13.8863636 C26,20.5765403 20.4442608,26 13.5909091,26 C6.73755742,26 1.18181818,20.5765403 1.18181818,13.8863636 C1.18181818,13.540626 1.19665566,13.1982714 1.22574292,12.8598734 L6.30410592,12.859962 C6.25499466,13.1951893 6.22958398,13.5378796 6.22958398,13.8863636 C6.22958398,17.8551125 9.52536149,21.0724191 13.5909091,21.0724191 C17.6564567,21.0724191 20.9522342,17.8551125 20.9522342,13.8863636 C20.9522342,9.91761479 17.6564567,6.70030817 13.5909091,6.70030817 C13.2336969,6.70030817 12.8824272,6.72514561 12.5388136,6.77314791 L12.5392575,1.81561642 C12.8859498,1.78721495 13.2366963,1.77272727 13.5909091,1.77272727 Z" fill="url(#linearGradient-1)"></path>
+                      <rect id="Rectangle" x="0" y="0" width="7.68181818" height="7.68181818"></rect>
+                      <rect id="Rectangle" fill="url(#linearGradient-2)" x="0" y="0" width="7.68181818" height="7.68181818"></rect>
+                    </g>
+                  </g>
+                </g>
+              </g>
+            </svg>
+          </div>
+          <h2 class="brand-text mb-0">Frest</h2></a></li>
+      <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i class="bx bx-x d-block d-xl-none font-medium-4 primary"></i><i class="toggle-icon bx bx-disc font-medium-4 d-none d-xl-block primary" data-ticon="bx-disc"></i></a></li>
+    </ul>
+  </div>
+  <div class="shadow-bottom"></div>
+  <div class="main-menu-content">
+    <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" data-icon-style="lines">
+      <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Dashboard</span><span class="badge badge-light-danger badge-pill badge-round float-right mr-50 ml-auto">2</span></a>
+        <ul class="menu-content">
+          <li class="active"><a class="d-flex align-items-center" href="dashboard-ecommerce.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">eCommerce</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Analytics</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" navigation-header text-truncate"><span data-i18n="Apps">Apps</span>
+      </li>
+      <li class=" nav-item"><a href="app-email.html"><i class="#" data-icon="envelope-pull"></i><span class="menu-title text-truncate" data-i18n="Email">Email</span></a>
+      </li>
+      <li class=" nav-item"><a href="app-chat.html"><i class="#" data-icon="comments"></i><span class="menu-title text-truncate" data-i18n="Chat">Chat</span></a>
+      </li>
+      <li class=" nav-item"><a href="app-todo.html"><i class="#" data-icon="check-alt"></i><span class="menu-title text-truncate" data-i18n="Todo">Todo</span></a>
+      </li>
+      <li class=" nav-item"><a href="app-calendar.html"><i class="#" data-icon="calendar"></i><span class="menu-title text-truncate" data-i18n="Calendar">Calendar</span></a>
+      </li>
+      <li class=" nav-item"><a href="app-kanban.html"><i class="#" data-icon="grid"></i><span class="menu-title text-truncate" data-i18n="Kanban">Kanban</span></a>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="notebook"></i><span class="menu-title text-truncate" data-i18n="Invoice">Invoice</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="app-invoice-list.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice List">Invoice List</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="app-invoice.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice">Invoice</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="app-invoice-edit.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice Edit">Invoice Edit</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="app-invoice-add.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice Add">Invoice Add</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" nav-item"><a href="app-file-manager.html"><i class="#" data-icon="save"></i><span class="menu-title text-truncate" data-i18n="File Manager">File Manager</span></a>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="users"></i><span class="menu-title text-truncate" data-i18n="User">User</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="app-users-list.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="List">List</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="app-users-view.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="View">View</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="app-users-edit.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Edit">Edit</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" navigation-header text-truncate"><span data-i18n="UI Elements">UI Elements</span>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="retweet"></i><span class="menu-title text-truncate" data-i18n="Content">Content</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="content-grid.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Grid">Grid</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="content-typography.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Typography">Typography</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="content-text-utilities.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Text Utilities">Text Utilities</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="content-syntax-highlighter.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Syntax Highlighter">Syntax Highlighter</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="content-helper-classes.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Helper Classes">Helper Classes</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" nav-item"><a href="colors.html"><i class="#" data-icon="drop"></i><span class="menu-title text-truncate" data-i18n="Colors">Colors</span></a>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="bulb"></i><span class="menu-title text-truncate" data-i18n="Icons">Icons</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="icons-livicons.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="LivIcons">LivIcons</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="icons-boxicons.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="BoxIcons">BoxIcons</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="square"></i><span class="menu-title text-truncate" data-i18n="Card">Card</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="card-basic.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Basic">Basic</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="card-actions.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Card Actions">Card Actions</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" nav-item"><a href="widgets.html"><i class="#" data-icon="thumbnails-small"></i><span class="menu-title text-truncate" data-i18n="Widgets">Widgets</span><span class="badge badge-light-primary badge-pill badge-round float-right ml-auto">New</span></a>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="box-add"></i><span class="menu-title text-truncate" data-i18n="Components">Components</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="component-alerts.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Alerts">Alerts</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-buttons-basic.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Buttons">Buttons</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-breadcrumbs.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Breadcrumbs">Breadcrumbs</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-carousel.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Carousel">Carousel</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-collapse.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Collapse">Collapse</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-dropdowns.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Dropdowns">Dropdowns</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-list-group.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="List Group">List Group</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-modals.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Modals">Modals</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-pagination.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Pagination">Pagination</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-navbar.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Navbar">Navbar</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-tabs-component.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Tabs Component">Tabs Component</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-pills-component.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Pills Component">Pills Component</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-tooltips.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Tooltips">Tooltips</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-popovers.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Popovers">Popovers</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-badges.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Badges">Badges</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-pill-badges.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Pill Badges">Pill Badges</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-progress.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Progress">Progress</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-media-objects.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Media Objects">Media Objects</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-spinner.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Spinner">Spinner</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="component-bs-toast.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Toasts">Toasts</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="briefcase"></i><span class="menu-title text-truncate" data-i18n="Extra Components">Extra Components</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="ex-component-avatar.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Avatar">Avatar</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="ex-component-chips.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Chips">Chips</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="ex-component-divider.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Divider">Divider</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" navigation-header text-truncate"><span data-i18n="Forms &amp; Tables">Forms &amp; Tables</span>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="check"></i><span class="menu-title text-truncate" data-i18n="Form Elements">Form Elements</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="form-inputs.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Input">Input</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="form-input-groups.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Input Groups">Input Groups</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="form-number-input.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Number Input">Number Input</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="form-select.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Select">Select</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="form-radio.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Radio">Radio</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="form-checkbox.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Checkbox">Checkbox</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="form-switch.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Switch">Switch</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="form-textarea.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Textarea">Textarea</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="form-quill-editor.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Quill Editor">Quill Editor</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="form-file-uploader.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="File Uploader">File Uploader</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="form-date-time-picker.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Date &amp; Time Picker">Date &amp; Time Picker</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" nav-item"><a href="form-layout.html"><i class="#" data-icon="settings"></i><span class="menu-title text-truncate" data-i18n="Form Layout">Form Layout</span></a>
+      </li>
+      <li class=" nav-item"><a href="form-wizard.html"><i class="#" data-icon="priority-low"></i><span class="menu-title text-truncate" data-i18n="Form Wizard">Form Wizard</span></a>
+      </li>
+      <li class=" nav-item"><a href="form-validation.html"><i class="#" data-icon="check-alt"></i><span class="menu-title text-truncate" data-i18n="Form Validation">Form Validation</span></a>
+      </li>
+      <li class=" nav-item"><a href="form-repeater.html"><i class="#" data-icon="priority-low"></i><span class="menu-title text-truncate" data-i18n="Form Repeater">Form Repeater</span></a>
+      </li>
+      <li class=" nav-item"><a href="table.html"><i class="#" data-icon="thumbnails-big"></i><span class="menu-title text-truncate" data-i18n="Table">Table</span></a>
+      </li>
+      <li class=" nav-item"><a href="table-extended.html"><i class="#" data-icon="thumbnails-small"></i><span class="menu-title text-truncate" data-i18n="Table extended">Table extended</span></a>
+      </li>
+      <li class=" nav-item"><a href="table-datatable.html"><i class="#" data-icon="morph-map"></i><span class="menu-title text-truncate" data-i18n="Datatable">Datatable</span></a>
+      </li>
+      <li class=" navigation-header text-truncate"><span data-i18n="Pages">Pages</span>
+      </li>
+      <li class=" nav-item"><a href="page-user-profile.html"><i class="#" data-icon="user"></i><span class="menu-title text-truncate" data-i18n="User Profile">User Profile</span></a>
+      </li>
+      <li class=" nav-item"><a href="page-faq.html"><i class="#" data-icon="question-alt"></i><span class="menu-title text-truncate" data-i18n="FAQ">FAQ</span></a>
+      </li>
+      <li class=" nav-item"><a href="page-knowledge-base.html"><i class="#" data-icon="info-alt"></i><span class="menu-title text-truncate" data-i18n="Knowledge Base">Knowledge Base</span></a>
+      </li>
+      <li class=" nav-item"><a href="page-search.html"><i class="#" data-icon="search"></i><span class="menu-title text-truncate" data-i18n="Search">Search</span></a>
+      </li>
+      <li class=" nav-item"><a href="page-account-settings.html"><i class="#" data-icon="wrench"></i><span class="menu-title text-truncate" data-i18n="Account Settings">Account Settings</span></a>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="unlink"></i><span class="menu-title text-truncate" data-i18n="Starter kit">Starter kit</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/starter-kit/ltr/vertical-menu-template/sk-layout-1-column.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="1 column">1 column</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/starter-kit/ltr/vertical-menu-template/sk-layout-2-columns.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="2 columns">2 columns</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/starter-kit/ltr/vertical-menu-template/sk-layout-fixed-navbar.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Fixed navbar">Fixed navbar</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/starter-kit/ltr/vertical-menu-template/sk-layout-fixed.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Fixed layout">Fixed layout</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="https://www.pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/starter-kit/ltr/vertical-menu-template/sk-layout-static.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Static layout">Static layout</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="unlock"></i><span class="menu-title text-truncate" data-i18n="Authentication">Authentication</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="auth-login.html" target="_blank"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Login">Login</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="auth-register.html" target="_blank"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Register">Register</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="auth-forgot-password.html" target="_blank"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Forgot Password">Forgot Password</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="auth-reset-password.html" target="_blank"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Reset Password">Reset Password</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="auth-lock-screen.html" target="_blank"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Lock Screen">Lock Screen</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="share"></i><span class="menu-title text-truncate" data-i18n="Miscellaneous">Miscellaneous</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="page-coming-soon.html" target="_blank"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Coming Soon">Coming Soon</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="#"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Error">Error</span></a>
+            <ul class="menu-content">
+              <li><a class="d-flex align-items-center" href="error-404.html" target="_blank"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="404">404</span></a>
+              </li>
+              <li><a class="d-flex align-items-center" href="error-500.html" target="_blank"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="500">500</span></a>
+              </li>
+            </ul>
+          </li>
+          <li><a class="d-flex align-items-center" href="page-not-authorized.html" target="_blank"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Not Authorized">Not Authorized</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="page-maintenance.html" target="_blank"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Maintenance">Maintenance</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" navigation-header text-truncate"><span data-i18n="Charts &amp; Maps">Charts &amp; Maps</span>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="pie-chart"></i><span class="menu-title text-truncate" data-i18n="Charts">Charts</span><span class="badge badge-pill badge-round badge-light-info float-right mr-50 ml-auto">3</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="chart-apex.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Apex">Apex</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="chart-chartjs.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Chartjs">Chartjs</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="chart-chartist.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Chartist">Chartist</span></a>
+          </li>
+        </ul>
+      </li>
+      <li class=" nav-item"><a href="maps-leaflet.html"><i class="#" data-icon="map"></i><span class="menu-title text-truncate" data-i18n="Leaflet Maps">Leaflet Maps</span></a>
+      </li>
+      <li class=" navigation-header text-truncate"><span data-i18n="Extensions">Extensions</span>
+      </li>
+      <li class=" nav-item"><a href="ext-component-sweet-alerts.html"><i class="#" data-icon="warning-alt"></i><span class="menu-title text-truncate" data-i18n="Sweet Alert">Sweet Alert</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-toastr.html"><i class="#" data-icon="morph-map"></i><span class="menu-title text-truncate" data-i18n="Toastr">Toastr</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-noui-slider.html"><i class="#" data-icon="settings"></i><span class="menu-title text-truncate" data-i18n="NoUi Slider">NoUi Slider</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-drag-drop.html"><i class="#" data-icon="priority-high"></i><span class="menu-title text-truncate" data-i18n="Drag &amp; Drop">Drag &amp; Drop</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-tour.html"><i class="#" data-icon="paper-plane"></i><span class="menu-title text-truncate" data-i18n="Tour">Tour</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-swiper.html"><i class="#" data-icon="morph-orientation-tablet"></i><span class="menu-title text-truncate" data-i18n="Swiper">Swiper</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-treeview.html"><i class="#" data-icon="morph-sort-alt"></i><span class="menu-title text-truncate" data-i18n="Treeview">Treeview</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-block-ui.html"><i class="#" data-icon="expand"></i><span class="menu-title text-truncate" data-i18n="Block-UI">Block-UI</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-media-player.html"><i class="#" data-icon="music"></i><span class="menu-title text-truncate" data-i18n="Media Player">Media Player</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-miscellaneous.html"><i class="#" data-icon="loader-10"></i><span class="menu-title text-truncate" data-i18n="Miscellaneous">Miscellaneous</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-i18n.html"><i class="#" data-icon="globe"></i><span class="menu-title text-truncate" data-i18n="i18n">i18n</span></a>
+      </li>
+      <li class=" nav-item"><a href="ext-component-ratings.html"><i class="#" data-icon="star"></i><span class="menu-title text-truncate" data-i18n="Ratings">Ratings</span></a>
+      </li>
+      <li class=" navigation-header text-truncate"><span data-i18n="Others">Others</span>
+      </li>
+      <li class=" nav-item"><a href="#"><i class="#" data-icon="morph-menu-arrow-bottom"></i><span class="menu-title text-truncate" data-i18n="Menu Levels">Menu Levels</span></a>
+        <ul class="menu-content">
+          <li><a class="d-flex align-items-center" href="#"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Second Level">Second Level</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="#"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Second Level">Second Level</span></a>
+            <ul class="menu-content">
+              <li><a class="d-flex align-items-center" href="#"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Third Level">Third Level</span></a>
+              </li>
+              <li><a class="d-flex align-items-center" href="#"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Third Level">Third Level</span></a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li class="disabled nav-item"><a href="#"><i class="#" data-icon="morph-preview"></i><span class="menu-title text-truncate" data-i18n="Disabled Menu">Disabled Menu</span></a>
+      </li>
+      <li class=" navigation-header text-truncate"><span data-i18n="Support">Support</span>
+      </li>
+      <li class=" nav-item"><a href="https://pixinvent.com/demo/frest-clean-bootstrap-admin-dashboard-template/documentation" target="_blank"><i class="#" data-icon="morph-folder"></i><span class="menu-title text-truncate" data-i18n="Documentation">Documentation</span></a>
+      </li>
+      <li class=" nav-item"><a href="https://pixinvent.ticksy.com/" target="_blank"><i class="#" data-icon="help"></i><span class="menu-title text-truncate" data-i18n="Raise Support">Raise Support</span></a>
+      </li>
+    </ul>
+  </div>
 </div>
-<!-- end::header -->
-
-<!-- begin::main -->
-<div id="main">
-
-    <!-- begin::navigation -->
-    <div class="navigation">
-
-        <div class="navigation-menu-tab">
-            <div>
-                <div class="navigation-menu-tab-header" data-toggle="tooltip" title="Roxana Roussell" data-placement="right">
-                    <a href="#" class="nav-link" data-toggle="dropdown" aria-expanded="false">
-                        <figure class="avatar avatar-sm">
-                            <img src="img/assets/media/image/user/women_avatar1.jpg" class="rounded-circle" alt="avatar">
-                        </figure>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right dropdown-menu-big">
-                        <div class="p-3 text-center" data-backround-image="img/assets/media/image/image1.jpg">
-                            <figure class="avatar mb-3">
-                                <img src="img/assets/media/image/user/women_avatar1.jpg" class="rounded-circle" alt="image">
-                            </figure>
-                            <h6 class="d-flex align-items-center justify-content-center">
-                                Roxana Roussell
-                                <a href="#" class="btn btn-primary btn-sm ml-2" data-toggle="tooltip" title="Edit profile">
-                                    <i data-feather="edit-2"></i>
-                                </a>
-                            </h6>
-                            <small>Balance: <strong>$105</strong></small>
-                        </div>
-                        <div class="dropdown-menu-body">
-                            <div class="border-bottom p-4">
-                                <h6 class="text-uppercase font-size-11 d-flex justify-content-between">
-                                    Storage
-                                    <span>%25</span>
-                                </h6>
-                                <div class="progress" style="height: 8px;">
-                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 35%;"
-                                         aria-valuenow="35"
-                                         aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="list-group list-group-flush">
-                                <a href="#" class="list-group-item">Profile</a>
-                                <a href="#" class="list-group-item d-flex">
-                                    Followers <span class="text-muted ml-auto">214</span>
-                                </a>
-                                <a href="#" class="list-group-item d-flex">
-                                    Inbox <span class="text-muted ml-auto">18</span>
-                                </a>
-                                <a href="#" class="list-group-item" data-sidebar-target="#settings">Billing</a>
-                                <a href="#" class="list-group-item" data-sidebar-target="#settings">Need help?</a>
-                                <a href="#" class="list-group-item text-danger" data-sidebar-target="#settings">Sign Out!</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="flex-grow-1">
-                <ul>
-                    <li>
-                        <a class="active" href="#" data-toggle="tooltip" data-placement="right" title="Dashboards"
-                           data-nav-target="#dashboards">
-                            <i data-feather="bar-chart-2"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-toggle="tooltip" data-placement="right" title="Apps" data-nav-target="#apps">
-                            <i data-feather="command"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-toggle="tooltip" data-placement="right" title="UI Elements"
-                           data-nav-target="#elements">
-                            <i data-feather="layers"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" data-toggle="tooltip" data-placement="right" title="Pages" data-nav-target="#pages">
-                            <i data-feather="copy"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-            <div>
-                <ul>
-                    <li>
-                        <a href="#" data-toggle="tooltip" data-placement="right" title="Settings">
-                            <i data-feather="settings"></i>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="login.html" data-toggle="tooltip" data-placement="right" title="Logout">
-                            <i data-feather="log-out"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <!-- begin::navigation menu -->
-        <div class="navigation-menu-body">
-
-            <!-- begin::navigation-logo -->
-            <div>
-                <div id="navigation-logo">
-                    <a href="index-2.html">
-                        <img class="logo" style=" height:30px;"; src="img/e-conta-logo-01.png" alt="logo">
-                        <img class="logo-light" src="img/e-conta-logo-01.png" alt="light logo">
-                    </a>
-                </div>
-            </div>
-            <!-- end::navigation-logo -->
-
-            <div class="navigation-menu-group">
-
-                <div class="open" id="dashboards">
-                    <ul>
-                        <li class="navigation-divider">Dashboards</li>
-                        <li><a class="active" href="index-2.html">CRM System</a></li>
-                        <li><a href="dashboard-two.html">Ecommerce <span class="badge badge-danger">2</span></a></li>
-                        <li><a href="dashboard-three.html">Analytics</a></li>
-                        <li><a href="dashboard-four.html">Project Management</a></li>
-                        <li><a href="dashboard-five.html">Helpdesk Management</a></li>
-                        <li class="navigation-divider">Contacts</li>
-                        <li>
-                            <div class="list-group list-group-flush">
-                                <a href="#" class="list-group-item d-flex align-items-center">
-                                    <div>
-                                        <div class="avatar avatar-sm m-r-10">
-                                            <img src="img/assets/media/image/user/man_avatar1.jpg" class="rounded-circle" alt="image">
-                                        </div>
-                                    </div>
-                                    <span>Valentine Maton</span>
-                                </a>
-                                <a href="#" class="list-group-item d-flex align-items-center">
-                                    <div>
-                                        <div class="avatar avatar-sm m-r-10">
-                                            <img src="img/assets/media/image/user/women_avatar2.jpg" class="rounded-circle" alt="image">
-                                        </div>
-                                    </div>
-                                    <span>Holmes Cherryman</span>
-                                </a>
-                                <a href="#" class="list-group-item d-flex align-items-center">
-                                    <div>
-                                        <div class="avatar avatar-sm m-r-10">
-                                            <img src="img/assets/media/image/user/women_avatar4.jpg" class="rounded-circle" alt="image">
-                                        </div>
-                                    </div>
-                                    <span>Kenneth Hune</span>
-                                </a>
-                            </div>
-                        </li>
-                        <li class="navigation-divider">Followers</li>
-                        <li>
-                            <div class="avatar-group ml-4">
-                                <a href="#" class="avatar">
-                                    <span class="avatar-title bg-success rounded-circle">E</span>
-                                </a>
-                                <a href="#" class="avatar">
-                                    <img src="img/assets/media/image/user/women_avatar5.jpg" class="rounded-circle" alt="avatar">
-                                </a>
-                                <a href="#" class="avatar">
-                                    <img src="img/assets/media/image/user/women_avatar2.jpg" class="rounded-circle" alt="avatar">
-                                </a>
-                                <a href="#" class="avatar">
-                                    <span class="avatar-title bg-info rounded-circle">C</span>
-                                </a>
-                                <a href="#" class="avatar">
-                                    <span class="avatar-title bg-dark rounded-circle">+30</span>
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <div id="apps">
-                    <ul>
-                        <li class="navigation-divider">Web Apps</li>
-                        <li>
-                            <a href="chat.html">
-                                <span>Chat</span>
-                                <span class="badge badge-danger">5</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="inbox.html">
-                                <span>Mail</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="app-todo.html">
-                                <span>Todo</span>
-                                <span class="badge badge-warning">2</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="file-manager.html">
-                                <span>File Manager</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="calendar.html">
-                                <span>Calendar</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-                <div id="elements">
-                    <ul>
-                        <li class="navigation-divider">UI Elements</li>
-                        <li>
-                            <a href="#">Basic</a>
-                            <ul>
-                                <li><a href="alerts.html">Alert</a></li>
-                                <li><a href="accordion.html">Accordion</a></li>
-                                <li><a href="buttons.html">Buttons</a></li>
-                                <li><a href="dropdown.html">Dropdown</a></li>
-                                <li><a href="list-group.html">List Group</a></li>
-                                <li><a href="pagination.html">Pagination</a></li>
-                                <li><a href="typography.html">Typography</a></li>
-                                <li><a href="media-object.html">Media Object</a></li>
-                                <li><a href="progress.html">Progress</a></li>
-                                <li><a href="modal.html">Modal</a></li>
-                                <li><a href="spinners.html">Spinners</a></li>
-                                <li><a href="navs.html">Navs</a></li>
-                                <li><a href="tab.html">Tab</a></li>
-                                <li><a href="tooltip.html">Tooltip</a></li>
-                                <li><a href="popovers.html">Popovers</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Cards</a>
-                            <ul>
-                                <li><a href="basic-cards.html">Basic Cards </a></li>
-                                <li><a href="image-cards.html">Image Cards </a></li>
-                                <li><a href="card-scroll.html">Card Scroll </a></li>
-                                <li><a href="other-cards.html">Others </a></li>
-                            </ul>
-                        </li>
-                        <li><a href="avatar.html">Avatar</a></li>
-                        <li><a href="icons.html">Icons</a></li>
-                        <li><a href="colors.html">Colors</a></li>
-                        <li>
-                            <a href="#">Plugins</a>
-                            <ul>
-                                <li><a href="sweet-alert.html">Sweet Alert</a></li>
-                                <li><a href="lightbox.html">Lightbox</a></li>
-                                <li><a href="toast.html">Toast</a></li>
-                                <li><a href="tour.html">Tour</a></li>
-                                <li><a href="slick-slide.html">Slick Slide</a></li>
-                                <li><a href="nestable.html">Nestable</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Forms</a>
-                            <ul>
-                                <li><a href="basic-form.html">Form Layouts</a></li>
-                                <li><a href="custom-form.html">Custom Forms</a></li>
-                                <li><a href="advanced-form.html">Advanced Form</a></li>
-                                <li><a href="form-validation.html">Validation</a></li>
-                                <li><a href="form-wizard.html">Wizard</a></li>
-                                <li><a href="file-upload.html">File Upload</a></li>
-                                <li><a href="datepicker.html">Datepicker</a></li>
-                                <li><a href="timepicker.html">Timepicker</a></li>
-                                <li><a href="colorpicker.html">Colorpicker</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Tables</a>
-                            <ul>
-                                <li><a href="tables.html">Basic Tables</a></li>
-                                <li><a href="data-table.html">Datatable</a></li>
-                                <li><a href="responsive-table.html">Responsive Tables</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Charts</a>
-                            <ul>
-                                <li><a href="apexchart.html">Apex</a></li>
-                                <li><a href="chartjs.html">Chartjs</a></li>
-                                <li><a href="justgage.html">Justgage</a></li>
-                                <li><a href="morsis.html">Morsis</a></li>
-                                <li><a href="peity.html">Peity</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Maps</a>
-                            <ul>
-                                <li><a href="google-map.html">Google</a></li>
-                                <li><a href="vector-map.html">Vector</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-                <div id="pages">
-                    <ul>
-                        <li class="navigation-divider">Pages</li>
-                        <li><a href="login.html">Login</a></li>
-                        <li><a href="register.html">Register</a></li>
-                        <li><a href="recover-password.html">Recovery Password</a></li>
-                        <li><a href="lock-screen.html">Lock Screen</a></li>
-                        <li><a href="profile.html">Profile</a></li>
-                        <li><a href="timeline.html">Timeline</a></li>
-                        <li><a href="invoice.html">Invoice</a></li>
-
-                        <li><a href="pricing-table.html">Pricing Table</a></li>
-                        <li><a href="search-result.html">Search Result</a></li>
-                        <li>
-                            <a href="#">Error Pages</a>
-                            <ul>
-                                <li><a href="404.html">404</a></li>
-                                <li><a href="404-2.html">404 V2</a></li>
-                                <li><a href="503.html">503</a></li>
-                                <li><a href="mean-at-work.html">Mean at Work</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="blank-page.html">Starter Page</a></li>
-                        <li>
-                            <a href="#">Email Templates</a>
-                            <ul>
-                                <li><a href="email-template-basic.html">Basic</a></li>
-                                <li><a href="email-template-alert.html">Alert</a></li>
-                                <li><a href="email-template-billing.html">Billing</a></li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#">Menu Level</a>
-                            <ul>
-                                <li>
-                                    <a href="#">Menu Level</a>
-                                    <ul>
-                                        <li>
-                                            <a href="#">Menu Level </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- end::navigation menu -->
-
-    </div>
-    <!-- end::navigation -->
-
-    <!-- begin::main-content -->
-    <div class="main-content">
-
-        <!-- begin::page-header -->
-        <div class="page-header">
-            <div class="container-fluid d-sm-flex justify-content-between">
-                <h4>CRM System</h4>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item">
-                            <a href="#">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item active" aria-current="page">CRM System</li>
-                    </ol>
-                </nav>
-            </div>
-        </div>
-        <!-- end::page-header -->
-
+<!-- END: Main Menu-->
 
 
 
@@ -984,6 +706,293 @@
 @yield('content');
 
 
+
+
+
+ <!-- BEGIN: Customizer-->
+ <div class="customizer d-none d-md-block"><a class="customizer-toggle" href="javascript:void(0);"><i class="bx bx-cog bx bx-spin white"></i></a><div class="customizer-content p-2">
+    <h4 class="text-uppercase mb-0">Theme Customizer</h4>
+    <small>Customize & Preview in Real Time</small>
+    <a href="javascript:void(0)" class="customizer-close">
+          <i class="bx bx-x"></i>
+    </a>
+    <hr>
+    <!-- Theme options starts -->
+    <h5 class="mt-1">Theme Layout</h5>
+    <div class="theme-layouts">
+      <div class="d-flex justify-content-start">
+        <div class="mx-50">
+          <fieldset>
+            <div class="radio">
+              <input type="radio" name="layoutOptions" value="false" id="radio-light" class="layout-name" data-layout=""
+                checked>
+              <label for="radio-light">Light</label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="mx-50">
+          <fieldset>
+            <div class="radio">
+              <input type="radio" name="layoutOptions" value="false" id="radio-dark" class="layout-name"
+                data-layout="dark-layout">
+              <label for="radio-dark">Dark</label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="mx-50">
+          <fieldset>
+            <div class="radio">
+              <input type="radio" name="layoutOptions" value="false" id="radio-semi-dark" class="layout-name"
+                data-layout="semi-dark-layout">
+              <label for="radio-semi-dark">Semi Dark</label>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <!-- Theme options starts -->
+    <hr>
+  
+    <!-- Menu Colors Starts -->
+    <div id="customizer-theme-colors">
+      <h5>Menu Colors</h5>
+      <ul class="list-inline unstyled-list">
+        <li class="color-box bg-primary selected" data-color="theme-primary"></li>
+        <li class="color-box bg-success" data-color="theme-success"></li>
+        <li class="color-box bg-danger" data-color="theme-danger"></li>
+        <li class="color-box bg-info" data-color="theme-info"></li>
+        <li class="color-box bg-warning" data-color="theme-warning"></li>
+        <li class="color-box bg-dark" data-color="theme-dark"></li>
+      </ul>
+      <hr>
+    </div>
+    <!-- Menu Colors Ends -->
+    <!-- Menu Icon Animation Starts -->
+    <div id="menu-icon-animation">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="icon-animation-title">
+          <h5 class="pt-25">Icon Animation</h5>
+        </div>
+        <div class="icon-animation-switch">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" checked id="icon-animation-switch">
+            <label class="custom-control-label" for="icon-animation-switch"></label>
+          </div>
+        </div>
+      </div>
+      <hr>
+    </div>
+    <!-- Menu Icon Animation Ends -->
+    <!-- Collapse sidebar switch starts -->
+    <div class="collapse-sidebar d-flex justify-content-between align-items-center">
+      <div class="collapse-option-title">
+        <h5 class="pt-25">Collapse Menu</h5>
+      </div>
+      <div class="collapse-option-switch">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="collapse-sidebar-switch">
+          <label class="custom-control-label" for="collapse-sidebar-switch"></label>
+        </div>
+      </div>
+    </div>
+    <!-- Collapse sidebar switch Ends -->
+    <hr>
+  
+    <!-- Navbar colors starts -->
+    <div id="customizer-navbar-colors">
+      <h5>Navbar Colors</h5>
+      <ul class="list-inline unstyled-list">
+        <li class="color-box bg-white border selected" data-navbar-default=""></li>
+        <li class="color-box bg-primary" data-navbar-color="bg-primary"></li>
+        <li class="color-box bg-success" data-navbar-color="bg-success"></li>
+        <li class="color-box bg-danger" data-navbar-color="bg-danger"></li>
+        <li class="color-box bg-info" data-navbar-color="bg-info"></li>
+        <li class="color-box bg-warning" data-navbar-color="bg-warning"></li>
+        <li class="color-box bg-dark" data-navbar-color="bg-dark"></li>
+      </ul>
+      <small><strong>Note :</strong> This option with work only on sticky navbar when you scroll page.</small>
+      <hr>
+    </div>
+    <!-- Navbar colors starts -->
+    <!-- Navbar Type Starts -->
+    <h5>Navbar Type</h5>
+    <div class="navbar-type d-flex justify-content-start">
+      <div class="hidden-ele mx-50">
+        <fieldset>
+          <div class="radio">
+            <input type="radio" name="navbarType" value="false" id="navbar-hidden">
+            <label for="navbar-hidden">Hidden</label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="mx-50">
+        <fieldset>
+          <div class="radio">
+            <input type="radio" name="navbarType" value="false" id="navbar-static">
+            <label for="navbar-static">Static</label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="mx-50">
+        <fieldset>
+          <div class="radio">
+            <input type="radio" name="navbarType" value="false" id="navbar-sticky" checked>
+            <label for="navbar-sticky">Fixed</label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <hr>
+    <!-- Navbar Type Starts -->
+  
+    <!-- Footer Type Starts -->
+    <h5>Footer Type</h5>
+    <div class="footer-type d-flex justify-content-start">
+      <div class="mx-50">
+        <fieldset>
+          <div class="radio">
+            <input type="radio" name="footerType" value="false" id="footer-hidden">
+            <label for="footer-hidden">Hidden</label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="mx-50">
+        <fieldset>
+          <div class="radio">
+            <input type="radio" name="footerType" value="false" id="footer-static" checked>
+            <label for="footer-static">Static</label>
+          </div>
+        </fieldset>
+      </div>
+      <div class="mx-50">
+        <fieldset>
+          <div class="radio">
+            <input type="radio" name="footerType" value="false" id="footer-sticky">
+            <label for="footer-sticky" class="">Sticky</label>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <!-- Footer Type Ends -->
+    <hr>
+  
+    <!-- Card Shadow Starts-->
+    <div class="card-shadow d-flex justify-content-between align-items-center py-25">
+      <div class="hide-scroll-title">
+        <h5 class="pt-25">Card Shadow</h5>
+      </div>
+      <div class="card-shadow-switch">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" checked id="card-shadow-switch">
+          <label class="custom-control-label" for="card-shadow-switch"></label>
+        </div>
+      </div>
+    </div>
+    <!-- Card Shadow Ends-->
+    <hr>
+  
+    <!-- Hide Scroll To Top Starts-->
+    <div class="hide-scroll-to-top d-flex justify-content-between align-items-center py-25">
+      <div class="hide-scroll-title">
+        <h5 class="pt-25">Hide Scroll To Top</h5>
+      </div>
+      <div class="hide-scroll-top-switch">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" class="custom-control-input" id="hide-scroll-top-switch">
+          <label class="custom-control-label" for="hide-scroll-top-switch"></label>
+        </div>
+      </div>
+    </div>
+    <!-- Hide Scroll To Top Ends-->
+  </div>
+  
+      </div>
+      <!-- End: Customizer-->
+  
+      <!-- Buynow Button-->
+      <div class="buy-now"><a href="https://1.envato.market/frest_admin" target="_blank" class="btn btn-danger">Buy Now</a>
+  
+      </div>
+      <!-- demo chat-->
+      <div class="widget-chat-demo"><!-- widget chat demo footer button start -->
+  <button class="btn btn-primary chat-demo-button glow px-1"><i class="livicon-evo"
+      data-options="name: comments.svg; style: lines; size: 24px; strokeColor: #fff; autoPlay: true; repeat: loop;"></i></button>
+  <!-- widget chat demo footer button ends -->
+  <!-- widget chat demo start -->
+  <div class="widget-chat widget-chat-demo d-none">
+    <div class="card mb-0">
+      <div class="card-header border-bottom p-0">
+        <div class="media m-75">
+          <a href="JavaScript:void(0);">
+            <div class="avatar mr-75">
+              <img src="../../../app-assets/images/portrait/small/avatar-s-2.jpg" alt="avtar images" width="32"
+                height="32">
+              <span class="avatar-status-online"></span>
+            </div>
+          </a>
+          <div class="media-body">
+            <h6 class="media-heading mb-0 pt-25"><a href="javaScript:void(0);">Kiara Cruiser</a></h6>
+            <span class="text-muted font-small-3">Active</span>
+          </div>
+        </div>
+        <div class="heading-elements">
+          <i class="bx bx-x widget-chat-close float-right my-auto cursor-pointer"></i>
+        </div>
+      </div>
+      <div class="card-body widget-chat-container widget-chat-demo-scroll">
+        <div class="chat-content">
+          <div class="badge badge-pill badge-light-secondary my-1">today</div>
+          <div class="chat">
+            <div class="chat-body">
+              <div class="chat-message">
+                <p>How can we help? 😄</p>
+                <span class="chat-time">7:45 AM</span>
+              </div>
+            </div>
+          </div>
+          <div class="chat chat-left">
+            <div class="chat-body">
+              <div class="chat-message">
+                <p>Hey John, I am looking for the best admin template.</p>
+                <p>Could you please help me to find it out? 🤔</p>
+                <span class="chat-time">7:50 AM</span>
+              </div>
+            </div>
+          </div>
+          <div class="chat">
+            <div class="chat-body">
+              <div class="chat-message">
+                <p>Stack admin is the responsive bootstrap 4 admin template.</p>
+                <span class="chat-time">8:01 AM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer border-top p-1">
+        <form class="d-flex" onsubmit="widgetChatMessageDemo();" action="javascript:void(0);">
+          <input type="text" class="form-control chat-message-demo mr-75" placeholder="Type here...">
+          <button type="submit" class="btn btn-primary glow px-1"><i class="bx bx-paper-plane"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- widget chat demo ends -->
+  
+      </div>
+      <div class="sidenav-overlay"></div>
+      <div class="drag-target"></div>
+  
+      <!-- BEGIN: Footer-->
+      <footer class="footer footer-static footer-light">
+        <p class="clearfix mb-0"><span class="float-left d-inline-block">2021 &copy; PIXINVENT</span><span class="float-right d-sm-inline-block d-none">Crafted with<i class="bx bxs-heart pink mx-50 font-small-3"></i>by<a class="text-uppercase" href="https://1.envato.market/pixinvent_portfolio" target="_blank">Pixinvent</a></span>
+          <button class="btn btn-primary btn-icon scroll-top" type="button"><i class="bx bx-up-arrow-alt"></i></button>
+        </p>
+      </footer>
+      <!-- END: Footer-->
+  
+
+
 </body>
 <footer style="margin-top: 20px;">
     <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |
@@ -993,21 +1002,14 @@
 </html>
  <!-- =============codigo body fin====================================== -->       
 {{--
-
-
-
 <div id="page-loader"><span class="preloader-interior"></span></div>
-
 <div id="app">
-
     @if (Auth::check() && !Route::is('home', 'login', 'modules', 'log') && !Route::is('construccion'))
-
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/modules') }}">
                     <img src="img/e-conta-logo-01.png" width="200px">
                 </a>
-
                 --}}
                 {{-- <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -1018,9 +1020,7 @@
              {{--    <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
                     </ul>
-
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
@@ -1030,13 +1030,11 @@
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
                             @endif
-
                             @if (Route::has('register'))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
-
                             @if (Route::has('registro'))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ url('registro') }}">{{ __('Registro') }}</a>
@@ -1082,28 +1080,16 @@
         </div>
         <br>
         <br>
-
     @endif
-
-
     <main class="py-4">
-
         @if (Route::is('home', 'login', 'modules', 'log'))
             <div class="row justify-content-center mb-3">
                 <img src="{{ asset('img/logo-contarapp-01.png') }}" width="380px">
             </div>
         @endif
-
         @yield('content')
-
-
-
     </main>
 </div>
-
 @stack('calendario')
-
 --}}
-
-
 

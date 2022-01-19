@@ -6375,16 +6375,16 @@
         },
         {
             "name": "wire-elements/modal",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/wire-elements/modal.git",
-                "reference": "b3e08a9fbfabd615c6d27a8780b142a2dce47fbb"
+                "reference": "6eedd5fae9e3d7def7afa6fab0b2bd236294b44d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wire-elements/modal/zipball/b3e08a9fbfabd615c6d27a8780b142a2dce47fbb",
-                "reference": "b3e08a9fbfabd615c6d27a8780b142a2dce47fbb",
+                "url": "https://api.github.com/repos/wire-elements/modal/zipball/6eedd5fae9e3d7def7afa6fab0b2bd236294b44d",
+                "reference": "6eedd5fae9e3d7def7afa6fab0b2bd236294b44d",
                 "shasum": ""
             },
             "require": {
@@ -6427,9 +6427,9 @@
             ],
             "support": {
                 "issues": "https://github.com/wire-elements/modal/issues",
-                "source": "https://github.com/wire-elements/modal/tree/1.0.3"
+                "source": "https://github.com/wire-elements/modal/tree/1.0.4"
             },
-            "time": "2021-11-05T12:45:43+00:00"
+            "time": "2022-01-18T11:08:35+00:00"
         }
     ],
     "packages-dev": [

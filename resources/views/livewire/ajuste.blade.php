@@ -15,7 +15,7 @@
 
 
  
-<hr>
+
 <a id="tooltip" href="#" style="text-decoration: none; " class="{{$class}} fas fa-balance-scale"
 data-toggle="modal" data-target="#ajuste{{$datos->id}}">
 </a>
@@ -23,7 +23,7 @@ data-toggle="modal" data-target="#ajuste{{$datos->id}}">
 <span class="tooltip-content">Ajuste</span>
      <!-- Modal -->
 
-     <div wire:ignore.self class="modal fade" id="ajuste{{$datos->_id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+     <div wire:ignore.self class="modal fade" id="ajuste{{$datos->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
          <div class="modal-dialog" role="document">
              <div class="modal-content">
                  <div class="modal-header">

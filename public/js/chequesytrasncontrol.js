@@ -5,6 +5,15 @@ $( document ).ready(function() {
 });
 
 
+   
+
+$(document).ready(function() {
+    $('#example').DataTable( {
+        
+     
+    } );
+} );
+
 /*
 //Funcion para obtrener la fecha de pago por js
 function diaSemana() {
@@ -333,3 +342,8 @@ window.addEventListener('pdf', event => {
 window.addEventListener('ajuste', event => {
     location.reload();
 });
+
+
+window.addEventListener('hola', event => {
+    alert('hola');
+  });

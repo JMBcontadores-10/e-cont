@@ -84,4 +84,3 @@ Route::post('/upload/{id}', [App\Http\Controllers\UploadController::class, 'stor
 Route::post('/uploadEdit/{id}', [App\Http\Controllers\UploadController::class, 'storeEditPdf']);
 Route::get('/chequesytransferencias',Chequesytransferencias::class)->name('cheques');
 Route::get('/descargascfdi', [App\Http\Controllers\DescargascfdiController::class, 'index'])->name('descargascfdi');
-

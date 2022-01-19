@@ -23,8 +23,7 @@ class Editar extends ModalComponent
     public $relacionadosUp =[];
 
 
-
-
+   
 
 /////////////////////// funcion rules necesaria para validar datos en tiempo real
 //////////////////////comparandolos con la base datos (siempre con livewire)

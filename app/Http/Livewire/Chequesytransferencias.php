@@ -19,12 +19,18 @@ class Chequesytransferencias extends Component
     public $cheque;
 
     public int $perPage=10;
-    public $search = '';
+    public $search;
 
     protected $listeners = [
         'chequesRefresh' => '$refresh',
      ];
 
+
+     public function mount()
+     {
+         $this->search;
+     }
+ 
 
 protected function rules(){
 
@@ -79,20 +85,32 @@ public function ver_pdf($id ){
 
 
         return view('livewire.chequesytransferencias',['colCheques' => $cheque, 'meses'=>$meses,'anios'=>$anios])
-        ->extends('layouts.livewire-layout');
+        ->extends('layouts.livewire-layout')
+        ->section('content');
 
     }
 
 
 
-    public function search(){
+    public function buscar(){
 
+        $dtz = new DateTimeZone("America/Mexico_City");
+        $dt = new DateTime("now", $dtz);
+        $rfc = Auth::user()->RFC;
+        $anio = $dt->format('Y');
+        $cheque = Cheques::
+        search($this->search)
+        ->where('rfc',$rfc)
 
+        ->paginate($this->perPage)
+        ;
 
+       $class="table nowrap dataTable no-footer";// clase para la tabla de cheques y tranferencias
+       // $this->dispatchBrowserEvent('hola', []);
     }
 
 
-
+  
 
 
 
