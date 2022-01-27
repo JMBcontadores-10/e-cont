@@ -34,24 +34,26 @@ use App\Models\XmlR;
             <table class="table table-sm table-hover table-bordered mx-2">
                 <thead>
                     <tr class="table-primary">
-                        <th class="text-center align-middle">No.</th>
+                        <th class="text-center align-middle" width="100">No.</th>
                         {{-- Si el cheque no está verificado se puede desvincular --}}
                         @if ($verificado == 0)
-                            <th class="text-center align-middle">Desvincular CFDI <input type="checkbox" id="allcheck"
+                            <th  class="text-center align-middle" width="150">Desvincular CFDI <input type="checkbox" id="allcheck"
                                     name="allcheck" /></th>
                         @endif
                         {{-- <th class="text-center align-middle">RFC Emisor</th> --}}
                         {{-- <th class="text-center align-middle">Razón Social Emisor</th> --}}
-                        <th class="text-center align-middle">UUID</th>
-                        <th class="text-center align-middle">Fecha Emisión</th>
-                        <th class="text-center align-middle">Concepto</th>
-                        <th class="text-center align-middle">Folio</th>
-                        <th class="text-center align-middle">Metodo - Pago</th>
-                        <th class="text-center align-middle">Complemento</th>
-                        <th class="text-center align-middle">Efecto</th>
-                        <th class="text-center align-middle">Total</th>
-                        <th class="text-center align-middle">Estado</th>
-                        <th class="text-center align-middle">Descargar</th>
+                        <th class="text-center align-middle"width="200">UUID</th>
+                        <th class="text-center align-middle"width="150">Fecha Emisión</th>
+                        <th class="text-center align-middle" width="200">Emisor</th>
+                        <th class="text-center align-middle"width="150">Concepto</th>
+                        <th class="text-center align-middle"width="150">Folio</th>
+                        <th class="text-center align-middle"width="150">Metodo - Pago</th>
+                        <th class="text-center align-middle"width="150">Complemento</th>
+                        <th class="text-center align-middle"width="150">Efecto</th>
+                        <th class="text-center align-middle"width="150">IVA</th>
+                        <th class="text-center align-middle"width="150">Total</th>
+                        <th class="text-center align-middle"width="150">Estado</th>
+                        <th class="text-center align-middle"width="150">Descargar</th>
                     </tr>
                 </thead>
                 <tbody class="buscar">
@@ -88,6 +90,8 @@ use App\Models\XmlR;
                             {{-- <td class="text-center align-middle">{{ $emisorNombre }}</td> --}}
                             <td class="text-center align-middle">{{ $folioF }}</td>
                             <td class="text-center align-middle">{{ $fechaE }}</td>
+                            <td class="text-center align-middle">{{ $emisorNombre }}</td>
+
                             @php
                                 $anio = substr($fechaE, 0, 4);
                                 $mes = (string) (int) substr($fechaE, 5, 2);
@@ -103,6 +107,7 @@ use App\Models\XmlR;
                                     foreach ($colX as $v) {
                                         $concepto = $v['Conceptos.Concepto'];
                                         $metodoPago = $v['MetodoPago'];
+                                        $iva=$v['Impuestos.TotalImpuestosTrasladados'];
                                         $folio = $v['Folio'];
                                         if ($efecto == 'Pago') {
                                             $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
@@ -154,6 +159,13 @@ use App\Models\XmlR;
                                 @endif
                             </td>
                             <td class="text-center align-middle">{{ $efecto }}</td>
+                            @if (empty($iva))
+                            <td class="text-center align-middle">x </td>  
+                            @elseif ($iva=="0.00")
+                            <td class="text-center align-middle">x </td> 
+                            @else 
+                            <td class="text-center align-middle">${{ $iva }}</td>
+                            @endif
                             <td class="text-center align-middle">${{ number_format($total, 2) }}</td>
                             <td class="text-center align-middle">{{ $estado }}</td>
                             <td class="text-center align-middle">

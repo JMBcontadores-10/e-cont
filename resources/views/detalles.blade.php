@@ -27,9 +27,25 @@ use App\Models\XmlR;
             <hr style="border-color:black; width:100%;">
         </div>
         <div class="input-group">
-            <span class="input-group-text">Buscar</span>
-            <input id="filtrar" type="text" class="form-control" placeholder="Buscar proveedor">
-        </div>
+            <form >
+
+              
+                </div>
+    
+    
+            <div class="input-group">
+    
+                <span  style ="display: none;" class="input-group-text" >Buscar</span>
+    
+                <a class="btn btn-secondary " style="width: 100px;" href="{{ url('detalles') }}" >X Filtro</a>
+    
+    
+                <button type="submit" class="btn btn-primary ml-2">Busca</button>
+                <input id="" name="filtro_detalles" type="text" class="form-control" placeholder="Filtra por palabra clave fecha/ Num de factura/ etc...	">
+                  <!-- se deshabilita la funcion busqueda automatica en tabla por script -->
+             </div>
+            </form>
+       
         <br>
 
     </div>
@@ -39,25 +55,28 @@ use App\Models\XmlR;
             <table class="table table-sm table-hover table-bordered mx-3">
                 <thead>
                     <tr class="table-primary">
-                        <th class="text-center align-middle">N°</th>
-                        <th class="text-center align-middle">Vincular CFDI</th>
+                        <th class="text-center "width="120">N°</th>
+                        <th class="text-center "width="120">Vincular CFDI</th>
                         {{-- @if ($emisorNombre == 'Varios Proveedores')
                             <th class="text-center align-middle">RFC Emisor</th>
                             <th class="text-center align-middle">Razón Social Emisor</th>
                         @endif --}}
-                        <th class="text-center align-middle">UUID</th>
-                        <th class="text-center align-middle">Fecha Emisión</th>
-                        <th class="text-center align-middle">Concepto</th>
-                        <th class="text-center align-middle">Metodo - Pago</th>
-                        <th class="text-center align-middle">UUID - Referencial</th>
-                        <th class="text-center align-middle">Folio</th>
-                        <th class="text-center align-middle">Efecto</th>
-                        <th class="text-center align-middle">Total</th>
-                        <th class="text-center align-middle">Estado</th>
-                        <th class="text-center align-middle">Descargar</th>
+                        <th class="text-center " width="200">UUID</th>
+                        <th class="text-center "  width="150">Fecha Emisión</th>
+                        <th class="text-center " width="200">Emisor</th>
+                        <th class="text-center " width="200">Concepto</th>
+                        <th class="text-center "  width="100">Metodo - Pago</th>
+                        <th class="text-center " width="200">UUID - Referencial</th>
+                        <th class="text-center "width="120">Folio</th>
+                        <th class="text-center "width="120">Efecto</th>
+                        <th class="text-center "width="120">IVA</th>
+                        <th class="text-center "width="120">Total</th>
+                        <th class="text-center "width="120">Estado</th>
+                        <th class="text-center "width="120">Descargar</th>
                     </tr>
                 </thead>
                 <tbody class="buscar">
+                   
                     @php
                          echo $varios = $emisorNombre;
                     @endphp
@@ -88,6 +107,7 @@ use App\Models\XmlR;
                                 <td class="text-center align-middle">{{ $emisorRfc }}</td>
                                 <td class="text-center align-middle">{{ $emisorNombre }}</td>
                             @endif --}}
+                      
                             <td class="text-center align-middle">{{ $folioF }}</td>
                             <td class="text-center align-middle">{{ $fechaE }}</td>
                             @php
@@ -105,6 +125,7 @@ use App\Models\XmlR;
                                     foreach ($colX as $v) {
                                         $concepto = $v['Conceptos.Concepto'];
                                         $metodoPago = $v['MetodoPago'];
+                                        $iva=$v['Impuestos.TotalImpuestosTrasladados'];
                                         $folio = $v['Folio'];
                                         if ($efecto == 'Pago') {
                                             $docRel = $v['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
@@ -123,6 +144,7 @@ use App\Models\XmlR;
                                     $uuidRef = 'X';
                                 }
                             @endphp
+                             <td class="text-center align-middle">{{ $emisorNombre }}</td>
                             <td class="text-center align-middle">
                                 @if (!$colX->isEmpty())
                                     @foreach ($concepto as $c)
@@ -132,6 +154,7 @@ use App\Models\XmlR;
                                     {{ $concepto }}
                                 @endif
                             </td>
+                         
                             <td class="text-center align-middle">{{ $metodoPago }}</td>
                             <td class="text-center align-middle">
                                 @if (!$colX->isEmpty())
@@ -156,6 +179,14 @@ use App\Models\XmlR;
                             </td>
                             <td class="text-center align-middle">{{ $folio }}</td>
                             <td class="text-center align-middle">{{ $efecto }}</td>
+                              @if (empty($iva))
+                              <td class="text-center align-middle">x </td>  
+                              @elseif ($iva=="0.00")
+                              <td class="text-center align-middle">x </td> 
+                              @else 
+
+                            <td class="text-center align-middle"> $ {{$iva}} </td>
+                              @endif
                             <td class="text-center align-middle">${{ number_format($total, 2) }}</td>
                             <td class="text-center align-middle">{{ $estado }}</td>
                             <td class="text-center align-middle">

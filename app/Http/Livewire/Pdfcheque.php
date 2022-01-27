@@ -78,7 +78,9 @@ protected function rules(){
  $this->emitTo( 'pdfcheque','refreshpdf');
 
  //session()->flash('flash');
- $this->dispatchBrowserEvent('pdf', []);
+ //$this->dispatchBrowserEvent('pdf', []);
+ $this->emitTo( 'chequesytransferencias','chequesRefresh');
+ $this->emitTo( 'pdfcheque','refreshpdf');
 
     }// fin funcion eliminar
 

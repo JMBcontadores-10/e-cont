@@ -11,7 +11,7 @@
                 </button>
             </div>
            <div class="modal-body">
-              
+              {{$ajuste}}
                 <form>
                     <div class="form-group">
                         <input type="text" wire:model="user_id">

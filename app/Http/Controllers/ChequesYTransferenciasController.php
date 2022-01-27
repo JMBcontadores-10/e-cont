@@ -460,7 +460,7 @@ echo $filtro_cheques;
         $ajuste = 0;
         $ruta = 'cheques-transferencias';
         $files = $_FILES['doc_relacionados']['name'];
-        $rutaDescargaDR = "storage/contarappv1_descargas/$rfc/$anio/Cheques_Transferencias/Documentos_Relacionados/$mes/";
+        $rutaDescargaDR = "storage/contarappv1_descargas/$rfc/$anioo/Cheques_Transferencias/Documentos_Relacionados/$mes/";
 
         // Verifica si existen documentos relacionados
         if (!$files['0'] == '') {

@@ -1,26 +1,7 @@
 <div>
 
 
-    @if (!$datos1->doc_relacionados['0'] == '')
-  
-       @php $class="content_true" @endphp
-
-       @else
-
-       @php $class="icons" @endphp
-
-
-    @endif
- 
-  
-    <hr>
-    <a  href="#" style="text-decoration: none; " class="icons fas fa-upload"
-    data-toggle="modal" data-controls-modal="#uploadRelacionados"    data-backdrop="static" data-keyboard="false"  id="{{$datos1->id}}" onclick="filepond(this.id)"  data-target="#uploadRelacionados">
-   </a>
-   <hr>
-   <a  href="#" style="text-decoration: none; " class="{{$class}} fas fa-folder-open"
-   data-toggle="modal"   id="{{$datos1->id}}"  data-target="#relacionados-{{$datos1->id}}" >
-  </a>
+    
  
 
 

@@ -1,8 +1,6 @@
 <div>
 
-    <button type="button" class="fabutton" id="{{$datos->_id}}" onclick="filepondEditCheque(this.id)" data-toggle="modal" data-target="#editar-{{$datos->_id}}">
-        <a class="fas fa-edit fa-lg" > </a>
-    </button>
+  
 
     @php
   $dtz = new DateTimeZone("America/Mexico_City");

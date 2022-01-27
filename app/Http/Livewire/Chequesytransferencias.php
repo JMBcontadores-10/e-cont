@@ -9,27 +9,66 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Cheques;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
+
 
 class Chequesytransferencias extends Component
 {
 
 
+    use WithFileUploads;
+    use WithPagination;
+    public Cheques $ajusteCheque; // coneccion al model cheques
+    public Cheques $Crear;// enlaza al modelo cheques
+    public $datos;
+    public float $ajuste;
 
-    public $users, $name, $email, $user_id;
+    public  $users, $name, $email, $user_id,$fecha,$importe,$ajuste2,$datos1,$user;
     public $cheque;
 
-    public int $perPage=100;
+   ///=======================variables nuevo-cheque=========================///
+    public $Nuevo_tipomov,$Nuevo_fecha,$Nuevo_importecheque,$Nuevo_beneficiario,
+    $Nuevo_tipoopera,$Nuevo_pdf,$relacionadosUp =[];
+
+
+   ///======================= fin variables nuevo-cheque====================///
+   
+    
+    public $mes;
+    public $anio;
+    public $todos;
+
+    protected $paginationTheme = 'bootstrap';// para dar e estilo numerico al paginador
+
+  
+    public function mount()
+    {
+
+        $this->anio=date("Y");
+        $this->mes=date("m");
+
+    }
+
+
+    public int $perPage=20;
     public $search;
+
+
+    public function updatingSearch(){
+
+        $this->resetPage();
+    }
+
+
+
+  
 
     protected $listeners = [
         'chequesRefresh' => '$refresh',
      ];
 
 
-     public function mount()
-     {
-         $this->search;
-     }
+    
  
 
 protected function rules(){
@@ -37,6 +76,9 @@ protected function rules(){
     return [
         'user_id' => '',
         'name' => '',
+        //======== modal ajuste =====//
+      
+       
        
     ];
 }
@@ -48,20 +90,39 @@ protected function rules(){
 
 
 
-
     public function render()
     {
 
+ 
+       
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
+
+      if($this->todos){
+
         $cheque = Cheques::
         search($this->search)
         ->where('rfc',$rfc)
+        ->orderBy('fecha', 'desc')
+        ->orderBy('updated_at', 'desc')
+     
+      
+        ->paginate($this->perPage);
 
-        ->paginate($this->perPage)
-        ;
+      }else{
+
+        $cheque = Cheques::
+        search($this->search)
+        ->where('rfc',$rfc)
+        ->where('fecha', 'like','%'.$this->anio."-".'%')
+        ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
+      
+        ->paginate($this->perPage);
+
+      }
+        
         $meses = array(
             '01' => 'Enero',
             '02' => 'Febrero',
@@ -110,10 +171,9 @@ protected function rules(){
     public function editar($id){
 
   
-        $dtz = new DateTimeZone("America/Mexico_City");
-        $dt = new DateTime("now", $dtz);
+        
         $rfc = Auth::user()->RFC;
-        $anio = $dt->format('Y');
+        
         $cheque = Cheques::
       
         where('_id',$id)->first();
@@ -122,11 +182,19 @@ protected function rules(){
 
         $this->user_id = $id;
         $this->name = $cheque->numcheque;
-        $this->fecha = $cheque->fecha;
+        $this->fecha = $cheque->importexml;
+        
+        $this->importe=$cheque->importexml;
+        $this->ajuste2=$cheque->ajuste;
+        $this->datos1=$cheque;
 
+        
  
 
     }
+
+
+
 
 
 
@@ -136,6 +204,42 @@ protected function rules(){
     }
 
 
+///================== metodos modal ajuste ==================//
+
+public function guardar(){
+
+    $this->validate();
+
+   $valor = floatval($this->ajuste);
+
+
+    $data=[
+
+
+        'ajuste' => $valor
+
+    ];
+
+    $this->ajusteCheque->update($data);
+
+    $this->dispatchBrowserEvent('ajuste', []);
+
+}
+
+
+
+/// ===================== Seccion metodos nuevo cheque   ============================//
+
+public function save_nuevo_cheque(){
 
 
 }
+
+
+
+
+/// ===================== fin seccion metodos nuevo cheque   ============================//
+
+
+
+}/// fin de la clase principal

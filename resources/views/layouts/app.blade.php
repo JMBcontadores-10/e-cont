@@ -45,7 +45,7 @@
     <link href="{{ asset('css/fullcalendar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <!--<link href="{{ asset('css/styles.css') }}" rel="stylesheet">-->
-  <!--  <link href="{{ asset('css/seccionRelacionados.css') }}" rel="stylesheet" >-->
+   <link href="{{ asset('css/seccionRelacionados.css') }}" rel="stylesheet" >
 <link href="{{ asset('css/estilos_generales.css')}}" rel="stylesheet">
   {{--------- estilos para el dashbard  ---}}
   {{--------- estilos para el dashbard  ---}}
@@ -381,15 +381,51 @@
   </div>
   <div class="shadow-bottom"></div>
   <div class="main-menu-content">
+   
     <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" data-icon-style="lines">
+       
       <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Dashboard</span><span class="badge badge-light-danger badge-pill badge-round float-right mr-50 ml-auto">2</span></a>
         <ul class="menu-content">
-          <li class="active"><a class="d-flex align-items-center" href="dashboard-ecommerce.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">eCommerce</span></a>
+          <li class="active"><a class="d-flex align-items-center" href="dashboard-ecommerce.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">cheques y transferencias</span></a>
           </li>
-          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Analytics</span></a>
+          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
           </li>
+          @if (Session::get('tipoU') == '2')
+          <li class=" nav-item"><a href="#"><i class="#" data-icon="notebook"></i><span class="menu-title text-truncate" data-i18n="Invoice">empresas</span></a>
+            <ul class="menu-content">
+              <li><a class="d-flex align-items-center" href="app-invoice-list.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice List">Invoice List</span></a>
+              </li>
+              <li><a class="d-flex align-items-center" href="app-invoice.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice">Invoice</span></a>
+              </li>
+              <li><a class="d-flex align-items-center" href="app-invoice-edit.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice Edit">Invoice Edit</span></a>
+              </li>
+              <li><a class="d-flex align-items-center" href="app-invoice-add.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice Add">Invoice Add</span></a>
+              </li>
+            </ul>
+          </li>
+          @endif
+          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
+          </li>
+          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
+          </li>
+                 <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
+          </li>
+          
         </ul>
+
       </li>
+
+
       <li class=" navigation-header text-truncate"><span data-i18n="Apps">Apps</span>
       </li>
       <li class=" nav-item"><a href="app-email.html"><i class="#" data-icon="envelope-pull"></i><span class="menu-title text-truncate" data-i18n="Email">Email</span></a>
@@ -695,7 +731,7 @@
 
 @yield('content');
 
-
+@livewireScripts
 
 
 
@@ -981,7 +1017,6 @@
       </footer>
       <!-- END: Footer-->
   
-      @livewire('livewire-ui-modal')
 </body>
 <footer style="margin-top: 20px;">
     <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |

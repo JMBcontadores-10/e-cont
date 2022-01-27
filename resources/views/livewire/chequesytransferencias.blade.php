@@ -1,12 +1,11 @@
 <div><!-- div contenedor principal-->
 
+    
     @php
 use App\Models\Cheques;
 use App\Http\Controllers\ChequesYTransferenciasController;
 @endphp
 
-
-  
 
         @php
         $rfc = Auth::user()->RFC;
@@ -31,12 +30,15 @@ use App\Http\Controllers\ChequesYTransferenciasController;
   <section class="invoice-list-wrapper">
     <!-- create invoice button-->
     <div class="invoice-create-btn mb-1">
-      <a href="app-invoice-add.html" class="btn btn-primary glow invoice-create" role="button" aria-pressed="true">Create
-        Invoice</a>
+      <a  data-toggle="modal" data-target="#nuevo-cheque" class="btn btn-primary glow invoice-create" role="button" aria-pressed="true">Nuevo Cheque/Transferencia
+        </a>
     </div>
-    <input wire:model.debounce.300ms="search" type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"placeholder="Search users...">
+    <!--<form action="{{ url('vincular-cheque') }}" method="POST">
+        @csrf
+        <button class="button2">Registrar Cheque/Transferencia</button>
+    </form>-->
 
-    <form  wire:submit.prevent="buscar">
+   <!-- <form  wire:submit.prevent="buscar">
         @csrf    
   
     <input wire:model.defer="search" type="text"  name="ajuste" class="form-control">
@@ -52,8 +54,44 @@ use App\Http\Controllers\ChequesYTransferenciasController;
     
     <button type="submit"   class="btn btn-primary close-modal">Ajustar</button>
     
-         </form>
+         </form>-->
+         
+
+     
+       
+         <form class="form-inline mr-auto">
+            <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Search">
+            &nbsp;&nbsp;
+            <label for="inputState">Mes</label>
+            <select wire:model="mes" id="inputState1" class=" select form-control"  >
+                <option  value="00" >Todos</option>
+                <?php foreach ($meses as $key => $value) {
+                    echo '<option value="' . $key . '">' . $value . '</option>';
+                } ?>
+            </select>
+            &nbsp;&nbsp;
+            <label for="inputState">Año</label>
+            <select wire:model="anio" id="inputState2" class="select form-control">
+             
+                <?php foreach (array_reverse($anios) as $value) {
+                    echo '<option value="' . $value . '">' . $value . '</option>';
+                } ?>
+            </select>
+    &nbsp;&nbsp;
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" wire:model="todos"  name="stOne" id="stOne"  >
+        <label class="form-check-label" for="flexCheckChecked">
+          Todos los registros
+        </label>
+      </div>
+<!-- <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Search">
+           -->
+
+           
+
+          </form>            
     
+      
     <!-- Options and filter dropdown button-->
     <div class="action-dropdown-btn d-none">
       <div class="dropdown invoice-filter-action">
@@ -71,16 +109,22 @@ use App\Http\Controllers\ChequesYTransferenciasController;
           <tr>
           
             <th>
-              <span class="align-middle">Invoice#</span>
+              <span class="align-middle">fecha </span>
             </th>
             
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Customer</th>
-            <th>Ajuste</th>
-            <th>Tags</th>
-            <th>Status</th>
-            <th>Action</th>
+            <th>Factura#</th>
+            <th>T.operación</th>
+            <th>F.pago</th>
+            <th>Pagado</th>
+            <th>$Cfdi</th>
+            <th>comprobar</th>
+        
+            <th >acciones / Funciones </th>
+           
+       
+           
+
+
           </tr>
         </thead>
         @foreach ($colCheques as $i)
@@ -134,33 +178,113 @@ use App\Http\Controllers\ChequesYTransferenciasController;
         @endphp
         <tbody>
           <tr>
-       
+            <td><small class="text-muted">{{$fecha}}</small></td>
             <td>
-              <a href="app-invoice.html">{{$numCheque}}</a>
+              <a href="app-invoice.html">{{ Str::limit($numCheque, 20); }}</a>
             </td>
-            <td><span class="invoice-amount">$459.30</span></td>
-            <td><small class="text-muted">12-08-19</small></td>
-            <td><span class="invoice-customer">Pixinvent PVT. LTD</span></td>
-            <td ><span class="invoice-customer" > 
+            <td><small class="text-muted">{{$tipoO}}</small></td>
+         
+            <td><span class="invoice-amount">{{$tipo}}</span></td>
+            <td><span class="invoice-amount">${{ number_format($importeC, 2) }}</span></td>
+           
+            <td><span class="invoice-amount">${{ number_format($sumaxml, 2) }}</span></td>
+            <td><span class="invoice-amount">${{ $diferencia }}</span></td>
+            <td>{{-- ajuste y notas---}}<span class="invoice-amount">
+                @if (Session::get('tipoU') == '2')
+                @if ($ajuste!=0)
+                @php $class="content_true" @endphp
+                @else
+               @php $class="icons" @endphp
+             @endif 
 
-                 <a  href="#" style="text-decoration: none; " class="icons fas fa-upload"
-                               data-toggle="modal" id="{{$id}}" onclick="filepond(this.id)"  data-target="#uploadRelacionados">
-                              </a>
-                              <button data-toggle="modal" data-target="#exampleModal" wire:click="editar('{{$id}}')"class="btn btn-primary btn-sm">Edit</button>
-                             
-            </span></td>
-            <td>
-              <span class="bullet bullet-success bullet-sm"></span>
-              <small class="text-muted">Technology</small>
-            </td>
-            <td><span class="badge badge-light-danger badge-pill">UNPAID</span></td>
-            <td>
-                <span class="badge badge-light-danger badge-pill">UNPAID</span>
-            </td>
+               <a class="{{$class}} fas fa-balance-scale"
+                data-toggle="modal" data-target="#ajuste{{$id}}"></a>
+               &nbsp; | &nbsp; 
+                @endif
+
+                @if (!empty($comentario))
+  
+                @php $class_c="content_true" @endphp
+            
+                @else
+            
+                @php $class_c="icons" @endphp
+            
+            
+             @endif
+
+<a  class="{{$class_c}} fas fa-sticky-note"
+data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
+                         
+           
+
+                @if ($nombreCheque!="0")
+    @php $class_p="content_true_pdf" @endphp
+    @else
+    @php $class_p="icons" @endphp
+     @endif
+
+        <a id="{{$id}}" class="{{$class_p}} fas fa-file-pdf"
+    data-toggle="modal" data-target="#pdfcheque{{$id}}"  onclick="filepondEditCheque(this.id)" > </a>
+   
+       
+
+            <a class="icons fas fa-upload"
+            data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"  data-backdrop="static" data-keyboard="false"   onclick="filepond(this.name)"  data-target="#uploadRelacionados">
+           </a>{{-- id="{{$id}}"--}}
+
+            &nbsp; | &nbsp; 
+            @if (!$docAdi['0'] == '')
+  
+            @php $class="content_true" @endphp
+     
+            @else
+     
+            @php $class="icons" @endphp
+     
+     
+         @endif
+      
+            <a  class="{{$class}} fas fa-folder-open"
+            data-toggle="modal"     data-target="#relacionados-{{$id}}" >{{--id="{{$id}}"--}}
+           </a>
+        
+          
+            <a  class="icons fas fa-edit"
+            data-toggle="modal"     data-target="#editar-{{$id}}" >{{--id="{{$id}}"--}}
+           </a>
+
+           @if ($faltaxml != 0)
+           <div class="col align-self-center">
+               <form action="{{ url('detallesCT') }}" method="POST">
+                   @csrf
+                   <input type="hidden" name="id" value="{{ $id }}">
+                   <input type="hidden" name="verificado" value="{{ $verificado }}">
+                   <button type="submit" class="fabutton">
+                       <i class="fas fa-eye fa-lg mt-3" style="color: rgb(8, 8, 8)"></i>
+                   </button>
+               </form>
+           </div>
+       @endif
+
+           
+            
+    </span>  </td>
+     
+         
+
+            
+           
+
           </tr>
+          
          @endforeach
         </tbody>
       </table>
+      {{ $colCheques->links() }}
+   
+        
+@livewireScripts
     </div>
   </section>
           </div>
@@ -168,11 +292,83 @@ use App\Http\Controllers\ChequesYTransferenciasController;
       </div>
       <!-- END: Content-->
 
-      <livewire:ajuste  :ajusteCheque=$i : key="$i->id">
+     
 
 
       <livewire:uploadrelacionados >
 
-   
+        @include('livewire.agregarcheque')
         @include('livewire.demo')
+      {{--  @include('livewire.ajuste')--}}
 </div><!-- fin div contenedor principal-->
+
+@php
+    
+    $col = Cheques::
+        
+        where('rfc',$rfc)
+
+        ->get()
+        ;
+
+@endphp
+
+@foreach ($col as $i)
+
+@php
+ $editar = true;
+$id = $i->_id;
+$tipo = $i->tipomov;
+$fecha = $i->fecha;
+$dateValue = strtotime($fecha);
+ $anio = date('Y',$dateValue);
+$rutaDescarga = 'storage/contarappv1_descargas/'.$rfc.'/'.$anio.'/Cheques_Transferencias/';
+$numCheque = $i->numcheque;
+$beneficiario = $i->Beneficiario;
+$importeC = $i->importecheque;
+$sumaxml = $i->importexml;
+$ajuste = $i->ajuste;
+$verificado = $i->verificado;
+$faltaxml = $i->faltaxml;
+$contabilizado = $i->conta;
+$pendiente = $i->pendi;
+    $tipoO = $i->tipoopera;
+    if ($tipoO == 'Impuestos' or $tipoO == 'Parcialidad') {
+        $diferencia = 0;
+    } else {
+        $diferencia = $importeC - abs($sumaxml);
+        $diferencia = $diferencia - $ajuste;
+    }
+    if ($diferencia > 1 or $diferencia < -1) {
+        $diferenciaP = 0;
+    } else {
+        $diferenciaP = 1;
+    }
+    $diferencia = number_format($diferencia, 2);
+    $nombreCheque = $i->nombrec;
+    if ($nombreCheque == '0') {
+        $subirArchivo = true;
+        $nombreChequeP = 0;
+    } else {
+        $subirArchivo = false;
+        $nombreChequeP = 1;
+    }
+    $rutaArchivo = $rutaDescarga . $nombreCheque;
+    if (!empty($i->doc_relacionados)) {
+        $docAdi = $i->doc_relacionados;
+    }
+    $revisado_fecha = $i->revisado_fecha;
+    $contabilizado_fecha = $i->contabilizado_fecha;
+    $poliza = $i->poliza;
+    $comentario = $i->comentario;
+@endphp
+
+<livewire:ajuste  :ajusteCheque=$i : key="$i->id" >
+<livewire:comentarios  :comentarioCheque=$i : key="$i->id" >
+
+
+@endforeach
+
+<livewire:relacionados  :filesrelacionados=$i : key="$i->id" >
+    <livewire:editar  :editCheque=$i : key="$i->id">
+        <livewire:pdfcheque :pdfcheque=$i : key="$i->id" >

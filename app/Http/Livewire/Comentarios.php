@@ -32,7 +32,7 @@ protected function rules(){
     $this->validate();
 
     $this->comentarioCheque->save();// guarda todos los campos
-
+    $this->emitTo( 'chequesytransferencias','chequesRefresh');
  }
 
 

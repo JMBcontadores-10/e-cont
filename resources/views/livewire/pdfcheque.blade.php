@@ -1,19 +1,7 @@
 <div>
 
-    @if ($datos->nombrec!="0")
-  
-    @php $class="content_true_pdf" @endphp
+    
 
-    @else
-
-    @php $class="icons" @endphp
-
-
- @endif
-
-    <a id="{{$datos->id}}" href="#" style="text-decoration: none; " class="{{$class}} fas fa-file-pdf"
-    data-toggle="modal" data-target="#pdfcheque{{$datos->id}}"  onclick="filepondEditCheque(this.id)" > </a>
-  
 
 
  

@@ -1,5 +1,6 @@
 <div>
- 
+  
+    
 
        
     @if ($datos->ajuste!=0)
@@ -15,10 +16,9 @@
 
 
  
+<!--
 
-<a id="tooltip" href="#" style="text-decoration: none; " class="{{$class}} fas fa-balance-scale"
-data-toggle="modal" data-target="#ajuste{{$datos->id}}">
-</a>
+</a>-->
 
 <span class="tooltip-content">Ajuste</span>
      <!-- Modal -->
@@ -27,12 +27,13 @@ data-toggle="modal" data-target="#ajuste{{$datos->id}}">
          <div class="modal-dialog" role="document">
              <div class="modal-content">
                  <div class="modal-header">
-                     <h6 class="modal-title" id="exampleModalLabel">  <span style="text-decoration: none;"  class="icons fas fa-balance-scale"> Ajuste</span></h6>
+                     <h6 class="modal-title" id="exampleModalLabel">  <span style="text-decoration: none;"  class="icons fas fa-balance-scale"> Ajuste{{$datos->numcheque}}</span></h6>
                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true close-btn">×</span>
                      </button>
                  </div>
  <div class="modal-body"><!--modal body -->
+
 
 
 

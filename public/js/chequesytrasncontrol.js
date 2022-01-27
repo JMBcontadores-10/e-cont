@@ -155,7 +155,7 @@ $("#attachment").on('change', function(e){
 // Get a reference to the file input element
 //const inputElement = document.getElementById("avatar");
 
-// ================Filepond=========================== //
+// ================Filepond Seccion=========================== //
 
 function filepond(id) {
 
@@ -283,6 +283,121 @@ FilePond.setOptions({
     }// fin funcion
 
 
+
+ // ================Filepond nuevo cheque(Agregar cheque/trasnferencia)=========================== //
+
+
+
+
+
+    // registrar plugin validacion filepond  se deben agregar los cdn despues del body 
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+    // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
+    FilePond.registerPlugin(FilePondPluginFileValidateSize);
+    
+    const token = document.querySelector('input[name="_token"]');
+     var ID =id;
+    
+    
+    
+    const iden = document.getElementById("agregarCheque");
+    const realcionados = document.getElementById("agregarCheque_relacionados");
+ 
+    
+    
+    
+    // Create a FilePond instance
+     //const pond = FilePond.create(ruta);// creacion simple de filepond
+    var filePondObj=FilePond.create(iden, {        /// creacion con validacion de archivos
+        maxFileSize: '1000KB',
+        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+        labelIdle:'Archivo comprobante de pago (solo PDF) <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading:'Cargando',
+        labelFileProcessing:'Subiendo a E-cont..',
+        labelFileProcessingComplete: 'Carga completa',
+        labelFileProcessingAborted: 'Carga cancelada',
+        labelTapToCancel: 'Presiona para cancelar',
+        allowMultiple: false,
+        instantUpload: false,
+        acceptedFileTypes: ["application/pdf"],
+        fileValidateTypeDetectType: (source, type) =>
+            new Promise((resolve, reject) => {
+                // Do custom type detection here and return with promise
+    
+                resolve(type);
+            }),
+         
+    });
+    
+    FilePond.setOptions({
+        name:'agregarCheque',
+     server: {
+    
+           url:'nuevoCheque/',
+           headers:{
+               'X-CSRF-TOKEN': token.value
+    
+     }
+     
+    }
+    
+    
+    
+    });
+
+
+
+
+       // Create a FilePond instance relacionados
+     //const pond = FilePond.create(ruta);// creacion simple de filepond
+     var filePondObj=FilePond.create(realcionados, {        /// creacion con validacion de archivos
+        maxFileSize: '1000KB',
+        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+        labelIdle:'Documentos Adicionales (solo PDF) <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading:'Cargando',
+        labelFileProcessing:'Subiendo a E-cont..',
+        labelFileProcessingComplete: 'Carga completa',
+        labelFileProcessingAborted: 'Carga cancelada',
+        labelTapToCancel: 'Presiona para cancelar',
+        allowMultiple: true,
+        instantUpload: false,
+        acceptedFileTypes: ["application/pdf"],
+        fileValidateTypeDetectType: (source, type) =>
+            new Promise((resolve, reject) => {
+                // Do custom type detection here and return with promise
+    
+                resolve(type);
+            }),
+         
+    });
+    
+    FilePond.setOptions({
+        name:'agregarCheque_relacionados',
+     server: {
+    
+           url:'nuevoCheque_relacionados/',
+           headers:{
+               'X-CSRF-TOKEN': token.value
+    
+     }
+     
+    }
+    
+    
+    
+    });
+    
+  function uploadFiles()
+  {
+        console.log(this.myPond.getFiles());
+      }
+
+
+
+///============================FIN filepond seccion ====================/////
+
+
+
  
     
 
@@ -347,3 +462,100 @@ window.addEventListener('ajuste', event => {
 window.addEventListener('hola', event => {
     alert('hola');
   });
+
+
+
+  window.addEventListener('disable', event => {
+
+
+    var m = document.querySelector("#inputState1");
+    var a = document.querySelector("#inputState2");
+
+    m.setAttribute("disabled", "");
+    a.setAttribute("disabled", "");
+
+
+  });
+ // =====================0seccion form steps modal nuevo cheque========//
+
+ $(document).ready(function(){
+
+    var current_fs, next_fs, previous_fs; //fieldsets
+    var opacity;
+    
+    $(".next").click(function(){
+    
+    current_fs = $(this).parent();
+    next_fs = $(this).parent().next();
+    
+    //Add Class Active
+    $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+    
+    //show the next fieldset
+    next_fs.show();
+    //hide the current fieldset with style
+    current_fs.animate({opacity: 0}, {
+    step: function(now) {
+    // for making fielset appear animation
+    opacity = 1 - now;
+    
+    current_fs.css({
+    'display': 'none',
+    'position': 'relative'
+    });
+    next_fs.css({'opacity': opacity});
+    },
+    duration: 600
+    });
+    });
+    
+    $(".previous").click(function(){
+    
+    current_fs = $(this).parent();
+    previous_fs = $(this).parent().prev();
+    
+    //Remove class active
+    $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+    
+    //show the previous fieldset
+    previous_fs.show();
+    
+    //hide the current fieldset with style
+    current_fs.animate({opacity: 0}, {
+    step: function(now) {
+    // for making fielset appear animation
+    opacity = 1 - now;
+    
+    current_fs.css({
+    'display': 'none',
+    'position': 'relative'
+    });
+    previous_fs.css({'opacity': opacity});
+    },
+    duration: 600
+    });
+    });
+    
+    $('.radio-group .radio').click(function(){
+    $(this).parent().find('.radio').removeClass('selected');
+    $(this).addClass('selected');
+    });
+    
+    $(".submit").click(function(){
+    return false;
+    })
+    
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+

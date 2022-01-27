@@ -9,6 +9,8 @@ use LivewireUI\Modal\ModalComponent;
 class Ajuste extends ModalComponent
 {
 
+    
+    
     public Cheques $ajusteCheque; // coneccion al model cheques
     public $ajuste;
     
@@ -20,7 +22,8 @@ class Ajuste extends ModalComponent
 
       
       
-      return[  'ajuste' => 'required|numeric'
+      return[  'ajuste' => 'required|numeric',
+               
     ];
     }
 
@@ -43,10 +46,10 @@ class Ajuste extends ModalComponent
 
         ];
 
-        $this->ajusteCheque->update($data);
+        $this->ajusteCheque->update($data);// actuliza la base de datos con el campo recibido 'ajuste'
 
-        $this->dispatchBrowserEvent('ajuste', []);
-
+      //  $this->dispatchBrowserEvent('ajuste', []);// recarga la pagina mediante js checar chequesytranscontrol.js
+      $this->emitTo( 'chequesytransferencias','chequesRefresh');
     }
 
     public function render()

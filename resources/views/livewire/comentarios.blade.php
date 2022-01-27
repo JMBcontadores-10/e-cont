@@ -1,21 +1,6 @@
 <div>
     
-    @if (!empty($datos->comentario))
-  
-    @php $class="content_true" @endphp
 
-    @else
-
-    @php $class="icons" @endphp
-
-
- @endif
-
-
- 
-
-<a id="tooltip"  href="#" style="text-decoration: none; " class="{{$class}} fas fa-comments"
-data-toggle="modal" data-target="#comentarios-{{$datos->id}}"> </a>
 
 <span class="tooltip-content">Comentarios</span>
      <!-- Modal -->

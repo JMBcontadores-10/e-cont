@@ -16,11 +16,13 @@ class Editar extends ModalComponent
 
 
     public Cheques $editCheque;// enlasar al modelo cheques
+  
 
     use WithFileUploads;
     public $editChequenombrec;
     public $relacionados;
     public $relacionadosUp =[];
+   
 
 
    
@@ -91,6 +93,7 @@ class Editar extends ModalComponent
 
 /* verifica si existe el pdf en el dir. y lo elimina si se va a remplazar */
 
+
      
 if ($this->editCheque->nombrec!="0"){
 
@@ -108,6 +111,8 @@ $this->editCheque->save();// guarda todos los campos
 $this->dispatchBrowserEvent('say-goodbye', []);
 
 }
+
+
 
 
 
