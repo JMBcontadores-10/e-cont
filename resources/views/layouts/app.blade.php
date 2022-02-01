@@ -40,7 +40,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
     {{-- <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet"> --}}
-    
+
     <!-- Styles -->
     <link href="{{ asset('css/fullcalendar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -74,7 +74,7 @@
    <link rel="stylesheet"  href="{{ asset('css/app-assets/css/themes/semi-dark-layout.min.css')}}">
    <!-- END: Theme CSS-->
 
- 
+
    <link rel="stylesheet"  href="{{ asset('css/app-assets/css/pages/app-invoice.min.css')}}">
    <!-- END: Page CSS-->
 
@@ -93,7 +93,7 @@
 
 
 
-  
+
      {{--------- end estilos para el dashbard  ---}}
 
 
@@ -151,7 +151,7 @@
 
 
 
-      
+
       {{----------- end scripts dashboard    ---}}
 
 
@@ -235,7 +235,7 @@
           <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="javascript:void(0);" data-toggle="dropdown"><i class="ficon bx bx-bell bx-tada bx-flip-horizontal"></i><span class="badge badge-pill badge-danger badge-up">5</span></a>
             <ul class="dropdown-menu dropdown-menu-media dropdown-menu-right">
               <li class="dropdown-menu-header">
-                <div class="dropdown-header px-1 py-75 d-flex justify-content-between"><span class="notification-title">7 new Notification</span><span class="text-bold-400 cursor-pointer">Mark all as read</span></div>
+                <div class="dropdown-header px-1 py-75 d-flex justify-content-between"><span class="notification-title">7 Nuevas Notificaciones</span><span class="text-bold-400 cursor-pointer">Mark all as read</span></div>
               </li>
               <li class="scrollable-container media-list"><a class="d-flex justify-content-between" href="javascript:void(0);">
                   <div class="media d-flex align-items-center">
@@ -246,15 +246,8 @@
                       <h6 class="media-heading"><span class="text-bold-500">Congratulate Socrates Itumay</span> for work anniversaries</h6><small class="notification-text">Mar 15 12:32pm</small>
                     </div>
                   </div></a><a class="d-flex justify-content-between read-notification cursor-pointer" href="javascript:void(0);">
-                  <div class="media d-flex align-items-center">
-                    <div class="media-left pr-0">
-                      <div class="avatar mr-1 m-0"><img src="app-assets/images/portrait/small/avatar-s-16.jpg" alt="avatar" height="39" width="39"></div>
-                    </div>
-                    <div class="media-body">
-                      <h6 class="media-heading"><span class="text-bold-500">New Message</span> received</h6><small class="notification-text">You have 18 unread messages</small>
-                    </div>
-                  </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
-                  <div class="media d-flex align-items-center py-0">
+
+                 <!--  <div class="media d-flex align-items-center py-0">
                     <div class="media-left pr-0"><img class="mr-1" src="app-assets/images/icon/sketch-mac-icon.png" alt="avatar" height="39" width="39"></div>
                     <div class="media-body">
                       <h6 class="media-heading"><span class="text-bold-500">Updates Available</span></h6><small class="notification-text">Sketch 50.2 is currently newly added</small>
@@ -270,66 +263,19 @@
                       </div>
                     </div>
                   </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
-                  <div class="media d-flex align-items-center">
-                    <div class="media-left pr-0">
-                      <div class="avatar bg-primary bg-lighten-5 mr-1 m-0 p-25"><span class="avatar-content text-primary font-medium-2">LD</span></div>
-                    </div>
-                    <div class="media-body">
-                      <h6 class="media-heading"><span class="text-bold-500">New customer</span> is registered</h6><small class="notification-text">1 hrs ago</small>
-                    </div>
-                  </div></a><a href="javascript:void(0);">
-                  <div class="media d-flex align-items-center justify-content-between">
-                    <div class="media-left pr-0">
-                      <div class="media-body">
-                        <h6 class="media-heading">New Offers</h6>
-                      </div>
-                    </div>
-                    <div class="media-right">
-                      <div class="custom-control custom-switch">
-                        <input class="custom-control-input" type="checkbox" checked id="notificationSwtich">
-                        <label class="custom-control-label" for="notificationSwtich"></label>
-                      </div>
-                    </div>
-                  </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
-                  <div class="media d-flex align-items-center">
-                    <div class="media-left pr-0">
-                      <div class="avatar bg-danger bg-lighten-5 mr-1 m-0 p-25"><span class="avatar-content"><i class="bx bxs-heart text-danger"></i></span></div>
-                    </div>
-                    <div class="media-body">
-                      <h6 class="media-heading"><span class="text-bold-500">Application</span> has been approved</h6><small class="notification-text">6 hrs ago</small>
-                    </div>
-                  </div></a><a class="d-flex justify-content-between read-notification cursor-pointer" href="javascript:void(0);">
-                  <div class="media d-flex align-items-center">
-                    <div class="media-left pr-0">
-                      <div class="avatar mr-1 m-0"><img src="app-assets/images/portrait/small/avatar-s-4.jpg" alt="avatar" height="39" width="39"></div>
-                    </div>
-                    <div class="media-body">
-                      <h6 class="media-heading"><span class="text-bold-500">New file</span> has been uploaded</h6><small class="notification-text">4 hrs ago</small>
-                    </div>
-                  </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
-                  <div class="media d-flex align-items-center">
-                    <div class="media-left pr-0">
-                      <div class="avatar bg-rgba-danger m-0 mr-1 p-25">
-                        <div class="avatar-content"><i class="bx bx-detail text-danger"></i></div>
-                      </div>
-                    </div>
-                    <div class="media-body">
-                      <h6 class="media-heading"><span class="text-bold-500">Finance report</span> has been generated</h6><small class="notification-text">25 hrs ago</small>
-                    </div>
-                  </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
-                  <div class="media d-flex align-items-center border-0">
-                    <div class="media-left pr-0">
-                      <div class="avatar mr-1 m-0"><img src="app-assets/images/portrait/small/avatar-s-16.jpg" alt="avatar" height="39" width="39"></div>
-                    </div>
-                    <div class="media-body">
-                      <h6 class="media-heading"><span class="text-bold-500">New customer</span> comment recieved</h6><small class="notification-text">2 days ago</small>
-                    </div>
-                  </div></a></li>
+                 -->
+
+
+                 @php
+
+                $nombre=Session::get('nombreU');
+                 @endphp
+
               <li class="dropdown-menu-footer"><a class="dropdown-item p-50 text-primary justify-content-center" href="javascript:void(0)">Read all notifications</a></li>
             </ul>
           </li>
           <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0);" data-toggle="dropdown">
-              <div class="user-nav d-sm-flex d-none"><span class="user-name">John Doe</span><span class="user-status text-muted">Available</span></div><span><img class="round" src="app-assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="40" width="40"></span></a>
+              <div class="user-nav d-sm-flex d-none"><span class="user-name">{{$nombre}}</span><span class="user-status text-muted">Available</span></div><span><img class="round" src="app-assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="40" width="40"></span></a>
             <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item" href="page-user-profile.html"><i class="bx bx-user mr-50"></i> Edit Profile</a><a class="dropdown-item" href="app-email.html"><i class="bx bx-envelope mr-50"></i> My Inbox</a><a class="dropdown-item" href="app-todo.html"><i class="bx bx-check-square mr-50"></i> Task</a><a class="dropdown-item" href="app-chat.html"><i class="bx bx-message mr-50"></i> Chats</a>
               <div class="dropdown-divider mb-0"></div><a class="dropdown-item" href="auth-login.html"><i class="bx bx-power-off mr-50"></i> Logout</a>
             </div>
@@ -381,9 +327,9 @@
   </div>
   <div class="shadow-bottom"></div>
   <div class="main-menu-content">
-   
+
     <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" data-icon-style="lines">
-       
+
       <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Dashboard</span><span class="badge badge-light-danger badge-pill badge-round float-right mr-50 ml-auto">2</span></a>
         <ul class="menu-content">
           <li class="active"><a class="d-flex align-items-center" href="dashboard-ecommerce.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">cheques y transferencias</span></a>
@@ -420,7 +366,7 @@
           </li>
                  <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
           </li>
-          
+
         </ul>
 
       </li>
@@ -778,7 +724,7 @@
     </div>
     <!-- Theme options starts -->
     <hr>
-  
+
     <!-- Menu Colors Starts -->
     <div id="customizer-theme-colors">
       <h5>Menu Colors</h5>
@@ -823,7 +769,7 @@
     </div>
     <!-- Collapse sidebar switch Ends -->
     <hr>
-  
+
     <!-- Navbar colors starts -->
     <div id="customizer-navbar-colors">
       <h5>Navbar Colors</h5>
@@ -870,7 +816,7 @@
     </div>
     <hr>
     <!-- Navbar Type Starts -->
-  
+
     <!-- Footer Type Starts -->
     <h5>Footer Type</h5>
     <div class="footer-type d-flex justify-content-start">
@@ -901,7 +847,7 @@
     </div>
     <!-- Footer Type Ends -->
     <hr>
-  
+
     <!-- Card Shadow Starts-->
     <div class="card-shadow d-flex justify-content-between align-items-center py-25">
       <div class="hide-scroll-title">
@@ -916,7 +862,7 @@
     </div>
     <!-- Card Shadow Ends-->
     <hr>
-  
+
     <!-- Hide Scroll To Top Starts-->
     <div class="hide-scroll-to-top d-flex justify-content-between align-items-center py-25">
       <div class="hide-scroll-title">
@@ -931,13 +877,13 @@
     </div>
     <!-- Hide Scroll To Top Ends-->
   </div>
-  
+
       </div>
       <!-- End: Customizer-->
-  
+
       <!-- Buynow Button-->
       <div class="buy-now"><a href="https://1.envato.market/frest_admin" target="_blank" class="btn btn-danger">Buy Now</a>
-  
+
       </div>
       <!-- demo chat-->
       <div class="widget-chat-demo"><!-- widget chat demo footer button start -->
@@ -1004,11 +950,11 @@
     </div>
   </div>
   <!-- widget chat demo ends -->
-  
+
       </div>
       <div class="sidenav-overlay"></div>
       <div class="drag-target"></div>
-  
+
       <!-- BEGIN: Footer-->
       <footer class="footer footer-static footer-light">
         <p class="clearfix mb-0"><span class="float-left d-inline-block">2021 &copy; PIXINVENT</span><span class="float-right d-sm-inline-block d-none">Crafted with<i class="bx bxs-heart pink mx-50 font-small-3"></i>by<a class="text-uppercase" href="https://1.envato.market/pixinvent_portfolio" target="_blank">Pixinvent</a></span>
@@ -1016,7 +962,7 @@
         </p>
       </footer>
       <!-- END: Footer-->
-  
+
 </body>
 <footer style="margin-top: 20px;">
     <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |
@@ -1024,7 +970,7 @@
 </footer>
 @stack('scripts')
 </html>
- <!-- =============codigo body fin====================================== -->       
+ <!-- =============codigo body fin====================================== -->
 {{--
 <div id="page-loader"><span class="preloader-interior"></span></div>
 <div id="app">

@@ -1,5 +1,5 @@
 <div><!-- div contenedor principal-->
-
+   
     
     @php
 use App\Models\Cheques;
@@ -30,8 +30,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
   <section class="invoice-list-wrapper">
     <!-- create invoice button-->
     <div class="invoice-create-btn mb-1">
-      <a  data-toggle="modal" data-target="#nuevo-cheque" class="btn btn-primary glow invoice-create" role="button" aria-pressed="true">Nuevo Cheque/Transferencia
-        </a>
+
+        <a  data-toggle="modal" data-target="#nuevo-cheque" class="btn btn-primary glow invoice-create"
+   wire:click="editar()" >Nuevo Cheque/Transferencia </a>    
     </div>
     <!--<form action="{{ url('vincular-cheque') }}" method="POST">
         @csrf
@@ -59,7 +60,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
      
        
-         <form class="form-inline mr-auto">
+         <div class="form-inline mr-auto">
             <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Search">
             &nbsp;&nbsp;
             <label for="inputState">Mes</label>
@@ -89,7 +90,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
            
 
-          </form>            
+        </div>            
     
       
     <!-- Options and filter dropdown button-->
@@ -119,7 +120,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             <th>$Cfdi</th>
             <th>comprobar</th>
         
-            <th >acciones / Funciones </th>
+            <th >...</th>
            
        
            
@@ -177,7 +178,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             $comentario = $i->comentario;
         @endphp
         <tbody>
-          <tr>
+          <tr onclick="showHideRow('hidden_row{{$id}}');">
             <td><small class="text-muted">{{$fecha}}</small></td>
             <td>
               <a href="app-invoice.html">{{ Str::limit($numCheque, 20); }}</a>
@@ -190,86 +191,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             <td><span class="invoice-amount">${{ number_format($sumaxml, 2) }}</span></td>
             <td><span class="invoice-amount">${{ $diferencia }}</span></td>
             <td>{{-- ajuste y notas---}}<span class="invoice-amount">
-                @if (Session::get('tipoU') == '2')
-                @if ($ajuste!=0)
-                @php $class="content_true" @endphp
-                @else
-               @php $class="icons" @endphp
-             @endif 
-
-               <a class="{{$class}} fas fa-balance-scale"
-                data-toggle="modal" data-target="#ajuste{{$id}}"></a>
-               &nbsp; | &nbsp; 
-                @endif
-
-                @if (!empty($comentario))
-  
-                @php $class_c="content_true" @endphp
-            
-                @else
-            
-                @php $class_c="icons" @endphp
-            
-            
-             @endif
-
-<a  class="{{$class_c}} fas fa-sticky-note"
-data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
-                         
-           
-
-                @if ($nombreCheque!="0")
-    @php $class_p="content_true_pdf" @endphp
-    @else
-    @php $class_p="icons" @endphp
-     @endif
-
-        <a id="{{$id}}" class="{{$class_p}} fas fa-file-pdf"
-    data-toggle="modal" data-target="#pdfcheque{{$id}}"  onclick="filepondEditCheque(this.id)" > </a>
-   
-       
-
-            <a class="icons fas fa-upload"
-            data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"  data-backdrop="static" data-keyboard="false"   onclick="filepond(this.name)"  data-target="#uploadRelacionados">
-           </a>{{-- id="{{$id}}"--}}
-
-            &nbsp; | &nbsp; 
-            @if (!$docAdi['0'] == '')
-  
-            @php $class="content_true" @endphp
-     
-            @else
-     
-            @php $class="icons" @endphp
-     
-     
-         @endif
-      
-            <a  class="{{$class}} fas fa-folder-open"
-            data-toggle="modal"     data-target="#relacionados-{{$id}}" >{{--id="{{$id}}"--}}
-           </a>
-        
-          
-            <a  class="icons fas fa-edit"
-            data-toggle="modal"     data-target="#editar-{{$id}}" >{{--id="{{$id}}"--}}
-           </a>
-
-           @if ($faltaxml != 0)
-           <div class="col align-self-center">
-               <form action="{{ url('detallesCT') }}" method="POST">
-                   @csrf
-                   <input type="hidden" name="id" value="{{ $id }}">
-                   <input type="hidden" name="verificado" value="{{ $verificado }}">
-                   <button type="submit" class="fabutton">
-                       <i class="fas fa-eye fa-lg mt-3" style="color: rgb(8, 8, 8)"></i>
-                   </button>
-               </form>
-           </div>
-       @endif
-
-           
-            
-    </span>  </td>
+              
      
          
 
@@ -277,6 +199,150 @@ data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
            
 
           </tr>
+
+          <tr id="hidden_row{{$id}}" class="hidden_row">
+            <td colspan=12>
+               {{$numCheque}}<br>
+
+               <div class="box">
+                <div>  
+                    <div class="tr"> Ajuste</div>  
+
+
+                    @if (Session::get('tipoU') == '2')
+                    @if ($ajuste!=0)
+                    @php $class="content_true" @endphp
+                    @else
+                   @php $class="icons" @endphp
+                 @endif 
+     
+                   <a class="{{$class}} fas fa-balance-scale"
+                    data-toggle="modal" data-target="#ajuste{{$id}}"></a>
+                
+                    @endif
+                </div>
+                <div>  
+                    <div class="tr"> Comentario</div> 
+                    
+               @if (!empty($comentario))
+ 
+               @php $class_c="content_true" @endphp
+           
+               @else
+           
+               @php $class_c="icons" @endphp
+           
+           
+            @endif
+            
+<a  class="{{$class_c}} fas fa-sticky-note"
+data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
+            
+                </div>
+                <div>  
+                    <div class="tr"> Pdf</div> 
+                     @if ($nombreCheque!="0")
+   @php $class_p="content_true_pdf" @endphp
+   @else
+   @php $class_p="icons" @endphp
+    @endif
+
+       <a id="{{$id}}" class="{{$class_p}} fas fa-file-pdf"
+   data-toggle="modal" data-target="#pdfcheque{{$id}}"  onclick="filepondEditCheque(this.id)" > </a>
+  
+              
+            
+                </div>
+                <div>  
+                    <div class="tr"> Documentos Adcionales</div> 
+                    <a class="icons fas fa-upload"
+                    data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"  data-backdrop="static" data-keyboard="false"   onclick="filepond(this.name)"  data-target="#uploadRelacionados">
+                   </a>{{-- id="{{$id}}"--}}
+         
+                    &nbsp; | &nbsp; 
+                    @if (!$docAdi['0'] == '')
+          
+                    @php $class="content_true" @endphp
+             
+                    @else
+             
+                    @php $class="icons" @endphp
+             
+             
+                 @endif
+              
+                    <a  class="{{$class}} fas fa-folder-open"
+                    data-toggle="modal"     data-target="#relacionados-{{$id}}" >{{--id="{{$id}}"--}}
+                   </a> 
+            
+                </div>
+                <div>  
+                    <div class="tr">Vinculadas</div> 
+                    @if ($faltaxml != 0)
+                   
+            <i class="content_true fa-eye " ></i>
+                      
+        @else
+
+        <i class="icons fas fas fa-eye" ></i>
+                @endif 
+
+
+                      </div>
+
+                      <div>  
+                        <div class="tr">Impresion</div> 
+                        <i class="icons fas fa-print" ></i>
+
+                          </div>
+
+
+                <div>  
+              <div class="tr"> Editar</div> 
+              <a  class="icons fas fa-edit"
+              data-toggle="modal"     data-target="#editar-{{$id}}" >{{--id="{{$id}}"--}}
+             </a>
+   
+                </div>
+
+                <div>  
+                    <div class="tr">Eliminar Cheque</div> 
+                    @if ($verificado == 0)
+                  
+         
+                     
+            <a onclick="return confirm('¿Seguro que deseas eliminar el cheque/transferencia?')" class="icons fas fa-trash"></a>
+                   
+
+                @endif
+         
+                      </div>
+                      
+
+                      <div>
+                        <div class="tr">Cheque Id</div> 
+                                          {{$id}}
+                     
+                                               </div>
+                                               
+                   
+            
+
+
+
+                   
+
+
+           
+   </span>  
+</div>
+   
+</div>
+            </td>
+
+
+            
+        </tr>
           
          @endforeach
         </tbody>
@@ -290,14 +356,18 @@ data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
           </div>
         </div>
       </div>
-      <!-- END: Content-->
+    
 
-     
+
+
+
+
 
 
       <livewire:uploadrelacionados >
-
-        @include('livewire.agregarcheque')
+      
+   
+        
         @include('livewire.demo')
       {{--  @include('livewire.ajuste')--}}
 </div><!-- fin div contenedor principal-->
@@ -371,4 +441,4 @@ $pendiente = $i->pendi;
 
 <livewire:relacionados  :filesrelacionados=$i : key="$i->id" >
     <livewire:editar  :editCheque=$i : key="$i->id">
-        <livewire:pdfcheque :pdfcheque=$i : key="$i->id" >
+        <livewire:pdfcheque :pdfcheque=$i : key="$i->id" >  <livewire:agregarcheque >

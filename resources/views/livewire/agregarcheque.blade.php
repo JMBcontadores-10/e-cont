@@ -16,12 +16,12 @@
             </div>
 <div class="modal-body"><!--modal body -->
 
-  
+
     {{--<h2><strong>C</strong></h2>--}}
     <p>llena los campos y da click en siguiente</p>
-    <div class="row">
+    <div class="row"> 
         <div class="col-md-12 mx-0">
-            <form id="msform">
+          
                 <!-- progressbar -->
                 <ul id="progressbar">
                     <li class="active" id="account"><strong>Información</strong></li>
@@ -38,7 +38,8 @@
 
  
       
-
+    <form  wire:submit.prevent="guardar_nuevo_cheque">
+        @csrf     
         <div class="form-row">
           <div class="form-group col-md-6">
               {{---tooltip---}}
@@ -47,7 +48,7 @@
               {{----tootip-----}}
             <label for="inputEmail4">Forma de pago</label>
  
-            <select wire:model="Crear.tipomov" name="tipo" id="tipo" class="form-control">
+            <select wire:model="Nuevo_tipomov" name="tipo" id="tipo" class="form-control">
                 <option>Cheque</option>
                 <option>Transferencia</option>
                 <option>Domiciliación</option>
@@ -62,8 +63,8 @@
             Si se trata de un cheque, también escriba número de cheque.</span>
               {{---tooltip---}}
             <label for="inputPassword4">#Factura</label>
-            <input class="form-control" type=text required name="numCheque" 
-            placeholder="Describa lo que está pagando" wire:model="Crear.numcheque">
+            <input class="form-control" type=text  name="Nuevo_numCheque" 
+            placeholder="Describa lo que está pagando" wire:model="Nuevo_numcheque">
           </div>
         </div>
         <div class="form-group">
@@ -72,7 +73,7 @@
          <span id="fecha" class="tooltiptext">Escriba la fecha en que realizó el pago.</span>
          {{---tooltip---}}
           <label for="inputAddress">Fecha de pago</label>
-          <input class="form-control" id="fecha" wire:model="Nuevo_fecha"  type=date required   min="2014-01-01"
+          <input class="form-control" id="fecha" wire:model="Nuevo_fecha"  type=date   min="2014-01-01"
           max={{ $date }}   >
 
         </div>
@@ -84,14 +85,14 @@
                 {{----tootip-----}}
               <label for="inputEmail4">Total pagado</label>
    
-              <input class="form-control" wire:model="Nuevo_importecheque" type="number"  step="0.01" placeholder="pesos y centavos Ej. 98.50" required name="importeCheque">
+              <input class="form-control" wire:model="Nuevo_importecheque" type="number"  step="0.01" placeholder="pesos y centavos Ej. 98.50" name="importeCheque">
             </div>
             <div class="form-group col-md-6">
                   {{---tooltip---}}
           
                 {{---tooltip---}}
               <label for="inputPassword4">Total factura(s):</label>
-              <input class="form-control" type=text required readonly name="importeT"
+              <input class="form-control" type=text  readonly name="importeT"
                             value="">
             </div>
           </div>
@@ -103,7 +104,7 @@
             </span>
             {{---tooltip---}}
             <label for="inputCity">Beneficiario</label>
-            <input class="form-control" wire:model="Nuevo_beneficiario" type=text required name="beneficiario"
+            <input class="form-control" wire:model="Nuevo_beneficiario" type=text name="beneficiario"
                placeholder="A quien realizó el pago">
           </div>
           <div class="form-group col-md-4">
@@ -122,7 +123,9 @@
                 <option>Otro</option>
             </select>
           </div>
- 
+       
+
+
         </div>
         <div class="form-group">
             <div class="form-group col-md-12">
@@ -133,7 +136,7 @@
          {{---tooltip---}}
           <label for="inputAddress">Comprobante (PDF)</label>
           <div class="custom-file">
-            <input type="file"  wire:model="Nuevo_pdf"class="custom-file-input" id="customFileLang" lang="es">
+            <input type="file"  wire:model="Nuevo_nombrec" class="custom-file-input" id="customFileLang" lang="es">
             <label class="custom-file-label" for="customFileLang">Seleccionar Archivo</label>
           </div>
             </div>
@@ -149,7 +152,7 @@
 
                 </label>
 
-                <input name="doc_relacionados[]"  type="file" accept=".pdf" id="attachment" style="visibility: hidden; position: absolute;" multiple />
+                <input  wire:model="pushArchivos"  type="file" accept=".pdf" id="attachment" style="visibility: hidden; position: absolute;" multiple />
 
             </p>
             <p id="files-area">
@@ -162,17 +165,9 @@
 
 
 
-        <div class="form-group">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck">
-            <label class="form-check-label" for="gridCheck">
-              Check me out
-            </label>
-          </div>
-        </div>
         <button type="submit" class="btn btn-primary">Sign in</button>
     
-      
+    </form>
             
 
 
@@ -244,7 +239,7 @@
                         </div>
                     </div>
                 </fieldset>
-            </form>
+            
         </div>
     </div>
 

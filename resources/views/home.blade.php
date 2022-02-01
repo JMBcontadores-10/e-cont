@@ -8,10 +8,11 @@ use App\Http\Controllers\ChequesYTransferenciasController;
     <div class="container">
         <div class="row justify-content-center">
             <div class="inicio" align="center">
-                @if (Session::get('tipoU') == '2')
+                @if (Session::get('tipoU') == '3')
                     <h4>Esta entrando como contador a la</h4>
                 @endif
                 <h4>Sesión de:</h4>
+                <h2>{{  Session::get('nombreU') }}</h2>
                 <h2>{{ Auth::user()->nombre }}</h2>
                 <h4>{{ Auth::user()->RFC }}</h4>
                 <br>

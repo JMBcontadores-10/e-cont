@@ -27,7 +27,7 @@ class Chequesytransferencias extends Component
     public $cheque;
 
    ///=======================variables nuevo-cheque=========================///
-    public $Nuevo_tipomov,$Nuevo_fecha,$Nuevo_importecheque,$Nuevo_beneficiario,
+    public $Nuevo_numcheque,$Nuevo_tipomov,$Nuevo_fecha,$Nuevo_importecheque,$Nuevo_beneficiario,
     $Nuevo_tipoopera,$Nuevo_pdf,$relacionadosUp =[];
 
 
@@ -43,6 +43,8 @@ class Chequesytransferencias extends Component
   
     public function mount()
     {
+
+        $this->Crear=new Cheques();
 
         $this->anio=date("Y");
         $this->mes=date("m");
@@ -68,14 +70,19 @@ class Chequesytransferencias extends Component
      ];
 
 
-    
- 
+  
 
 protected function rules(){
 
     return [
         'user_id' => '',
         'name' => '',
+        'Nuevo_numcheque'=>'required',
+        'Nuevo_tipomov'=>'',
+        'Nuevo_fecha'=>'',
+        'Nuevo_importecheque'=>'',
+        'Nuevo_beneficiario'=>'',
+       
         //======== modal ajuste =====//
       
        
@@ -168,28 +175,16 @@ protected function rules(){
     }
 
 
-    public function editar($id){
+    public function editar(){
 
   
         
-        $rfc = Auth::user()->RFC;
-        
-        $cheque = Cheques::
-      
-        where('_id',$id)->first();
-
-        ;
-
-        $this->user_id = $id;
-        $this->name = $cheque->numcheque;
-        $this->fecha = $cheque->importexml;
-        
-        $this->importe=$cheque->importexml;
-        $this->ajuste2=$cheque->ajuste;
-        $this->datos1=$cheque;
+       
+        $this->datos1="hola";
 
         
- 
+        $this->dispatchBrowserEvent('hola', []);
+
 
     }
 
@@ -230,10 +225,7 @@ public function guardar(){
 
 /// ===================== Seccion metodos nuevo cheque   ============================//
 
-public function save_nuevo_cheque(){
 
-
-}
 
 
 

@@ -95,7 +95,7 @@ $("[data-dismiss=modal]").trigger({ type: "click" });// cerrar modal por data-di
                                     <a title={{$docs}}  class="alert fas fa-file-pdf"></a> </button>
 
 
-                                <span> {{Str::limit(Str::afterLast($docs, '&'), 10); }} <span>
+                                <span> {{Str::limit(Str::afterLast($docs, '#'), 10); }} <span>
 
 
                         <hr>

@@ -29,9 +29,14 @@ class Login1Controller extends Controller
                 if (Hash::check($request->passC, $t['password'])) {
                     $ti = $t['tipo'];
                     $co = $t['Id_Conta'];
+
                     Session::put('idConta', $co);
                     Session::put('tipoU', $ti);
+
+
                     if (Session::get('tipoU') == '2') {
+
+
                         return view('auth.login')
                         ->with('rfc', $request->rfcC);
                     } else{
@@ -64,9 +69,11 @@ class Login1Controller extends Controller
             ->first();
 
         $ti = $t['tipo'];
+        $nombre=$t['nombre'];
 
 
         Session::put('tipoU', $ti);
+        Session::put('nombreU', $nombre);
 
 
         return view('auth.login')

@@ -552,7 +552,9 @@ window.addEventListener('hola', event => {
 
 
 
-
+    function showHideRow(row) {
+        $("#" + row).toggle();
+    }
 
 
 
