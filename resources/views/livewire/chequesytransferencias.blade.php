@@ -61,6 +61,12 @@ use App\Http\Controllers\ChequesYTransferenciasController;
      
        
          <div class="form-inline mr-auto">
+            <label for="inputState">Mes</label>
+            <select wire:model="rfcEmpresas" id="inputState1" class=" select form-control"  >
+                <option  value="00" >Todos</option>
+             
+            </select>
+            &nbsp;&nbsp;
             <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Search">
             &nbsp;&nbsp;
             <label for="inputState">Mes</label>
@@ -92,7 +98,12 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
         </div>            
     
+      {{$empresa}}
       
+@foreach($empresas as $em)
+
+      {{$em['nombre']}}
+      @endforeach
     <!-- Options and filter dropdown button-->
     <div class="action-dropdown-btn d-none">
       <div class="dropdown invoice-filter-action">
@@ -376,7 +387,7 @@ data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
     
     $col = Cheques::
         
-        where('rfc',$rfc)
+        where('rfc','PERE9308105X4')
 
         ->get()
         ;

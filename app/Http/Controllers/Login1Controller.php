@@ -12,7 +12,7 @@ class Login1Controller extends Controller
 {
     public function index()
     {
-        return view('login1');
+        return view('auth.login');
     }
 
     public function login(Request $request)
@@ -21,24 +21,25 @@ class Login1Controller extends Controller
         if ($request->has('rfcC')) {
 
             $t = DB::table('clientes')
-                ->select('tipo', 'password', 'Id_Conta')
+              //  ->select('tipo', 'password', 'Id_Conta','nombre')
                 ->where('RFC', $request->rfcC)
                 ->first();
 
             if (!$t == null) {
                 if (Hash::check($request->passC, $t['password'])) {
-                    $ti = $t['tipo'];
-                    $co = $t['Id_Conta'];
-
-                    Session::put('idConta', $co);
-                    Session::put('tipoU', $ti);
+                   // $ti = $t['tipo'];
+                   // $co = $t['Id_Conta'];
+                    $nombre=$t['nombre'];
+                    Session::put('nombreU', $nombre);// session put para el nombre del contador
+                   // Session::put('idConta', $co);
+                   // Session::put('tipoU', $ti);
 
 
                     if (Session::get('tipoU') == '2') {
 
 
-                        return view('auth.login')
-                        ->with('rfc', $request->rfcC);
+                        return view('auth.login');
+                       // ->with('rfc', $request->rfcC);
                     } else{
                         return back();
                     }

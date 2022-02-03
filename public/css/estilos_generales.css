@@ -627,3 +627,14 @@ font-size:19px;
         padding:10px;
         background-color: #F2F2F2;
     }
+
+
+
+    /*   reposive img del home /modulos*/
+
+    .responsive {
+        max-width: 100%;
+        height: auto;
+      }
+
+      

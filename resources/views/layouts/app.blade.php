@@ -168,7 +168,7 @@
 </head>
 
 
-<body   class="vertical-layout vertical-menu-modern 2-columns  navbar-sticky footer-static  " data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
+<body   class="vertical-layout vertical-menu-modern 2-columns  navbar-sticky footer-static  " style="background-image: url('img/auth-bg3.jpg');" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
     <!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
 <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
@@ -266,18 +266,29 @@
                  -->
 
 
-                 @php
+                 @if(Auth::check())
 
-                $nombre=Session::get('nombreU');
-                 @endphp
+                auth()->user();
+
+                $tipo=auth()->user->tipo;
+                $rfc= auth()->user()->RFC;
+                $empresa=auth()->user->tipo;
+              
+                          @endif 
 
               <li class="dropdown-menu-footer"><a class="dropdown-item p-50 text-primary justify-content-center" href="javascript:void(0)">Read all notifications</a></li>
             </ul>
           </li>
           <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0);" data-toggle="dropdown">
-              <div class="user-nav d-sm-flex d-none"><span class="user-name">{{$nombre}}</span><span class="user-status text-muted">Available</span></div><span><img class="round" src="app-assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="40" width="40"></span></a>
-            <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item" href="page-user-profile.html"><i class="bx bx-user mr-50"></i> Edit Profile</a><a class="dropdown-item" href="app-email.html"><i class="bx bx-envelope mr-50"></i> My Inbox</a><a class="dropdown-item" href="app-todo.html"><i class="bx bx-check-square mr-50"></i> Task</a><a class="dropdown-item" href="app-chat.html"><i class="bx bx-message mr-50"></i> Chats</a>
-              <div class="dropdown-divider mb-0"></div><a class="dropdown-item" href="auth-login.html"><i class="bx bx-power-off mr-50"></i> Logout</a>
+              <div class="user-nav d-sm-flex d-none"><span class="user-name">{{ auth()->user()->nombre}}</span><span class="user-status text-muted"><i style="color:#90EE90; box-shadow: 0 0 5px #4f9;" class="fas fa-circle"></i>&nbsp;Conectado</span></div><span><img class="round" src="app-assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="40" width="40"></span></a>
+            <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item" href="page-user-profile.html"><i class="bx bx-user mr-50"></i> Editar Perfil</a><a class="dropdown-item" href="app-email.html"><i class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item" href="app-todo.html"><i class="bx bx-check-square mr-50"></i>Tareas</a><a class="dropdown-item" href="app-chat.html"><i class="bx bx-message mr-50"></i>Chats</a>
+              <div class="dropdown-divider mb-0"></div>
+              <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <input class="dropdown-item" type="submit" value="Cerrar Sesión"
+                   >
+            </form>
+             
             </div>
           </li>
         </ul>
@@ -289,7 +300,7 @@
 
 
 <!-- BEGIN: Main Menu-->
-<div class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
+<div style="background-color:#397ac4;"  class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
   <div class="navbar-header">
     <ul class="nav navbar-nav flex-row">
       <li class="nav-item mr-auto"><a class="navbar-brand" href="index.html">
@@ -330,26 +341,24 @@
 
     <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" data-icon-style="lines">
 
-      <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Dashboard</span><span class="badge badge-light-danger badge-pill badge-round float-right mr-50 ml-auto">2</span></a>
+      <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Modulos</span><span class="badge badge-light-danger badge-pill badge-round float-right mr-50 ml-auto">2</span></a>
         <ul class="menu-content">
-          <li class="active"><a class="d-flex align-items-center" href="dashboard-ecommerce.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">cheques y transferencias</span></a>
+        
+            
+          <li class="active"><a class="d-flex align-items-center" href="{{ url('chequesytransferencias') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">cheques y transferencias</span></a>
           </li>
-          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
-          </li>
-          @if (Session::get('tipoU') == '2')
-          <li class=" nav-item"><a href="#"><i class="#" data-icon="notebook"></i><span class="menu-title text-truncate" data-i18n="Invoice">empresas</span></a>
+     
+
+<li  class="active"><a href="#"><i class="#" data-icon="notebook"></i><span class="menu-title text-truncate" data-i18n="Invoice">empresas</span></a>
             <ul class="menu-content">
-              <li><a class="d-flex align-items-center" href="app-invoice-list.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice List">Invoice List</span></a>
-              </li>
-              <li><a class="d-flex align-items-center" href="app-invoice.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice">Invoice</span></a>
-              </li>
-              <li><a class="d-flex align-items-center" href="app-invoice-edit.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice Edit">Invoice Edit</span></a>
-              </li>
-              <li><a class="d-flex align-items-center" href="app-invoice-add.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Invoice Add">Invoice Add</span></a>
-              </li>
+        
+           
             </ul>
           </li>
-          @endif
+
+          <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
+          </li>
+      
           <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
           </li>
           <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
@@ -881,16 +890,7 @@
       </div>
       <!-- End: Customizer-->
 
-      <!-- Buynow Button-->
-      <div class="buy-now"><a href="https://1.envato.market/frest_admin" target="_blank" class="btn btn-danger">Buy Now</a>
-
-      </div>
-      <!-- demo chat-->
-      <div class="widget-chat-demo"><!-- widget chat demo footer button start -->
-  <button class="btn btn-primary chat-demo-button glow px-1"><i class="livicon-evo"
-      data-options="name: comments.svg; style: lines; size: 24px; strokeColor: #fff; autoPlay: true; repeat: loop;"></i></button>
-  <!-- widget chat demo footer button ends -->
-  <!-- widget chat demo start -->
+  
   <div class="widget-chat widget-chat-demo d-none">
     <div class="card mb-0">
       <div class="card-header border-bottom p-0">
@@ -956,17 +956,17 @@
       <div class="drag-target"></div>
 
       <!-- BEGIN: Footer-->
-      <footer class="footer footer-static footer-light">
-        <p class="clearfix mb-0"><span class="float-left d-inline-block">2021 &copy; PIXINVENT</span><span class="float-right d-sm-inline-block d-none">Crafted with<i class="bx bxs-heart pink mx-50 font-small-3"></i>by<a class="text-uppercase" href="https://1.envato.market/pixinvent_portfolio" target="_blank">Pixinvent</a></span>
+   {{-- <footer class="footer footer-static footer-light">
+        <p class="clearfix mb-0"><span class="float-left d-inline-block">{{ date('Y') }} &copy; E-Cont</span><span class="float-right d-sm-inline-block d-none">Creado por<a class="text-uppercase" href="https://1.envato.market/pixinvent_portfolio" target="_blank">JMB CONTADORES</a></span>
           <button class="btn btn-primary btn-icon scroll-top" type="button"><i class="bx bx-up-arrow-alt"></i></button>
         </p>
-      </footer>
+      </footer>--}}
       <!-- END: Footer-->
 
 </body>
 <footer style="margin-top: 20px;">
-    <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |
-        JMB Contadores</p>
+  {{--  <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |
+        JMB Contadores</p>--}}
 </footer>
 @stack('scripts')
 </html>
