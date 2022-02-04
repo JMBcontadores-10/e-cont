@@ -27,7 +27,7 @@ class Chequesytransferencias extends Component
     public  $users, $name, $email, $user_id,$fecha,$importe,$ajuste2,$datos1,$user;
     public $cheque;
 
-     
+
 
    ///=======================variables nuevo-cheque=========================///
     public $Nuevo_numcheque,$Nuevo_tipomov,$Nuevo_fecha,$Nuevo_importecheque,$Nuevo_beneficiario,
@@ -35,16 +35,16 @@ class Chequesytransferencias extends Component
 
 
    ///======================= fin variables nuevo-cheque====================///
-   
-    
+
+
     public $mes;
     public $anio;
     public $todos;
-    public $rfcEmpresas;
+    public $rfcEmpresa;
 
     protected $paginationTheme = 'bootstrap';// para dar e estilo numerico al paginador
 
-  
+
     public function mount()
     {
 
@@ -53,8 +53,8 @@ class Chequesytransferencias extends Component
         $this->anio=date("Y");
         $this->mes=date("m");
 
-       
-        $this->rfcEmpresas=auth()->user()->empresas[0];
+
+        $this->rfcEmpresa=auth()->user()->nombre;
 
     }
 
@@ -70,14 +70,14 @@ class Chequesytransferencias extends Component
 
 
 
-  
+
 
     protected $listeners = [
         'chequesRefresh' => '$refresh',
      ];
 
 
-  
+
 
 protected function rules(){
 
@@ -89,11 +89,11 @@ protected function rules(){
         'Nuevo_fecha'=>'',
         'Nuevo_importecheque'=>'',
         'Nuevo_beneficiario'=>'',
-       
+
         //======== modal ajuste =====//
-      
-       
-       
+
+
+
     ];
 }
 
@@ -107,20 +107,20 @@ protected function rules(){
     public function render()
     {
 
-        
-        if(Auth::check()){/// autentica si se incio session 
+
+        if(Auth::check()){/// autentica si se incio session
 
             auth()->user();
-                     
-           } 
+
+           }
 
 
 
 
-       
+
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
-        
+
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
 
@@ -128,53 +128,57 @@ protected function rules(){
 
         $cheque = Cheques::
         search($this->search)
-        ->where('rfc',$this->rfcEmpresas)
+        ->where('rfc',$this->rfcEmpresa)
         ->orderBy('fecha', 'desc')
         ->orderBy('updated_at', 'desc')
-     
-      
+
+
         ->paginate($this->perPage);
 
       }else{
 
         $cheque = Cheques::
         search($this->search)
-        ->where('rfc',$this->rfcEmpresas)
+        ->where('rfc',$this->rfcEmpresa)
         ->where('fecha', 'like','%'.$this->anio."-".'%')
         ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
-      
+
         ->paginate($this->perPage);
 
       }
 
 
-  
+
 $e=array();
-      $largo=sizeof(auth()->user()->empresas);// obtener ellarog del array empresas 
+      $largo=sizeof(auth()->user()->empresas);// obtener ellarog del array empresas
 
 
       for($i=0; $i <$largo; $i++) {
-     
+
       $rfc=auth()->user()->empresas[$i];
-       $e[]=DB::Table('clientes')
+       $e=DB::Table('clientes')
        ->select('RFC','nombre')
-       
+
        ->where('RFC', $rfc)
-       
-       ->get(); 
 
-     
-   
+       ->get();
+
+       foreach($e as $em)
+
+
+       $emp[]= array( $em['RFC'],$em['nombre']);
       }
-     
-    
 
 
 
 
 
-           
-        
+
+
+
+
+
+
         $meses = array(
             '01' => 'Enero',
             '02' => 'Febrero',
@@ -194,7 +198,7 @@ $e=array();
 
 
 
-        return view('livewire.chequesytransferencias',['colCheques' => $cheque, 'meses'=>$meses,'anios'=>$anios,'empresa'=>$this->rfcEmpresas,'empresas'=>$e])
+        return view('livewire.chequesytransferencias',['colCheques' => $cheque, 'meses'=>$meses,'anios'=>$anios,'empresa'=>$this->rfcEmpresa,'empresas'=>$emp])
         ->extends('layouts.livewire-layout')
         ->section('content');
 
@@ -222,12 +226,12 @@ $e=array();
 
     public function editar(){
 
-  
-        
-       
+
+
+
         $this->datos1="hola";
 
-        
+
         $this->dispatchBrowserEvent('hola', []);
 
 

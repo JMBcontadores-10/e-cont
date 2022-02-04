@@ -1,6 +1,6 @@
 <div><!-- div contenedor principal-->
-   
-    
+
+
     @php
 use App\Models\Cheques;
 use App\Http\Controllers\ChequesYTransferenciasController;
@@ -15,8 +15,8 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
         }
 
-    
-    
+
+
      @endphp
 
 
@@ -32,7 +32,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
     <div class="invoice-create-btn mb-1">
 
         <a  data-toggle="modal" data-target="#nuevo-cheque" class="btn btn-primary glow invoice-create"
-   wire:click="editar()" >Nuevo Cheque/Transferencia </a>    
+   wire:click="editar()" >Nuevo Cheque/Transferencia </a>
     </div>
     <!--<form action="{{ url('vincular-cheque') }}" method="POST">
         @csrf
@@ -40,33 +40,51 @@ use App\Http\Controllers\ChequesYTransferenciasController;
     </form>-->
 
    <!-- <form  wire:submit.prevent="buscar">
-        @csrf    
-  
+        @csrf
+
     <input wire:model.defer="search" type="text"  name="ajuste" class="form-control">
-    
+
     <div wire:loading wire:target="buscar" >
         <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
           <div></div>
           <div></div>
-          
+
       </div>
       Guardando ajuste
       </div>
-    
-    <button type="submit"   class="btn btn-primary close-modal">Ajustar</button>
-    
-         </form>-->
-         
 
-     
-       
-         <div class="form-inline mr-auto">
-            <label for="inputState">Mes</label>
-            <select wire:model="rfcEmpresas" id="inputState1" class=" select form-control"  >
+    <button type="submit"   class="btn btn-primary close-modal">Ajustar</button>
+
+         </form>-->
+
+
+<h4>{{$empresas[3][0]}}</h4>
+
+@php
+foreach($empresas as $fila)
+{
+    foreach($fila as $nombre)
+    {
+	echo " $nombre ";
+    }
+
+	echo "<br>";
+}
+@endphp
+            <label for="inputState">Empresa</label>
+            <select wire:model="rfcEmpresa" id="inputState1" class=" select form-control"  >
                 <option  value="00" >Todos</option>
-             
+                <?php $rfc=0; $rS=1;foreach($empresas as $fila)
+                {
+
+                    echo '<option value="' . $fila[$rfc] . '">'. $fila[$rS] . '</option>';
+
+          }
+                ?>
             </select>
-            &nbsp;&nbsp;
+
+            &nbsp;&nbsp;<br>
+            <div class="form-inline mr-auto">
             <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Search">
             &nbsp;&nbsp;
             <label for="inputState">Mes</label>
@@ -79,7 +97,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             &nbsp;&nbsp;
             <label for="inputState">Año</label>
             <select wire:model="anio" id="inputState2" class="select form-control">
-             
+
                 <?php foreach (array_reverse($anios) as $value) {
                     echo '<option value="' . $value . '">' . $value . '</option>';
                 } ?>
@@ -94,16 +112,16 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 <!-- <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Search">
            -->
 
-           
 
-        </div>            
-    
+
+        </div>
+
       {{$empresa}}
-      
-@foreach($empresas as $em)
 
-      {{$em['nombre']}}
-      @endforeach
+
+
+
+
     <!-- Options and filter dropdown button-->
     <div class="action-dropdown-btn d-none">
       <div class="dropdown invoice-filter-action">
@@ -111,30 +129,30 @@ use App\Http\Controllers\ChequesYTransferenciasController;
           aria-haspopup="true" aria-expanded="false">
           Filter Invoice
         </button>
-      
+
       </div>
-      
+
     </div>
     <div class="table-responsive">
       <table id="example" class="{{$class}}" style="width:100%">
         <thead>
           <tr>
-          
+
             <th>
               <span class="align-middle">fecha </span>
             </th>
-            
+
             <th>Factura#</th>
             <th>T.operación</th>
             <th>F.pago</th>
             <th>Pagado</th>
             <th>$Cfdi</th>
             <th>comprobar</th>
-        
+
             <th >...</th>
-           
-       
-           
+
+
+
 
 
           </tr>
@@ -195,19 +213,19 @@ use App\Http\Controllers\ChequesYTransferenciasController;
               <a href="app-invoice.html">{{ Str::limit($numCheque, 20); }}</a>
             </td>
             <td><small class="text-muted">{{$tipoO}}</small></td>
-         
+
             <td><span class="invoice-amount">{{$tipo}}</span></td>
             <td><span class="invoice-amount">${{ number_format($importeC, 2) }}</span></td>
-           
+
             <td><span class="invoice-amount">${{ number_format($sumaxml, 2) }}</span></td>
             <td><span class="invoice-amount">${{ $diferencia }}</span></td>
             <td>{{-- ajuste y notas---}}<span class="invoice-amount">
-              
-     
-         
 
-            
-           
+
+
+
+
+
 
           </tr>
 
@@ -216,8 +234,8 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                {{$numCheque}}<br>
 
                <div class="box">
-                <div>  
-                    <div class="tr"> Ajuste</div>  
+                <div>
+                    <div class="tr"> Ajuste</div>
 
 
                     @if (Session::get('tipoU') == '2')
@@ -225,33 +243,33 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                     @php $class="content_true" @endphp
                     @else
                    @php $class="icons" @endphp
-                 @endif 
-     
+                 @endif
+
                    <a class="{{$class}} fas fa-balance-scale"
                     data-toggle="modal" data-target="#ajuste{{$id}}"></a>
-                
+
                     @endif
                 </div>
-                <div>  
-                    <div class="tr"> Comentario</div> 
-                    
+                <div>
+                    <div class="tr"> Comentario</div>
+
                @if (!empty($comentario))
- 
+
                @php $class_c="content_true" @endphp
-           
+
                @else
-           
+
                @php $class_c="icons" @endphp
-           
-           
+
+
             @endif
-            
+
 <a  class="{{$class_c}} fas fa-sticky-note"
 data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
-            
+
                 </div>
-                <div>  
-                    <div class="tr"> Pdf</div> 
+                <div>
+                    <div class="tr"> Pdf</div>
                      @if ($nombreCheque!="0")
    @php $class_p="content_true_pdf" @endphp
    @else
@@ -260,114 +278,114 @@ data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
 
        <a id="{{$id}}" class="{{$class_p}} fas fa-file-pdf"
    data-toggle="modal" data-target="#pdfcheque{{$id}}"  onclick="filepondEditCheque(this.id)" > </a>
-  
-              
-            
+
+
+
                 </div>
-                <div>  
-                    <div class="tr"> Documentos Adcionales</div> 
+                <div>
+                    <div class="tr"> Documentos Adcionales</div>
                     <a class="icons fas fa-upload"
                     data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"  data-backdrop="static" data-keyboard="false"   onclick="filepond(this.name)"  data-target="#uploadRelacionados">
                    </a>{{-- id="{{$id}}"--}}
-         
-                    &nbsp; | &nbsp; 
+
+                    &nbsp; | &nbsp;
                     @if (!$docAdi['0'] == '')
-          
+
                     @php $class="content_true" @endphp
-             
+
                     @else
-             
+
                     @php $class="icons" @endphp
-             
-             
+
+
                  @endif
-              
+
                     <a  class="{{$class}} fas fa-folder-open"
                     data-toggle="modal"     data-target="#relacionados-{{$id}}" >{{--id="{{$id}}"--}}
-                   </a> 
-            
+                   </a>
+
                 </div>
-                <div>  
-                    <div class="tr">Vinculadas</div> 
+                <div>
+                    <div class="tr">Vinculadas</div>
                     @if ($faltaxml != 0)
-                   
+
             <i class="content_true fa-eye " ></i>
-                      
+
         @else
 
         <i class="icons fas fas fa-eye" ></i>
-                @endif 
+                @endif
 
 
                       </div>
 
-                      <div>  
-                        <div class="tr">Impresion</div> 
+                      <div>
+                        <div class="tr">Impresion</div>
                         <i class="icons fas fa-print" ></i>
 
                           </div>
 
 
-                <div>  
-              <div class="tr"> Editar</div> 
+                <div>
+              <div class="tr"> Editar</div>
               <a  class="icons fas fa-edit"
               data-toggle="modal"     data-target="#editar-{{$id}}" >{{--id="{{$id}}"--}}
              </a>
-   
+
                 </div>
 
-                <div>  
-                    <div class="tr">Eliminar Cheque</div> 
+                <div>
+                    <div class="tr">Eliminar Cheque</div>
                     @if ($verificado == 0)
-                  
-         
-                     
+
+
+
             <a onclick="return confirm('¿Seguro que deseas eliminar el cheque/transferencia?')" class="icons fas fa-trash"></a>
-                   
+
 
                 @endif
-         
+
                       </div>
-                      
+
 
                       <div>
-                        <div class="tr">Cheque Id</div> 
+                        <div class="tr">Cheque Id</div>
                                           {{$id}}
-                     
+
                                                </div>
-                                               
-                   
-            
 
 
 
-                   
 
 
-           
-   </span>  
+
+
+
+
+
+   </span>
 </div>
-   
+
 </div>
             </td>
 
 
-            
+
         </tr>
-          
+
          @endforeach
         </tbody>
       </table>
       {{ $colCheques->links() }}
-   
-        
+
+
 @livewireScripts
     </div>
   </section>
           </div>
         </div>
       </div>
-    
+
 
 
 
@@ -376,17 +394,17 @@ data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
 
 
       <livewire:uploadrelacionados >
-      
-   
-        
+
+
+
         @include('livewire.demo')
       {{--  @include('livewire.ajuste')--}}
 </div><!-- fin div contenedor principal-->
 
 @php
-    
+
     $col = Cheques::
-        
+
         where('rfc','PERE9308105X4')
 
         ->get()
