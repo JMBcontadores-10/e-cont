@@ -41,7 +41,7 @@ class Chequesytransferencias extends Component
     public $anio;
     public $todos;
     public $rfcEmpresa;
-
+   
     protected $paginationTheme = 'bootstrap';// para dar e estilo numerico al paginador
 
 
@@ -54,7 +54,7 @@ class Chequesytransferencias extends Component
         $this->mes=date("m");
 
 
-        $this->rfcEmpresa=auth()->user()->nombre;
+        $this->rfcEmpresa=auth()->user()->RFC;
 
     }
 
@@ -147,10 +147,10 @@ protected function rules(){
 
       }
 
-
+if(!empty(auth()->user()->tipo)){
 
 $e=array();
-      $largo=sizeof(auth()->user()->empresas);// obtener ellarog del array empresas
+      $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
 
 
       for($i=0; $i <$largo; $i++) {
@@ -169,7 +169,12 @@ $e=array();
        $emp[]= array( $em['RFC'],$em['nombre']);
       }
 
+    }else{
 
+$emp='';
+
+
+    }//end if
 
 
 

@@ -168,7 +168,7 @@
 </head>
 
 
-<body   class="vertical-layout vertical-menu-modern 2-columns  navbar-sticky footer-static  " style="background-image: url('img/auth-bg3.jpg');" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns">
+<body   class="vertical-layout vertical-menu-modern 2-columns  navbar-sticky footer-static  " style="background-image: url('img/auth-bg3.jpg');" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" >
     <!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
 <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
@@ -183,6 +183,7 @@
     <script>
    $(document).ready(function() {
     $('#page-loader').fadeOut(500);
+    mostrarSaludo()
 });
             </script>
 
@@ -192,6 +193,16 @@
 <!-- begin::preloader-->
 <div id="page-loader"><span class="preloader-interior"></span></div>
 <!-- end::preloader -->
+
+@if(Auth::check())
+
+auth()->user();
+
+$tipo=auth()->user->tipo;
+{{--$rfc=auth()->user()->RFC--}}
+$empresa=auth()->user->tipo;
+
+          @endif
 
 <!-- BEGIN: Header-->
 <div class="header-navbar-shadow"></div>
@@ -237,45 +248,76 @@
               <li class="dropdown-menu-header">
                 <div class="dropdown-header px-1 py-75 d-flex justify-content-between"><span class="notification-title">7 Nuevas Notificaciones</span><span class="text-bold-400 cursor-pointer">Mark all as read</span></div>
               </li>
+ @if(!empty(auth()->user()->tipo))
+              @php
+
+    $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
+
+
+for($i=0; $i <$largo; $i++) {
+
+$rfc=auth()->user()->empresas[$i];
+ $e[]=DB::Table('notificaciones')
+
+ ->where('rfc', $rfc)
+
+ ->get();
+
+
+}
+
+
+
+              @endphp
+
+
+@for($y=0; $y <sizeof($e); $y++)
+@php $data = json_decode($e[$y], true);  @endphp
+
+@foreach ($data as  $data1 )
+
+
+
+
+
               <li class="scrollable-container media-list"><a class="d-flex justify-content-between" href="javascript:void(0);">
                   <div class="media d-flex align-items-center">
                     <div class="media-left pr-0">
-                      <div class="avatar mr-1 m-0"><img src="app-assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="39" width="39"></div>
+                     <!-- <div class="avatar mr-1 m-0"><img src="app-assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="39" width="39"></div>-->
                     </div>
                     <div class="media-body">
-                      <h6 class="media-heading"><span class="text-bold-500">Congratulate Socrates Itumay</span> for work anniversaries</h6><small class="notification-text">Mar 15 12:32pm</small>
-                    </div>
-                  </div></a><a class="d-flex justify-content-between read-notification cursor-pointer" href="javascript:void(0);">
 
-                 <!--  <div class="media d-flex align-items-center py-0">
-                    <div class="media-left pr-0"><img class="mr-1" src="app-assets/images/icon/sketch-mac-icon.png" alt="avatar" height="39" width="39"></div>
+                      <h6 class="media-heading"><span class="text-bold-500">{{$data1['rfc']}}</span> ¡Agrego un nuevo cheque!<br>#Cheque:&nbsp;{{$data1['numcheque']}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$data1['fecha']}}</small>
+                    </div>
+
+                        <h6 class="media-heading mb-0">Cerrar</h6>
+
+                  </div></a><a class="d-flex justify-content-between read-notification cursor-pointer" href="javascript:void(0);">
+  @endforeach
+  @endfor
+
+  @endif
+                    {{--
+                  <div class="media d-flex align-items-center py-0">
+                    <!--<div class="media-left pr-0"><img class="mr-1" src="app-assets/images/icon/sketch-mac-icon.png" alt="avatar" height="39" width="39"></div>-->
                     <div class="media-body">
                       <h6 class="media-heading"><span class="text-bold-500">Updates Available</span></h6><small class="notification-text">Sketch 50.2 is currently newly added</small>
                     </div>
                     <div class="media-right pl-0">
                       <div class="row border-left text-center">
-                        <div class="col-12 px-50 py-75 border-bottom">
+                        <!--<div class="col-12 px-50 py-75 border-bottom">
                           <h6 class="media-heading text-bold-500 mb-0">Update</h6>
-                        </div>
+                        </div>-->
                         <div class="col-12 px-50 py-75">
-                          <h6 class="media-heading mb-0">Close</h6>
+                          <h6 class="media-heading mb-0">Cerrar</h6>
                         </div>
                       </div>
                     </div>
                   </div></a><a class="d-flex justify-content-between cursor-pointer" href="javascript:void(0);">
-                 -->
 
+--}}
 
-                 @if(Auth::check())
-
-                auth()->user();
-
-                $tipo=auth()->user->tipo;
-                $rfc= auth()->user()->RFC;
-                $empresa=auth()->user->tipo;
-              
-                          @endif 
-
+                  </li>
               <li class="dropdown-menu-footer"><a class="dropdown-item p-50 text-primary justify-content-center" href="javascript:void(0)">Read all notifications</a></li>
             </ul>
           </li>
@@ -288,7 +330,7 @@
                 <input class="dropdown-item" type="submit" value="Cerrar Sesión"
                    >
             </form>
-             
+
             </div>
           </li>
         </ul>
@@ -343,22 +385,22 @@
 
       <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Modulos</span><span class="badge badge-light-danger badge-pill badge-round float-right mr-50 ml-auto">2</span></a>
         <ul class="menu-content">
-        
-            
+
+
           <li class="active"><a class="d-flex align-items-center" href="{{ url('chequesytransferencias') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">cheques y transferencias</span></a>
           </li>
-     
+
 
 <li  class="active"><a href="#"><i class="#" data-icon="notebook"></i><span class="menu-title text-truncate" data-i18n="Invoice">empresas</span></a>
             <ul class="menu-content">
-        
-           
+
+
             </ul>
           </li>
 
           <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
           </li>
-      
+
           <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
           </li>
           <li><a class="d-flex align-items-center" href="dashboard-analytics.html"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">cuentas por pagar</span></a>
@@ -890,7 +932,7 @@
       </div>
       <!-- End: Customizer-->
 
-  
+
   <div class="widget-chat widget-chat-demo d-none">
     <div class="card mb-0">
       <div class="card-header border-bottom p-0">

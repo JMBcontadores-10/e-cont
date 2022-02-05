@@ -57,10 +57,21 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
          </form>-->
 
+@empty(!$empresas)
+
+
+
 
 <h4>{{$empresas[3][0]}}</h4>
 
-@php
+
+
+
+{{$empresa}}
+
+<br><br>
+
+{{--@php
 foreach($empresas as $fila)
 {
     foreach($fila as $nombre)
@@ -70,10 +81,10 @@ foreach($empresas as $fila)
 
 	echo "<br>";
 }
-@endphp
+@endphp--}}
             <label for="inputState">Empresa</label>
             <select wire:model="rfcEmpresa" id="inputState1" class=" select form-control"  >
-                <option  value="00" >Todos</option>
+                <option  value="00" >--Selecciona Empresa--</option>
                 <?php $rfc=0; $rS=1;foreach($empresas as $fila)
                 {
 
@@ -84,6 +95,8 @@ foreach($empresas as $fila)
             </select>
 
             &nbsp;&nbsp;<br>
+@endempty
+
             <div class="form-inline mr-auto">
             <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Search">
             &nbsp;&nbsp;
@@ -116,7 +129,7 @@ foreach($empresas as $fila)
 
         </div>
 
-      {{$empresa}}
+     
 
 
 
@@ -470,4 +483,7 @@ $pendiente = $i->pendi;
 
 <livewire:relacionados  :filesrelacionados=$i : key="$i->id" >
     <livewire:editar  :editCheque=$i : key="$i->id">
-        <livewire:pdfcheque :pdfcheque=$i : key="$i->id" >  <livewire:agregarcheque >
+        <livewire:pdfcheque :pdfcheque=$i : key="$i->id" >  
+
+
+            <livewire:agregarcheque >

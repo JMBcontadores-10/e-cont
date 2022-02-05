@@ -5,12 +5,12 @@ $( document ).ready(function() {
 });
 
 
-   
+
 
 $(document).ready(function() {
     $('#example').DataTable( {
-        
-     
+
+
     } );
 } );
 
@@ -161,7 +161,7 @@ function filepond(id) {
 
 
 
-// registrar plugin validacion filepond  se deben agregar los cdn despues del body 
+// registrar plugin validacion filepond  se deben agregar los cdn despues del body
 FilePond.registerPlugin(FilePondPluginFileValidateType);
 // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
 FilePond.registerPlugin(FilePondPluginFileValidateSize);
@@ -196,7 +196,7 @@ var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de ar
 
             resolve(type);
         }),
-     
+
 });
 
 FilePond.setOptions({
@@ -208,7 +208,7 @@ FilePond.setOptions({
            'X-CSRF-TOKEN': token.value
 
  }
- 
+
 }
 
 
@@ -223,9 +223,9 @@ function filepondEditCheque(id) {
 
 
 
-   
 
-// registrar plugin validacion filepond  se deben agregar los cdn despues del body 
+
+// registrar plugin validacion filepond  se deben agregar los cdn despues del body
 FilePond.registerPlugin(FilePondPluginFileValidateType);
 // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
 FilePond.registerPlugin(FilePondPluginFileValidateSize);
@@ -260,7 +260,7 @@ var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de ar
 
             resolve(type);
         }),
-     
+
 });
 
 FilePond.setOptions({
@@ -272,14 +272,14 @@ FilePond.setOptions({
            'X-CSRF-TOKEN': token.value
 
  }
- 
+
 }
 
 
 
 });
 
-    
+
     }// fin funcion
 
 
@@ -290,22 +290,22 @@ FilePond.setOptions({
 
 
 
-    // registrar plugin validacion filepond  se deben agregar los cdn despues del body 
+    // registrar plugin validacion filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateType);
     // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateSize);
-    
+
     const token = document.querySelector('input[name="_token"]');
      var ID =id;
-    
-    
-    
+
+
+
     const iden = document.getElementById("agregarCheque");
     const realcionados = document.getElementById("agregarCheque_relacionados");
- 
-    
-    
-    
+
+
+
+
     // Create a FilePond instance
      //const pond = FilePond.create(ruta);// creacion simple de filepond
     var filePondObj=FilePond.create(iden, {        /// creacion con validacion de archivos
@@ -323,26 +323,26 @@ FilePond.setOptions({
         fileValidateTypeDetectType: (source, type) =>
             new Promise((resolve, reject) => {
                 // Do custom type detection here and return with promise
-    
+
                 resolve(type);
             }),
-         
+
     });
-    
+
     FilePond.setOptions({
         name:'agregarCheque',
      server: {
-    
+
            url:'nuevoCheque/',
            headers:{
                'X-CSRF-TOKEN': token.value
-    
+
      }
-     
+
     }
-    
-    
-    
+
+
+
     });
 
 
@@ -365,28 +365,28 @@ FilePond.setOptions({
         fileValidateTypeDetectType: (source, type) =>
             new Promise((resolve, reject) => {
                 // Do custom type detection here and return with promise
-    
+
                 resolve(type);
             }),
-         
+
     });
-    
+
     FilePond.setOptions({
         name:'agregarCheque_relacionados',
      server: {
-    
+
            url:'nuevoCheque_relacionados/',
            headers:{
                'X-CSRF-TOKEN': token.value
-    
+
      }
-     
+
     }
-    
-    
-    
+
+
+
     });
-    
+
   function uploadFiles()
   {
         console.log(this.myPond.getFiles());
@@ -398,8 +398,8 @@ FilePond.setOptions({
 
 
 
- 
-    
+
+
 
 
 
@@ -434,14 +434,14 @@ function updateDiv(id)
 }
 
 function limpiar(){
-   
+
    // alert('limpiar');
 
   $("#table_refresh").load(" #table_refresh > *");
 
   //$("#table_refresh").load(location.href + " #table_refresh");
-    
-  
+
+
 }
 
 window.addEventListener('say-goodbye', event => {
@@ -482,15 +482,15 @@ window.addEventListener('hola', event => {
 
     var current_fs, next_fs, previous_fs; //fieldsets
     var opacity;
-    
+
     $(".next").click(function(){
-    
+
     current_fs = $(this).parent();
     next_fs = $(this).parent().next();
-    
+
     //Add Class Active
     $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
-    
+
     //show the next fieldset
     next_fs.show();
     //hide the current fieldset with style
@@ -498,7 +498,7 @@ window.addEventListener('hola', event => {
     step: function(now) {
     // for making fielset appear animation
     opacity = 1 - now;
-    
+
     current_fs.css({
     'display': 'none',
     'position': 'relative'
@@ -508,24 +508,24 @@ window.addEventListener('hola', event => {
     duration: 600
     });
     });
-    
+
     $(".previous").click(function(){
-    
+
     current_fs = $(this).parent();
     previous_fs = $(this).parent().prev();
-    
+
     //Remove class active
     $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
-    
+
     //show the previous fieldset
     previous_fs.show();
-    
+
     //hide the current fieldset with style
     current_fs.animate({opacity: 0}, {
     step: function(now) {
     // for making fielset appear animation
     opacity = 1 - now;
-    
+
     current_fs.css({
     'display': 'none',
     'position': 'relative'
@@ -535,16 +535,16 @@ window.addEventListener('hola', event => {
     duration: 600
     });
     });
-    
+
     $('.radio-group .radio').click(function(){
     $(this).parent().find('.radio').removeClass('selected');
     $(this).addClass('selected');
     });
-    
+
     $(".submit").click(function(){
     return false;
     })
-    
+
     });
 
 
@@ -560,4 +560,30 @@ window.addEventListener('hola', event => {
 
 
 
+    /// saludo por hora del dia js
 
+    function mostrarSaludo(){
+
+        fecha = new Date();
+        hora = fecha.getHours();
+
+        if(hora >= 0 && hora < 12){
+          texto = "Buenos Días";
+          //imagen = "img/dia.png";
+        }
+
+        if(hora >= 12 && hora < 18){
+          texto = "Buenas Tardes";
+         // imagen = "img/tarde.png";
+        }
+
+        if(hora >= 18 && hora < 24){
+          texto = "Buenas Noches";
+         // imagen = "img/noche.png";
+        }
+
+       // document.images["tiempo"].src = imagen;
+
+        document.getElementById('txtsaludo').innerHTML = texto;
+
+      }

@@ -23,7 +23,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
 
 
-                <h4>Auth::user()->RFC</h4>
+
                 <br>
 
                 @php
@@ -32,8 +32,10 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             @endphp
 
 
-                <h2>Bienvenid@</h2>
-                
+                <h2 id="txtsaludo">Bienvenid@</h2>
+                @if(!empty(auth()->user()->tipo))
+                <h5>Contador@</h5>
+                @endif
 
 
                 @if(Auth::check())
