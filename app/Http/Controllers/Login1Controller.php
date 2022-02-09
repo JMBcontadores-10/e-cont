@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
@@ -12,7 +12,12 @@ class Login1Controller extends Controller
 {
     public function index()
     {
-        return view('auth.login');
+        if(Auth::check()){ //Retornamos a la vista home(modules) cuando esta en sesión aún. 
+            return view('home');
+        }else
+        {
+        return view('auth.login'); //retornamos al login siempre cuando el usuario no ha iniciado sesion aún
+        }
     }
 
     public function login(Request $request)

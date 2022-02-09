@@ -3,16 +3,34 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 @endphp
 
+@php
+
+$agent = $_SERVER["HTTP_USER_AGENT"];
+
+if( preg_match('/MSIE (\d+\.\d+);/', $agent) ) {
+$buscador = "Internet Explorer";
+} 
+else if (preg_match('/Chrome[\/\s](\d+\.\d+)/', $agent) ) {
+$buscador = "Chrome";
+
+} 
+else if (preg_match('/Edge[\/\s](\d+\.\d+)/', $agent) ) {
+$buscador = "Edge";
+} 
+else if ( preg_match('/Firefox[\/\s](\d+\.\d+)/', $agent) ) {
+$buscador = "Firefox";
+} 
+else if ( preg_match('/OPR[\/\s](\d+\.\d+)/', $agent) ) {
+$buscador = "Opera";
+} 
+else if (preg_match('/Safari[\/\s](\d+\.\d+)/', $agent) ) {
+$buscador = "Safari";
+}
+
+@endphp
 
 
-
-
-
-
-
-
-
-
+       
 
 <!DOCTYPE html>
 
@@ -82,6 +100,7 @@ use Illuminate\Support\Facades\DB;
   <!-- BEGIN: Body-->
   <body class="vertical-layout vertical-menu-modern 1-column  navbar-sticky footer-static bg-full-screen-image  blank-page" data-open="click" data-menu="vertical-menu-modern" data-col="1-column">
     <!-- BEGIN: Content-->
+    
     <div class="app-content content">
       <div class="content-overlay"></div>
       <div class="content-wrapper">
@@ -89,18 +108,24 @@ use Illuminate\Support\Facades\DB;
         </div>
         <div class="content-body"><!-- lock screen starts -->
 <section class="row flexbox-container">
+
     <div class="col-xl-7 col-10">
         <div class="card bg-authentication mb-0">
             <div class="row m-0">
+            
                 <!-- left lock screen section -->
                 <div class="col-md-6 col-12 px-0">
+               
                     <div class="card disable-rounded-right mb-0 p-2">
                         <div class="card-header pb-1">
                             <div class="card-title">
                                 <h4 class="text-center mb-2">INICIO DE SESIÓN</h4>
+                                
                             </div>
                         </div>
+                       
                         <div class="card-body">
+                            @if($buscador == 'Chrome')
                             <form method="POST" action="{{ route('login') }}">
                                 
                                 @csrf
@@ -133,6 +158,12 @@ use Illuminate\Support\Facades\DB;
                                 <button type="submit" class="btn btn-primary glow position-relative w-100">Entrar<i
                                         id="icon-arrow" class="bx bx-right-arrow-alt"></i></button>
                             </form>
+                            @else
+                            <h3>Tu asistente contable solo funciona con Google Chrome o Firefox</h3>
+                            <p >Pulse <a href="https://www.google.com/intl/es/chrome/">aquí </a> para  descargar Google Chrome</p>
+                            <p>Pulse <a href="https://www.mozilla.org/es-ES/firefox/download/thanks/"> aquí </a> para descargar Firefox</p>
+
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -194,6 +225,7 @@ use Illuminate\Support\Facades\DB;
       {{----------- end scripts dashboard    ---}}
     <!-- BEGIN: Page JS-->
     <!-- END: Page JS-->
+
 
   </body>
   <!-- END: Body-->
@@ -277,3 +309,5 @@ use Illuminate\Support\Facades\DB;
 
 @endsection
 --}}
+
+

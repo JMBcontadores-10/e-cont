@@ -16,19 +16,14 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                     <h4>Esta entrando como contador a la</h4>
                 @endif
                 <h4>Sesión de:</h4>
-
-
-
-
-
-
-
-
                 <br>
 
                 @php
+
                 $rfc = Auth::user()->RFC;
                 $tipo = Session::get('tipoU');
+
+                
             @endphp
 
 
@@ -41,17 +36,15 @@ use App\Http\Controllers\ChequesYTransferenciasController;
                 @if(Auth::check())
 
                 <h6>{{auth()->user()->RFC}}</h6>
+                
+                        @endif
 
-                          @endif
+                          
+                        
+                        
+            
 
                        {{----------contenido seccion---------}}
-
-
-
-
-
-
-
 
  {{----------contenido seccion---------}}
         </div>

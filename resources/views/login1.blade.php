@@ -1,6 +1,4 @@
 
-
-
 <!DOCTYPE html>
 
 <html >
@@ -85,6 +83,7 @@
                         <div class="card-header pb-1">
                             <div class="card-title">
                                 <h4 class="text-center mb-2">INICIO DE SESIÓN</h4>
+                                
                             </div>
                         </div>
                         <div class="card-body">
@@ -105,7 +104,14 @@
                                 <button type="submit" class="btn btn-primary glow position-relative w-100">Entrar<i
                                         id="icon-arrow" class="bx bx-right-arrow-alt"></i></button>
                             </form>
+
+
+                            
                         </div>
+
+                        
+
+
                     </div>
                 </div>
                 <!-- right image section -->
@@ -265,3 +271,4 @@
     </div>
 
 --}}
+
