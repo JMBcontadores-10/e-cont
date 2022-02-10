@@ -69,6 +69,8 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
 {{$empresa}}
 
+
+
 <br><br>
 
 {{--@php
@@ -84,9 +86,9 @@ foreach($empresas as $fila)
 @endphp--}}
             <label for="inputState">Empresa</label>
             <select wire:model="rfcEmpresa" id="inputState1" class=" select form-control"  >
-                <option  value="00" >--Selecciona Empresa--</option>
+                <option  value="00" >--Seleccione una  Empresa--</option>
                 <?php $rfc=0; $rS=1;foreach($empresas as $fila)
-                {
+          {
 
                     echo '<option value="' . $fila[$rfc] . '">'. $fila[$rS] . '</option>';
 
@@ -98,7 +100,7 @@ foreach($empresas as $fila)
 @endempty
 
             <div class="form-inline mr-auto">
-            <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Search">
+            <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Buscar...">
             &nbsp;&nbsp;
             <label for="inputState">Mes</label>
             <select wire:model="mes" id="inputState1" class=" select form-control"  >
@@ -131,10 +133,6 @@ foreach($empresas as $fila)
 
      
 
-
-
-
-
     <!-- Options and filter dropdown button-->
     <div class="action-dropdown-btn d-none">
       <div class="dropdown invoice-filter-action">
@@ -156,11 +154,13 @@ foreach($empresas as $fila)
             </th>
 
             <th>Factura#</th>
+            <th>beneficiario</th>
             <th>T.operación</th>
             <th>F.pago</th>
             <th>Pagado</th>
             <th>$Cfdi</th>
             <th>comprobar</th>
+           
 
             <th >...</th>
 
@@ -218,13 +218,16 @@ foreach($empresas as $fila)
             $contabilizado_fecha = $i->contabilizado_fecha;
             $poliza = $i->poliza;
             $comentario = $i->comentario;
+            $impresion = $i['impresion'];
         @endphp
         <tbody>
           <tr onclick="showHideRow('hidden_row{{$id}}');">
             <td><small class="text-muted">{{$fecha}}</small></td>
+            
             <td>
-              <a href="app-invoice.html">{{ Str::limit($numCheque, 20); }}</a>
+              <a style="color:#3498DB" >{{ Str::limit($numCheque, 20); }}</a>
             </td>
+            <td> {{ Str::limit($beneficiario, 20);}}</td>
             <td><small class="text-muted">{{$tipoO}}</small></td>
 
             <td><span class="invoice-amount">{{$tipo}}</span></td>
@@ -234,24 +237,27 @@ foreach($empresas as $fila)
             <td><span class="invoice-amount">${{ $diferencia }}</span></td>
             <td>{{-- ajuste y notas---}}<span class="invoice-amount">
 
-
-
-
-
-
-
           </tr>
 
           <tr id="hidden_row{{$id}}" class="hidden_row">
             <td colspan=12>
-               {{$numCheque}}<br>
+               {{$numCheque}}
+               &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            <!--               
+               <br>
+          -->
+
+               {{$beneficiario}}
+               
+               <br>
 
                <div class="box">
                 <div>
+
                     <div class="tr"> Ajuste</div>
 
 
-                    @if (Session::get('tipoU') == '2')
+                    @if (Auth::user()->tipo)
                     @if ($ajuste!=0)
                     @php $class="content_true" @endphp
                     @else
@@ -263,6 +269,8 @@ foreach($empresas as $fila)
 
                     @endif
                 </div>
+
+                
                 <div>
                     <div class="tr"> Comentario</div>
 
@@ -274,29 +282,27 @@ foreach($empresas as $fila)
 
                @php $class_c="icons" @endphp
 
-
             @endif
 
-<a  class="{{$class_c}} fas fa-sticky-note"
-data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
-
+      <a  class="{{$class_c}} fas fa-sticky-note" data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
                 </div>
                 <div>
-                    <div class="tr"> Pdf</div>
+                    <div class="tr">Cheque o Transferencia</div>
                      @if ($nombreCheque!="0")
-   @php $class_p="content_true_pdf" @endphp
-   @else
-   @php $class_p="icons" @endphp
-    @endif
-
+                     <a id="rutArc" href="{{ $rutaArchivo }}" target="_blank"> </a>
+   
+        @php $class_p="content_true_pdf" @endphp
+        @else
+        @php $class_p="icons" @endphp
+        @endif
+        
+        
        <a id="{{$id}}" class="{{$class_p}} fas fa-file-pdf"
    data-toggle="modal" data-target="#pdfcheque{{$id}}"  onclick="filepondEditCheque(this.id)" > </a>
 
-
-
                 </div>
                 <div>
-                    <div class="tr"> Documentos Adcionales</div>
+                    <div class="tr"> Documentos Adicionales</div>
                     <a class="icons fas fa-upload"
                     data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"  data-backdrop="static" data-keyboard="false"   onclick="filepond(this.name)"  data-target="#uploadRelacionados">
                    </a>{{-- id="{{$id}}"--}}
@@ -322,25 +328,32 @@ data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
                     <div class="tr">Vinculadas</div>
                     @if ($faltaxml != 0)
 
-            <i class="content_true fa-eye " ></i>
+            <i class="icons fas fas fa-eye " ></i>
 
         @else
 
-        <i class="icons fas fas fa-eye" ></i>
+       
+
+                                          <form action="{{ url('detallesCT') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="id" value="{{ $id }}">
+                                            <input type="hidden" name="verificado" value="{{ $verificado }}">
+                                            <button   style= "background:none; border:none">
+                                                <i  class="icons fas fas fa-eye" style="color: rgb(8, 8, 8)"></i>
+                                          </button>
+                                        </form>
+
+
                 @endif
 
 
                       </div>
 
-                      <div>
-                        <div class="tr">Impresion</div>
-                        <i class="icons fas fa-print" ></i>
-
-                          </div>
+                     
 
 
                 <div>
-              <div class="tr"> Editar</div>
+              <div class="tr">Editar</div>
               <a  class="icons fas fa-edit"
               data-toggle="modal"     data-target="#editar-{{$id}}" >{{--id="{{$id}}"--}}
              </a>
@@ -351,32 +364,81 @@ data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
                     <div class="tr">Eliminar Cheque</div>
                     @if ($verificado == 0)
 
+                    <form action="{{ url('delete-cheque') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" id="id" name="id" value="{{ $id }}">
+                                            <input type="hidden" name="rutaArchivo" value="{{ $rutaArchivo }}">
+                                            <button  style= "background:none; border:none"
+                                                onclick="return confirm('¿Seguro que deseas eliminar el cheque/transferencia?')"
+                                                type="submit" class="fabutton">
+                                                <i class="fas fa-trash" style="color: rgb(8, 8, 8)"></i>
+                                            </button>
+                                        </form>
 
-
-            <a onclick="return confirm('¿Seguro que deseas eliminar el cheque/transferencia?')" class="icons fas fa-trash"></a>
+            
 
 
                 @endif
 
                       </div>
 
-
                       <div>
-                        <div class="tr">Cheque Id</div>
-                                          {{$id}}
+                                                
+                                               <div class="tr">Contabilizado</div>
+                                               
+                                               <a  class="alert fas fa-file-invoice-dollar"> </a>
 
                                                </div>
 
 
 
 
+                                               <div>
+                            <div class="tr">Impresion</div>
+  
+                                    @if($impresion == 'on')
+                                   
+                                    <i class="icons fas fa-print" style="color: green"></i>
+                                        
+
+                                    @endif
+
+                                        @if($impresion == '')
+                                    <form action="{{ url('cheques-transferencias') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" id="id" name="id" value="{{ $id }}">
+                                            
+                                            <input type="checkbox" name="impresion" required class="mb-2">
+                                            
+                                            Impresion
+                                            <div>
+                                            <input type="submit" name="Aceptar" value="Aceptar">
+                                            </div>
+                                            @endif
+                                        </form>
 
 
+                    
+
+                          </div>
 
 
+                                      <div>
+                        
+                                        <div class="tr">Cheque Id</div>
+                                          {{$id}}
+
+                                               </div>
+
+                                              
 
 
+                                               </div>
+
+                                               
    </span>
+
+   
 </div>
 
 </div>
@@ -391,39 +453,41 @@ data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
       </table>
       {{ $colCheques->links() }}
 
+      
 
-@livewireScripts
+    @livewireScripts
+  
     </div>
+
+
   </section>
+  
           </div>
+          
         </div>
+        
       </div>
-
-
-
-
-
-
-
-
+      
+          
+     
+      
       <livewire:uploadrelacionados >
+      
 
-
-
-        @include('livewire.demo')
-      {{--  @include('livewire.ajuste')--}}
+      
+        @include('livewire.demo') 
+        
+        
+      {{-- @include('livewire.ajuste') --}}
 </div><!-- fin div contenedor principal-->
 
 @php
-
-    $col = Cheques::
-
-        where('rfc','PERE9308105X4')
-
+$col = Cheques:: where('rfc','SAJ161001KC6')
         ->get()
-        ;
+               ;
 
 @endphp
+
 
 @foreach ($col as $i)
 
@@ -476,7 +540,10 @@ $pendiente = $i->pendi;
 @endphp
 
 <livewire:ajuste  :ajusteCheque=$i : key="$i->id" >
-<livewire:comentarios  :comentarioCheque=$i : key="$i->id" >
+  
+
+<livewire:comentarios  :comentarioCheque=$i : key="$i->id">
+
 
 
 @endforeach
@@ -484,6 +551,5 @@ $pendiente = $i->pendi;
 <livewire:relacionados  :filesrelacionados=$i : key="$i->id" >
     <livewire:editar  :editCheque=$i : key="$i->id">
         <livewire:pdfcheque :pdfcheque=$i : key="$i->id" >  
-
 
             <livewire:agregarcheque >

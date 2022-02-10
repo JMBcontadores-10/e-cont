@@ -375,7 +375,7 @@ $rfc=auth()->user()->empresas[$i];
       <li class="nav-item mr-auto" ><a class="navbar-brand" href="{{ url('modules') }}">
           <div class="brand-logo">
             
-          <img src="img/logo-contarapp-03.png" alt="" class= "logo"> </img>
+          <img src="img/logo-contarapp-04.png" alt="" class= "logo"> </img>
 
 
           </div>

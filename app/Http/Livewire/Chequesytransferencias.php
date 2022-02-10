@@ -59,7 +59,7 @@ class Chequesytransferencias extends Component
     }
 
 
-    public int $perPage=20;
+    public int $perPage=15;
     public $search;
 
 
@@ -237,7 +237,7 @@ $emp='';
         $this->datos1="hola";
 
 
-        $this->dispatchBrowserEvent('hola', []);
+        //$this->dispatchBrowserEvent('hola', []);
 
 
     }

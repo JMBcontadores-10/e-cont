@@ -252,6 +252,15 @@ echo $filtro_cheques;
             return back();
         }
 
+        if ($r->has('impresion')) {
+            $id = $r->id;
+            Cheques::where('_id', $id)->update([
+                'impresion' => $r->impresion
+            ]);
+            return back();
+        }
+
+
         return view('chequesytransferencias')
             ->with('rutaDescarga', $rutaDescarga)
             ->with('n', $n)

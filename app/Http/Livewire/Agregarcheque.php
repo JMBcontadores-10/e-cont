@@ -60,9 +60,6 @@ class Agregarcheque extends Component
         ];
     }
     
-    
-
-
     public function guardar_nuevo_cheque(){
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);

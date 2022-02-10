@@ -10,12 +10,12 @@ $agent = $_SERVER["HTTP_USER_AGENT"];
 if( preg_match('/MSIE (\d+\.\d+);/', $agent) ) {
 $buscador = "Internet Explorer";
 } 
-else if (preg_match('/Chrome[\/\s](\d+\.\d+)/', $agent) ) {
+else if ( preg_match('/Chrome[\/\s](\d+\.\d+)/', $agent) ) {
 $buscador = "Chrome";
 
 } 
-else if (preg_match('/Edge[\/\s](\d+\.\d+)/', $agent) ) {
-$buscador = "Edge";
+else if (preg_match('/Edg[\/\d+]/', $agent) ) {
+$buscador = "Edg";
 } 
 else if ( preg_match('/Firefox[\/\s](\d+\.\d+)/', $agent) ) {
 $buscador = "Firefox";
@@ -125,7 +125,7 @@ $buscador = "Safari";
                         </div>
                        
                         <div class="card-body">
-                            @if($buscador == 'Chrome')
+                            @if($buscador == 'Chrome' || $buscador =='Firefox')
                             <form method="POST" action="{{ route('login') }}">
                                 
                                 @csrf

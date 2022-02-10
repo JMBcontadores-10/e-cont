@@ -18,7 +18,7 @@
 
 
     {{--<h2><strong>C</strong></h2>--}}
-    <p>llena los campos y da click en siguiente</p>
+    <p>Llene los campos y haga click en siguiente</p>
     <div class="row"> 
         <div class="col-md-12 mx-0">
           
@@ -160,7 +160,7 @@
 
 
 
-        <button type="submit" class="btn btn-primary">Sign in</button>
+        <button type="submit" class="btn btn-primary">Aceptar</button>
     
     </form>
             

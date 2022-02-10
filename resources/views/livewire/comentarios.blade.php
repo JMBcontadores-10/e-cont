@@ -11,7 +11,7 @@
                  <div class="modal-header">
                      <h6 class="modal-title" id="exampleModalLabel">  <span style="text-decoration: none;"  class="icons fas fa-comments"> Comentarios</span></h6>
                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true close-btn">×</span>
+                          <span aria-hidden="true close-btn">X</span>
                      </button>
                  </div>
  <div class="modal-body"><!--modal body -->
@@ -53,19 +53,5 @@
          </div>
      </div>
 
-
-
-
  </div>
-
-
- 
-
-
-
-
-
-
-
-
 </div>
