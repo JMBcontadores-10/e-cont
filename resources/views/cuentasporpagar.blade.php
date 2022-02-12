@@ -5,9 +5,21 @@ use App\Models\MetadataR;
 use App\Models\ListaNegra;
 @endphp
 
+@php
+        $rfc = Auth::user()->RFC;
+       $class='';
+        if(empty($class)){
+           $class="table nowrap dataTable no-footer";
+
+        }
+
+@endphp
+
+
 <head>
     <title>Cuentas por pagar Contarapp</title>
 </head>
+
 
 @section('content')
     <div class="container">
@@ -26,6 +38,16 @@ use App\Models\ListaNegra;
             <h5 style="font-weight: bold">{{ Auth::user()->RFC }}</h5>
             <hr style="border-color:black; width:100%;">
         </div>
+
+        
+       
+
+
+        <label for="inputState">Empresa</label>
+            <select wire:model="rfcEmpresa" id="inputState1" class=" select form-control"  >
+                <option  value="00" >--Seleccione una  Empresa--</option>
+        </select>
+
 
         <div class="row justify-content-end">
             <form>
@@ -59,8 +81,15 @@ use App\Models\ListaNegra;
                             @php
                                 $sum = 0;
                                 $nXml = 0;
+                             
                                 // Consulta para obtener el total de monto y cantidad de CFDI por empresa emisora
                                 // Se aplicó un indice para agilizar la velocidad de consulta
+
+                              $empre = DB::collection('clientes')
+                                ->select ('RFC', 'empresas')
+                                ->get();
+
+
                                 $colT = DB::collection('metadata_r')
                                     ->select('total', 'efecto')
                                     ->where('receptorRfc', $rfc)
@@ -82,6 +111,8 @@ use App\Models\ListaNegra;
                             @endphp
                             {{-- Valida si existe al menos un CFDI para crear la fila --}}
                             @if (!$nXml == 0)
+
+
                                 <tr>
                                     <td class="text-center align-middle">{{ ++$n }}</td>
                                     <td id="vinp" class="text-center align-middle">
@@ -98,6 +129,8 @@ use App\Models\ListaNegra;
                                                 alt="">
                                         </td>
                                     @else
+
+                                    
                                         <td class="td1 text-center align-middle"><img src="{{ asset('img/ima2.png') }}"
                                                 alt="">
                                         </td>
@@ -114,6 +147,8 @@ use App\Models\ListaNegra;
                                 </tr>
                             @endif
                         @endforeach
+
+                       
                         <tr>
                             <td></td>
                             <td></td>

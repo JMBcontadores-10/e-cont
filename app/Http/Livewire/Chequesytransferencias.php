@@ -149,7 +149,7 @@ protected function rules(){
 
 if(!empty(auth()->user()->tipo)){
 
-$e=array();
+            $e=array();
       $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
 
 

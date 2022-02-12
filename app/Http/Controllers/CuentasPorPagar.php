@@ -90,11 +90,34 @@ class CuentasPorPagar extends Controller
         }
 
 
-       
+        if(!empty(auth()->user()->tipo)){
 
-
-
-
+            $e=array();
+                  $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
+            
+            
+                  for($i=0; $i <$largo; $i++) {
+            
+                  $rfc=auth()->user()->empresas[$i];
+                   $e=DB::Table('clientes')
+                   ->select('RFC','nombre')
+            
+                   ->where('RFC', $rfc)
+            
+                   ->get();
+            
+                   foreach($e as $em)
+            
+            
+                   $emp[]= array( $em['RFC'],$em['nombre']);
+                  }
+            
+                }else{
+            
+            $emp='';
+            
+            
+                }//end if
 
 
         return view('detalles')

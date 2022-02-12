@@ -6,7 +6,6 @@ use App\Models\Cheques;
 use App\Http\Controllers\ChequesYTransferenciasController;
 @endphp
 
-
         @php
         $rfc = Auth::user()->RFC;
        $class='';
@@ -15,10 +14,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
         }
 
-
-
      @endphp
-
 
           <!-- BEGIN: Content-->
     <div class="app-content content">
@@ -59,13 +55,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
 @empty(!$empresas)
 
-
-
-
 <h4>{{$empresas[3][0]}}</h4>
-
-
-
 
 {{$empresa}}
 
@@ -84,6 +74,8 @@ foreach($empresas as $fila)
 	echo "<br>";
 }
 @endphp--}}
+
+
             <label for="inputState">Empresa</label>
             <select wire:model="rfcEmpresa" id="inputState1" class=" select form-control"  >
                 <option  value="00" >--Seleccione una  Empresa--</option>
@@ -93,11 +85,18 @@ foreach($empresas as $fila)
                     echo '<option value="' . $fila[$rfc] . '">'. $fila[$rS] . '</option>';
 
           }
+        
+
+          
                 ?>
             </select>
+           
 
             &nbsp;&nbsp;<br>
 @endempty
+
+
+
 
             <div class="form-inline mr-auto">
             <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Buscar...">
@@ -163,7 +162,6 @@ foreach($empresas as $fila)
            
 
             <th >...</th>
-
 
 
 
@@ -241,7 +239,9 @@ foreach($empresas as $fila)
 
           <tr id="hidden_row{{$id}}" class="hidden_row">
             <td colspan=12>
-               {{$numCheque}}
+
+            <a style="color:#3498DB">{{$numCheque}}</a>
+               
                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
             <!--               
                <br>
@@ -354,14 +354,17 @@ foreach($empresas as $fila)
 
                 <div>
               <div class="tr">Editar</div>
+              
               <a  class="icons fas fa-edit"
               data-toggle="modal"     data-target="#editar-{{$id}}" >{{--id="{{$id}}"--}}
              </a>
 
                 </div>
-
+              
                 <div>
+
                     <div class="tr">Eliminar Cheque</div>
+                    @if (Auth::user()->tipo)
                     @if ($verificado == 0)
 
                     <form action="{{ url('delete-cheque') }}" method="POST">
@@ -375,25 +378,101 @@ foreach($empresas as $fila)
                                             </button>
                                         </form>
 
-            
-
+            @else
+            <i class="fas fa-trash"></i>
 
                 @endif
+                @endif
+
 
                       </div>
 
                       <div>
                                                 
-                                               <div class="tr">Contabilizado</div>
-                                               
-                                               <a  class="alert fas fa-file-invoice-dollar"> </a>
+                                <div class="tr">Contabilizado</div>
+                              
 
-                                               </div>
+                                <a>
+                                             @if (Auth::user()->tipo)
+                                    @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+                                        @php
+                                            Cheques::find($id)->update(['pendi' => 1]);
+                                        @endphp
+                            
+                                    @elseif ($verificado == 0 )
+                                        <form action="{{ url('cheques-transferencias') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" id="id" name="id" value="{{ $id }}">
+                                            <a >
+                                            &nbsp;&nbsp;
+                                            <input type="checkbox" name="revisado" required class="mb-2">
+                                            </a>
+                                            Revisado
+                                            <input type="submit" name="Aceptar" value="Aceptar">
+                                        </form>
+                                    @else
+                                        <i class="far fa-check-circle" style="color: green"></i>
+
+                                        @if (isset($revisado_fecha))
+                                        <br>
+                                        
+                                            {{ $revisado_fecha }}
+                                        @endif
+                                    @endif
+                                   </a>
+
+                                <a>
+                                    @if ($verificado == 1 and $contabilizado == 0)
+                                        <form action="{{ url('cheques-transferencias') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" id="id" name="id" value="{{ $id }}">
+                                            &nbsp;&nbsp;&nbsp;&nbsp;
+                                           
+                                            <input type="checkbox" name="conta" required class="mt-4">
+                                            Contabilizado
+                                            
+                                                Póliza:
+                                                <input type="text" name="poliza" size="2" required class="mt-1 mb-2">
+                                    
+                                            <input type="submit" name="Aceptar" value="Aceptar">
+                                        </form>
+                                    @elseif ($verificado == 1 and $contabilizado == 1)
+                                    <i   style="color: blue; " class="fas fa-calculator">
+          </i>
+                                  
+                                        
+                                        @if (isset($contabilizado_fecha))
+                                        <br>
+                                        &nbsp;&nbsp;
+                                          {{ $contabilizado_fecha }}
+                                        @endif
+                                        @if (isset($poliza))
+                                        &nbsp;
+                                            Póliza: {{ $poliza }}
+                                            &nbsp;&nbsp;
+                                        @endif
+                                    @else
+                                    <a   style="text-decoration: none; " class="alert fas fa-file-invoice-dollar">
+                                   
+                                   </a>
+
+                                    @endif
 
 
+                  @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+                                        @php
+                                            Cheques::find($id)->update(['pendi' => 1]);
+                                        @endphp
+                                        @endif
+                                        @endif
 
-
+                                
+                                </div>
+          </a>
                                                <div>
+
+
+          
                             <div class="tr">Impresion</div>
   
                                     @if($impresion == 'on')
@@ -412,8 +491,9 @@ foreach($empresas as $fila)
                                             
                                             Impresion
                                             <div>
+                                              
                                             <input type="submit" name="Aceptar" value="Aceptar">
-                                            </div>
+          </div>
                                             @endif
                                         </form>
 
@@ -426,13 +506,9 @@ foreach($empresas as $fila)
                                       <div>
                         
                                         <div class="tr">Cheque Id</div>
-                                          {{$id}}
+                                        &nbsp;&nbsp;&nbsp; {{$id}}
 
                                                </div>
-
-                                              
-
-
                                                </div>
 
                                                
@@ -469,7 +545,6 @@ foreach($empresas as $fila)
       </div>
       
           
-     
       
       <livewire:uploadrelacionados >
       
@@ -482,11 +557,14 @@ foreach($empresas as $fila)
 </div><!-- fin div contenedor principal-->
 
 @php
-$col = Cheques:: where('rfc','SAJ161001KC6')
-        ->get()
-               ;
 
-@endphp
+
+$col = Cheques:: where(['rfc' => $empresa])
+
+        ->get()
+
+        @endphp
+
 
 
 @foreach ($col as $i)
@@ -537,19 +615,27 @@ $pendiente = $i->pendi;
     $contabilizado_fecha = $i->contabilizado_fecha;
     $poliza = $i->poliza;
     $comentario = $i->comentario;
+
+   
 @endphp
-
 <livewire:ajuste  :ajusteCheque=$i : key="$i->id" >
-  
-
 <livewire:comentarios  :comentarioCheque=$i : key="$i->id">
+<livewire:ajuste  :ajusteCheque=$i : key="$i->id" >
+<livewire:relacionados  :filesrelacionados=$i : key="$i->id" >
 
+<livewire:editar  :editCheque=$i : key="$i->id">
 
+<livewire:agregarcheque>
+<livewire:pdfcheque :pdfcheque=$i : key="$i->id" >  
 
 @endforeach
 
-<livewire:relacionados  :filesrelacionados=$i : key="$i->id" >
-    <livewire:editar  :editCheque=$i : key="$i->id">
-        <livewire:pdfcheque :pdfcheque=$i : key="$i->id" >  
 
-            <livewire:agregarcheque >
+
+
+
+
+
+
+
+            

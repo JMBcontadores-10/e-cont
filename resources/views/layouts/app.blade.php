@@ -388,7 +388,7 @@ $rfc=auth()->user()->empresas[$i];
 
     <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" data-icon-style="lines">
 
-      <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Modulos</span><span class="badge badge-light-danger badge-pill badge-round float-right mr-50 ml-auto">2</span></a>
+      <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Modulos</span><span class="badge badge-light-danger badge-pill badge-round float-right mr-50 ml-auto">0</span></a>
         <ul class="menu-content">
 
 
