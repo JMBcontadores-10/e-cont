@@ -1,11 +1,8 @@
 <div><!-- div contenedor principal-->
-
-
-    @php
+@php
 use App\Models\Cheques;
 use App\Http\Controllers\ChequesYTransferenciasController;
 @endphp
-
         @php
         $rfc = Auth::user()->RFC;
        $class='';
@@ -13,9 +10,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
            $class="table nowrap dataTable no-footer";
 
         }
-
      @endphp
-
           <!-- BEGIN: Content-->
     <div class="app-content content">
         <div class="content-overlay"></div>
@@ -59,8 +54,6 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
 {{$empresa}}
 
-
-
 <br><br>
 
 {{--@php
@@ -85,18 +78,12 @@ foreach($empresas as $fila)
                     echo '<option value="' . $fila[$rfc] . '">'. $fila[$rS] . '</option>';
 
           }
-        
-
-          
                 ?>
             </select>
            
 
             &nbsp;&nbsp;<br>
 @endempty
-
-
-
 
             <div class="form-inline mr-auto">
             <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Buscar...">
@@ -123,6 +110,7 @@ foreach($empresas as $fila)
           Todos los registros
         </label>
       </div>
+
 <!-- <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Search" aria-label="Search">
            -->
 
@@ -242,7 +230,7 @@ foreach($empresas as $fila)
 
             <a style="color:#3498DB">{{$numCheque}}</a>
                
-               &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+               &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
             <!--               
                <br>
           -->
@@ -389,12 +377,12 @@ foreach($empresas as $fila)
 
                       <div>
                                                 
-                                <div class="tr">Contabilizado</div>
+                        <div class="tr">Contabilizado</div>
                               
 
                                 <a>
-                                             @if (Auth::user()->tipo)
-                                    @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+                    @if (Auth::user()->tipo)
+                    @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                         @php
                                             Cheques::find($id)->update(['pendi' => 1]);
                                         @endphp
@@ -419,7 +407,7 @@ foreach($empresas as $fila)
                                             {{ $revisado_fecha }}
                                         @endif
                                     @endif
-                                   </a>
+                            </a>
 
                                 <a>
                                     @if ($verificado == 1 and $contabilizado == 0)
@@ -437,8 +425,7 @@ foreach($empresas as $fila)
                                             <input type="submit" name="Aceptar" value="Aceptar">
                                         </form>
                                     @elseif ($verificado == 1 and $contabilizado == 1)
-                                    <i   style="color: blue; " class="fas fa-calculator">
-          </i>
+                                    <i   style="color: blue; " class="fas fa-calculator"></i>
                                   
                                         
                                         @if (isset($contabilizado_fecha))
@@ -452,14 +439,12 @@ foreach($empresas as $fila)
                                             &nbsp;&nbsp;
                                         @endif
                                     @else
-                                    <a   style="text-decoration: none; " class="alert fas fa-file-invoice-dollar">
-                                   
-                                   </a>
+                                    <a   style="text-decoration: none; " class="alert fas fa-file-invoice-dollar"></a>
 
                                     @endif
 
 
-                  @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+ @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                         @php
                                             Cheques::find($id)->update(['pendi' => 1]);
                                         @endphp
@@ -468,8 +453,8 @@ foreach($empresas as $fila)
 
                                 
                                 </div>
-          </a>
-                                               <div>
+                                </a>
+                            <div>
 
 
           
@@ -482,7 +467,7 @@ foreach($empresas as $fila)
 
                                     @endif
 
-                                        @if($impresion == '')
+                                    @if($impresion == '')
                                     <form action="{{ url('cheques-transferencias') }}" method="POST">
                                             @csrf
                                             <input type="hidden" id="id" name="id" value="{{ $id }}">
@@ -493,7 +478,7 @@ foreach($empresas as $fila)
                                             <div>
                                               
                                             <input type="submit" name="Aceptar" value="Aceptar">
-          </div>
+                                 </div>
                                             @endif
                                         </form>
 
