@@ -1,7 +1,18 @@
 <?php
 
+use App\Http\Controllers\UploadController;
+use App\Http\Livewire\Chequesytransferencias;
+use App\Http\Livewire\CuentasPorpagar;
+use App\Http\Livewire\Cheques;
+use App\Http\Livewire\Eliminar;
+use App\Http\Livewire\FacturasVinculadas;
+use App\Http\Livewire\Modals\Editar;
+use App\Http\Livewire\Pdfcheque;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +30,8 @@ Auth::routes(['register'=>false]);
 
 // Rutas Octavio
 
-// Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
-// Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
+Route::get('/registro', [App\Http\Controllers\Registro2Controller::class, 'index'])->name('registro');
+Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'store'])->name('registro-store');
 // Route::get('/renombrarXml', [App\Http\Controllers\Prueba::class, 'renombrarXml'])->name('renombrarXml');
 Route::get('/prueba', [App\Http\Controllers\Prueba::class, 'index'])->name('prueba');
 Route::match(['get', 'post'], '/home', [App\Http\Controllers\Login1Controller::class, 'login'])->name('home');
@@ -69,3 +80,26 @@ Route::get('/script1', [App\Http\Controllers\Script1::class, 'tipoUsuarios'])->n
 Route::get('/dir', [App\Http\Controllers\Prueba::class, 'createdir'])->name('createdir');
 //Crear directorios en volumetrico
 Route::get('/dir1', [App\Http\Controllers\Prueba::class, 'createDir2'])->name('createDir2');
+
+
+// Rutas Jose Segura
+Route::get('/script2', [App\Http\Controllers\RecarpetarCheques::class, 'archivar'])->name('archivar');
+Route::view('editar','livewire.editar');
+Route::post('/upload/{id}', [App\Http\Controllers\UploadController::class, 'store']);
+Route::post('/upload2/{id}', [App\Http\Controllers\UploadController::class, 'store2']);
+Route::post('/uploadEdit/{id}', [App\Http\Controllers\UploadController::class, 'storeEditPdf']);
+Route::post('/uploadEdit2/{id}', [App\Http\Controllers\UploadController::class, 'storeEditPdf2']);
+Route::post('/nuevoCheque/{id}', [App\Http\Controllers\UploadController::class, 'nuevoCheque']);
+Route::get('/chequesytransferencias',Chequesytransferencias::class)->name('cheques');
+// Route::get('facturasVinculadas',FacturasVinculadas::class)->name('vinculadas');
+Route::get('/descargascfdi', [App\Http\Controllers\DescargascfdiController::class, 'index'])->name('descargascfdi');
+Route::get('zip-download/{id}', [Eliminar::class, 'descargarZip']);
+Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
+
+//Rutas Leo
+
+//Ruta de la vista de cuentas por pagar en livewire
+Route::get('/cuentas-por-pagar',CuentasPorpagar::class)->name('cuenta');
+
+
+

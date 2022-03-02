@@ -89,6 +89,14 @@ class CuentasPorPagar extends Controller
             // ->get();
         }
 
+
+       
+
+
+
+
+
+
         return view('detalles')
             ->with('meses', $meses)
             ->with('rutaDescarga', $rutaDescarga)

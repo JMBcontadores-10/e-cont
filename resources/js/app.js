@@ -3,12 +3,23 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
+// Reference from published scripts
+require('./vendor/livewire-ui/modal');
+
+
+// Reference from vendor
+require('../../vendor/livewire-ui/modal/resources/js/modal');
+
+
 
 require('./bootstrap');
 
 // window.axios = require('axios');
 
 window.Vue = require('vue').default;
+
+
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -32,3 +43,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 const app = new Vue({
     el: '#app',
 });
+
+import * as FilePond from 'filepond';

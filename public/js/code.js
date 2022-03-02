@@ -529,12 +529,16 @@ $('#allcheck').change(function() {
 });
 
 // Filtra las tablas dependiendo su contenido
+
 $("#filtrar").on("keyup", function() {
     var value = $(this).val().toLowerCase();
     $(".buscar tr").filter(function() {
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
 });
+//se deshabilita la funcion  filtrar tabla
+
+
 
 // Suma los valores de los checkboxes cada vez que son seleccionados
 $(document).on('click keyup', '.mis-checkboxes,.mis-adicionales', function() {
@@ -644,6 +648,20 @@ function verAdicional(btn_id) {
     var rutaArchivo = ra + da;
     window.open(rutaArchivo, '_blank');
 }
+
+// Permite abrir los documentos adicionales de cada cheque sin el input Select
+function verAdicionales(id_button) {
+
+    var ru = document.getElementById("rutaAdicional").value;
+    var iden = document.getElementById("iden" + id_button).value;
+    var ruta= ru + iden;
+
+
+
+    window.open(ruta, '_blank');
+}
+
+
 
 // Evita registrar múltiples veces cualquier cheque al momento de su creación o actualización
 function submitBlock() {

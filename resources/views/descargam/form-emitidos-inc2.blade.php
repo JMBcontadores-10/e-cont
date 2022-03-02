@@ -14,7 +14,7 @@ $meses = [
 '12' => 'Diciembre',
 ];
 $dias = range(1, 31);
-$anios = range(2014, date('Y'));
+$anios = range(2013, date('Y'));
 ?>
 <form class="form-inline" method="POST" id="emitidos-form">
     @csrf

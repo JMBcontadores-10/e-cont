@@ -34,6 +34,7 @@ use App\Models\ListaNegra;
         </div>
 
         <div class="input-group">
+            
             <span class="input-group-text">Buscar</span>
             <input id="filtrar" type="text" class="form-control" placeholder="Buscar proveedor">
             <a id="vinp" href="#bottom" class="btn btn-primary ml-2">Ir a vincular proveedores</a>
