@@ -36,6 +36,8 @@ window.addEventListener('hola', event => {
           </div>
           <div class="content-body"><!-- invoice list -->
   <section class="invoice-list-wrapper">
+
+
     <!-- create invoice button-->
     <div class="invoice-create-btn mb-1">
 
@@ -296,6 +298,7 @@ $pp = explode("/", $doc);
 
           @endphp
           <tbody>
+
             <tr onclick="showHideRow('hidden_row{{$id}}');">
               <td><small class="text-muted">
 
@@ -651,6 +654,8 @@ ver
 @livewireScripts
     </div>
   </section>
+
+
           </div>
         </div>
       </div>

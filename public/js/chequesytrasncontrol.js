@@ -9,15 +9,15 @@ $( document ).ready(function() {
 
 $(document).ready(function() {
     $('#example').DataTable( {
-     
+
         "searching": false,/// elimina el buscador por defecto de datatable() js
         "bLengthChange": false,//elimina el show entries por defecto de datatable() js
-       
+
         "language": {
             "emptyTable": "No existen registros para mostrar."
           }
     } );
-    
+
 } );
 
 /*
@@ -255,7 +255,7 @@ FilePond.registerPlugin(FilePondPluginFileValidateSize);
 const token = document.querySelector('input[name="_token"]');
  var ID =id;
 
-const ids= document.getElementById("user").value;
+
 
 const iden = document.getElementById("editCheque"+ID);
 const ruta= iden;
@@ -264,7 +264,7 @@ const ruta= iden;
 
 // Create a FilePond instance
  //const pond = FilePond.create(ruta);// creacion simple de filepond
-var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
+var filePondObj=FilePond.create(iden, {        /// creacion con validacion de archivos
     maxFileSize: '1000KB',
     labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
     labelIdle:'Sube un archivo <span class="filepond--label-action"> Explorar </span>',
@@ -273,6 +273,7 @@ var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de ar
     labelFileProcessingComplete: 'Carga completa',
     labelFileProcessingAborted: 'Carga cancelada',
     labelTapToCancel: 'Presiona para cancelar',
+    // instantUpload:false,
     allowMultiple: false,
     //instantUpload: false,
     acceptedFileTypes: ["application/pdf"],
@@ -319,17 +320,17 @@ FilePond.setOptions({
     FilePond.registerPlugin(FilePondPluginFileValidateType);
     // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateSize);
-    
+
     const token = document.querySelector('input[name="_token"]');
      var ID =id;
-    
+
     const ids= document.getElementById("user").value;
-    
+
     const iden = document.getElementById("nuevoCheque");
     const ruta= iden;
-    
-    
-    
+
+
+
     // Create a FilePond instance
      //const pond = FilePond.create(ruta);// creacion simple de filepond
     var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
@@ -347,31 +348,31 @@ FilePond.setOptions({
         fileValidateTypeDetectType: (source, type) =>
             new Promise((resolve, reject) => {
                 // Do custom type detection here and return with promise
-    
+
                 resolve(type);
             }),
-    
+
     });
-    
+
     FilePond.setOptions({
         name:'nuevoCheque',
      server: {
-    
+
            url:'uploadEdit2/'+ID,
            headers:{
                'X-CSRF-TOKEN': token.value
-    
+
      }
-    
+
     }
-    
-    
-    
+
+
+
     });
-    
-  
+
+
         }// fin funcion
-    
+
 
 
 
@@ -386,17 +387,17 @@ FilePond.setOptions({
             FilePond.registerPlugin(FilePondPluginFileValidateType);
             // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
             FilePond.registerPlugin(FilePondPluginFileValidateSize);
-            
+
             const token = document.querySelector('input[name="_token"]');
              var ID =id;
-            
+
             const ids= document.getElementById("user").value;
-            
+
             const iden = document.getElementById("adicionalesNuevoCheque");
             const ruta= iden;
-            
-            
-            
+
+
+
             // Create a FilePond instance
              //const pond = FilePond.create(ruta);// creacion simple de filepond
             var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
@@ -414,31 +415,31 @@ FilePond.setOptions({
                 fileValidateTypeDetectType: (source, type) =>
                     new Promise((resolve, reject) => {
                         // Do custom type detection here and return with promise
-            
+
                         resolve(type);
                     }),
-            
+
             });
-            
+
             FilePond.setOptions({
                 name:'adicionalesNuevoCheque',
              server: {
-            
+
                    url:'upload2/'+ID,
                    headers:{
                        'X-CSRF-TOKEN': token.value
-            
+
              }
-            
+
             }
-            
-            
-            
+
+
+
             });
-            
-            
+
+
             }// fin funcion
-            
+
 
 
 
@@ -767,4 +768,4 @@ window.addEventListener('hola', event => {
 
 
 
-      
+

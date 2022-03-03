@@ -151,7 +151,9 @@
     <script src="{{ asset('js/app-assets/js/scripts/pages/app-invoice.min.js') }}" defer></script>
 
      <script src="{{ asset('js/app-assets/js/scripts/forms/wizard-steps.min.js') }}" defer></script>
-
+  <!-- BEGIN: Page JS-->
+  <script src="{{ asset('js/app-assets/js/scripts/pages/bootstrap-toast.min.js') }}" defer></script>
+  <!-- END: Page JS-->
     <!-- END: Page JS-->
 
 
@@ -282,8 +284,9 @@ $empresa=auth()->user->tipo;
 
 
 <livewire:notification-secction >
-    
 
+    <div class="btn btn-outline-primary toast-autohide-toggler mt-2 mr-1">Auto Hide Off</div>
+    
 
 
     <!--========NOTIFICATION SECTION=============== -->

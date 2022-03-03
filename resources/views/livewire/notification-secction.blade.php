@@ -3,7 +3,7 @@
 
 
 
-    <li class="dropdown dropdown-notification nav-item"><a class="nav-link nav-link-label" href="javascript:void(0);" data-toggle="dropdown"><i class="ficon bx bx-bell bx-tada bx-flip-horizontal"></i><span class="badge badge-pill badge-danger badge-up">
+    <li class="dropdown dropdown-notification nav-item"><a class=" toast-autohide-toggler nav-link nav-link-label" href="javascript:void(0);" ><i class="ficon bx bx-bell bx-tada bx-flip-horizontal"></i><span class="badge badge-pill badge-danger badge-up">
    
             
       
