@@ -167,7 +167,14 @@ foreach($empresas as $fila)
 
 
 
+        <div wire:loading >
+            <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+              <div></div>
+              <div></div>
 
+          </div>
+          <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
+          </div>
 
 
 
@@ -207,6 +214,7 @@ foreach($empresas as $fila)
 
             </tr>
           </thead>
+
           @php $arreglo=""; @endphp
           @foreach ($colCheques as $i)
 
@@ -296,6 +304,7 @@ $pp = explode("/", $doc);
 
           @endphp
           <tbody>
+
             <tr onclick="showHideRow('{{$id}}');">
               <td><small class="text-muted">
 
