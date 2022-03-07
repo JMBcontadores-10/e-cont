@@ -312,6 +312,8 @@ $pp = explode("/", $doc);
 
           @endphp
           <tbody>
+         {{------- Actualizacion del estado pendiente a 0------}}
+
 
             <tr onclick="showHideRow('{{$id}}');">
               <td><small class="text-muted">
@@ -321,10 +323,17 @@ $pp = explode("/", $doc);
                                             Cheques::find($id)->update(['pendi' => 1]);
                                         @endphp
 
-
                                          <a style="color:red;"  class="parpadea fas fa-exclamation"
                                           onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
                                         </a>
+
+                                        @else
+
+                                        @php
+                                            Cheques::find($id)->update(['pendi' => 0]);
+                                        @endphp
+
+
                                         @endif
 
 
