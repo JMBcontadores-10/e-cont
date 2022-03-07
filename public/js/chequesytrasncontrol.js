@@ -2,6 +2,8 @@
 
 $( document ).ready(function() {
     $('#exampleModalCenter').modal('toggle')
+
+    // Push.create('Hello World!')
 });
 
 
@@ -728,41 +730,154 @@ window.addEventListener('hola', event => {
 
 
 
-    function showHideRow(row) {
-        $("#" + row).toggle();
-    }
+    // function showHideRow(row) {
+    //     $("#" + row).toggle();
+    // }
 
 
 
 
+    $(document).ready(function(){
 
-    /// saludo por hora del dia js
-
-    function mostrarSaludo(){
-
-        fecha = new Date();
-        hora = fecha.getHours();
-
-        if(hora >= 0 && hora < 12){
-          texto = "Buenos Días";
-          //imagen = "img/dia.png";
+        var current_fs, next_fs, previous_fs; //fieldsets
+        var opacity;
+    
+        $(".next").click(function(){
+    
+        current_fs = $(this).parent();
+        next_fs = $(this).parent().next();
+    
+        //Add Class Active
+        $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+    
+        //show the next fieldset
+        next_fs.show();
+        //hide the current fieldset with style
+        current_fs.animate({opacity: 0}, {
+        step: function(now) {
+        // for making fielset appear animation
+        opacity = 1 - now;
+    
+        current_fs.css({
+        'display': 'none',
+        'position': 'relative'
+        });
+        next_fs.css({'opacity': opacity});
+        },
+        duration: 600
+        });
+        });
+    
+        $(".previous").click(function(){
+    
+        current_fs = $(this).parent();
+        previous_fs = $(this).parent().prev();
+    
+        //Remove class active
+        $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+    
+        //show the previous fieldset
+        previous_fs.show();
+    
+        //hide the current fieldset with style
+        current_fs.animate({opacity: 0}, {
+        step: function(now) {
+        // for making fielset appear animation
+        opacity = 1 - now;
+    
+        current_fs.css({
+        'display': 'none',
+        'position': 'relative'
+        });
+        previous_fs.css({'opacity': opacity});
+        },
+        duration: 600
+        });
+        });
+    
+        $('.radio-group .radio').click(function(){
+        $(this).parent().find('.radio').removeClass('selected');
+        $(this).addClass('selected');
+        });
+    
+        $(".submit").click(function(){
+        return false;
+        })
+    
+        });
+    
+        function showHideRow(Id) {
+            $("#hidden_row" + Id).toggle();
+         
+    
+            //Escodemos los mensajes de contabilidad y revision de cheques
+            $('#MostrarConta'+Id).hide();
+            $('#MostrarConta'+Id+" .TxtRevicion").text("");
+            $('#MostrarRevi'+Id).hide();
+            $('#MostrarRevi'+Id+" .TxtRevicion").text("");
         }
-
-        if(hora >= 12 && hora < 18){
-          texto = "Buenas Tardes";
-         // imagen = "img/tarde.png";
+    
+        /// saludo por hora del dia js
+        function mostrarSaludo(){
+    
+            fecha = new Date();
+            hora = fecha.getHours();
+    
+            if(hora >= 0 && hora < 12){
+              texto = "Buenos DÃ­as";
+              //imagen = "img/dia.png";
+            }
+    
+            if(hora >= 12 && hora < 18){
+              texto = "Buenas Tardes";
+             // imagen = "img/tarde.png";
+            }
+    
+            if(hora >= 18 && hora < 24){
+              texto = "Buenas Noches";
+             // imagen = "img/noche.png";
+            }
+    
+           // document.images["tiempo"].src = imagen;
+    
+            document.getElementById('txtsaludo').innerHTML = texto;
+    
+          }
+    
+          //Mostrar cheques revisados (Fecha)
+          function MostrarRevisado(Id, Contenido){
+              if($('#MostrarRevi'+Id).is(":visible")){
+                $('#MostrarRevi'+Id).hide();
+                $('#MostrarRevi'+Id+" .TxtRevicion").text("");
+              }else{
+                //Escondemos el mensaje de contabilizado
+                $('#MostrarConta'+Id).hide();
+                $('#MostrarConta'+Id+" .TxtRevicion").text("");
+                //Mostramos el mensaje de revisado
+                $('#MostrarRevi'+Id).show();
+                $('#MostrarRevi'+Id+" .TxtRevicion").text(Contenido);
+              }
+          }
+    
+          //Mostrar la contabilidad
+          function MostrarConta(Id, Poliza, Fecha){
+            if($('#MostrarConta'+Id).is(":visible")){
+              $('#MostrarConta'+Id).hide();
+              $('#MostrarConta'+Id+" .TxtRevicion").text("");
+            }else{
+              //Escodemos el mesaje de revisado
+              $('#MostrarRevi'+Id).hide();
+              $('#MostrarRevi'+Id+" .TxtRevicion").text("");
+              //Mostramos el mensaje de contabilizado
+              $('#MostrarConta'+Id).show();
+              $('#MostrarConta'+Id+" .TxtNomConta").text(Poliza);
+              $('#MostrarConta'+Id+" .TxtFechaConta").text(Fecha);
+            }
         }
+    
 
-        if(hora >= 18 && hora < 24){
-          texto = "Buenas Noches";
-         // imagen = "img/noche.png";
-        }
 
-       // document.images["tiempo"].src = imagen;
 
-        document.getElementById('txtsaludo').innerHTML = texto;
-
-      }
 
 
 

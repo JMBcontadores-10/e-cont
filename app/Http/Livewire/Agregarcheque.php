@@ -175,6 +175,7 @@ $chequeC = Notificaciones::create([
         'Beneficiario' => $this->Nuevo_beneficiario,
         'tipoopera' => $this->Nuevo_tipoopera,
         'rfc' => $this->rfcEmpresa,
+        'read_at' => 0,
 
 
 ]);
@@ -194,8 +195,8 @@ $this->emitTo( 'chequesytransferencias','chequesRefresh');//actualiza la tabla c
 
 $this->dispatchBrowserEvent('step2', []);
 
-       
-
+   
+$this->emitTo( 'notification-secction','avisoPush');
     }
 
 

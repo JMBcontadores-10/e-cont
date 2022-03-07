@@ -1,10 +1,7 @@
-
 .icons{
 
     font-size:19px;
     color:#B0ACAB;
-
-
 }
 
 .content_true{
@@ -14,15 +11,8 @@
 }
 
 .content_true_pdf{
-
     font-size:19px;
     color:#D33E20;
-}
-
-.alert{
-    font-size:19px;
-    color:#C81B02;
-
 }
 
 .icon_basic{
@@ -102,17 +92,16 @@ font-size:19px;
     margin: 0 auto;
     height: 200px;
     overflow: scroll;
+    padding: 6px;
   }
 
   .b {
-    border: 2px solid #dedede;
-
+        border: 2px solid #dedede;
         min-height: 100px;
         width:100px;
         word-wrap: break-word;
         display:inline-block;
-
-
+        border-radius: 4px;
     }
 
 /*!
@@ -662,41 +651,110 @@ font-size:19px;
 
     }
 
-.steps{
-   
-  
-    text-align: center;
 
-
-
-}
-
-    .step_desing{
-        height:30px;
-        width:30px;
-        border-radius: 100%;
-        background-color:#B0ACAB;
-        display: inline-block;
-        margin-left:6rem;
-        padding: 3px;
-       
+    /*Diseño de la ventana PDF */
+    /*Encabezado*/
+    /*Contenedor encabezado*/
+    .EncabezadoPDFContainer{
         text-align: center;
-
+        padding: 10px 0px 0px 0px;
     }
-    .active_step {
-        background-color: #3498db;
-       
+    /*Icono PDF*/
+    .DocumentPDF{
+        color: #C81B02;
+        font-size: 70px;
+    }
 
+    /*Cuerpo*/
+    /*Contenedor del nombre del PDF*/
+    .CuerpoNamePDFContainer{
+        text-align: center;
+    }
+
+    /*Span del nombre del PDF*/
+    .SpanNamePDF{
+        font-size: 14px;
+    }
+
+    /*Boton de eliminar*/
+    .BtnDelPDF{
+        background: #475f7b;
+        border-radius: 3px;
+        cursor: pointer;
+        height: 28px;
+        text-align: center;
+        padding: 4px 0px 0px 0px;
+    }
+
+    /*Contenedor del icono*/
+    .RevisadoContainer{
+        width: fit-content;
+        margin: auto;
+    }
+
+    /*Mensaje (ToolTip)*/
+    .MensajeContainer{
+        border: 0.5px solid;
+        border-radius: 5px;
+        background: #0060ceb0;
+        color: white;
+        position: absolute;
+        height: fit-content;
+        width: fit-content;
+        display: none;
+    }
+
+    /*Texto del mensaje*/
+    .Contenido{
+        padding: 4px;
+    }
+
+    /*Espaciado entre textos*/
+    .TextoMensaje{
+        margin: 0;
+    }
+
+
+
+
+    .come-from-modal.left .modal-dialog,
+    .come-from-modal.right .modal-dialog {
+        position: fixed;
+        margin: auto;
+        width: 320px;
+        height: 100%;
+        -webkit-transform: translate3d(0%, 0, 0);
+        -ms-transform: translate3d(0%, 0, 0);
+        -o-transform: translate3d(0%, 0, 0);
+        transform: translate3d(0%, 0, 0);
     }
     
-
-
-
-#notifications{
-
-
-    width: 50px;
-    height: 100px;
-    background-color: blue;
-
+    .come-from-modal.left .modal-content,
+    .come-from-modal.right .modal-content {
+        height: 100%;
+        overflow-y: auto;
+        border-radius: 0px;
+    }
+    
+    .come-from-modal.left .modal-body,
+    .come-from-modal.right .modal-body {
+        padding: 15px 15px 80px;
+    }
+    .come-from-modal.right.fade .modal-dialog {
+        right: -320px;
+        -webkit-transition: opacity 0.3s linear, right 0.3s ease-out;
+        -moz-transition: opacity 0.3s linear, right 0.3s ease-out;
+        -o-transition: opacity 0.3s linear, right 0.3s ease-out;
+        transition: opacity 0.3s linear, right 0.3s ease-out;
+    }
+    
+    .come-from-modal.right.fade.in .modal-dialog {
+        right: 0;
+    }
+    
+    
+    
+    
+    
+    
     

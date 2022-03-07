@@ -36,8 +36,6 @@ window.addEventListener('hola', event => {
           </div>
           <div class="content-body"><!-- invoice list -->
   <section class="invoice-list-wrapper">
-
-
     <!-- create invoice button-->
     <div class="invoice-create-btn mb-1">
 
@@ -298,8 +296,7 @@ $pp = explode("/", $doc);
 
           @endphp
           <tbody>
-
-            <tr onclick="showHideRow('hidden_row{{$id}}');">
+            <tr onclick="showHideRow('{{$id}}');">
               <td><small class="text-muted">
 
                                @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
@@ -332,7 +329,7 @@ $pp = explode("/", $doc);
             </tr>
 
             <tr id="hidden_row{{$id}}" class="hidden_row"  >
-              <td colspan=12 style="  background-color:rgba(242,246,249,0.2);">
+              <td colspan=12 style=" background-color:rgba(242,246,249,0.2);">
 
               <a style="color:#3498DB">{{$numCheque}}</a>
 
@@ -482,7 +479,6 @@ ver
                           <div class="tr">Revisado</div>
 
 
-                                  <a>
                       @if (Auth::user()->tipo)
                       @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                           @php
@@ -498,17 +494,19 @@ ver
                                         </label>
                                       </div>
 
-
                                       @else
-                                          <a class=" icons far fa-check-circle" style="color: green"></a>
-
+                                          <div id="{{$id}}" class="RevisadoContainer" onclick="MostrarRevisado(this.id, '{{$revisado_fecha}}')">
+                                            <a class="icons far fa-check-circle BtnRevisado" style="color: green"></a>
+                                            <div id="MostrarRevi{{$id}}" class="MensajeContainer">
+                                                <div class="Contenido">
+                                                    <p class="TextoMensaje">Revisado el: </p>
+                                                    <p class="TxtRevicion TextoMensaje"></p>
+                                                </div>
+                                            </div>
+                                          </div>
                                           @if (isset($revisado_fecha))
-
-
-                                              {{-- {{ $revisado_fecha }} --}}
                                           @endif
                                       @endif
-                              </a>
                         </div>
 
                               <div>
@@ -519,27 +517,19 @@ ver
                                 @endif
                                       @if ($verificado == 1 and $contabilizado == 0)
 
-
                                       <a class="icons fas fa-file-contract"
                                       data-toggle="modal" data-target="#poliza{{$id}}"></a>
 
                                       @elseif ($verificado == 1 and $contabilizado == 1)
-                                      <i   style="color: blue; " class="icons fas fa-calculator"></i>
-
-
-                                          {{-- @if (isset($contabilizado_fecha))
-                                          <br>
-                                          &nbsp;&nbsp;
-                                            {{ $contabilizado_fecha }}
-                                          @endif
-                                          @if (isset($poliza))
-                                          &nbsp;
-                                              Póliza: {{ $poliza }}
-                                              &nbsp;&nbsp;
-                                          @endif
-                                      @else
-                                      <a   style="text-decoration: none; " class="icons  fas fa-file-invoice-dollar" style="color:red"></a> --}}
-
+                                      <div id="{{$id}}" class="RevisadoContainer" onclick="MostrarConta(this.id, '{{$poliza}}', '{{$contabilizado_fecha}}')">
+                                        <i style="color: blue; " class="icons fas fa-calculator"></i>
+                                        <div id="MostrarConta{{$id}}" class="MensajeContainer">
+                                            <div class="Contenido">
+                                                <p class="TextoMensaje TxtNomConta"></p>
+                                                <p class="TextoMensaje TxtFechaConta"></p>
+                                            </div>
+                                        </div>
+                                      </div>
                                       @endif
 
 
@@ -568,10 +558,12 @@ ver
 
                                    @if($impresion == '')
 
-  <input class="form-check-input" type="checkbox"  wire:model="impresion"   value="{{$id}}" name="s{{$id}}" id="stOneaa{{$id}}"  >
-                                        <label class="form-check-labeldd" for="flexCheckCheckeddd">
-                                      Impresión
-                                        </label>
+                                   <div class="ImpContainer">
+                                    <input id="flexCheckCheckeddd" type="checkbox"  wire:model="impresion"   value="{{$id}}" name="s{{$id}}" id="stOneaa{{$id}}"  >
+                                    <label for="flexCheckCheckeddd">
+                                  Impresión
+                                    </label>
+                                   </div>
                                         @endif
 
                           </div>
@@ -654,8 +646,6 @@ ver
 @livewireScripts
     </div>
   </section>
-
-
           </div>
         </div>
       </div>

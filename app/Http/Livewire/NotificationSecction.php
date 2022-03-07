@@ -9,21 +9,11 @@ use Livewire\Component;
 class NotificationSecction extends Component
 {
 
-public $polling;
-
-
-public function mount(){
-
-   $this->polling=true;
-
-    }
-
-
+    protected $listeners = ['avisoPush' => 'avisoPush' ]; // listeners para refrescar el modal
 
     public function render()
     {
 
-       
 
         if(!empty(auth()->user()->tipo)){
 
@@ -34,23 +24,27 @@ public function mount(){
     $rfc=auth()->user()->empresas;
     $noti = Notificaciones::
         whereIn('rfc', auth()->user()->empresas)
+        ->where('read_at', 0)
         ->get();
     
         }else{
 
             $noti=[];
         }
-
-     
         
-        return view('livewire.notification-secction',['notifications'=>$noti,'polling'=>$this->polling]);
+        return view('livewire.notification-secction',['notifications'=>$noti]);
     }
 
+public function actualizar(){
+
+    $this->emitTo('notification-content','actualizarNoti');
+}
 
 
-public function off(){
+public function avisoPush(){
 
-    $this->polling=false;
+    $this->dispatchBrowserEvent('PushNotifaction', []);
+
 }
 
 

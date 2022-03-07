@@ -6,9 +6,16 @@
  <!-- Modal -->
 
  <script>
+ 
+
     window.addEventListener('cier', event => {
 
         document.getElementById("mdla").click();
+ 
+  
+
+
+
 
 
       });

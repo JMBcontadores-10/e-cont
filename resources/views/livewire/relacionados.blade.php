@@ -1,8 +1,8 @@
 <div>
 
 
-    
- 
+
+
 
 
      @php
@@ -56,36 +56,35 @@ $("[data-dismiss=modal]").trigger({ type: "click" });// cerrar modal por data-di
 
                         </script>
 
-
                         @endif
                     </div>
 
-
-
-
-
-
+                    <div class="AdicionalesContainer">
+                        @php
+                            $TotalArchivos = sizeof($datos1->doc_relacionados);
+                        @endphp
+                        <p>Total de archivos adicionales {{$TotalArchivos}}</p>
+                    </div>
 
                     <div id="#relacionadosView{{$datos1->_id}}" class="dropzone">
                         <p   class="mt-5 text-center">
                             <p class="pf">Archivos Exsitentes:</p>
-
                         </p>
                         <p id="files-area">
                             <span id="filesList">
                                 <div class="wrapper">
 
 
-                                    @php $n=1; 
-                                    
-                                    
+                                    @php $n=1;
+
+
        $dateValue = strtotime($datos1->fecha);//obtener la fecha
         $mesfPago = date('m',$dateValue);// obtener el mes
         $anioPago= date('Y',$dateValue);// obtener el año
 
-     
- 
+
                                     @endphp
+
 
 
                          @foreach ($datos1->doc_relacionados as $docs )
@@ -115,24 +114,20 @@ $ruta='storage/contarappv1_descargas/'.$datos1->rfc.'/'.$anioPago.'/Cheques_Tran
 
                             <input id="iden{{$n}}" type="hidden" value="{{ $docs}}" >
 
-                        
 
-
-             <a class="alert fas fa-file-pdf" target="_blank" href="{{asset($ruta)}}"></a>
-                                <span> {{Str::limit(Str::afterLast($docs, '#'), 10); }} <span>
-
-
-                        <hr>
-
-                  <button   wire:click="eliminar('{{$docs}}')" wire:loading.attr="disabled"  style="margin-top:-20px;" class="fabutton" >
-                    <i class="icons fas fa-trash-alt"></i> </button>
-
-
-                   <!-- <hr>
-                            <button style="margin-top:-20px;" class="fabutton" wire:click="" type="submit">
-                                <i class="icons fas fa-eye"></i> </button>-->
-
-
+        <!--Contenedor para eliminar y visualizar PDF-->
+        <div class="EncabezadoPDFContainer">
+            <a class="DocumentPDF fas fa-file-pdf" target="_blank" href="{{asset($ruta)}}"></a>
+        </div>
+        <div class="CuerpoNamePDFContainer">
+            <span class="SpanNamePDF">{{Str::limit(Str::afterLast($docs, '#'), 10); }}<span>
+        </div>
+        <div class="BotonesPDFContainer">
+            <!--Eliminar PDF-->
+            <div class="BtnDelPDF" wire:click="eliminar('{{$docs}}')" wire:loading.attr="disabled">
+                <i class="icons fas fa-trash-alt"></i>
+            </div>
+        </div>
 
                          </div>
                          @endif
@@ -148,24 +143,24 @@ $ruta='storage/contarappv1_descargas/'.$datos1->rfc.'/'.$anioPago.'/Cheques_Tran
                         <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
                           <div></div>
                           <div></div>
-                          
+
                       </div>
                       Eliminando archivo
                       </div>
                     <br>
                     <br>
 
-               
 
 
 
 
-                   
+
+
 
 
                 </div>
 
-            
+
             </div>
         </div>
 
@@ -175,12 +170,12 @@ $ruta='storage/contarappv1_descargas/'.$datos1->rfc.'/'.$anioPago.'/Cheques_Tran
     </div>
 
 </div>
-    
 
 
 
 
-</div> 
+
+</div>
 
 
 

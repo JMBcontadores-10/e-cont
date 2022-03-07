@@ -20,6 +20,7 @@ class Notificaciones extends Model
         'Beneficiario',
         'tipoopera',
         'rfc',
+        'read_at',
     ];
 
     protected $collection = 'notificaciones';

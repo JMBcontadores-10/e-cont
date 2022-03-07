@@ -4,11 +4,11 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 // Reference from published scripts
-require('./vendor/livewire-ui/modal');
+// require('./vendor/livewire-ui/modal');
 
 
 // Reference from vendor
-require('../../vendor/livewire-ui/modal/resources/js/modal');
+// require('../../vendor/livewire-ui/modal/resources/js/modal');
 
 
 

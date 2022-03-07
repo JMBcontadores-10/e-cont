@@ -16,7 +16,7 @@
     <script src="{{ asset('js/code.js') }}" defer></script>
     <script src="{{ asset('js/numeros.js') }}" defer></script>
     <script  src="{{ asset('js/chequesytrasncontrol.js') }}" defer > </script>
-
+    <script  src="{{ asset('js/General.js') }}" defer > </script>
 
     <script src="{{ asset('js/calendar.js') }}" defer></script>
     <script src="{{ asset('js/calendari.js')}}" defer></script>
@@ -54,7 +54,6 @@
    <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/vendors.min.css') }}">
    <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/charts/apexcharts.css') }}">
    <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/extensions/swiper.min.css') }}">
-   <link rel="stylesheet" type="text/css" href="{{ asset('css/app-assets/css/plugins/forms/wizard.min.css') }}">
    <!-- END: Vendor CSS-->
 
 
@@ -133,9 +132,6 @@
     <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/buttons.bootstrap4.min.js') }}" defer></script>
     <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/dataTables.responsive.min.js') }}" defer></script>
     <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/responsive.bootstrap4.min.js') }}" defer></script>
-    <script src="{{ asset('js/app-assets/vendors/js/extensions/jquery.steps.min.js') }}" defer></script>
-    <script src="{{ asset('js/app-assets/vendors/js/forms/validation/jquery.validate.min.js') }}" defer></script>
-
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN: Theme JS-->
@@ -149,11 +145,6 @@
 
     <!-- BEGIN: Page JS-->
     <script src="{{ asset('js/app-assets/js/scripts/pages/app-invoice.min.js') }}" defer></script>
-
-     <script src="{{ asset('js/app-assets/js/scripts/forms/wizard-steps.min.js') }}" defer></script>
-  <!-- BEGIN: Page JS-->
-  <script src="{{ asset('js/app-assets/js/scripts/pages/bootstrap-toast.min.js') }}" defer></script>
-  <!-- END: Page JS-->
     <!-- END: Page JS-->
 
 
@@ -285,9 +276,6 @@ $empresa=auth()->user->tipo;
 
 <livewire:notification-secction >
 
-    <div class="btn btn-outline-primary toast-autohide-toggler mt-2 mr-1">Auto Hide Off</div>
-    
-
 
     <!--========NOTIFICATION SECTION=============== -->
 
@@ -311,9 +299,6 @@ $empresa=auth()->user->tipo;
     </div>
   </div>
 </nav>
-
-
-
 <!-- END: Header-->
 
 
@@ -321,11 +306,10 @@ $empresa=auth()->user->tipo;
 <div style="background-color:#397ac4;"  class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
   <div class="navbar-header">
     <ul class="nav navbar-nav flex-row">
-      <li class="nav-item mr-auto" ><a class="navbar-brand" href="{{ url('modules') }}">
+      <li class="nav-item mr-auto" id="Inicio" ><a class="navbar-brand" href="{{ url('modules') }}">
           <div class="brand-logo">
 
           <img src="img/logo-contarapp-03.png" alt="" class= "logo"> </img>
-
 
           </div>
           <h2 class="brand-text mb-0" style="color:#FFFFFF">E-Cont</h2></a></li>
@@ -340,32 +324,24 @@ $empresa=auth()->user->tipo;
       <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Modulos</span><span class="badge badge-light-danger badge-pill badge-round float-right mr-50 ml-auto">2</span></a>
         <ul class="menu-content">
 
-
-          <li class="active"><a class="d-flex align-items-center" href="{{ url('chequesytransferencias') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">Cheques y Transferencias</span></a>
+          <li id="chequesytransferencias"><a class="d-flex align-items-center" href="{{ url('chequesytransferencias') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">Cheques y Transferencias</span></a>
           </li>
-
-
-
-
-          <li><a class="d-flex align-items-center" href="{{ url('cuentasporpagar') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Cuentas por Pagar</span></a>
+          <li id="cuentasporpagar"><a class="d-flex align-items-center" href="{{ url('cuentasporpagar') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Cuentas por Pagar</span></a>
           </li>
-
-          <li><a class="d-flex align-items-center" href="{{ url('descargasv2') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Descargas</span></a>
+          <li id="descargasv2"><a class="d-flex align-items-center" href="{{ url('descargasv2') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Descargas</span></a>
           </li>
-          <li><a class="d-flex align-items-center" onclick="alerta()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Nóminas</span></a>
+          <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Nóminas</span></a>
           </li>
-          <li><a class="d-flex align-items-center" onclick="alerta()" href=""><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Expediente Digital</span></a>
+          <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()" href=""><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Expediente Digital</span></a>
           </li>
-          <li><a class="d-flex align-items-center" href="{{('volumetrico')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Control Volumetrico</span></a>
+          <li id="volumetrico"><a class="d-flex align-items-center" href="{{('volumetrico')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Control Volumetrico</span></a>
           </li>
-          <li><a class="d-flex align-items-center" onclick="alerta()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Expediente Fiscal</span></a>
+          <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Expediente Fiscal</span></a>
           </li>
-          <li><a class="d-flex align-items-center" href="{{('auditoria')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Auditoria</span></a>
+          <li id="auditoria"><a class="d-flex align-items-center" href="{{('auditoria')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Auditoria</span></a>
           </li>
-          <li><a class="d-flex align-items-center" href="{{('consultas')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Consultas</span></a>
+          <li id="consultas"><a class="d-flex align-items-center" href="{{('consultas')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Consultas</span></a>
           </li>
-
-
         </ul>
 
       </li>
@@ -983,6 +959,7 @@ $empresa=auth()->user->tipo;
 
 
 </body>
+<livewire:notification-content>
 <footer style="margin-top: 20px;">
   {{--  <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |
         JMB Contadores</p>--}}
