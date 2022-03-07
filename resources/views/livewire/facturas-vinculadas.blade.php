@@ -258,10 +258,10 @@ $iva_Egreso [] = $vIva;
 <div class="table-body-cell">
                @if (!$colX->isEmpty())
                  @foreach ($concepto as $c)
-                    {{-- {{ ++$nCon }}.{{Str::limit($c['Descripcion'],25); }} <br> --}}
+                    {{ ++$nCon }}.{{Str::limit($c['Descripcion'],25); }} <br>
 
                 @endforeach
-                {{Str::limit($concepto[0]['Descripcion'],25); }} 
+                {{-- {{Str::limit($concepto[0]['Descripcion'],25); }} --}}
 
                @else
                  {{ Str::limit( $concepto,25);}}

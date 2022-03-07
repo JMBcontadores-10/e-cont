@@ -667,7 +667,6 @@ echo $filtro_cheques;
                 File::delete($rutaArchivo);
             }
         }
-        
         $colM = $cheque->metadata_r;
         foreach ($colM as $i) {
             MetadataR::where('cheques_id', $i->cheques_id)

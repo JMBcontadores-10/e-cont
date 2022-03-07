@@ -7,64 +7,45 @@
 
      <!-- Modal -->
 
+
      <div wire:ignore.self class="modal fade" id="pdfcheque{{$datos->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;" class="icons fas fa-balance-scale"> Ver PDF</span></h6>
-
                     @if($datos->nombrec=="0")
-                    <button id="mdlP{{$datos->_id}}" type="button" wire:click="refrecar()"   class="close" data-dismiss="modal" aria-label="Close">
-                       
-                        <span aria-hidden="true close-btn">×</span>
-                    </button>
-                        @else
-                        
-                    <button id="mdlP" type="button"    class="close" data-dismiss="modal" aria-label="Close">
-                    
-                        <span aria-hidden="true close-btn">×</span>
-                    </button>
-                    
-                    @endif
-                         
+                        <button id="mdlP" type="button" wire:click="refrecar()" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true close-btn">×</span>
+                        </button>
+                    @else
+                        <button id="mdlP" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true close-btn">×</span>
+                        </button>
+                   @endif
                 </div>
 
-
-                 <script>
-
-
-
-    window.addEventListener('cerrarPdfmodal', event => {
-
-    document.getElementById("mdlP").click();
-
-
-
-    });
-
-
-
-    //$("[data-dismiss=modal]").trigger({ type: "click" });// cerrar modal por data-dismiss.:)
-
-
-
-                 </script>
-
-
-
+    {{--Cerramos la ventana cada vez que hagamos un cambio--}}
+    <script>
+        window.addEventListener('cerrarPdfmodal', event => {
+            $("#mdlP").click();
+        });
+    </script>
 
    <div class="modal-body"><!--modal body -->
-      {{$datos->nombrec}}
+    {{--Encazado del modal--}}
+    {{-- Nombre de la factura--}}
+   <div class="EncabezadoModalChequesYTransf">
+       <h4>Factura</h4>
+       <h4 class="LblEncabezado"><b>{{$datos->numcheque}}</b></h4>
+   </div>
 
+   {{--Texto de archivos existentes--}}
+   <div class="ArchExistContenedor">
+        <p class="pf LblArchExist"><b>Archivo Exsitente</b></p>
+   </div>
 
-
-
-
+   {{--Zona para subir archivos--}}
    <div class="dropzone">
-    <p   class="mt-5 text-center">
-        <p class="pf">Archivo Exsitente:</p>
-
-    </p>
     <p id="files-area">
         <span id="filesList">
             <div class="wrapper" >
@@ -73,12 +54,9 @@
                 @php $n=1; @endphp
 
      @if($datos->nombrec =="0")
-
-
-        <h4>  No hay archivo </h4>
-
-
-
+            <div class="TxtNoArchivos">
+                <h4>No hay archivo</h4>
+            </div>
       {{---------Input filepond------------}}
         <input   name="editCheque" type="file" id="editCheque{{$datos->id}}"  />
         <input type="hidden"  name="editcheque" wire:model="pdfcheque._id"  />
@@ -118,46 +96,32 @@
      </div>
    @endif
 
-
-
-
-
     </span>
     </p>
       </div>
 
-
-
-
-    <div wire:loading wire:target="eliminar" >
-    <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
-      <div></div>
-      <div></div>
-
   </div>
-  Eliminando archivo
+
+ {{-- Pantalla de carga al eliminar un archivo--}}
+ <div wire:loading wire:target="eliminar">
+    <div class="PantallaCarga">
+        <div style="color: #3CA2DB" class="DisplayElimCarga la-ball-clip-rotate-multiple">
+            <div></div>
+            <div></div>
+        </div>
+        Eliminando archivo
+    </div>
   </div>
-   <br>
-     <br>
 
+  {{--Parte inferior del modal--}}
+  <div class="modal-footer">
 
-
-
-
-   <div class="modal-footer">
-
-@if($datos->nombrec=="0")
+    @if($datos->nombrec=="0")
+        <button type="button" name="cierra"  wire:click="refrecar()" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+    @else
     <button type="button" name="cierra"  wire:click="refrecar()" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-@else
-<button type="button" name="cierra"  wire:click="refrecar()" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-@endif
-   </div>
-
-
-
-  </div>
-
-
+    @endif
+       </div>
   </div>
   </div>
 

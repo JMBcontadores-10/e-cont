@@ -154,24 +154,24 @@ public function guardar(){
         Storage::disk('public2')->delete($path);
 
        }
- 
+
       $this->emitTo('relacionados', 'refreshComponent'); // emit para refrescar el modal una ves  se cierre
- 
-
-      
-
-       
 
 
 
-      //$this->emit('reviewSectionRefresh'); 
-      
+
+
+
+
+
+      //$this->emit('reviewSectionRefresh');
+
       //$this->emitTo('chequesytransferencias', 'refreshCheques'); // emit para refrescar el modal una ves  se cierre
     }
 
 
 
- 
+
 
 /////////////////////////////////////////////////////////////
 

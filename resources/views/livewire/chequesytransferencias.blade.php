@@ -329,7 +329,7 @@ $pp = explode("/", $doc);
             </tr>
 
             <tr id="hidden_row{{$id}}" class="hidden_row"  >
-              <td colspan=12 style=" background-color:rgba(242,246,249,0.2);">
+              <td colspan=12 style="  background-color:rgba(242,246,249,0.2);">
 
               <a style="color:#3498DB">{{$numCheque}}</a>
 
@@ -346,24 +346,19 @@ $pp = explode("/", $doc);
 
 
 
-
-                  <div>
-
-                      <div class="tr"> Ajuste</div>
-
-
-                      @if (Auth::user()->tipo)
-                      @if ($ajuste!=0)
-                      @php $class="content_true" @endphp
-                      @else
-                     @php $class="icons" @endphp
-                   @endif
-
-                     <a class="{{$class}} fas fa-balance-scale"
-                      data-toggle="modal" data-target="#ajuste{{$id}}"></a>
-
-                      @endif
-                  </div>
+                  @if(Auth::user()->tipo)
+                  <!--Seccion ajute-->
+                    <div>
+                        <div class="tr"> Ajuste</div>
+                        @if ($ajuste!=0)
+                            @php $class="content_true" @endphp
+                        @else
+                            @php $class="icons" @endphp
+                        @endif
+                        <a class="{{$class}} fas fa-balance-scale"
+                        data-toggle="modal" data-target="#ajuste{{$id}}"></a>
+                    </div>
+                  @endif
 
 
                   <div>
@@ -474,74 +469,60 @@ ver
 
                         </div>
 
-                        <div>
-
-                          <div class="tr">Revisado</div>
 
 
-                      @if (Auth::user()->tipo)
-                      @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
-                                          @php
-                                              Cheques::find($id)->update(['pendi' => 1]);
-                                          @endphp
-
-                                      @elseif ($verificado == 0 )
-
-                                      <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" wire:model="revisado"   value="{{$id}}" name="stOne{{$id}}" id="stOne"  >
-                                        <label class="form-check-label" for="flexCheckChecked">
-                                        Revisado
-                                        </label>
-                                      </div>
-
-                                      @else
-                                          <div id="{{$id}}" class="RevisadoContainer" onclick="MostrarRevisado(this.id, '{{$revisado_fecha}}')">
-                                            <a class="icons far fa-check-circle BtnRevisado" style="color: green"></a>
-                                            <div id="MostrarRevi{{$id}}" class="MensajeContainer">
-                                                <div class="Contenido">
-                                                    <p class="TextoMensaje">Revisado el: </p>
-                                                    <p class="TxtRevicion TextoMensaje"></p>
-                                                </div>
-                                            </div>
-                                          </div>
-                                          @if (isset($revisado_fecha))
-                                          @endif
-                                      @endif
+@if (Auth::user()->tipo)
+<!--Seccion revisado-->
+    <div>
+        <div class="tr">Revisado</div>
+        @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+            @php Cheques::find($id)->update(['pendi' => 1]); @endphp
+        @elseif ($verificado == 0 )
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" wire:model="revisado"   value="{{$id}}" name="stOne{{$id}}" id="stOne"  >
+                <label class="form-check-label" for="flexCheckChecked">Revisado</label>
+            </div>
+        @else
+            <div id="{{$id}}" class="RevisadoContainer" onclick="MostrarRevisado(this.id, '{{$revisado_fecha}}')">
+                <a class="icons far fa-check-circle BtnRevisado" style="color: green"></a>
+                    <div id="MostrarRevi{{$id}}" class="MensajeContainer">
+                        <div class="Contenido">
+                            <p class="TextoMensaje">Revisado el: </p>
+                            <p class="TxtRevicion TextoMensaje"></p>
                         </div>
+                    </div>
+            </div>
+        @if (isset($revisado_fecha))
+        @endif
+    </div>
+    <div>
+        @if ($verificado == 1 and $contabilizado == 1)
+            <div class="tr">Contabilizado</div>
+        @else
+            <div class="tr">Póliza</div>
+        @endif
 
-                              <div>
-                               @if ($verificado == 1 and $contabilizado == 1)
-                                <div class="tr">Contabilizado</div>
-                                @else
-                                <div class="tr">Póliza</div>
-                                @endif
-                                      @if ($verificado == 1 and $contabilizado == 0)
+        @if ($verificado == 1 and $contabilizado == 0)
+            <a class="icons fas fa-file-contract"
+            data-toggle="modal" data-target="#poliza{{$id}}"></a>
+        @elseif ($verificado == 1 and $contabilizado == 1)
+            <div id="{{$id}}" class="RevisadoContainer" onclick="MostrarConta(this.id, '{{$poliza}}', '{{$contabilizado_fecha}}')">
+                <i style="color: blue; " class="icons fas fa-calculator"></i>
+                <div id="MostrarConta{{$id}}" class="MensajeContainer">
+                    <div class="Contenido">
+                        <p class="TextoMensaje TxtNomConta"></p>
+                        <p class="TextoMensaje TxtFechaConta"></p>
+                    </div>
+                </div>
+            </div>
+        @endif
 
-                                      <a class="icons fas fa-file-contract"
-                                      data-toggle="modal" data-target="#poliza{{$id}}"></a>
-
-                                      @elseif ($verificado == 1 and $contabilizado == 1)
-                                      <div id="{{$id}}" class="RevisadoContainer" onclick="MostrarConta(this.id, '{{$poliza}}', '{{$contabilizado_fecha}}')">
-                                        <i style="color: blue; " class="icons fas fa-calculator"></i>
-                                        <div id="MostrarConta{{$id}}" class="MensajeContainer">
-                                            <div class="Contenido">
-                                                <p class="TextoMensaje TxtNomConta"></p>
-                                                <p class="TextoMensaje TxtFechaConta"></p>
-                                            </div>
-                                        </div>
-                                      </div>
-                                      @endif
-
-
-   @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
-                                          @php
-                                              Cheques::find($id)->update(['pendi' => 1]);
-                                          @endphp
-                                          @endif
-                                          @endif
-
-
-                                  </div>
+        @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+            @php Cheques::find($id)->update(['pendi' => 1]); @endphp
+        @endif
+        @endif
+    </div>
+@endif
 
 
 

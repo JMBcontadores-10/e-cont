@@ -51,25 +51,42 @@
 });
 
 $("[data-dismiss=modal]").trigger({ type: "click" });// cerrar modal por data-dismiss.:)
-
-
-
                         </script>
-
                         @endif
                     </div>
 
-                    <div class="AdicionalesContainer">
-                        @php
-                            $TotalArchivos = sizeof($datos1->doc_relacionados);
-                        @endphp
-                        <p>Total de archivos adicionales {{$TotalArchivos}}</p>
-                    </div>
+    {{--Encazado del modal--}}
+    {{-- Nombre de la factura--}}
+   <div class="EncabezadoModalChequesYTransf">
+    <h4>Factura</h4>
+    <h4 class="LblEncabezado"><b>{{$datos1->numcheque}}</b></h4>
+</div>
+
+{{--Texto de archivos existentes--}}
+<div class="ArchExistContenedor">
+    @php
+    //Realizamos un foreach para acceder al arreglo de los archivos relacionados
+    foreach ($datos1->doc_relacionados as $docs ){
+        /*Si eliminamos todos los archivos el arreglo no queda vacio queda con un registro
+        vacio, por lo que realizaremos an condicional para saber que la cantida de archivos
+        es "0"*/
+
+        //Si no hay archivos
+        if ($docs == "") {
+            $TotalArchivos = 0;
+        }
+        //Si hay archivos
+        else {
+            $TotalArchivos = sizeof($datos1->doc_relacionados);
+        }
+    }
+@endphp
+
+{{--Mostramos el total de archivos--}}
+     <p class="pf LblArchExist"><b>Total de archivos adicionales {{$TotalArchivos}}</b></p>
+</div>
 
                     <div id="#relacionadosView{{$datos1->_id}}" class="dropzone">
-                        <p   class="mt-5 text-center">
-                            <p class="pf">Archivos Exsitentes:</p>
-                        </p>
                         <p id="files-area">
                             <span id="filesList">
                                 <div class="wrapper">
@@ -105,7 +122,9 @@ $ruta='storage/contarappv1_descargas/'.$datos1->rfc.'/'.$anioPago.'/Cheques_Tran
                          @endphp
 
                          @if($docs == "")
-                            <h4>  No hay archivos </h4>
+                         <div class="TxtNoArchivos">
+                            <h4>No hay archivos</h4>
+                        </div>
                          @else
                          <div class="b" id="c{{$n}}">
 
@@ -147,28 +166,10 @@ $ruta='storage/contarappv1_descargas/'.$datos1->rfc.'/'.$anioPago.'/Cheques_Tran
                       </div>
                       Eliminando archivo
                       </div>
-                    <br>
-                    <br>
-
-
-
-
-
-
-
-
-
                 </div>
-
-
             </div>
         </div>
-
-
-
-
     </div>
-
 </div>
 
 
