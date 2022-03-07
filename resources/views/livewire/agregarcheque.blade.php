@@ -6,16 +6,9 @@
  <!-- Modal -->
 
  <script>
- 
-
     window.addEventListener('cier', event => {
 
         document.getElementById("mdla").click();
- 
-  
-
-
-
 
 
       });
@@ -248,10 +241,12 @@ document.getElementById("tipo").disabled = false;
 <div id="step2" style="display:none;" >
 @if($idNuevoCheque!==null)
 
- {{$idNuevoCheque->_id}} 
+{{-- {{$idNuevoCheque->_id}} --}}
+
+
 
     @if($step3)
-   {{"estep:".$step3}} 
+    {{-- {{"estep:".$step3}} --}}
     <script>
     filepondNuevoCheque('{{$idNuevoCheque->_id}}');
     </script>
@@ -259,8 +254,8 @@ document.getElementById("tipo").disabled = false;
 @endif
 
 @endif
-<input   name="nuevoCheque" type="file" id="nuevoCheque"  /><!--input filepond -->
 
+<input   name="nuevoCheque" type="file" id="nuevoCheque"  /><!--input filepond -->
     <div style="background-color: #61A2C8; color:white;"  class="alert  alert-dismissible mb-2" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">&times;</span>

@@ -374,12 +374,7 @@ if($this->impresion){
 
 
     }
-    // public function refresh(){
 
-    //     $this->emitTo('agregarcheque','actualizar');//actualiza la tabla cheques y transferencias
-
-
-    // }
 
 
 

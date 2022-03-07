@@ -178,7 +178,7 @@
 </head>
 
 
-<body   class="vertical-layout vertical-menu-modern 2-columns  navbar-sticky footer-static  " style="background-image: url('img/auth-bg3.jpg');" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" >
+<body class="vertical-layout vertical-menu-modern 2-columns navbar-sticky footer-static" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" >
     <!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
 <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
@@ -274,31 +274,28 @@ $empresa=auth()->user->tipo;
 <!--========NOTIFICATION SECTION=============== -->
 
 
-<livewire:notification-secction >
-
+<livewire:notification-secction>
 
     <!--========NOTIFICATION SECTION=============== -->
 
+    <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0);" data-toggle="dropdown">
+        <div class="user-nav d-sm-flex d-none"><span class="user-name">{{ auth()->user()->nombre}}</span><span class="user-status text-muted"><i style="color:#90EE90; box-shadow: 0 0 5px #4f9;" class="fas fa-circle"></i>&nbsp;Conectado</span></div><span><img class="round" src="img/user.png" alt="avatar" height="40" width="40"></span></a>
+      <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item" href="page-user-profile.html"><i class="bx bx-user mr-50"></i> Editar Perfil</a><a class="dropdown-item" href="app-email.html"><i class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item" href="app-todo.html"><i class="bx bx-check-square mr-50"></i>Tareas</a><a class="dropdown-item" href="app-chat.html"><i class="bx bx-message mr-50"></i>Chats</a>
+        <div class="dropdown-divider mb-0"></div>
+        <form action="{{ route('logout') }}" method="POST">
+          @csrf
+          <input class="dropdown-item" type="submit" value="Cerrar SesiÃ³n"
+             >
+      </form>
 
-
-
-          <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0);" data-toggle="dropdown">
-              <div class="user-nav d-sm-flex d-none"><span class="user-name">{{ auth()->user()->nombre}}</span><span class="user-status text-muted"><i style="color:#90EE90; box-shadow: 0 0 5px #4f9;" class="fas fa-circle"></i>&nbsp;Conectado</span></div><span><img class="round" src="img/user.png" alt="avatar" height="40" width="40"></span></a>
-            <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item" href="page-user-profile.html"><i class="bx bx-user mr-50"></i> Editar Perfil</a><a class="dropdown-item" href="app-email.html"><i class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item" href="app-todo.html"><i class="bx bx-check-square mr-50"></i>Tareas</a><a class="dropdown-item" href="app-chat.html"><i class="bx bx-message mr-50"></i>Chats</a>
-              <div class="dropdown-divider mb-0"></div>
-              <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <input class="dropdown-item" type="submit" value="Cerrar Sesión"
-                   >
-            </form>
-
-            </div>
-          </li>
-        </ul>
       </div>
-    </div>
-  </div>
+    </li>
+  </ul>
+</div>
+</div>
+</div>
 </nav>
+
 <!-- END: Header-->
 
 

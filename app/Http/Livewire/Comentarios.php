@@ -38,6 +38,6 @@ protected function rules(){
 
     public function render()
     {
-        return view('livewire.comentarios', ['datos' =>  $this->comentarioCheque]);
+        return view('livewire.comentarios', ['datos' =>  $this->comentarioCheque ]);
     }
 }

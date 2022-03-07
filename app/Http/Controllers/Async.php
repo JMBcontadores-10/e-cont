@@ -196,7 +196,7 @@ class Async extends Controller
                 $mes = $_POST['mes'];
                 $dia = $_POST['dia'];
                 $rutaEmpresa = "$rfc/$anio/Descargas/$mes.$meses[$mes]/Recibidos/DescargasManuales/";
-                $rutaDescarga = $rutaDescarga.$rutaEmpresa;
+                $rutaDescarga = $rutaDescarga . $rutaEmpresa;
                 $descarga = new DescargaAsincrona($maxDescargasSimultaneas);
 
                 $filtros = new BusquedaRecibidos();
@@ -583,7 +583,6 @@ class Async extends Controller
 
 
 
-                                
                         } else {
                             XmlE::where(['UUID' => $fileBaseName])
                                 ->update(

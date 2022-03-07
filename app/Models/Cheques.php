@@ -13,7 +13,7 @@ class Cheques extends Model
 
 
     protected $primaryKey = '_id';
-
+ 
 
     protected $fillable = [
         '_id',
@@ -37,7 +37,7 @@ class Cheques extends Model
         'doc_relacionados',
     ];
 
-
+   
 
     protected $collection = 'cheques';
 
@@ -100,6 +100,10 @@ public static function search($search)
     return empty($search) ? static::query()
         : static::query()->where('Id', 'like', '%'.$search.'%')
             ->orWhere('numcheque', 'like', '%'.$search.'%')
+            ->orWhere('tipoopera' , 'like' ,'%'.$search.'%')
+            ->orWhere('tipomov' , 'like' ,'%'.$search.'%')
+            ->orWhere('_id', $search)
+
             ->orWhere('Beneficiario', 'like', '%'.$search.'%');
 }
 
