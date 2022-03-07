@@ -22,11 +22,19 @@ use Illuminate\Support\Facades\DB;
 
 
 <script>
-window.addEventListener('hola', event => {
-    alert('hola');
+window.addEventListener('disabled', event => {
+
   });
 
+
+
+
+
+
     </script>
+
+
+
 
           <!-- BEGIN: Content-->
     <div class="app-content content">
@@ -93,7 +101,7 @@ foreach($empresas as $fila)
 }
 @endphp--}}
             <label for="inputState">Empresa</label>
-            <select wire:model="rfcEmpresa" id="inputState1" class=" select form-control"  >
+            <select wire:loading.attr="disabled"   wire:model="rfcEmpresa" id="inputState1" class=" select form-control"  >
                 <option  value="00" >--Selecciona Empresa--</option>
                 <?php $rfc=0; $rS=1;foreach($empresas as $fila)
                 {
@@ -110,10 +118,10 @@ foreach($empresas as $fila)
 
 
             <div class="form-inline mr-auto">
-            <input  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Filtro" aria-label="Search">
+            <input wire:loading.attr="readonly"  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Filtro" aria-label="Search">
             &nbsp;&nbsp;
             <label for="inputState">Mes</label>
-            <select wire:model="mes" id="inputState1" class=" select form-control"  >
+            <select wire:model="mes" id="inputState1"  wire:loading.attr="disabled"  class=" select form-control"  >
                 <option  value="00" >Todos</option>
                 <?php foreach ($meses as $key => $value) {
                     echo '<option value="' . $key . '">' . $value . '</option>';
@@ -123,7 +131,7 @@ foreach($empresas as $fila)
 
 
             <label for="inputState">Año</label>
-            <select wire:model="anio" id="inputState2" class="select form-control">
+            <select wire:loading.attr="disabled" wire:model="anio" id="inputState2" class="select form-control">
 
                 <?php foreach (array_reverse($anios) as $value) {
                     echo '<option value="' . $value . '">' . $value . '</option>';
@@ -140,14 +148,14 @@ foreach($empresas as $fila)
 
         <input  wire:model.debounce.300ms="importe" class="form-control"  placeholder="Importe $"  type="number"  step="0.01" aria-label="importe" style="width:110px;" >
         &nbsp;
-        <select wire:model="condicion" id="inputState1" class=" select form-control"  >
+        <select wire:loading.attr="disabled" wire:model="condicion" id="inputState1" class=" select form-control"  >
             <option  value=">=" >--Condición--</option>
             <option value="=" >igual</option>
             <option value=">" >mayor que</option>
             <option value="<" >menor que</option>
         </select>
   &nbsp;
-        <select wire:model="estatus" id="inputState1" class=" select form-control"  >
+        <select wire:loading.attr="disabled" wire:model="estatus" id="inputState1" class=" select form-control"  >
             <option  value="" >--Estatus--</option>
             <option value="pendi" >Pendientes</option>
 
