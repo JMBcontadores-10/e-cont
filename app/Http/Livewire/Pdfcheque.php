@@ -13,16 +13,16 @@ use LivewireUI\Modal\ModalComponent;
 class Pdfcheque extends Component
 {
 
-   
+
     public Cheques $pdfcheque; // coneccion al model cheques
     protected $listeners = ['refreshpdf' => '$refresh' ]; // listeners para refrescar el modal
-   
+
 
 
 protected function rules(){
 
     return [
-       
+
         'pdfcheque._id'=> '',
     ];
 }
@@ -41,7 +41,7 @@ protected function rules(){
        $this->dispatchBrowserEvent('pdf', []);
 
        echo"hola";
-     
+
     }
 
 
@@ -54,9 +54,9 @@ protected function rules(){
         $mesOrigen= date('m',$valorOrigen);
 
         $espa=new Cheques();
-     
-     
-        return view('livewire.pdfcheque',['datos' =>  $this->pdfcheque, 'mes'=>$espa->fecha_es($mesOrigen) ]);
+
+
+        return view('livewire.pdfcheque',['datos'=>$this->pdfcheque, 'mes'=>$espa->fecha_es($mesOrigen) ]);
     }
 
 
@@ -64,13 +64,13 @@ protected function rules(){
 
 
         $this->validate();
-          
+
 
         $cheque = Cheques::where('_id',$this->pdfcheque->id);
-       
- 
+
+
         $rfc = Auth::user()->RFC;
-       
+
         $anioo = strtotime($this->pdfcheque->fecha); // se obtiene fecha del cheque
         $mesPago1 = strtotime($this->pdfcheque->fecha); // se obtiene fecha del cheque
         $mes = date('m',$mesPago1);
@@ -79,12 +79,12 @@ protected function rules(){
 
         $path="contarappv1_descargas/".$rfc."/".$anio."/Cheques_Transferencias/".$espa->fecha_es($mes)."/" .$this->pdfcheque->nombrec;
 
-        $cheque->update([  // actualiza el campo nombrec a 0 
+        $cheque->update([  // actualiza el campo nombrec a 0
          'nombrec' => "0",
         ]);
 
  /// elimina el pdf de la carpeta correspondiente
- 
+
  Storage::disk('public2')->delete($path);
 
 
@@ -93,22 +93,22 @@ protected function rules(){
 
 
 
- 
-
- $this->dispatchBrowserEvent('cerrarPdfmodal', []);
 
 
- 
- 
+ $this->dispatchBrowserEvent('cerrarPdfmodal', ["IdCheque" => $this->pdfcheque->id]);
+
+
+
+
 
  $this->emitUp('chequesRefresh');//actualiza la tabla cheques y transferencias
 
  $this->emit('refreshpdf');
 
 
- 
+
  //$this->dispatchBrowserEvent('pdf', []);
- 
+
 
 
 
