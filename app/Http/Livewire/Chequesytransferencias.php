@@ -88,16 +88,9 @@ $this->condicion='>=';
         $this->resetPage();
     }
 
-
-
-
     protected $listeners = [
         'chequesRefresh' => '$refresh',
      ];
-
-
-
-
 
 
 protected function rules(){
@@ -175,7 +168,6 @@ protected function rules(){
         ->where('rfc',$this->rfcEmpresa)
         ->where('importecheque',$this->condicion,$this->importe)
         ->where('verificado',0)
-        ->where('pendi',0)
         ->where('fecha', 'like','%'.$this->anio."-".'%')
         ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
         ->orderBy('fecha', 'desc')
@@ -191,7 +183,6 @@ protected function rules(){
         ->where('rfc',$this->rfcEmpresa)
         ->where('importecheque',$this->condicion,$this->importe)
         ->where('conta',0)
-        ->where('verificado',1)
         ->where('fecha', 'like','%'.$this->anio."-".'%')
         ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
         ->orderBy('fecha', 'desc')
@@ -373,7 +364,6 @@ if($this->impresion){
     public function refeshModal(){
 
         $this->emitTo('pdfcheque','refreshpdf');//actualiza la tabla cheques y transferencias
-
 
     }
 
