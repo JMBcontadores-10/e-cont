@@ -1,25 +1,25 @@
 <div>
-  
+
     <!-- Modal -->
     <div wire:ignore.self class="modal fade" id="uploadRelacionados" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;"  class="icons fas fa-upload"> Subir Archivoss</span></h6>
-                    <button id="mdl" type="button"  wire:click="refreshh()"  class="close" data-dismiss="modal" aria-label="Close">
+                    <button id="mdl" type="button"  wire:click="refresh()"  class="close" data-dismiss="modal" aria-label="Close">
                          <span aria-hidden="true close-btn">×</span>
                     </button>
                 </div>
-                <script> 
+                <script>
                      function refresca(){
                  document.getElementById("mdl").click();/// cerrar el modal dando click
                 //  location.reload();
                      }
-                     
+
                 </script>
                <div class="modal-body" id="cargaArchivos"><!-- modal body -->
-       
-               
+
+
 
                     <div id="drop-zone">
                        <p class="mt-5 text-center">
@@ -34,7 +34,7 @@
                         <input   name="avatar" type="file" id="avatar"  /><!--input filepond -->
                         <input type="hidden" id="user" name="user_id" value="">
                         <input type="hidden" name="nombre" value="avatar">
-                    
+
                         {{-- <input type="text"> --}}
                        </p>
                        <p id="files-area">
@@ -43,26 +43,26 @@
                            </span>
                        </p>
                    </div>
-                  
+
 
 
                    </div>
 
 
                <div class="modal-footer">
-                <button type="button" wire:click="refreshh()" onclick="refresca()" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-       
+                <button type="button" wire:click="refresh()" onclick="refresca()" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+
             </div>
 
                </div><!-- modal body -->
-            
+
 
             </div>
 
         </div>
     </div>
 
-    
+
 
 
 
