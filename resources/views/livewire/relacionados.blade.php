@@ -139,7 +139,7 @@ $ruta='storage/contarappv1_descargas/'.$datos1->rfc.'/'.$anioPago.'/Cheques_Tran
             <a class="DocumentPDF fas fa-file-pdf" target="_blank" href="{{asset($ruta)}}"></a>
         </div>
         <div class="CuerpoNamePDFContainer">
-            <span class="SpanNamePDF">{{Str::limit(Str::afterLast($docs, '#'), 10); }}<span>
+            <span class="SpanNamePDF">{{Str::limit(Str::afterLast($docs, '&'), 10); }}<span>
         </div>
         <div class="BotonesPDFContainer">
             <!--Eliminar PDF-->
