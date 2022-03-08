@@ -195,12 +195,12 @@ $this->emitTo( 'chequesytransferencias','chequesRefresh');//actualiza la tabla c
 
 $this->dispatchBrowserEvent('step2', []);
 
-   
+
 $this->emitTo( 'notification-secction','avisoPush');
     }
 
 
-   
+
 
 
     public function render()
@@ -248,15 +248,15 @@ $this->emitTo( 'notification-secction','avisoPush');
 
     public function refresh(){
 
-        // 
+        //
         $this->emitUp('chequesRefresh');//actualiza la tabla cheques y transferencias
     //  $this->emitSelf('actualizar');
-       
-       
+
+
 $this->Nuevo_numcheque="";
 $this->Nuevo_fecha="";
 $this->Nuevo_beneficiario="";
-$this->importeCheque="";
+$this->Nuevo_importecheque="";
 $this->Nuevo_tipomov="";
 $this->Nuevo_tipoopera="";
 $this->idNuevoCheque=null;
