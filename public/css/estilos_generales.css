@@ -778,3 +778,8 @@ text-align: center;
 .come-from-modal.right.fade.in .modal-dialog {
     right: 0;
 }
+
+/*Botones de facturas vinculadas*/
+.BtnVinculadas{
+    color: white !important; /*Se agrega !important ya que bootstrap agrega un diseño por defecto*/
+}
