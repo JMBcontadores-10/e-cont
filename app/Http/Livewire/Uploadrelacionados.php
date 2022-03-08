@@ -9,10 +9,6 @@ class Uploadrelacionados extends Component
 
 
     protected $listeners = ['refreshUpload' => 'render' ]; // listeners para refrescar el modal
-   
-
-   
-
 
 
     public function render()
@@ -20,14 +16,8 @@ class Uploadrelacionados extends Component
         return view('livewire.uploadrelacionados');
     }
 
-
-    function refreshh(){
-
-        // 
+    function refresh(){
         $this->emitUp('chequesRefresh');//actualiza la tabla cheques y transferencias
-         $this->emitSelf('refreshUpload');
-
-       
-        // $this->emit('refreshUpload');
+        $this->emitSelf('refreshUpload');
     }
 }
