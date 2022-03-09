@@ -138,7 +138,7 @@ document.getElementById("tipo").disabled = false;
          <select wire:model="Nuevo_tipomov" name="tipo" id="tipo" class="agregarInputs form-control" required >
              <option  value="" >--Selecciona Forma--</option>
              <option>Cheque</option>
-             <option>Debito</option>
+
              <option>Transferencia</option>
              <option>Domiciliación</option>
              <option>Efectivo</option>
