@@ -146,6 +146,7 @@ document.getElementById("tipo").disabled = false;
        </div>
 
 
+
        <div class="form-group col-md-6">
              {{---tooltip---}}
          <i id="info" class="fa fa-info-circle" aria-hidden="true"></i>
@@ -243,6 +244,7 @@ document.getElementById("tipo").disabled = false;
 @if($idNuevoCheque!==null)
 
 {{-- {{$idNuevoCheque->_id}} --}}
+
 
 
 
