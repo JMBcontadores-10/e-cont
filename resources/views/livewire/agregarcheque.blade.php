@@ -64,19 +64,19 @@ $("#step3").fadeIn("slow");
                 <button id="mdla" type="button" wire:click="refresh()" class="close" data-dismiss="modal" aria-label="Close">
                     <span  aria-hidden="true close-btn">×</span>
                </button>
-               
+
                @else
                <button id="mdla" type="button"  wire:click="refresh()" class="close" data-dismiss="modal" aria-label="Close">
                 <span  aria-hidden="true close-btn">×</span>
            </button>
                 @endif
-             
+
             </div>
 <div class="modal-body"><!--modal body -->
 
     {{-- <div class="steps">
     <div class="active_step step_desing"> <li  style="color:white;"class="icons fas fa-plus"></li><br>Información Basica</div>
-       
+
     <div class=" step_desing"><li  style="color:white;"class="icons fas fa-plus"></li><br>Información Basica</div>
     <div class=" step_desing"><li  style="color:white;"class="icons fas fa-plus"></li><br>Información Basica</div>
     </div> --}}
@@ -89,7 +89,7 @@ $("#step3").fadeIn("slow");
  <div class="row">
      <div class="col-md-12 mx-0">
 
-         
+
 
 <!----------------------------------- ---->
 <div  ALIGN="center">
@@ -138,6 +138,7 @@ document.getElementById("tipo").disabled = false;
          <select wire:model="Nuevo_tipomov" name="tipo" id="tipo" class="agregarInputs form-control" required >
              <option  value="" >--Selecciona Forma--</option>
              <option>Cheque</option>
+             <option>Debito</option>
              <option>Transferencia</option>
              <option>Domiciliación</option>
              <option>Efectivo</option>
@@ -218,12 +219,12 @@ document.getElementById("tipo").disabled = false;
 
 
      </div>
-    
+
      <div wire:loading wire:target="guardar_nuevo_cheque" >
         <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
           <div></div>
           <div></div>
-          
+
       </div>
       Creando cheque ...
       </div>
@@ -263,7 +264,7 @@ document.getElementById("tipo").disabled = false;
         <div class="d-flex align-items-center" style="font-size: small;">
           <i class="bx bx-check"></i>
           <span>
-           ¡Se ha creado el cheque exitosamente!. Ahora agrega un comprobante de pago 
+           ¡Se ha creado el cheque exitosamente!. Ahora agrega un comprobante de pago
            @if($idNuevoCheque!==null)
            @if($idNuevoCheque->tipomov == 'Cheque' || $idNuevoCheque->tipomov == 'Transferencia' || $idNuevoCheque->tipomov == 'Domiciliación')
            , puedes subirlo mas tarde
@@ -279,7 +280,7 @@ document.getElementById("tipo").disabled = false;
 
 
     <button wire:click="step3()" type="submit" class="btn btn-primary">Siguiente</button>
- 
+
 </div>
 <div id="step3" style="display:none;" >
 
