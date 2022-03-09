@@ -312,11 +312,15 @@ $pp = explode("/", $doc);
 
           @endphp
           <tbody>
+
+
+
          {{------- Actualizacion del estado pendiente a 0------}}
 
 
             <tr onclick="showHideRow('{{$id}}');">
-              <td><small class="text-muted">
+              <td>
+                  {{-- <small class="text-muted"> --}}
 
                                @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                         @php
@@ -337,13 +341,13 @@ $pp = explode("/", $doc);
                                         @endif
 
 
-              {{$fecha}}</small></td>
+              {{$fecha}}</td>
 
               <td>
                 <a style="color:#3498DB" >{{ Str::limit($numCheque, 20); }}</a>
               </td>
               <td> {{ Str::limit($beneficiario, 20);}}</td>
-              <td><small class="text-muted">{{$tipoO}}</small></td>
+              <td>{{$tipoO}}</td>
 
               <td><span class="invoice-amount">{{$tipo}}</span></td>
               <td><span class="invoice-amount">${{ number_format($importeC, 2) }}</span></td>

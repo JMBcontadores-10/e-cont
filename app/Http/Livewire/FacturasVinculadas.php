@@ -7,6 +7,7 @@ use App\Models\MetadataR;
 use Livewire\Component;
 
 use App\Exports\FacturasExport;
+use App\Models\Notificaciones;
 use Maatwebsite\Excel\Facades\Excel;
 
 class FacturasVinculadas extends Component
@@ -42,6 +43,7 @@ if($this->checkedDesvincular){
 }
 
         $colM =MetadataR::where(['cheques_id' => $this->facturaVinculada->_id])->get();
+
 
 
 

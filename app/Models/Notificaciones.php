@@ -16,11 +16,18 @@ class Notificaciones extends Model
        '_id',
         'numcheque',
         'fecha',
+        'fechaCancelacion',
         'importecheque',
         'Beneficiario',
         'tipoopera',
         'rfc',
         'read_at',
+        'tipo',
+        'folioFiscal',
+        'cheques_id',
+        'emisorMensaje',
+        'receptorMensaje',
+        'tipo',
     ];
 
     protected $collection = 'notificaciones';

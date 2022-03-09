@@ -172,7 +172,12 @@ if($efecto == 'Pago'){
     $metodoPago = '-';
   $iva=0;
     $doc = $x['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
+    if (isset($doc)){
     $numPagos=count($doc);
+    }else{
+$numPagos=0;
+
+    }
     if($numPagos >1){
 
         foreach($doc as $dr){

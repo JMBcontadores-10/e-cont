@@ -166,7 +166,7 @@ class Agregarcheque extends Component
 }
 
 /// crea la notificacion
-
+$tipo[]='CA';
 $chequeC = Notificaciones::create([
 
         'numcheque' => $this->Nuevo_numcheque,
@@ -176,6 +176,7 @@ $chequeC = Notificaciones::create([
         'tipoopera' => $this->Nuevo_tipoopera,
         'rfc' => $this->rfcEmpresa,
         'read_at' => 0,
+        'tipo'=> 'CA',
 
 
 ]);

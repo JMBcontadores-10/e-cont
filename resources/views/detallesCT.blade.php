@@ -36,7 +36,7 @@ use App\Models\XmlR;
                     <tr class="table-primary">
                         <th class="text-center align-middle" width="100">No.</th>
                         {{-- Si el cheque no está verificado se puede desvincular --}}
-                        
+
 		@if ($verificado == 0)
                             <th  class="text-center align-middle" width="150">Desvincular CFDI <input type="checkbox" id="allcheck"
                                     name="allcheck" /></th>
@@ -52,7 +52,7 @@ use App\Models\XmlR;
                         <th class="text-center align-middle"width="150">Complemento</th>
                         <th class="text-center align-middle"width="150">Efecto</th>
 
-		<th class="text-center align-middle"width="150">subtotal</th>		
+		<th class="text-center align-middle"width="150">subtotal</th>
 
                         <th class="text-center align-middle"width="150">IVA</th>
                         <th class="text-center align-middle"width="150">Total</th>
@@ -85,7 +85,7 @@ use App\Models\XmlR;
                             if ($efecto == 'Egreso') {
                                 $total = -1 * abs($total);
 			  //$res_total = $total;
-				
+
                            }
                         @endphp
                         <tr>
@@ -116,45 +116,45 @@ use App\Models\XmlR;
                                 $totalX = 0;
                                 // Se consulta la coincidencia de metadata con el contenido xml para obtener los campos faltantes
                                 $colX = XmlR::where(['UUID' => $folioF])->get();
-			
+
                               $su =0;
                                 if (!$colX->isEmpty()) {
 
 
                                     foreach ($colX as $v) {
-				
+
                                         $concepto = $v['Conceptos.Concepto'];
                                         $metodoPago = $v['MetodoPago'];
 				$subtotal =$v['SubTotal'];
-				
-				
-				
-				
-												
-				//$iva=$v['Impuestos.TotalImpuestosTrasladados'];	
+
+
+
+
+
+				//$iva=$v['Impuestos.TotalImpuestosTrasladados'];
 				$total = $v['Total'];
-				$iva=$v['Impuestos.Traslados.Traslado.0.Importe']; // Imprimir el IVA .16% "002"			
+				$iva=$v['Impuestos.Traslados.Traslado.0.Importe']; // Imprimir el IVA .16% "002"
                                         $folio = $v['Folio'];
-				
-				
-			          
+
+
+
 
 				$var = (float) $v['SubTotal']; //Convertimos los datos de subtotal de string a flotante
 
-				
-				
-				
+
+
+
 				$vIva = (float) $v['Impuestos.Traslados.Traslado.0.Importe']; //Convertimos a flotante los datos extraidos de la base de datos
-				
-				
-				
+
+
+
 
 				$vTotal = (float) $v['Total']; //Convertimos los datos del Total de String a Flotante
 
 
 
                               if($efecto == "Traslado"){
-                                    
+
                                    	$t=0;
                                         $egreso=0;
 				$sub_Egreso=0;
@@ -170,7 +170,7 @@ use App\Models\XmlR;
 			$t[]=$vTotal; // array completo del Total de los ingresos
 			$a [] = $var; //Array completo del subtotal de los ingresos
 			$Iv [] = $vIva; //Array completo del Iva de todos los ingresos
-			
+
 
 			}
 
@@ -179,7 +179,7 @@ use App\Models\XmlR;
 		$egreso[]=$vTotal;
 		$sub_Egreso[] = $var;
 		$iva_Egreso [] = $vIva;
-		
+
 
 
 		}
@@ -187,15 +187,15 @@ use App\Models\XmlR;
                           }// end else
 
 
-				
 
 
-				
-				
-				
 
 
-		         
+
+
+
+
+
 
 
                                          if ($efecto == 'Pago') {
@@ -208,10 +208,10 @@ use App\Models\XmlR;
                                         } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso') {
                                             $docRel = $v['CfdiRelacionados.CfdiRelacionado'];
                                         }
-				
+
 			}
-							
-			
+
+
 
 
                                 } else {
@@ -220,7 +220,7 @@ use App\Models\XmlR;
                                     $folio = 'X';
                                     $uuidRef = 'X';
                                 }
-			
+
 
 
 
@@ -235,14 +235,14 @@ use App\Models\XmlR;
                                     {{ $concepto }}
                                 @endif
 
-			
-
-
-			
 
 
 
-	
+
+
+
+
+
                             </td>
                             <td class="text-center align-middle">{{ $folio }}</td>
                             <td class="text-center align-middle">{{ $metodoPago }}</td>
@@ -267,11 +267,11 @@ use App\Models\XmlR;
                                     {{ $uuidRef }}
                                 @endif
                             </td>
-			
+
 
 			@if($efecto =='Egreso')
                             <td class="text-center align-middle", style="background-color: rgb(255, 85, 85);">{{ $efecto }}</td>
-			@elseif($efecto = 'Ingreso')
+			@elseif($efecto == 'Ingreso')
 			<td class="text-center align-middle">{{ $efecto }}</td>
 			@else
 			<td class="text-center align-middle">{{ $efecto }}</td>
@@ -288,34 +288,34 @@ use App\Models\XmlR;
 
 			@endif
 
-				
-                           
-                            
-			@if (empty($iva))
-                            <td class="text-center align-middle">$ 0.0</td>  
-                            @elseif ($iva=="0.00")
-                            <td class="text-center align-middle">$ 0.0</td> 
-                             
-			
-			@elseif ($efecto =='Egreso')
-                            <td class="text-center align-middle", , style="background-color: rgb(255, 85, 85);"> ${{ $iva }}</td> 
-                            @else 
 
-			
+
+
+			@if (empty($iva))
+                            <td class="text-center align-middle">$ 0.0</td>
+                            @elseif ($iva=="0.00")
+                            <td class="text-center align-middle">$ 0.0</td>
+
+
+			@elseif ($efecto =='Egreso')
+                            <td class="text-center align-middle" style="background-color: rgb(255, 85, 85);"> ${{ $iva }}</td>
+                            @else
+
+
                             <td class="text-center align-middle">${{ $iva }}</td>
-                            @endif                           
-			
+                            @endif
+
 			@if($efecto =='Egreso')
-                           
+
 			<td class="text-center align-middle", style="background-color: rgb(255, 85, 85);">${{ number_format($total, 2) }}</td>
 			@elseif($efecto = 'Ingreso')
-			
+
 			 <td class="text-center align-middle">${{ number_format($total, 2) }}</td>
 			@else
-			
+
 			 <td class="text-center align-middle">${{ number_format($total, 2) }}</td>
 			@endif
-                           
+
 
 
                             <td class="text-center align-middle">{{ $estado }}</td>
@@ -334,21 +334,21 @@ use App\Models\XmlR;
                     @endforeach
 		@php
 
-				
+
 			$suma_subEgreso = array_sum($sub_Egreso); //Aqu� sumo el arreglo que contiene todos los egresos.
-			
+
 		  $suma_sub=array_sum($a) - $suma_subEgreso; // Aqu� hago la resta de los ingresos menos egresos para as� obtener el total
 
-                        
+
 	            $sumaEgreso= array_sum($egreso); //Sumo el array completo del Total de los egresos
 		 $suma_total = array_sum($t)-$sumaEgreso; // Aqu� hago la resta del array total de los egresos menos el array total de los ingresos
 
 		$suma_Iva_Egreso = array_sum($iva_Egreso);
 		$suma_iva = array_sum($Iv) - $suma_Iva_Egreso;
-				
+
 		@endphp
-		
-	
+
+
 		@if ($verificado == 0)
 
 
@@ -371,7 +371,7 @@ use App\Models\XmlR;
 			<td></td>
 			<td></td>
 			<td></td>
-			
+
 			<td></td>
 			<td></td>
 			<td></td>
@@ -383,7 +383,7 @@ use App\Models\XmlR;
 
 		@endif
 
-			
+
                 </tbody>
             </table>
         </div>

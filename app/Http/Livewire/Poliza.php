@@ -18,11 +18,23 @@ protected function rules(){
 
     return[
 
-        'polizaCheque.poliza' => ''
+        'polizaCheque.poliza' => 'required'
 
 
     ];
 }
+
+
+
+
+public function message(){
+
+    return[
+'poliza' =>'La poliza es requerida',
+
+    ];
+}
+
 
     public function guardar(){
 
@@ -41,6 +53,7 @@ protected function rules(){
 
         $this->polizaCheque->save();// guarda todos los campos
         $this->emitTo( 'chequesytransferencias','chequesRefresh');
+        $this->dispatchBrowserEvent('cerrarPolizamodal', []);
      }
 
     public function render()

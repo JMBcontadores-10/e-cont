@@ -7,13 +7,24 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="exampleModalLabel">  <span style="text-decoration: none;"  class="icons fas fa-file-contract"> Póliza&nbsp;{{$datos->numcheque}}</span></h6>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button id="poliza" type="button" class="close" data-dismiss="modal" aria-label="Close">
                      <span aria-hidden="true close-btn">×</span>
                 </button>
             </div>
 <div class="modal-body"><!--modal body -->
 
+    <script>
+        window.addEventListener('cerrarPolizamodal', event => {
+            $("#poliza").click();
 
+
+        if ($('.modal-backdrop').is(':visible')) {
+  $('body').removeClass('modal-open');
+  $('.modal-backdrop').remove();
+};
+
+        });
+    </script>
 
 
 
@@ -21,8 +32,10 @@
 <form  wire:submit.prevent="guardar">
 @csrf
 <input type="hidden" name="id" value="{{ $datos->id }}">
-<textarea wire:model.defer="polizaCheque.poliza" cols="20" rows="2" class="form-control"placeholder="Introduce póliza"></textarea><br>
-
+<textarea wire:model.defer="polizaCheque.poliza" cols="20" rows="2" class="form-control"placeholder="Introduce póliza" ></textarea><br>
+@error('polizaCheque.poliza')
+    <span class="text-red-500 py-3"> {{$message}} </span>
+@enderror
 <div wire:loading wire:target="guardar" >
 <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
  <div></div>

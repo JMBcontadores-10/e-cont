@@ -6,6 +6,7 @@
     @php
 use App\Models\XmlR;
 use App\Models\Cheques;
+use App\Models\Notificaciones;
 
 $class='';
         if(empty($class)){
@@ -37,7 +38,7 @@ $class='';
 
 
 
-<div class="modal-body"><!--modal body -->
+<div class="modal-body" style="color:#545252;"><!--modal body -->
 @if ($total==0)
 <button disabled class="btn btn-secondary mr-1 mb-1" wire:click="desvincular()">Desvincular Cheques </button>
 @else
@@ -68,10 +69,10 @@ $class='';
                 <div class="tr table-body-cell">Concepto</div>
                 <div class="tr table-body-cell">Folio</div>
                 <div class="tr table-body-cell">Metodo - Pago</div>
-                <div class="tr table-body-cell">UUID2 relacionado</div>
+                <div class="tr table-body-cell">UUID Relacionado</div>
                 <div class="tr table-body-cell">Efecto</div>
-                <div class="tr table-body-cell">subtotal</div>
-                <div class="tr table-body-cell">IVA</div>
+                <div class="tr table-body-cell">Subtotal</div>
+                <div class="tr table-body-cell">IVA 16%</div>
                 <div class="tr table-body-cell">Total</div>
                 <div class="tr table-body-cell">Estado</div>
                 <div class="tr table-body-cell">Descargar</div>
@@ -100,6 +101,31 @@ $n=0;
                 $efecto = $i->efecto;
                 $total = $i->total;
                 $estado = $i->estado;
+
+                if ($estado== 'Cancelado'){
+             $noti= Notificaciones::where('folioFiscal',$folioF)->get();
+            echo  $noti;
+             if(count($noti)==0){
+                    Notificaciones::create([
+
+                'numcheque' => $emisorNombre,
+                'fecha' => $i->fechaCancelacion,
+                'importecheque' => $i->total,
+                'folioFiscal' =>$folioF,
+                'rfc' => $i->receptorRfc,
+                'read_at' => 0,
+                'tipo'=>'FC',
+                'cheques_id'=>$i->cheques_id,
+
+
+
+        ]);
+
+        echo "vacio";
+                }
+
+        }
+
                 if ($efecto == 'Egreso') {
                     $total = -1 * abs($total);
   //$res_total = $total;
@@ -302,12 +328,15 @@ $iva_Egreso [] = $vIva;
 			@endif
 
 			@if($efecto =='Egreso')
+            @if (isset($subtotal))
+                
+           
             <div class="table-body-cell" style="color: rgb(255, 85, 85);">${{ number_format($subtotal,2) }}</div>
-
+            @endif
 			@elseif($efecto = 'Ingreso')
-
+            @if (isset($subtotal))
             <div class="table-body-cell">${{ number_format($subtotal,2) }}</div>
-
+            @endif
 			@else
             <div class="table-body-cell">${{ number_format($subtotal,2) }}</div>
 
