@@ -33,7 +33,6 @@ class Agregarcheque extends Component
     $pushArchivos=[],
     $step3;
 
-
     public $idNuevoCheque;
 
     protected $listeners = ['actualizar' => '$refresh' ]; // listeners para refrescar el modal
@@ -196,12 +195,12 @@ $this->emitTo( 'chequesytransferencias','chequesRefresh');//actualiza la tabla c
 
 $this->dispatchBrowserEvent('step2', []);
 
-   
+
 $this->emitTo( 'notification-secction','avisoPush');
     }
 
 
-   
+
 
 
     public function render()
@@ -249,11 +248,11 @@ $this->emitTo( 'notification-secction','avisoPush');
 
     public function refresh(){
 
-        // 
+        //
         $this->emitUp('chequesRefresh');//actualiza la tabla cheques y transferencias
     //  $this->emitSelf('actualizar');
-       
-       
+
+
 $this->Nuevo_numcheque="";
 $this->Nuevo_fecha="";
 $this->Nuevo_beneficiario="";
