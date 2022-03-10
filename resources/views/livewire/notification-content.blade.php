@@ -100,7 +100,7 @@ window.addEventListener('PushNotifaction', event => {
               @endforeach
 
 
-              @elseif(auth()->user()->tipo ==NULL)
+              @elseif(empty(auth()->user()->tipo))
               @foreach ($notifications as $noti)
 
 

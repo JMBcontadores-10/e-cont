@@ -36,27 +36,34 @@ Factura Cancelada = FC
 
 
 
-   $rfc=auth()->user()->empresas;
-    $noti = Notificaciones::
-        whereIn('rfc', auth()->user()->empresas)
-        ->where('read_at', 0)
-        ->orWhere('tipo','CA')
-        ->orWhere('tipo','FC')
-        ->orderBy('fecha', 'desc')
-        ->orderBy('created_at', 'desc')
 
-        ->get();
 
-        }elseif(auth()->user()->RFC!==NULL){
+ $rfc=auth()->user()->empresas;
+ $noti = Notificaciones::
+  whereIn('rfc', auth()->user()->empresas)
+  ->orwhereIn('emisorMensaje', auth()->user()->empresas)
+  ->where('read_at', 0)
+  ->orWhere('tipo','CA')
+  ->orWhere('tipo','FC')
+  ->orWhere('tipo','M')
+  ->orderBy('fecha', 'desc')
+  ->orderBy('created_at', 'desc')
+
+  ->get();
+
+
+        }elseif(empty(auth()->user()->tipo)){
 
             $rfc=auth()->user()->empresas;
             $noti = Notificaciones::where('rfc',auth()->user()->RFC)
-                ->where('read_at', 0)
-                ->orWhere('tipo','FC')
-                ->whereNotNull('folioFiscal')
-                ->orderBy('fecha', 'desc')
-                ->orderBy('created_at', 'desc')
-                ->get();
+            ->orWhere('receptorMensaje', 'CDI1801116Y9')
+            ->where('read_at', 0)
+            ->orWhere('tipo','FC')
+
+         //    ->orWhereNotNull('folioFiscal')
+            ->orderBy('fecha', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         }else{
 
@@ -71,7 +78,7 @@ Factura Cancelada = FC
 
 
 
-        return view('livewire.notification-secction',['notifications'=>$noti]);
+        return view('livewire.notification-secction',['notifications'=>$noti,'rfc'=>auth()->user()->RFC]);
     }
 
 public function actualizar(){

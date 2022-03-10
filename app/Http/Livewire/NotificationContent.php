@@ -35,14 +35,14 @@ class NotificationContent extends Component
 
                 ->get();
 
-                   }elseif(auth()->user()->tipo==NULL){
+                   }elseif(empty(auth()->user()->tipo)){
 
                $rfc=auth()->user()->empresas;
                $noti = Notificaciones::where('rfc',auth()->user()->RFC)
-               ->orWhere('receptorMensaje', auth()->user()->RFC)
+               ->orWhere('receptorMensaje', 'CDI1801116Y9')
                ->where('read_at', 0)
                ->orWhere('tipo','FC')
-               ->orWhere('tipo','M')
+
             //    ->orWhereNotNull('folioFiscal')
                ->orderBy('fecha', 'desc')
                ->orderBy('created_at', 'desc')
