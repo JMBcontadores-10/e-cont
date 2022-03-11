@@ -283,8 +283,7 @@ $pp = explode("/", $doc);
                                         @php
                                         Cheques::find($id)->update(['pendi' => 0]);
                                         @endphp
-
-                                        @if ($verificado == 1)
+                                        @if ($verificado == 1 && Auth::user()->tipo)
                                         @switch($contabilizado)
                                             @case(0)
                                                 <a class="parpadea icons fa fa-check" style="color: green" aria-hidden="true" onclick="alert('Revisado')"></a>
