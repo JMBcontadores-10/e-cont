@@ -47,6 +47,7 @@
   Guardando ajuste
   </div>
 
+  <br>
 <button type="submit"  wire:click="guardar()" class="btn btn-primary close-modal">Ajustar</button>
 
      </form>

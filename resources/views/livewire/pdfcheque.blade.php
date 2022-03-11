@@ -14,11 +14,11 @@
                 <div class="modal-header">
                     <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;" class="icons fas fa-balance-scale"> Ver PDF</span></h6>
                     @if($datos->nombrec=="0")
-                        <button id="mdlP" type="button" wire:click="refrecar()" class="close" data-dismiss="modal" aria-label="Close">
+                        <button id="mdlP{{$datos->id}}" type="button" wire:click="refrecar()" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true close-btn">×</span>
                         </button>
                     @else
-                        <button id="mdlP" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button id="mdlP{{$datos->id}}" type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true close-btn">×</span>
                         </button>
                    @endif
@@ -27,7 +27,7 @@
     {{--Cerramos la ventana cada vez que hagamos un cambio--}}
     <script>
         window.addEventListener('cerrarPdfmodal', event => {
-            $("#mdlP").click();
+            $("#mdlP"+event.detail.IdCheque).click();
         });
     </script>
 
@@ -87,12 +87,18 @@
         <div class="CuerpoNamePDFContainer">
             <span class="SpanNamePDF"> {{Str::limit(Str::afterLast($datos->nombrec, '&'), 10); }} <span>
         </div>
+
+        {{--Condicional para la accion eliminar, cuando el movimiento esta revisado--}}
+        @if ($datos->verificado == 0)
         <div class="BotonesPDFContainer">
             <!--Eliminar PDF-->
             <div class="BtnDelPDF" wire:click="eliminar()" wire:loading.attr="disabled">
                 <i class="icons fas fa-trash-alt"></i>
             </div>
         </div>
+        @endif
+
+        
      </div>
    @endif
 

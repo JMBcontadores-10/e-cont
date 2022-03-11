@@ -96,10 +96,5 @@ Route::get('/descargascfdi', [App\Http\Controllers\DescargascfdiController::clas
 Route::get('zip-download/{id}', [Eliminar::class, 'descargarZip']);
 Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
 
-//Rutas Leo
-
 //Ruta de la vista de cuentas por pagar en livewire
-Route::get('/cuentas-por-pagar',CuentasPorpagar::class)->name('cuenta');
-
-
-
+Route::get('/cuentaspagar', Cuentasporpagar::class)->name('cuentaspagar');

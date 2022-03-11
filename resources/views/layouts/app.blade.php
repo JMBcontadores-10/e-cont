@@ -279,7 +279,7 @@ $empresa=auth()->user->tipo;
     <!--========NOTIFICATION SECTION=============== -->
 
     <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0);" data-toggle="dropdown">
-        <div class="user-nav d-sm-flex d-none"><span class="user-name">{{ auth()->user()->nombre}}</span><span class="user-status text-muted"><i style="color:#90EE90; box-shadow: 0 0 5px #4f9;" class="fas fa-circle"></i>&nbsp;Conectado</span></div><span><img class="round" src="img/user.png" alt="avatar" height="40" width="40"></span></a>
+        <div class="user-nav d-sm-flex d-none"><span class="user-name">{{ucfirst(auth()->user()->nombre)}}</span><span class="user-status text-muted"><i style="color:#90EE90; box-shadow: 0 0 5px #4f9;" class="fas fa-circle"></i>&nbsp;Conectado</span></div><span><img class="round" src="img/user.png" alt="avatar" height="40" width="40"></span></a>
       <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item" href="page-user-profile.html"><i class="bx bx-user mr-50"></i> Editar Perfil</a><a class="dropdown-item" href="app-email.html"><i class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item" href="app-todo.html"><i class="bx bx-check-square mr-50"></i>Tareas</a><a class="dropdown-item" href="app-chat.html"><i class="bx bx-message mr-50"></i>Chats</a>
         <div class="dropdown-divider mb-0"></div>
         <form action="{{ route('logout') }}" method="POST">
@@ -338,6 +338,8 @@ $empresa=auth()->user->tipo;
           <li id="auditoria"><a class="d-flex align-items-center" href="{{('auditoria')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Auditoria</span></a>
           </li>
           <li id="consultas"><a class="d-flex align-items-center" href="{{('consultas')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Consultas</span></a>
+          </li>
+          <li id="monitoreo"><a class="d-flex align-items-center" href="{{('monitoreo')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Monitoreo de facturación</span></a>
           </li>
         </ul>
 

@@ -40,9 +40,9 @@ $class='';
 
 <div class="modal-body" style="color:#545252;"><!--modal body -->
 @if ($total==0)
-<button disabled class="btn btn-secondary mr-1 mb-1" wire:click="desvincular()">Desvincular Cheques </button>
+<button disabled class="btn btn-secondary mr-1 mb-1" wire:click="desvincular()">Desvincular factura</button>
 @else
-<button class="btn btn-secondary mr-1 mb-1" wire:click="desvincular()">Desvincular Cheques </button>
+<button class="btn btn-secondary mr-1 mb-1" wire:click="desvincular()">Desvincular factura </button>
 @endif
     {{-- &nbsp; {{$total}} --}}
  <div wire:loading wire:target="desvincular" >
@@ -55,7 +55,9 @@ $class='';
   </div>
 
 
-  <a  class="btn btn-success shadow mr-1 mb-1" href="{{ url('exportar', ['facturas' => $datos->_id])}}">Exportar a Excel</a>
+  <a class="btn btn-success shadow mr-1 mb-1 BtnVinculadas" href="{{ url('exportar', ['facturas' => $datos->_id])}}">Exportar a Excel</a>
+  <a class="btn btn-primary shadow mr-1 mb-1 BtnVinculadas" href="{{ url('cuentasporpagar') }}">Ir a Cuentas por pagar</a>
+
     <div id="resp-table">
         <div id="resp-table-body">
             <div class="resp-table-row"> {{----- incio row-----}}
@@ -133,6 +135,8 @@ $n=0;
   //$res_total = $total;
 
                }
+
+
             @endphp
 
             <div class="resp-table-row"> {{----- incio row-----}}
@@ -324,11 +328,11 @@ $iva_Egreso [] = $vIva;
         @if($efecto =='Egreso')
 
         <div class="table-body-cell" style="color: rgb(255, 85, 85);">{{ $efecto }}</div>
-			@elseif($efecto = 'Ingreso')
-            <div class="table-body-cell">{{ $efecto }}</div>
-			@else
-            <div class="table-body-cell">{{ $efecto }}</div>
-			@endif
+        @elseif($efecto = 'Ingreso')
+        <div class="table-body-cell">{{ $efecto }}</div>
+        @else
+        <div class="table-body-cell">{{ $efecto }}</div>
+        @endif
 
 			@if($efecto =='Egreso')
             @if (isset($subtotal))

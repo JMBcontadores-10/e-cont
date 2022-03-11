@@ -753,32 +753,25 @@ window.addEventListener('hola', event => {
       }
 
       //Mostrar cheques revisados (Fecha)
-      function MostrarRevisado(Id, Contenido){
+      function MostrarRevisado(Id){
           if($('#MostrarRevi'+Id).is(":visible")){
             $('#MostrarRevi'+Id).hide();
-            $('#MostrarRevi'+Id+" .TxtRevicion").text("");
           }else{
             //Escondemos el mensaje de contabilizado
             $('#MostrarConta'+Id).hide();
-            $('#MostrarConta'+Id+" .TxtRevicion").text("");
             //Mostramos el mensaje de revisado
             $('#MostrarRevi'+Id).show();
-            $('#MostrarRevi'+Id+" .TxtRevicion").text(Contenido);
           }
       }
 
       //Mostrar la contabilidad
-      function MostrarConta(Id, Poliza, Fecha){
+      function MostrarConta(Id){
         if($('#MostrarConta'+Id).is(":visible")){
           $('#MostrarConta'+Id).hide();
-          $('#MostrarConta'+Id+" .TxtRevicion").text("");
         }else{
           //Escodemos el mesaje de revisado
           $('#MostrarRevi'+Id).hide();
-          $('#MostrarRevi'+Id+" .TxtRevicion").text("");
           //Mostramos el mensaje de contabilizado
           $('#MostrarConta'+Id).show();
-          $('#MostrarConta'+Id+" .TxtNomConta").text(Poliza);
-          $('#MostrarConta'+Id+" .TxtFechaConta").text(Fecha);
         }
     }

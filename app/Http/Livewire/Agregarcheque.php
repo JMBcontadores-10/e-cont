@@ -33,6 +33,7 @@ class Agregarcheque extends Component
     $pushArchivos=[],
     $step3;
 
+
     public $idNuevoCheque;
 
     protected $listeners = ['actualizar' => '$refresh' ]; // listeners para refrescar el modal
@@ -256,7 +257,7 @@ $this->emitTo( 'notification-secction','avisoPush');
 $this->Nuevo_numcheque="";
 $this->Nuevo_fecha="";
 $this->Nuevo_beneficiario="";
-$this->importeCheque="";
+$this->Nuevo_importecheque="";
 $this->Nuevo_tipomov="";
 $this->Nuevo_tipoopera="";
 $this->idNuevoCheque=null;
