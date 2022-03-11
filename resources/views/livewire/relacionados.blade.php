@@ -139,14 +139,17 @@ $ruta='storage/contarappv1_descargas/'.$datos1->rfc.'/'.$anioPago.'/Cheques_Tran
             <a class="DocumentPDF fas fa-file-pdf" target="_blank" href="{{asset($ruta)}}"></a>
         </div>
         <div class="CuerpoNamePDFContainer">
-            <span class="SpanNamePDF">{{Str::limit(Str::afterLast($docs, '#'), 10); }}<span>
+            <span class="SpanNamePDF">{{Str::limit(Str::afterLast($docs, '&'), 10); }}<span>
         </div>
+        {{--Condicional para la accion eliminar, cuando el movimiento esta revisado--}}
+        @if ($datos1->verificado == 0)
         <div class="BotonesPDFContainer">
             <!--Eliminar PDF-->
             <div class="BtnDelPDF" wire:click="eliminar('{{$docs}}')" wire:loading.attr="disabled">
                 <i class="icons fas fa-trash-alt"></i>
             </div>
         </div>
+        @endif
 
                          </div>
                          @endif

@@ -1,6 +1,6 @@
 <div>
 
-  
+
 
     @php
   $dtz = new DateTimeZone("America/Mexico_City");
@@ -14,10 +14,10 @@
 
         document.getElementById("mdlEl").click();
         if ($('.modal-backdrop').is(':visible')) {
-  $('body').removeClass('modal-open'); 
-  $('.modal-backdrop').remove(); 
+  $('body').removeClass('modal-open');
+  $('.modal-backdrop').remove();
 };
-      
+
       });
 
         </script>
@@ -65,31 +65,31 @@ function miFunc() {
                     <form  wire:submit.prevent="eliminar">
                         @csrf
                        <h5> ¿Seguro que deseas eliminar este cheque?</h5>
-                   <input type="hidden" wire:model="eliminarCheque._id"> 
+                   <input type="hidden" wire:model="eliminarCheque._id">
                    @if($datos->nombrec !="0" || $datos->doc_relacionados[0] !=null || $numVinculados!=0 )
                       <p><strong> Se realizarán las siguientes acciones: </strong>  </p><br>
                       @endif
-                      <ul> 
+                      <ul>
 
-                         @if ($datos->nombrec !="0") 
-                         <li>Se eliminara el PDF principal </li>
+                         @if ($datos->nombrec !="0")
+                         <li>Se eliminará el PDF principal </li>
                          @endif
                          @if (!$datos->doc_relacionados[0] ==null )
                          <li>Se eliminará(n) lo(s) {{count($datos->doc_relacionados)}} documentos adicionales </li>
                          @endif
                          @if ($numVinculados!=0)
-                         <li>Tiene {{$numVinculados}} factura(s) viculadas, regresara a tu modulo de cuentas por pagar </li>
-                         @endif 
+                         <li>Tienes {{$numVinculados}} factura(s) viculada(s), regresará a tu módulo de cuentas por pagar </li>
+                         @endif
 
                       </ul>
-                 
+
                   @if($datos->nombrec !="0" || $datos->doc_relacionados[0] !=null)
                   <hr>
                   <p>
                   Atención: E-cont no se hace responsable por los archivos que se van a eliminar.<br>
-                  Si no cuentas con un respaldo de tus pdf, puedes hacerlo antes de eliminar este cheque.
+                  Si no cuentas con un respaldo de tus PDF, puedes hacerlo antes de eliminar este cheque.
                   </p>
-                 
+
                   <a href="{{ url('zip-download', ['idguest' => $datos->_id])}}"> Descarga una copia de tus archivos </a>
                    @endif
 
@@ -97,12 +97,12 @@ function miFunc() {
                     <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
                       <div></div>
                       <div></div>
-                      
+
                   </div>
                   Eliminando Cheque...
                   </div>
                 <div class="modal-footer">
-                    
+
                     <button type="submit"  wire:click="eliminar()"   class="btn btn-primary close-modal">Si</button>
                     <button type="button" class="btn btn-secondary close-btn" data-dismiss="modal">No</button>
                 </div>

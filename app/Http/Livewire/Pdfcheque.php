@@ -87,15 +87,9 @@ protected function rules(){
  
  Storage::disk('public2')->delete($path);
 
-
-
-
-
-
-
  
 
- $this->dispatchBrowserEvent('cerrarPdfmodal', []);
+ $this->dispatchBrowserEvent('cerrarPdfmodal', ["IdCheque" => $this->pdfcheque->id]);
 
 
  

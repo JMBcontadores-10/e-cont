@@ -46,61 +46,12 @@ window.addEventListener('disabled', event => {
   <section class="invoice-list-wrapper">
     <!-- create invoice button-->
     <div class="invoice-create-btn mb-1">
-
         <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static" data-keyboard="false"    data-target="#nuevo-cheque" class="btn btn-primary glow invoice-create"
     >Nuevo Cheque/Transferencia </a>
     </div>
-    <!--<form action="{{ url('vincular-cheque') }}" method="POST">
-        @csrf
-        <button class="button2">Registrar Cheque/Transferencia</button>
-    </form>-->
-
-   <!-- <form  wire:submit.prevent="buscar">
-        @csrf
-
-    <input wire:model.defer="search" type="text"  name="ajuste" class="form-control">
-
-    <div wire:loading wire:target="buscar" >
-        <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
-          <div></div>
-          <div></div>
-
-      </div>
-      Guardando ajuste
-      </div>
-
-    <button type="submit"   class="btn btn-primary close-modal">Ajustar</button>
-
-         </form>-->
-
 @empty(!$empresas)
 
-
-
-
-{{-- <h4>{{$empresas[3][0]}}</h4> --}}
-
-
-
-
-{{$empresa}}
-
-
-
-<br><br>
-
-{{--@php
-foreach($empresas as $fila)
-{
-    foreach($fila as $nombre)
-    {
-	echo " $nombre ";
-    }
-
-	echo "<br>";
-}
-@endphp--}}
-            <label for="inputState">Empresa</label>
+            <label for="inputState">Empresa: {{$empresa}}</label>
             <select wire:loading.attr="disabled"   wire:model="rfcEmpresa" id="inputState1" class=" select form-control"  >
                 <option  value="00" >--Selecciona Empresa--</option>
                 <?php $rfc=0; $rS=1;foreach($empresas as $fila)
@@ -225,7 +176,6 @@ foreach($empresas as $fila)
 
           @php $arreglo=""; @endphp
           @foreach ($colCheques as $i)
-
           @php
 
 
@@ -326,22 +276,30 @@ $pp = explode("/", $doc);
                                         @php
                                             Cheques::find($id)->update(['pendi' => 1]);
                                         @endphp
-
-                                         <a style="color:red;"  class="parpadea fas fa-exclamation"
-                                          onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})">
-                                        </a>
+                                         <a style="color:red; padding: 0px 5px 0px 5px;"  class="parpadea fas fa-exclamation"
+                                          onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})"></a>
 
                                         @else
-
                                         @php
-                                            Cheques::find($id)->update(['pendi' => 0]);
+                                        Cheques::find($id)->update(['pendi' => 0]);
                                         @endphp
 
-
+                                        @if ($verificado == 1)
+                                        @switch($contabilizado)
+                                            @case(0)
+                                                <a class="parpadea icons fa fa-check" style="color: green" aria-hidden="true" onclick="alert('Revisado')"></a>
+                                                @break
+                                            
+                                            @case(1)
+                                                <a class="parpadea icons fas fa-calculator" style="color: blue" aria-hidden="true" onclick="alert('Contabilizado')"></a>
+                                                @break
+                                            @default
+                                        @endswitch
+                                        @endif
                                         @endif
 
 
-              {{$fecha}}</td>
+            {{$fecha}}</td>
 
               <td>
                 <a style="color:#3498DB" >{{ Str::limit($numCheque, 20); }}</a>
@@ -385,8 +343,14 @@ $pp = explode("/", $doc);
                         @else
                             @php $class="icons" @endphp
                         @endif
+                        {{--Condicional para las acciones de movimientos ya revisados--}}
+                        @if ($verificado == 1)
+                        <a class="{{$class}} fas fa-balance-scale"
+                        data-toggle="modal" data-target="#Revisado"></a>
+                        @else
                         <a class="{{$class}} fas fa-balance-scale"
                         data-toggle="modal" data-target="#ajuste{{$id}}"></a>
+                        @endif
                     </div>
                   @endif
 
@@ -427,11 +391,18 @@ $pp = explode("/", $doc);
      data-toggle="modal" data-target="#pdfcheque{{$id}}"  onclick="filepondEditCheque(this.id)" > </a>
          @endif
                   </div>
+
                   <div>
                       <div class="tr"> Doctos. Adicionales</div>
+
+                      {{--Condicional para acciones con movimientos revisados--}}
+                      @if ($verificado == 1)
                       <a class="icons fas fa-upload"
-                      data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"  data-backdrop="static" data-keyboard="false"   onclick="filepond(this.name)"  data-target="#uploadRelacionados">
-                     </a>{{-- id="{{$id}}"--}}
+                      data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"  data-backdrop="static" data-keyboard="false"   onclick="filepond(this.name)"  data-target="#Revisado"></a>
+                      @else
+                      <a class="icons fas fa-upload"
+                      data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"  data-backdrop="static" data-keyboard="false"   onclick="filepond(this.name)"  data-target="#uploadRelacionados"></a>
+                      @endif
 
                       &nbsp; | &nbsp;
                       @if (!$docAdi['0'] == '')
@@ -455,19 +426,8 @@ $pp = explode("/", $doc);
 
                       <div class="tr">Vinculadas</div>
 
-
-
-                                            {{-- <form action="{{ url('detallesCT') }}" method="POST">
-                                              @csrf
-                                              <input type="hidden" name="id" value="{{ $id }}">
-                                              <input type="hidden" name="verificado" value="{{ $verificado }}">
-                                              <button   style= " border:none" >
-ver
-                                            </button>
-                                          </form> --}}
-
                                           <a  class="icons fas fa-eye"
-                                          data-toggle="modal"     data-target="#facturasVinculadas{{$id}}" >{{--id="{{$id}}"--}}
+                                          data-toggle="modal"     data-target="#facturasVinculadas{{$id}}" >
                                          </a>
 
 
@@ -482,9 +442,12 @@ ver
                   <div>
                 <div class="tr">Editar</div>
 
-                <a  class="icons fas fa-edit"
-                data-toggle="modal"     data-target="#editar-{{$id}}" >{{--id="{{$id}}"--}}
-               </a>
+                    {{--Condicional para acciones con movimientos revisados--}}
+                    @if ($verificado == 1)
+                    <a class="icons fas fa-edit" data-toggle="modal" data-target="#Revisado" ></a>
+                    @else
+                    <a class="icons fas fa-edit" data-toggle="modal" data-target="#editar-{{$id}}" ></a>
+                    @endif
 
                   </div>
 
@@ -492,10 +455,12 @@ ver
 
                       <div class="tr">Eliminar Cheque</div>
 
-                      <a  class="icons fas fa-trash-alt fa-lg"
-                data-toggle="modal"     data-target="#eliminar-{{$id}}" >{{--id="{{$id}}"--}}
-                                       </a>
-
+                        {{--Condicional para acciones con movimientos revisados--}}
+                        @if ($verificado == 1)
+                        <a class="icons fas fa-trash-alt fa-lg" data-toggle="modal" data-target="#Revisado" ></a>
+                        @else
+                        <a class="icons fas fa-trash-alt fa-lg" data-toggle="modal" data-target="#eliminar-{{$id}}" ></a>
+                        @endif
 
                         </div>
 
@@ -513,17 +478,17 @@ ver
                 <label class="form-check-label" for="flexCheckChecked">Revisado</label>
             </div>
         @else
-            <div id="{{$id}}" class="RevisadoContainer" onclick="MostrarRevisado(this.id, '{{$revisado_fecha}}')">
+        <div id="Revisado{{$id}}" onclick="ToolRevisado(this.id)">
+            <div id="{{$id}}" class="RevisadoContainer" onclick="MostrarRevisado(this.id)">
                 <a class="icons far fa-check-circle BtnRevisado" style="color: green"></a>
                     <div id="MostrarRevi{{$id}}" class="MensajeContainer">
                         <div class="Contenido">
                             <p class="TextoMensaje">Revisado el: </p>
-                            <p class="TxtRevicion TextoMensaje"></p>
+                            <p class="TextoMensaje">{{$revisado_fecha}}</p>
                         </div>
                     </div>
             </div>
-        @if (isset($revisado_fecha))
-        @endif
+        </div>
     </div>
     <div>
         @if ($verificado == 1 and $contabilizado == 1)
@@ -536,15 +501,15 @@ ver
             <a class="icons fas fa-file-contract"
             data-toggle="modal" data-target="#poliza{{$id}}"></a>
         @elseif ($verificado == 1 and $contabilizado == 1)
-            <div id="{{$id}}" class="RevisadoContainer" onclick="MostrarConta(this.id, '{{$poliza}}', '{{$contabilizado_fecha}}')">
-                <i style="color: blue; " class="icons fas fa-calculator"></i>
-                <div id="MostrarConta{{$id}}" class="MensajeContainer">
-                    <div class="Contenido">
-                        <p class="TextoMensaje TxtNomConta"></p>
-                        <p class="TextoMensaje TxtFechaConta"></p>
-                    </div>
+        <div id="{{$id}}" class="RevisadoContainer" onclick="MostrarConta(this.id)">
+            <i style="color: blue; " class="icons fas fa-calculator"></i>
+            <div id="MostrarConta{{$id}}" class="MensajeContainer">
+                <div class="Contenido">
+                    <p class="TextoMensaje">{{$poliza}}</p>
+                    <p class="TextoMensaje">{{$contabilizado_fecha}}</p>
                 </div>
             </div>
+        </div>
         @endif
 
         @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
@@ -673,85 +638,24 @@ ver
       {{--  @include('livewire.ajuste')--}}
 </div><!-- fin div contenedor principal-->
 
- {{-- @php
-
-    $col = Cheques::
-
-        where('rfc','CDI1801116Y9')
-
-        ->get()
-        ;
-
-
-@endphp
-
-@if(empty($col))
-
-
-
-@else
-@foreach ($col as $i)
-
-@php
- $editar = true;
-$id = $i->_id;
-$tipo = $i->tipomov;
-$fecha = $i->fecha;
-$dateValue = strtotime($fecha);
- $anio = date('Y',$dateValue);
-$rutaDescarga = 'storage/contarappv1_descargas/'.$rfc.'/'.$anio.'/Cheques_Transferencias/';
-$numCheque = $i->numcheque;
-$beneficiario = $i->Beneficiario;
-$importeC = $i->importecheque;
-$sumaxml = $i->importexml;
-$ajuste = $i->ajuste;
-$verificado = $i->verificado;
-$faltaxml = $i->faltaxml;
-$contabilizado = $i->conta;
-$pendiente = $i->pendi;
-    $tipoO = $i->tipoopera;
-    if ($tipoO == 'Impuestos' or $tipoO == 'Parcialidad') {
-        $diferencia = 0;
-    } else {
-        $diferencia = $importeC - abs($sumaxml);
-        $diferencia = $diferencia - $ajuste;
-    }
-    if ($diferencia > 1 or $diferencia < -1) {
-        $diferenciaP = 0;
-    } else {
-        $diferenciaP = 1;
-    }
-    $diferencia = number_format($diferencia, 2);
-    $nombreCheque = $i->nombrec;
-    if ($nombreCheque == '0') {
-        $subirArchivo = true;
-        $nombreChequeP = 0;
-    } else {
-        $subirArchivo = false;
-        $nombreChequeP = 1;
-    }
-    $rutaArchivo = $rutaDescarga . $nombreCheque;
-    if (!empty($i->doc_relacionados)) {
-        $docAdi = $i->doc_relacionados;
-    }
-    $revisado_fecha = $i->revisado_fecha;
-    $contabilizado_fecha = $i->contabilizado_fecha;
-    $poliza = $i->poliza;
-    $comentario = $i->comentario;
-@endphp
-
-<livewire:ajuste  :ajusteCheque=$i : key="$i->id" >
-<livewire:comentarios  :comentarioCheque=$i : key="$i->id" >
-
-
-
-
-@endforeach
-<livewire:pdfcheque :pdfcheque=$i : key="$i->id" >
-<livewire:editar  :editCheque=$i : key="$i->id">
-<livewire:relacionados  :filesrelacionados=$i : key="$i->id" >
-        <livewire:pdfcheque :pdfcheque=$i : key="$i->id" >
-
-@endif  --}}
-
-
+{{--Modal para las acciones bloqueadas por movimientos revisadps--}}
+{{--Modal de detalles de cuentas por pagar--}}
+    {{--Creacion del modal--}}
+    <div wire:ignore.self class="modal fade" id="Revisado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                {{--Encabezado--}}
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;" class="icons far fa-check-circle"> Movimiento revisado</span></h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true close-btn">×</span>
+                   </button>
+                </div>
+                {{--Cuerpo del modal--}}
+                <div class="modal-body">
+                    <p>No puedes realizar esta acción en un movimiento revisado</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{{--************************************************************--}}
