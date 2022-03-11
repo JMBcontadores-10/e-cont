@@ -97,4 +97,4 @@ Route::get('zip-download/{id}', [Eliminar::class, 'descargarZip']);
 Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
 
 //Ruta de la vista de cuentas por pagar en livewire
-Route::get('/cuentaspagar', CuentasPorpagar::class)->name('cuentaspagar');
+Route::get('/cuentaspagar', Cuentasporpagar::class)->name('cuentaspagar');
