@@ -490,8 +490,7 @@ $pp = explode("/", $doc);
                         </div>
                     </div>
             </div>
-
-
+        </div>
     @endif
     </div>
 
@@ -521,11 +520,8 @@ $pp = explode("/", $doc);
         @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
             @php Cheques::find($id)->update(['pendi' => 1]); @endphp
         @endif
-        @endif
     </div>
-
-
-
+    @endif
 
                                   <div>
 
