@@ -9,6 +9,9 @@
     window.addEventListener('cier', event => {
 
         document.getElementById("mdla").click();
+        if ($('.modal-backdrop').is(':visible')) {
+  $('body').removeClass('modal-open');
+  $('.modal-backdrop').remove();
 
 
       });

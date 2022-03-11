@@ -429,9 +429,18 @@ $pp = explode("/", $doc);
                   </div>
                   <div>
                       <div class="tr"> Doctos. Adicionales</div>
-                      <a class="icons fas fa-upload"
+          @if($verificado==1)
+          <a class="icons fas fa-upload"
+          onclick="alert('ya esta revisado no puedes hacer nada :)')">
+         </a>{{-- id="{{$id}}"--}}
+            @else
+
+
+          <a class="icons fas fa-upload"
                       data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"  data-backdrop="static" data-keyboard="false"   onclick="filepond(this.name)"  data-target="#uploadRelacionados">
                      </a>{{-- id="{{$id}}"--}}
+
+       @endif
 
                       &nbsp; | &nbsp;
                       @if (!$docAdi['0'] == '')
@@ -505,9 +514,9 @@ ver
 <!--Seccion revisado-->
     <div>
         <div class="tr">Revisado</div>
-        @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+        @if($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
             @php Cheques::find($id)->update(['pendi' => 1]); @endphp
-        @elseif ($verificado == 0 )
+        @elseif($verificado == 0 )
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" wire:model="revisado"   value="{{$id}}" name="stOne{{$id}}" id="stOne"  >
                 <label class="form-check-label" for="flexCheckChecked">Revisado</label>
@@ -522,9 +531,12 @@ ver
                         </div>
                     </div>
             </div>
-        @if (isset($revisado_fecha))
-        @endif
+
+
+    @endif
     </div>
+
+
     <div>
         @if ($verificado == 1 and $contabilizado == 1)
             <div class="tr">Contabilizado</div>
@@ -552,7 +564,7 @@ ver
         @endif
         @endif
     </div>
-@endif
+
 
 
 
@@ -645,6 +657,8 @@ ver
                     @if(!$i->faltaxml ==0)
                 <livewire:facturas-vinculadas  :facturaVinculada=$i :wire:key="'user-profile-eight-'.$i->_id" >
                     @endif
+
+
           </tr>
 
            @endforeach

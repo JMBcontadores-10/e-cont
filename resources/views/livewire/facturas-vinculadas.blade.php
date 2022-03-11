@@ -89,9 +89,11 @@ $iva_Egreso =[];
 $Iva=[];
 $Iv = [];
 $n=0;
+
         @endphp
         @foreach ($colM as $i)
             @php
+
 
                 $emisorRfc = $i->emisorRfc;
                 $arrRfc[] = $emisorRfc;
@@ -99,7 +101,7 @@ $n=0;
                 $folioF = $i->folioFiscal;
                 $fechaE = $i->fechaEmision;
                 $efecto = $i->efecto;
-                $total = $i->total;
+                $total += $i->total;
                 $estado = $i->estado;
 
                 if ($estado== 'Cancelado'){
@@ -195,8 +197,11 @@ $subtotal =$v['SubTotal'];
 
 //$iva=$v['Impuestos.TotalImpuestosTrasladados'];
 $total = $v['Total'];
-$iva=$v['Impuestos.Traslados.Traslado.0.Importe']; // Imprimir el IVA .16% "002"
-                       $folio = $v['Folio'];
+
+ $iva=$v['Impuestos.Traslados.Traslado.0.Importe']; // Imprimir el IVA .16% "002"
+$ivaa=$v['Impuestos.Traslados.Traslado'];
+
+$folio = $v['Folio'];
 
 
 
@@ -234,9 +239,7 @@ $a [] = $var; //Array completo del subtotal de los ingresos
 $Iv [] = $vIva; //Array completo del Iva de todos los ingresos
 
 
-}
-
-if ($efecto == 'Egreso') {
+}elseif($efecto == 'Egreso') {
 
 $egreso[]=$vTotal;
 $sub_Egreso[] = $var;
@@ -284,10 +287,10 @@ $iva_Egreso [] = $vIva;
 <div class="table-body-cell">
                @if (!$colX->isEmpty())
                  @foreach ($concepto as $c)
-                    {{ ++$nCon }}.{{Str::limit($c['Descripcion'],25); }} <br>
+                    {{-- {{ ++$nCon }}.{{Str::limit($c['Descripcion'],25); }} <br> --}}
 
                 @endforeach
-                {{-- {{Str::limit($concepto[0]['Descripcion'],25); }} --}}
+                 {{Str::limit($concepto[0]['Descripcion'],25); }}
 
                @else
                  {{ Str::limit( $concepto,25);}}
@@ -329,8 +332,8 @@ $iva_Egreso [] = $vIva;
 
 			@if($efecto =='Egreso')
             @if (isset($subtotal))
-                
-           
+
+
             <div class="table-body-cell" style="color: rgb(255, 85, 85);">${{ number_format($subtotal,2) }}</div>
             @endif
 			@elseif($efecto = 'Ingreso')
@@ -345,7 +348,20 @@ $iva_Egreso [] = $vIva;
             @if (empty($iva))
             <div class="table-body-cell">$ 0.0</div>
                             @elseif ($iva=="0.00")
-                            <div class="table-body-cell">$ 0.0</div>
+                            <div class="table-body-cell">
+
+                              @foreach ($ivaa as $item)
+
+                              @if ($item['TasaOCuota']=="0.160000")
+
+                              {{  $item['Importe']}}
+
+                               @endif
+                              @endforeach
+
+
+
+                            </div>
 
 
 			@elseif ($efecto =='Egreso')
@@ -353,7 +369,20 @@ $iva_Egreso [] = $vIva;
                             @else
 
 
-                            <div class="table-body-cell">${{ $iva }}</div>
+                            <div class="table-body-cell">
+                                @foreach ($ivaa as $itemm)
+
+                                @if ($itemm['TasaOCuota']=="0.160000")
+
+                                {{  $itemm['Importe']}}
+
+                                @else
+
+                                 @endif
+                                @endforeach
+
+
+                               </div>
                             @endif
 
 			@if($efecto =='Egreso')

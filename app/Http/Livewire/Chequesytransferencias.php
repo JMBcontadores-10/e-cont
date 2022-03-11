@@ -378,6 +378,10 @@ if($this->impresion){
     }
 
 
+    public function revisado($id){
+
+        $this->emit('uploadrelacionados',$id);
+    }
 
 
 

@@ -9,9 +9,9 @@ class Uploadrelacionados extends Component
 
 
     protected $listeners = ['refreshUpload' => 'render' ]; // listeners para refrescar el modal
-   
 
-   
+
+
 
 
 
@@ -23,11 +23,11 @@ class Uploadrelacionados extends Component
 
     function refreshh(){
 
-        // 
+        //
         $this->emitUp('chequesRefresh');//actualiza la tabla cheques y transferencias
          $this->emitSelf('refreshUpload');
 
-       
+
         // $this->emit('refreshUpload');
     }
 }
