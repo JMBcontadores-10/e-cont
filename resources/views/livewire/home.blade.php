@@ -100,7 +100,7 @@
                             {{--Movimientos pendientes--}}
                             <div class="row" style="text-align: center">
                               <div class="col-1">
-                                <i class="fas fa-exclamation fa-2x" style="color: red"></i>
+                                <i class="fas fa-exclamation fa-2x" style="padding: 0px 0px 0px 8px; color: red"></i>
                               </div>
                               <div class="col">
                                 <h6><b>Total de <br> pendientes</b></h6>
