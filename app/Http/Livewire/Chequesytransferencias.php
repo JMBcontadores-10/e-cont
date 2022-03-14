@@ -13,6 +13,7 @@ use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 
 
+
 class Chequesytransferencias extends Component
 {
 

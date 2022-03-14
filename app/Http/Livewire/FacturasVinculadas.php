@@ -47,7 +47,7 @@ if($this->checkedDesvincular){
 
 
 
-        return view('livewire.facturas-vinculadas',['colM'=>$colM,'datos'=>$this->facturaVinculada,'total'=>$this->total]);
+        return view('livewire.facturas-vinculadas',['colM'=>$colM,'datos'=>$this->facturaVinculada,'total'=>$this->total,'cheque_id'=>$this->facturaVinculada->_id]);
     }
 
 public function desvincular(){

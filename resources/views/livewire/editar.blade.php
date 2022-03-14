@@ -1,6 +1,6 @@
 <div>
 
-  
+
 
     @php
   $dtz = new DateTimeZone("America/Mexico_City");
@@ -12,9 +12,9 @@
 <script>
     window.addEventListener('cerrarEditar', event => {
 
-        document.getElementById("mdlE").click();
+        document.getElementById("mdlE{{$datos->_id}}").click();
 
-      
+
       });
 
         </script>
@@ -26,7 +26,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"  class="icons fas fa-edit fa-lg"> Editar</span></h6>
-                    <button id="mdlE" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button id="mdlE{{$datos->_id}}" type="button" class="close" data-dismiss="modal" aria-label="Close">
                          <span aria-hidden="true close-btn">×</span>
                     </button>
                 </div>
@@ -68,7 +68,7 @@ function miFunc() {
                         </div>-->
                     <div class="form-row">
                         <div class="form-group col-md-6">
-                            
+
                             <label for="exampleFormControlInput1">Forma de pago</label>
 
                             <select name="tipo" class="form-control" wire:model="editCheque.tipomov">
@@ -86,7 +86,7 @@ function miFunc() {
                             @error('numcheque') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
 
-                    </div><!-- fin group 1--> 
+                    </div><!-- fin group 1-->
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="exampleFormControlInput1">Fecha de pago</label>
@@ -125,7 +125,7 @@ function miFunc() {
                 </div>
 
                 <div class="form-group col-md-6">
-                    
+
                 </div>
 
             </div>
@@ -134,7 +134,7 @@ function miFunc() {
                 <div id="drop-zone">
                     <p class="mt-5 text-center">
                         <p class="pf">Actualizar Cheque/Transferencia (solo PDF):</p>
-                   
+
 
                           <input  type="file" accept=".pdf"
                         wire:model="editChequenombrec" class="btn text-dark " />
@@ -154,7 +154,7 @@ function miFunc() {
                     <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
                       <div></div>
                       <div></div>
-                      
+
                   </div>
                   Guardando cambios
                   </div>

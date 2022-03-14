@@ -3,6 +3,8 @@
 
     @php
 use App\Models\Cheques;
+use App\Models\XmlR;
+use App\Models\MetadataR;
 use App\Http\Controllers\ChequesYTransferenciasController;
 use Illuminate\Support\Facades\DB;
 @endphp
@@ -35,6 +37,11 @@ window.addEventListener('disabled', event => {
 
 
 
+@php
+
+
+
+@endphp
 
           <!-- BEGIN: Content-->
     <div class="app-content content">
@@ -174,9 +181,15 @@ window.addEventListener('disabled', event => {
             </tr>
           </thead>
 
-          @php $arreglo=""; @endphp
+          @php $arreglo="";
+
+          $totalVinculadas=0;
+          @endphp
           @foreach ($colCheques as $i)
           @php
+
+
+
 
 
            $editar = true;
@@ -298,7 +311,11 @@ $pp = explode("/", $doc);
                                         @endif
 
 
-            {{$fecha}}</td>
+            {{$fecha}} &nbsp;
+
+
+
+            </td>
 
               <td>
                 <a style="color:#3498DB" >{{ Str::limit($numCheque, 20); }}</a>
@@ -615,7 +632,9 @@ $pp = explode("/", $doc);
 
 
           </tr>
+       @php
 
+       @endphp
            @endforeach
           </tbody>
         </table>
