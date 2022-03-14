@@ -96,14 +96,13 @@ $n=0;
         @foreach ($colM as $i)
             @php
 
-
                 $emisorRfc = $i->emisorRfc;
                 $arrRfc[] = $emisorRfc;
                 $emisorNombre = $i->emisorNombre;
                 $folioF = $i->folioFiscal;
                 $fechaE = $i->fechaEmision;
                 $efecto = $i->efecto;
-                $total += $i->total;
+                $total = $i->total;
                 $estado = $i->estado;
 
                 if ($estado== 'Cancelado'){
@@ -392,7 +391,7 @@ $iva_Egreso [] = $vIva;
 			@if($efecto =='Egreso')
 
 			<div class="table-body-cell" style="color: rgb(255, 85, 85);">${{ number_format($total, 2) }}</div>
-			@elseif($efecto = 'Ingreso')
+			@elseif($efecto == 'Ingreso')
 
             <div class="table-body-cell">${{ number_format($total, 2) }}</div>
 			@else
@@ -462,6 +461,9 @@ $iva_Egreso [] = $vIva;
 			<div class="table-body-cell"><b> $ {{number_format($suma_sub, 2)}} </b> </div>
                 <div class="table-body-cell"><b> $ {{number_format($suma_iva, 2)}}</b> </div>
                     <div class="table-body-cell"><b> $ {{number_format($suma_total, 2)}}</b> </div>
+
+
+
 
 		@endif
 
