@@ -3,6 +3,7 @@
     //Llamamos a los modelos requeridos
     use App\Models\MetadataR;
     use App\Models\ListaNegra;
+    use App\Models\XmlR;
   
     //Obtenemos la clase para agregar a la tabla
     $rfc = Auth::user()->RFC;
@@ -107,7 +108,17 @@
                   @endif
                 </select>
               </div>
-  
+
+              <div wire:loading>
+                <br>
+                <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+                  <div></div>
+                  <div></div>
+                </div>
+                <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
+                <br>
+              </div>
+
               {{--Tabla--}}
               <div class="table-responsive">
                 <table id="example" class="{{$class}}" style="width:100%">
@@ -127,7 +138,6 @@
                     {{--Contenido de nuestra tabla--}}
                     {{--Llenamos nuestra tabla con un foreach--}}
                     @foreach ($col as $i)
-  
                     @php
                     //Variable para obtener el total
                     $SumTotal = 0;
@@ -136,7 +146,7 @@
                     $DatosMetaR = MetadataR::
                     select('total', 'efecto')
                     ->where('receptorRfc', $this -> rfcEmpresa)
-                    ->where('emisorRfc', $i -> emisorRfc)
+                    ->where('emisorRfc', $i->emisorRfc)
                     ->where('estado', '<>', 'Cancelado')
                     ->whereNull('cheques_id')
                     ->get();
@@ -153,16 +163,10 @@
   
                       $SumTotal = $SumTotal + $TotalFloat;
                     }
-  
-                    //Metemos los datos en variables
-                    $CFDIid = $i->_id;
-                    $RFCEmisor = $i->emisorRfc;
-                    $RazonSoc = $i->emisorNombre;
                     @endphp
   
                     {{--Condicional para saber si hay mas de un CFDI--}}
                     @if (!$NoCFDI == 0)
-                    
                     <tr>
                       {{--Contenido de la columna para vincular varios--}}
                       <td class="text-center align-middle VincVarProv">
@@ -171,10 +175,10 @@
                         </div>
                       </td>
                       <td class="text-center align-middle">
-                        <span class="invoice-amount">{{$RFCEmisor}}</span>
+                        <span class="invoice-amount">{{$i->emisorRfc}}</span>
                       </td>
                       <td class="text-center align-middle">
-                        <span class="invoice-amount">{{$RazonSoc}}</span>
+                        <span class="invoice-amount">{{$i->emisorNombre}}</span>
                       </td>
   
                       {{-- Valida si existe una coincidencia de RFC en la lista negra --}}
@@ -191,14 +195,11 @@
                         <span class="invoice-amount">${{number_format($SumTotal, 2)}}</span>
                       </td>
                       <td class="text-center align-middle">
-                        <a data-toggle="modal" data-target="#detalles{{$CFDIid}}" class="icons fas fa-eye"></a>
+                        <a data-toggle="modal" data-target="#detalles" class="icons fas fa-eye" wire:click="EmitRFC('{{$i->emisorRfc}}')"></a>
                       </td>
                       <td class="text-center align-middle"></td>
                     </tr>
                     @endif
-  
-                    {{--Llamamos a los detalles con el Id--}}
-                    <livewire:detalles :MetaDatos=$i :wire:key="'user-profile-one-'.$i->_id">
                     @endforeach
                   </tbody>
                 </table>
@@ -207,4 +208,143 @@
         </div>
     </div>
   </div>
+
+    {{--Llamamos a las modales--}}
+    {{--Modal de detalles de cuentas por pagar--}}
+    {{--Creacion del modal--}}
+    <div wire:ignore.self class="modal fade" id="detalles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
+          <div class="modal-content">
+              {{--Encabezado--}}
+              <div class="modal-header">
+                  <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;" class="icons fas fa-folder-open">Cuentas por pagar</span></h6>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true close-btn">×</span>
+                 </button>
+              </div>
+              {{--Cuerpo del modal--}}
+              <div class="modal-body">
+                {{--Generacion de la tabla--}}
+                <div id="resp-table">
+                  <div id="resp-table-body">
+                    {{--Encabezado de la tabla--}}
+                      <div class="resp-table-row">
+                          <div class="tr table-body-cell">UUID</div>
+                          <div class="tr table-body-cell">Fecha Emisión</div>
+                          <div class="tr table-body-cell">Emisor</div>
+                          <div class="tr table-body-cell">Concepto</div>
+                          <div class="tr table-body-cell">Folio</div>
+                          <div class="tr table-body-cell">Metodo - Pago</div>
+                          <div class="tr table-body-cell">UUID Relacionado</div>
+                          <div class="tr table-body-cell">Folio</div>
+                          <div class="tr table-body-cell">Efecto</div>
+                          <div class="tr table-body-cell">Total</div>
+                          <div class="tr table-body-cell">Estado</div>
+                          <div class="tr table-body-cell">Descargar</div>
+                      </div>
+
+                      {{--Cuerpo de la tabla--}}
+                      @foreach ($CFDI as $FolioCFDI)
+                      {{--Obtenemos los datos del XMLRecibidos--}}
+                      @php
+                        //Guardamos el folio fiscal en una variable
+                        $FolFsical = $FolioCFDI->folioFiscal;
+
+                        //Contador de conceptos
+                        $ConceptCount = 0;
+                        
+                        //Consulta de los datos
+                        $XmlReci = XmlR::
+                        where('UUID', $FolFsical)
+                        ->get();
+
+                        //Condicional para revisa si la consulta nos arrojo algo
+                        if (!$XmlReci->isEmpty()){
+                          //Por medio de un foreach guardaremos los datos requeridos
+                          foreach ($XmlReci as $CompleCFDI) {
+                          $Concept = $CompleCFDI['Conceptos.Concepto'];
+                          $Folio = $CompleCFDI['Folio'];
+                          $MetodPago = $CompleCFDI['MetodoPago'];
+                        }
+                      }
+                      //En caso de campos vacios estas se cambiaran por X
+                      else {
+                          $Concept = "X";
+                          $Folio = "X";
+                          $MetodPago = "X";
+                          $UUIDRef = 'X';
+                      }
+                      @endphp   
+
+
+                      <div class="resp-table-row">
+                        {{--UUID--}}
+                        <div class="table-body-cell">{{$FolioCFDI->folioFiscal}}</div>
+                        
+                        {{--Fecha emision--}}
+                        <div class="table-body-cell">{{$FolioCFDI->fechaEmision}}</div>
+                        
+                        {{--Emisor--}}
+                        <div class="table-body-cell">{{$FolioCFDI->emisorNombre}}</div>
+                        
+                        {{--Concepto--}}
+                        <div class="table-body-cell">
+                          @if (!$XmlReci->isEmpty())
+                            @foreach ($Concept as $c)
+                               {{++$ConceptCount}}.- {{$c['Descripcion']}}
+                              <br>
+                            @endforeach
+                          @else
+                            {{ $Concept }}
+                          @endif
+                        </div>
+
+                        {{--Folio--}}
+                        <div class="table-body-cell">
+                          {{$Folio}}
+                        </div>
+                        
+                        {{--Metodo/Pago--}}
+                        <div class="table-body-cell">
+                          {{$MetodPago}}
+                        </div>
+                        
+                        {{--UUID Relacionado--}}
+                        <div class="table-body-cell">
+                          
+                        </div>
+                        
+                        {{--Folio--}}
+                        <div class="table-body-cell">
+
+                        </div>
+                        
+                        {{--Efecto--}}
+                        <div class="table-body-cell">
+
+                        </div>
+                        
+                        {{--Total--}}
+                        <div class="table-body-cell">
+
+                        </div>
+                        
+                        {{--Estado--}}
+                        <div class="table-body-cell">
+
+                        </div>
+                        
+                        {{--Descargar--}}
+                        <div class="table-body-cell">
+
+                        </div>
+                    </div>
+                      @endforeach
+                  </div>
+                </div>
+              </div>
+          </div>
+      </div>
+  </div>
+
   </div>

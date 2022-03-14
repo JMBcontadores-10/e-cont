@@ -5,6 +5,7 @@ use App\Http\Livewire\Chequesytransferencias;
 use App\Http\Livewire\CuentasPorpagar;
 use App\Http\Livewire\Cheques;
 use App\Http\Livewire\Eliminar;
+use App\Http\Livewire\Home;
 use App\Http\Livewire\FacturasVinculadas;
 use App\Http\Livewire\Modals\Editar;
 use App\Http\Livewire\Pdfcheque;
@@ -35,7 +36,6 @@ Route::post('/registro', [App\Http\Controllers\Registro2Controller::class, 'stor
 // Route::get('/renombrarXml', [App\Http\Controllers\Prueba::class, 'renombrarXml'])->name('renombrarXml');
 Route::get('/prueba', [App\Http\Controllers\Prueba::class, 'index'])->name('prueba');
 Route::match(['get', 'post'], '/home', [App\Http\Controllers\Login1Controller::class, 'login'])->name('home');
-Route::match(['get', 'post'], '/modules', [App\Http\Controllers\HomeController::class, 'index'])->name('modules');
 
 Route::get('/descargasv2', [App\Http\Controllers\DescargasControllerv2::class, 'index'])->name('descargasv2');
 Route::post('/async', [App\Http\Controllers\Async::class, 'index'])->name('async');
@@ -98,3 +98,4 @@ Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
 
 //Ruta de la vista de cuentas por pagar en livewire
 Route::get('/cuentaspagar', Cuentasporpagar::class)->name('cuentaspagar');
+Route::get('/modules', Home::class)->name('modules');

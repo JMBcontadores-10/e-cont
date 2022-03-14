@@ -16,11 +16,9 @@
     <script>
         window.addEventListener('cerrarPolizamodal', event => {
             $("#poliza").click();
-
-
-        if ($('.modal-backdrop').is(':visible')) {
-  $('body').removeClass('modal-open');
-  $('.modal-backdrop').remove();
+            if ($('.modal-backdrop').is(':visible')) {
+            $('body').removeClass('modal-open');
+            $('.modal-backdrop').remove();
 };
 
         });
