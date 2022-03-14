@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UploadController;
 use App\Http\Livewire\Chequesytransferencias;
+use App\Http\Livewire\vinculacionAutomatica;
 use App\Http\Livewire\CuentasPorpagar;
 use App\Http\Livewire\Cheques;
 use App\Http\Livewire\Eliminar;
@@ -83,6 +84,8 @@ Route::get('/dir1', [App\Http\Controllers\Prueba::class, 'createDir2'])->name('c
 
 
 // Rutas Jose Segura
+
+Route::get('/vinculacionAutomatica', [App\Http\Controllers\vinculacionAutomaticaCfdi::class, 'vincular'])->name('vincular');
 Route::get('/script2', [App\Http\Controllers\RecarpetarCheques::class, 'archivar'])->name('archivar');
 Route::view('editar','livewire.editar');
 Route::post('/upload/{id}', [App\Http\Controllers\UploadController::class, 'store']);
