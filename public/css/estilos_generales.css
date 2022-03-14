@@ -783,3 +783,16 @@ text-align: center;
 .BtnVinculadas{
     color: white !important; /*Se agrega !important ya que bootstrap agrega un diseño por defecto*/
 }
+
+/*CUENTAS POR PAGAR*/
+/*Ocultar la columna de vincular proveedores*/
+.VincVarProv{
+    display: none;
+}
+
+/*INICIO*/
+/*PENDIENTES*/
+/*Ancho del select del inicio (Pendientes)*/
+.selectpendi{
+    width: 50% !important; /*Important ya que afecta un diseño de bootstrap*/
+}

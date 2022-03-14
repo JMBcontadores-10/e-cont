@@ -13,7 +13,7 @@ class Login1Controller extends Controller
     public function index()
     {
         if(Auth::check()){ //Retornamos a la vista home(modules) cuando esta en sesión aún. 
-            return view('home');
+            return redirect()->route('modules'); 
         }else
         {
         return view('auth.login'); //retornamos al login siempre cuando el usuario no ha iniciado sesion aún

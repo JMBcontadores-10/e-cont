@@ -284,8 +284,7 @@ $empresa=auth()->user->tipo;
         <div class="dropdown-divider mb-0"></div>
         <form action="{{ route('logout') }}" method="POST">
           @csrf
-          <input class="dropdown-item" type="submit" value="Cerrar SesiÃ³n"
-             >
+          <input class="dropdown-item" type="submit" value="Cerrar sesión">
       </form>
 
       </div>
@@ -318,7 +317,7 @@ $empresa=auth()->user->tipo;
 
     <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" data-icon-style="lines">
 
-      <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Modulos</span><span class="badge badge-light-danger badge-pill badge-round float-right mr-50 ml-auto">2</span></a>
+      <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Módulos</span></a>
         <ul class="menu-content">
 
           <li id="chequesytransferencias"><a class="d-flex align-items-center" href="{{ url('chequesytransferencias') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">Cheques y Transferencias</span></a>

@@ -17,4 +17,11 @@ class MetadataR extends Model
     public function cheques(){
         return $this->belongsTo(Cheques::class);
     }
+
+    public static function search($search)
+    {
+        return empty($search) ? static::query()
+        : static::query()->where('emisorRfc', 'like', '%'.$search.'%')
+        ->orWhere('emisorNombre', 'like', '%'.$search.'%');
+    }
 }

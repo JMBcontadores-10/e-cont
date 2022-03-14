@@ -17,6 +17,7 @@
                 </div>
                 {{--Cuerpo del modal--}}
                 <div class="modal-body">
+                    <h1></h1>
                 </div>
             </div>
         </div>

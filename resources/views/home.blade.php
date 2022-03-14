@@ -9,50 +9,87 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
 @section('content')
 
-    <div class="container" >
-        <div class="row justify-content-center">
-            <div class="inicio" align="center">
-              @if (Session::get('tipoU') == '3')
-                    <h4>Esta entrando como contador a la</h4>
-                @endif
-                <h4>Sesión de:</h4>
-                <br>
+    @php
+    $rfc = Auth::user()->RFC;
+    $class='';
+    if(empty($class)){
+    $class="table nowrap dataTable no-footer";
+    }
+    @endphp
 
-                @php
-
-                $rfc = Auth::user()->RFC;
-                $tipo = Session::get('tipoU');
-
-                
-            @endphp
-
-
-                <h2 id="txtsaludo">Bienvenid@</h2>
-                @if(!empty(auth()->user()->tipo))
-                <h5>Contador@</h5>
-                @endif
-
-
-                @if(Auth::check())
-
-                <h6>{{auth()->user()->RFC}}</h6>
-                
+    {{--Contenedor para mantener responsivo el contenido del modulo--}}
+    <div class="app-content content">
+        <div class="content-wrapper">
+          <div class="content-body">
+            <section class="invoice-list-wrapper">
+                    <div class="container" >
+                        <div class="row justify-content-center">
+                    <div class="inicio" align="center">
+                        @php
+                        $rfc = Auth::user()->RFC;
+                        $tipo = Session::get('tipoU');
+                        @endphp
+        
+                        <h2 id="txtsaludo">Bienvenid@</h2>
+                        @if(!empty(auth()->user()->tipo))
+                        <h5>Contador@</h5>
                         @endif
-
-                          
+        
+                        @if(Auth::check())
+        
+                        <h6>{{auth()->user()->RFC}}</h6>
                         
-                        
-            
-
-                       {{----------contenido seccion---------}}
-
- {{----------contenido seccion---------}}
-        </div>
+                                @endif
+                               {{----------contenido seccion---------}}
+        
+         {{----------contenido seccion---------}}
+                </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-lg-6 col-xl-8 col-xl-8 mb-8">
+                        <div class="card">
+                          <div class="card-header d-flex align-items-center justify-content-between">
+                            <h5 class="card-title mb-0"><b>Pendientes</b></h5>
+                            @if(Auth::user()->tipo)
+                            <div class="row">
+                                <div class="col-5">
+                                    <label>Año</label>
+                                    <select class="select form-control">
+                                        <option>2020</option>
+                                    </select>
+                                </div>
+                                <div class="col-7">
+                                    <label>Empresa</label>
+                                    <select class="select form-control">
+                                        <option>PREPARACION QUIMICA S DE R.L DE C.V</option>
+                                    </select>
+                                </div>
+                            </div>
+                            @endif
+                          </div>
+                          <div class="card-body">
+                            <div class="table-responsive">
+                                <table id="example" class="{{$class}}" style="width:100%">
+                                  <thead>
+                                    <tr>
+                                      <th>
+                                        <span class="align-middle">fecha </span>
+                                      </th>
+                                      <th>Factura#</th>
+                                      <th>beneficiario</th>
+                                    </tr>
+                                  </thead>
+                                </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+    </div>
+            </section>
+          </div>
         </div>
     </div>
-
-
-
 @endsection
 
 

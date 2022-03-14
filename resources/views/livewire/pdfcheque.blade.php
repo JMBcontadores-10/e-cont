@@ -41,7 +41,7 @@
 
    {{--Texto de archivos existentes--}}
    <div class="ArchExistContenedor">
-        <p class="pf LblArchExist"><b>Archivo Exsitente</b></p>
+        <p class="pf LblArchExist"><b>Archivo Existente</b></p>
    </div>
 
    {{--Zona para subir archivos--}}
@@ -65,11 +65,15 @@
         <input id="rutaAdicional" name="ruta-adicionales" type="hidden"value="">
         <input id="iden" type="hidden" value="{{ $datos->nombrec}}">
         @php
+            //Obtenemos el nombre original de los PDF
+            $NomPDF = $datos->nombrec;
+            $NomPDF = preg_split("/(&|PM-|AM-)/", $NomPDF);
+            $NomPDF = end($NomPDF);
+
             $dateValue = strtotime($datos->fecha);//obtener la fecha
             $mesfPago = date('m',$dateValue);// obtener el mes
             $anioPago= date('Y',$dateValue);// obtener el año
             $ruta='storage/contarappv1_descargas/'.$datos->rfc.'/'.$anioPago.'/Cheques_Transferencias/'.$mes.'/'.$datos->nombrec.'';
-
 
             if (file_exists($ruta)) {
                 $ruta=$ruta;
@@ -85,18 +89,18 @@
             <a class="DocumentPDF fas fa-file-pdf" target="_blank" href="{{asset($ruta)}}"></a>
         </div>
         <div class="CuerpoNamePDFContainer">
-            <span class="SpanNamePDF"> {{Str::limit(Str::afterLast($datos->nombrec, '&'), 10); }} <span>
+            <span class="SpanNamePDF"> {{Str::limit($NomPDF, 10); }} <span>
         </div>
 
         {{--Condicional para la accion eliminar, cuando el movimiento esta revisado--}}
-        @if ($datos->verificado == 0)
+        {{-- @if ($datos->verificado == 0) --}}
         <div class="BotonesPDFContainer">
             <!--Eliminar PDF-->
             <div class="BtnDelPDF" wire:click="eliminar()" wire:loading.attr="disabled">
                 <i class="icons fas fa-trash-alt"></i>
             </div>
         </div>
-        @endif
+        {{-- @endif --}}
 
         
      </div>

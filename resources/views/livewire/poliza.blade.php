@@ -19,7 +19,7 @@
         window.addEventListener('cerrarPolizamodal', event => {
             $("#poliza{{$datos->_id}}").click();
 
-
+            
         if ($('.modal-backdrop').is(':visible')) {
   $('body').removeClass('modal-open');
   $('.modal-backdrop').remove();
