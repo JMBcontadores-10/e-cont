@@ -8,6 +8,21 @@
     if(empty($class)){
     $class="table nowrap dataTable no-footer";
     }
+
+    //Mostrar mensaje de saludo dependiendo la hora
+    //Establecemos la zona horaria
+    date_default_timezone_set("America/Mexico_City");
+    //Obtenemos la hora
+    $horahoy = date('H', time());
+
+    //Condicional para mostrar los mensajes
+    if($horahoy >= 0 && $horahoy < 12){
+          $saludo = "Buenos Días";
+        }elseif($horahoy >= 12 && $horahoy < 18){
+          $saludo = "Buenas Tardes";
+        }elseif($horahoy >= 18 && $horahoy < 24){
+          $saludo = "Buenas Noches";
+        }
     @endphp
 
     {{--Contenedor para mantener responsivo el contenido del modulo--}}
@@ -23,7 +38,7 @@
                         $tipo = Session::get('tipoU');
                         @endphp
         
-                        <h2 id="txtsaludo">Bienvenid@</h2>
+                        <h2 id="txtsaludo">{{$saludo}}</h2>
                         @if(!empty(auth()->user()->tipo))
                         <h5>Contador@</h5>
                         @endif
