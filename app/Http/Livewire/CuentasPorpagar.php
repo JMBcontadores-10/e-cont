@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\MetadataR;
+use Illuminate\Support\Facades\Auth;
 
 class Cuentasporpagar extends Component
 {
@@ -35,6 +36,8 @@ class Cuentasporpagar extends Component
     //Metodo para ejecutar la vista
     public function render()
     {
+        $rfc = Auth::user()->RFC;
+
         if(!empty(auth()->user()->tipo)){
             $e=array();
             $largo=sizeof(auth()->user()->empresas);
@@ -68,8 +71,6 @@ class Cuentasporpagar extends Component
             '12' => 'Diciembre'
         );
 
-        $anios = range(2014, date('Y'));
-
         $col = MetadataR::
         search($this->search)
         ->where('receptorRfc', $this->rfcEmpresa)
@@ -87,7 +88,7 @@ class Cuentasporpagar extends Component
         ->orderBy('fechaEmision', 'desc')
         ->get();
 
-        return view('livewire.cuentasporpagar', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses,'anios'=>$anios, 'col'=>$col, 'CFDI'=>$CFDI])
+        return view('livewire.cuentasporpagar', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses, 'col'=>$col, 'CFDI'=>$CFDI, 'rfc'=>$rfc])
         ->extends('layouts.livewire-layout')
         ->section('content');
     }
