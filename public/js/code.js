@@ -612,6 +612,18 @@ $('#vinpbtn').on('click', function() {
     return false;
 });
 
+// Muestra la columna de vinculación a varios proveedores en cuentas por pagar (NUEVO MODULO)
+$("#BtnMoreProv").click(function(){
+    var ColumMasProv = $(".VincVarProv");
+    if(ColumMasProv.is(":visible")){
+        $(".DesatallesProv").attr("disabled", true);
+        ColumMasProv.hide();
+    }else{
+        $(".DesatallesProv").attr("disabled", false);
+        ColumMasProv.show();
+    }
+});
+
 // Evita vincular proveedores si ninguno ha sido seleccionado
 $('#vinpsub').on('click', function() {
     var lenght = $('div.checkbox-group :checkbox:checked').length

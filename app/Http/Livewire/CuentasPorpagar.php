@@ -5,7 +5,7 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use App\Models\MetadataR;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Cheques;
 
 class Cuentasporpagar extends Component
 {
@@ -21,6 +21,7 @@ class Cuentasporpagar extends Component
     {
         $this->RFC = $EmitRFC;
     }
+    
 
     //Metodo para identificar el tipo de usuario
     public function mount()
@@ -36,8 +37,6 @@ class Cuentasporpagar extends Component
     //Metodo para ejecutar la vista
     public function render()
     {
-        $rfc = Auth::user()->RFC;
-
         if(!empty(auth()->user()->tipo)){
             $e=array();
             $largo=sizeof(auth()->user()->empresas);
@@ -88,7 +87,7 @@ class Cuentasporpagar extends Component
         ->orderBy('fechaEmision', 'desc')
         ->get();
 
-        return view('livewire.cuentasporpagar', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses, 'col'=>$col, 'CFDI'=>$CFDI, 'rfc'=>$rfc])
+        return view('livewire.cuentasporpagar', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses, 'col'=>$col, 'CFDI'=>$CFDI])
         ->extends('layouts.livewire-layout')
         ->section('content');
     }

@@ -12,7 +12,8 @@
       $class="table nowrap dataTable no-footer";
       }
     @endphp
-  
+
+
     {{--Contenedor para mantener responsivo el contenido del modulo--}}
     <div class="app-content content">
       <div class="content-wrapper">
@@ -42,15 +43,25 @@
             @endempty
   
             <br>
-  
-            {{--Boton para mostrar la columna de vincular mas--}}
-            <div class="invoice-create-btn mb-1">
-              <a class="btn btn-primary button2" id="vinpbtn">Vincular Varios Proveedores</a>
+
+            {{--Botones para mas provvedores--}}
+            <div class="row">
+              <div class="col-4">
+                {{--Boton para mostrar la columna de vincular mas--}}
+                <div class="invoice-create-btn mb-1">
+                  <a class="btn btn-primary button2" id="BtnMoreProv">Vincular Varios Proveedores</a>
+                </div>
+              </div>
+              <div class="col-4">
+                {{--Boton para mostrar la columna de detalles para varios proveedores--}}
+                <div class="invoice-create-btn mb-1">
+                  <button data-toggle="modal" data-target="#detalles" class="btn btn-secondary button2 DesatallesProv" id="BtnDetMoreProvUp" disabled>Destalles Varios Proveedores</button>
+                </div>
+              </div>
             </div>
-  
+
             <br>
-  
-  
+
             {{--Mostrar tabla de contenido--}}
             {{--Filtros--}}
             <div class="form-inline mr-auto">
@@ -119,14 +130,14 @@
                       {{--Contenido de la columna para vincular varios--}}
                       <td class="text-center align-middle VincVarProv">
                         <div id="checkbox-group" class="checkbox-group">
-                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" id="allcheck" name="allcheck[]"value="{{$i->emisorRfc}}" />
+                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" value="{{$i->emisorRfc}}"/>
                         </div>
                       </td>
                       <td class="text-center align-middle">
-                        <span class="invoice-amount">{{$i->emisorRfc}}</span>
+                        <span style="color:#3498DB" class="invoice-amount">{{$i->emisorRfc}}</span>
                       </td>
                       <td class="text-center align-middle">
-                        <span class="invoice-amount">{{$i->emisorNombre}}</span>
+                        <span class="invoice-amount">{{ Str::limit($i->emisorNombre, 20); }}</span>
                       </td>
   
                       {{-- Valida si existe una coincidencia de RFC en la lista negra --}}
@@ -151,6 +162,11 @@
                     @endforeach
                   </tbody>
                 </table>
+              </div>
+              <br>
+              {{--Boton para mostrar la columna de detalles para varios proveedores--}}
+              <div class="invoice-create-btn mb-1">
+                <button data-toggle="modal" data-target="#detalles" class="btn btn-secondary button2 DesatallesProv" id="BtnMoreProvDown" disabled>Destalles Varios Proveedores</button>
               </div>
           </section>
         </div>
@@ -257,10 +273,14 @@
                       }
                       @endphp   
 
-
                       <div class="resp-table-row">
                         {{--UUID--}}
-                        <div class="table-body-cell">{{$FolioCFDI->folioFiscal}}</div>
+                        <div class="table-body-cell">
+                          <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="{{$FolioCFDI->folioFiscal}}">
+                            <label class="form-check-label">{{$FolioCFDI->folioFiscal}}</label>
+                          </div>
+                        </div>
                         
                         {{--Fecha emision--}}
                         <div class="table-body-cell">{{$FolioCFDI->fechaEmision}}</div>
@@ -347,5 +367,4 @@
           </div>
       </div>
   </div>
-
-  </div>
+</div>
