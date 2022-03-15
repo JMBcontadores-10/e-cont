@@ -12,8 +12,13 @@
         if ($('.modal-backdrop').is(':visible')) {
   $('body').removeClass('modal-open');
   $('.modal-backdrop').remove();
+<<<<<<< HEAD
         }
 
+=======
+
+        }
+>>>>>>> 4a88b061ceb6c42d0818674b13e07bfcebb98d6e
     });
 
 

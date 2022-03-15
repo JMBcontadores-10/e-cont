@@ -493,8 +493,8 @@ $pp = explode("/", $doc);
             @php Cheques::find($id)->update(['pendi' => 1]); @endphp
         @elseif($verificado == 0 )
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" wire:model="revisado"   value="{{$id}}" name="stOne{{$id}}" id="stOne"  >
-                <label class="form-check-label" for="flexCheckChecked">Revisado</label>
+                <input class="form-check-input" type="checkbox" wire:model="revisado" value="{{$id}}" name="stOne{{$id}}" id="Revi{{$id}}">
+                <label class="form-check-label" for="Revi{{$id}}">Revisado</label>
             </div>
         @else
         <div id="Revisado{{$id}}" onclick="ToolRevisado(this.id)">
@@ -554,10 +554,10 @@ $pp = explode("/", $doc);
                                    @if($impresion == '')
 
                                    <div class="ImpContainer">
-                                    <input id="flexCheckCheckeddd" type="checkbox"  wire:model="impresion"   value="{{$id}}" name="s{{$id}}" id="stOneaa{{$id}}"  >
-                                    <label for="flexCheckCheckeddd">
-                                  Impresión
-                                    </label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox"  wire:model="impresion" value="{{$id}}" name="s{{$id}}" id="Conta{{$id}}">
+                                        <label class="form-check-label" for="Conta{{$id}}">Impresión</label>
+                                    </div>
                                    </div>
                                         @endif
 

@@ -56,14 +56,12 @@ class Home extends Component
         $anios = range(2014, date('Y'));
 
         //Consulta para obtener los datos pendientes
+        //Condicional para mostrar que no se ejecute la consulta cuando no hay año
         $cheqpendient = Cheques::
-        search($this->search)
-        ->where('rfc',$this->rfcEmpresa)
-        ->where('importecheque',$this->condicion,$this->importe)
-        ->where('pendi',1)
-        ->where('fecha', 'like','%'.$this->anio."-".'%')
-        ->orderBy('fecha', 'desc')
-        ->paginate($this->perPage);
+            search($this->search)
+            ->where('rfc',$this->rfcEmpresa)
+            ->where('fecha', 'like','%'.$this->anio."-".'%')
+            ->get();
 
         return view('livewire.home', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'anios'=>$anios, 'pendientes'=>$cheqpendient])
         ->extends('layouts.livewire-layout')

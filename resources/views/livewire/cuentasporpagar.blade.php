@@ -55,59 +55,7 @@
             {{--Filtros--}}
             <div class="form-inline mr-auto">
               <input wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Filtro" aria-label="Search">    
-                
-                &nbsp;&nbsp;
-                  
-                <label for="inputState">Mes</label>
-                <select wire:model="mes" id="inputState1" class=" select form-control"  >
-                  <option  value="00" >Todos</option>
-                  <?php foreach ($meses as $key => $value) {
-                    echo '<option value="' . $key . '">' . $value . '</option>';
-                  }?>
-                </select>
-                  
-                &nbsp;&nbsp;
-                  
-                <label for="inputState">Año</label>
-                <select wire:model="anio" id="inputState2" class="select form-control">
-                  <?php foreach (array_reverse($anios) as $value) {
-                    echo '<option value="' . $value . '">' . $value . '</option>';
-                  }?>
-                </select>
-  
-                &nbsp;&nbsp;
-  
-                <fieldset>
-                  <div class="custom-control custom-checkbox">
-                    <input wire:model="todos" type="checkbox" class="custom-control-input bg-danger" checked name="customCheck" id="customColorCheck4">
-                    <label class="custom-control-label" for="customColorCheck4">Todos</label>
-                  </div>
-                </fieldset>
-  
-                &nbsp;&nbsp;
-  
-                <input  wire:model.debounce.300ms="importe" class="form-control"  placeholder="Importe $"  type="number"  step="0.01" aria-label="importe" style="width:110px;" >
-                
-                &nbsp;&nbsp;
-  
-                <select wire:model="condicion" id="inputState1" class=" select form-control"  >
-                  <option  value=">=" >--Condición--</option>
-                  <option value="=" >igual</option>
-                  <option value=">" >mayor que</option>
-                  <option value="<" >menor que</option>
-                </select>
-                
-                &nbsp;&nbsp;
-                
-                <select wire:model="estatus" id="inputState1" class=" select form-control"  >
-                  <option  value="" >--Estatus--</option>
-                  <option value="pendi" >Pendientes</option>
-                  @if(auth()->user()->tipo)
-                    <option value="sin_revisar" >Sin Revisar</option>
-                    <option value="sin_conta" >Sin Contabilizar</option>
-                  @endif
-                </select>
-              </div>
+            </div>
 
               <div wire:loading>
                 <br>
@@ -233,7 +181,6 @@
                           <div class="tr table-body-cell">Fecha Emisión</div>
                           <div class="tr table-body-cell">Emisor</div>
                           <div class="tr table-body-cell">Concepto</div>
-                          <div class="tr table-body-cell">Folio</div>
                           <div class="tr table-body-cell">Metodo - Pago</div>
                           <div class="tr table-body-cell">UUID Relacionado</div>
                           <div class="tr table-body-cell">Folio</div>
@@ -248,14 +195,38 @@
                       {{--Obtenemos los datos del XMLRecibidos--}}
                       @php
                         //Guardamos el folio fiscal en una variable
-                        $FolFsical = $FolioCFDI->folioFiscal;
+                        $folioF = $FolioCFDI->folioFiscal;
 
                         //Contador de conceptos
                         $ConceptCount = 0;
                         
+                        //Variables que contiene los resultados de la consulta
+                        $efecto = $FolioCFDI->efecto;
+                        $total = $FolioCFDI->total;
+                        $estado = $FolioCFDI->estado;
+                        $fechaE = $FolioCFDI->fechaEmision;
+                        $nUR = 0;
+
+                        //Rutas de archivos
+                        $espa=new MetadataR();
+                        $numero = (string) (int) substr($fechaE, 5, 2);
+                        $mesNombre = (string) (int) substr($fechaE, 5, 2);
+                        $anio = (string) (int) substr($fechaE, 0, 4);
+                        $mees=$espa->fecha_es($mesNombre);
+
+                        // Se asignan las rutas donde está almacenado el archivo
+                        $rutaXml = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
+                        $rutaPdf = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
+
+                        //Condicional para saber si el efecto es un egreso
+                        if ($efecto == 'Egreso'){
+                          //Si es un egreso entonces se saca el valor absoluto del total para descontar
+                          $total = -1 * abs($total);
+                        }
+
                         //Consulta de los datos
                         $XmlReci = XmlR::
-                        where('UUID', $FolFsical)
+                        where('UUID', $folioF)
                         ->get();
 
                         //Condicional para revisa si la consulta nos arrojo algo
@@ -265,6 +236,16 @@
                           $Concept = $CompleCFDI['Conceptos.Concepto'];
                           $Folio = $CompleCFDI['Folio'];
                           $MetodPago = $CompleCFDI['MetodoPago'];
+                          
+                          if ($efecto == 'Pago'){
+                            $docRel = $CompleCFDI['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
+                            $MetodPago = '-';
+                            if (!isset($docRel)){
+                              $docRel = $CompleCFDI['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'];
+                            }
+                          } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso'){
+                            $docRel = $CompleCFDI['CfdiRelacionados.CfdiRelacionado'];
+                          }
                         }
                       }
                       //En caso de campos vacios estas se cambiaran por X
@@ -299,11 +280,6 @@
                           @endif
                         </div>
 
-                        {{--Folio--}}
-                        <div class="table-body-cell">
-                          {{$Folio}}
-                        </div>
-                        
                         {{--Metodo/Pago--}}
                         <div class="table-body-cell">
                           {{$MetodPago}}
@@ -311,32 +287,57 @@
                         
                         {{--UUID Relacionado--}}
                         <div class="table-body-cell">
-                          
+                          @if (!$XmlReci->isEmpty())
+                            @if ($efecto == 'Pago')
+                              @if (is_array($docRel) || is_object($docRel))
+                                @foreach ($docRel as $d)
+                                  {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
+                                @endforeach
+                              @else
+                                {{ ++$nUR }}. {{ $docRel }}
+                              @endif
+                            @elseif ($efecto == 'Egreso' and !$docRel == null or $efecto == 'Ingreso' and !$docRel == null)
+                              @foreach ($docRel as $d)
+                                {{ ++$nUR }}. {{ $d['UUID'] }}<br>
+                              @endforeach
+                            @else
+                              -
+                            @endif
+                          @else
+                            {{ $UUIDRef }}
+                          @endif
                         </div>
-                        
+
                         {{--Folio--}}
                         <div class="table-body-cell">
-
+                          {{$Folio}}
                         </div>
                         
                         {{--Efecto--}}
                         <div class="table-body-cell">
-
+                          {{$efecto}}
                         </div>
                         
                         {{--Total--}}
                         <div class="table-body-cell">
-
+                          ${{number_format($total, 2)}}
                         </div>
                         
                         {{--Estado--}}
                         <div class="table-body-cell">
-
+                          {{$estado}}
                         </div>
                         
                         {{--Descargar--}}
                         <div class="table-body-cell">
-
+                          @if ($estado != 'Cancelado')
+                                    <a href="{{ $rutaXml }}" download="{{ $folioF }}.xml">
+                                        <i class="fas fa-file-download fa-2x"></i>
+                                    </a>
+                                    <a href="{{ $rutaPdf }}" target="_blank">
+                                        <i class="fas fa-file-pdf fa-2x" style="color: rgb(202, 19, 19)"></i>
+                                    </a>
+                                @endif
                         </div>
                     </div>
                       @endforeach
