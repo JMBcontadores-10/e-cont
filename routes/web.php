@@ -101,7 +101,4 @@ Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
 
 //Ruta de la vista de cuentas por pagar en livewire
 Route::get('/cuentaspagar', Cuentasporpagar::class)->name('cuentaspagar');
-<<<<<<< HEAD
-=======
 Route::get('/modules', Home::class)->name('modules');
->>>>>>> 5a1d8ba65b0284b501e11505ce6fa3d717d1cd49
