@@ -13,4 +13,10 @@ class XmlR extends Model
     protected $primaryKey = '_id';
 
     protected $collection = 'xmlrecibidos';
+
+
+
+
+
+
 }

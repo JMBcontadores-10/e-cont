@@ -12,9 +12,11 @@
         if ($('.modal-backdrop').is(':visible')) {
   $('body').removeClass('modal-open');
   $('.modal-backdrop').remove();
-
+        }
 
     });
+
+
 
 
     window.addEventListener('step2', event => {
@@ -30,7 +32,7 @@ $("#step1").fadeOut("slow");
 document.getElementById("step2").style.display = "visible";
 $("#step2").fadeIn("slow");
 
-aler('hola');
+
 
 });
 
@@ -156,7 +158,7 @@ document.getElementById("tipo").disabled = false;
        Si se trata de un cheque, también escriba número de cheque.</span>
          {{---tooltip---}}
        <label for="inputPassword4">#Factura</label>
-       <input class="form-control" type=text  name="Nuevo_numCheque"
+       <input class="form-control" type="text"  name="Nuevo_numCheque"
        placeholder="Describa lo que está pagando" wire:model="Nuevo_numcheque" required>
      </div>
    </div>
@@ -166,7 +168,7 @@ document.getElementById("tipo").disabled = false;
     <span id="fecha" class="tooltiptext">Escriba la fecha en que realizó el pago.</span>
     {{---tooltip---}}
      <label for="inputAddress">Fecha de pago</label>
-     <input class="form-control" id="fecha" wire:model="Nuevo_fecha"  type=date   min="2014-01-01"
+     <input class="form-control" id="fecha" wire:model="Nuevo_fecha"  type="date"   min="2014-01-01"
      max={{ $date }}  required >
 
    </div>
@@ -185,7 +187,7 @@ document.getElementById("tipo").disabled = false;
 
            {{---tooltip---}}
          <label for="inputPassword4">Total factura(s):</label>
-         <input class="form-control" type=text  readonly name="importeT"
+         <input class="form-control" type="text"  readonly name="importeT"
                        value="">
        </div>
      </div>
@@ -197,7 +199,7 @@ document.getElementById("tipo").disabled = false;
        </span>
        {{---tooltip---}}
        <label for="inputCity">Beneficiario</label>
-       <input class="form-control" wire:model="Nuevo_beneficiario" type=text name="beneficiario"
+       <input class="form-control" wire:model="Nuevo_beneficiario" type="text" name="beneficiario"
           placeholder="A quien realizó el pago" required>
      </div>
      <div class="form-group col-md-4">
