@@ -633,6 +633,12 @@ $('#vinpsub').on('click', function() {
     }
 });
 
+//Boton para mostrar el sgundo modal de agregar un cheque con CFDI vinculados
+$("#Btnmostrarnewcheq").click(function() {
+    //Mostrar modal
+    $("#nuevochequecfdi").modal("show");
+});
+
 // Muestra en una alerta los pendientes de los cheques
 function alertaP(a, b, c) {
     var nl = "\r\n"

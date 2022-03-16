@@ -4,6 +4,7 @@
     use App\Models\MetadataR;
     use App\Models\ListaNegra;
     use App\Models\XmlR;
+    use App\Models\Cheques;
   
     //Obtenemos la clase para agregar a la tabla
     $rfc = Auth::user()->RFC;
@@ -55,7 +56,7 @@
               <div class="col-4">
                 {{--Boton para mostrar la columna de detalles para varios proveedores--}}
                 <div class="invoice-create-btn mb-1">
-                  <button data-toggle="modal" data-target="#detalles" class="btn btn-secondary button2 DesatallesProv" id="BtnDetMoreProvUp" disabled>Destalles Varios Proveedores</button>
+                  <button data-toggle="modal" data-target="#detalles" class="btn btn-secondary button2 DesatallesProv" id="BtnDetMoreProvUp" wire:click="EmitRFCArray()" disabled>Destalles Varios Proveedores</button>
                 </div>
               </div>
             </div>
@@ -130,7 +131,7 @@
                       {{--Contenido de la columna para vincular varios--}}
                       <td class="text-center align-middle VincVarProv">
                         <div id="checkbox-group" class="checkbox-group">
-                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" value="{{$i->emisorRfc}}"/>
+                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" wire:model.defer="moreprov" value="{{$i->emisorRfc}}"/>
                         </div>
                       </td>
                       <td class="text-center align-middle">
@@ -166,7 +167,7 @@
               <br>
               {{--Boton para mostrar la columna de detalles para varios proveedores--}}
               <div class="invoice-create-btn mb-1">
-                <button data-toggle="modal" data-target="#detalles" class="btn btn-secondary button2 DesatallesProv" id="BtnMoreProvDown" disabled>Destalles Varios Proveedores</button>
+                <button data-toggle="modal" data-target="#detalles" class="btn btn-secondary button2 DesatallesProv" id="BtnMoreProvDown"  wire:click="EmitRFCArray()" disabled>Destalles Varios Proveedores</button>
               </div>
           </section>
         </div>
@@ -182,12 +183,58 @@
               {{--Encabezado--}}
               <div class="modal-header">
                   <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;" class="icons fas fa-folder-open">Cuentas por pagar</span></h6>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="CleanRFC()">
                       <span aria-hidden="true close-btn">×</span>
                  </button>
               </div>
               {{--Cuerpo del modal--}}
               <div class="modal-body">
+                {{--Listado de cheques a vincular--}}
+                <label>Movimiento: </label>
+                <select class="select form-control" wire:model="moviselect">
+                  <option  value="" >--Selecciona Movimiento--</option>
+                  @foreach ($Cheques as $i)
+                    <option value="{{ $i->_id }}">
+                      {{ $i->fecha }} - {{ $i->numcheque }} - {{ $i->Beneficiario }} -
+                      ${{ number_format($i->importecheque, 2) }}
+                    </option>
+                  @endforeach
+                </select>
+
+                <br>
+
+                {{--Seccion de botones--}}
+                <div class="row">
+                  <div class="col-3">
+                    {{--Vincular--}}
+                    {{--Condicional para activar o desactivar el boton--}}
+                    @if ($btnvinactiv == 1)
+                    <div class="invoice-create-btn mb-1">
+                      <button class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
+                    </div>
+                    @else
+                    <div class="invoice-create-btn mb-1">
+                      <button class="btn btn-primary" wire:click="VincuCFDIMovi()" disabled>Vincular a Movimiento</button>
+                    </div>
+                    @endif
+                  </div>
+                  <div class="col-3">
+                    <div class="invoice-create-btn mb-1">
+                      <button class="btn btn-secondary" id="Btnmostrarnewcheq">Vincular a nuevo Movimiento</button>
+                    </div>
+                  </div>
+                </div>
+
+                <br>
+
+                <div wire:loading>
+                  <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
+                </div>
+
                 {{--Generacion de la tabla--}}
                 <div id="resp-table">
                   <div id="resp-table-body">
@@ -230,9 +277,21 @@
                         $anio = (string) (int) substr($fechaE, 0, 4);
                         $mees=$espa->fecha_es($mesNombre);
 
-                        // Se asignan las rutas donde está almacenado el archivo
-                        $rutaXml = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
-                        $rutaPdf = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
+                        //Se asignan las rutas donde está almacenado el 
+                        //Condicional para saber si el RFC es un arreglo
+                        if(is_array($RFC)){
+                          //Si es un arreglo
+                          foreach ($RFC as $RFCArray) {
+                            $rutaXml = "storage/contarappv1_descargas/$RFCArray/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
+                            $rutaPdf = "storage/contarappv1_descargas/$RFCArray/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
+                          }
+                        }else {
+                          //Si no es un arreglo
+                          $rutaXml = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
+                          $rutaPdf = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
+                        }
+
+                        
 
                         //Condicional para saber si el efecto es un egreso
                         if ($efecto == 'Egreso'){
@@ -277,8 +336,11 @@
                         {{--UUID--}}
                         <div class="table-body-cell">
                           <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="{{$FolioCFDI->folioFiscal}}">
-                            <label class="form-check-label">{{$FolioCFDI->folioFiscal}}</label>
+                            {{--Condicional para ocultar el checkbox cuando este es un pago--}}
+                            @if ($efecto != "Pago")
+                            <input id="Chk{{$FolioCFDI->folioFiscal}}" class="form-check-input" type="checkbox" wire:model="movivinc" value="{{$FolioCFDI->folioFiscal}}">
+                            @endif
+                            <label for="Chk{{$FolioCFDI->folioFiscal}}" class="form-check-label">{{$FolioCFDI->folioFiscal}}</label>
                           </div>
                         </div>
                         
@@ -366,5 +428,24 @@
               </div>
           </div>
       </div>
+  </div>
+
+  {{--Modal de creacion de nuevo cheque--}}
+  {{--Creacion del modal--}}
+  <div class="modal fade" id="nuevochequecfdi" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog " role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h6 class="modal-title" id="exampleModalLabel">  <span style="text-decoration: none;"  class="icons fas fa-plus">&nbsp;Agrega Cheque/Transferencia</span></h6>
+          </div>
+          <div class="modal-body">
+            {{--Parte uno registro del nuevo cheque (Aqui agregamos los cheques con los CFDI)--}}
+            
+            {{--Parte dos agregar PDF--}}
+
+            {{--Parte tres agregas los documentos relacionados--}}
+          </div>
+        </div>
+    </div>
   </div>
 </div>

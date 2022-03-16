@@ -610,7 +610,7 @@ echo $filtro_cheques;
             'faltaxml' => $faltaxml,
         ]);
 
-        $alerta = 'Cheque vinculado exitosamente.';
+        $alerta = "Cheque vinculado exitosamente.";
         $ruta = 'chequesytransferencias';
         $this->alerta($alerta, $ruta);
     }
