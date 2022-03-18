@@ -76,7 +76,7 @@ window.addEventListener('disabled', event => {
 
 
             <div class="form-inline mr-auto">
-            <input wire:loading.attr="readonly"  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Filtro" aria-label="Search">
+            <input wire:loading.attr="readonly"  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Filtro" aria-label="Search" >
             &nbsp;&nbsp;
             <label for="inputState">Mes</label>
             <select wire:model="mes" id="inputState1"  wire:loading.attr="disabled"  class=" select form-control"  >

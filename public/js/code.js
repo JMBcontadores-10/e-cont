@@ -633,12 +633,6 @@ $('#vinpsub').on('click', function() {
     }
 });
 
-//Boton para mostrar el sgundo modal de agregar un cheque con CFDI vinculados
-$("#Btnmostrarnewcheq").click(function() {
-    //Mostrar modal
-    $("#nuevochequecfdi").modal("show");
-});
-
 // Muestra en una alerta los pendientes de los cheques
 function alertaP(a, b, c) {
     var nl = "\r\n"
@@ -680,9 +674,103 @@ function verAdicionales(id_button) {
 }
 
 
-
 // Evita registrar múltiples veces cualquier cheque al momento de su creación o actualización
 function submitBlock() {
     $('#reg-cheque').hide()
     setTimeout("$('#reg-cheque').show()", 250);
+}
+
+
+//Funcion para abrir el modal
+function OpenModalDetail(){
+    $('#detalles').modal('show');
+}
+
+//Funcion para abrir el modal de agregar un nuevo cheque con CFDI vinculados
+function OpenModalNewCheque(){
+    $('#newchequevinc').modal('show');
+}
+
+
+//FilePond para los input de cuentas por pagar
+//Para agregar PDF
+function AddPDFChequeCFDI(id){
+    // registrar plugin validacion filepond  se deben agregar los cdn despues del body
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+    // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
+    FilePond.registerPlugin(FilePondPluginFileValidateSize);
+
+    const token = document.querySelector('input[name="_token"]');
+    const ruta = document.getElementById("addpdf");
+
+    var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
+        maxFileSize: '1000KB',
+        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+        labelIdle:'Sube un archivo <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading:'Cargando',
+        labelFileProcessing:'Subiendo a E-cont..',
+        labelFileProcessingComplete: 'Carga completa',
+        labelFileProcessingAborted: 'Carga cancelada',
+        labelTapToCancel: 'Presiona para cancelar',
+        allowMultiple: false,
+        //instantUpload: false,
+        acceptedFileTypes: ["application/pdf"],
+        fileValidateTypeDetectType: (source, type) =>
+            new Promise((resolve, reject) => {
+                // Do custom type detection here and return with promise
+                resolve(type);
+            }),
+
+    });
+
+    FilePond.setOptions({
+        name:'nuevoCheque',
+     server: {
+           url:'uploadEdit2/'+id,
+           headers:{
+               'X-CSRF-TOKEN': token.value
+            }
+        }
+    });
+}
+
+//Para agregar los relacionados
+function AddRelChequeCFDI(id){
+    // registrar plugin validacion filepond  se deben agregar los cdn despues del body
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+    // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
+    FilePond.registerPlugin(FilePondPluginFileValidateSize);
+
+    const token = document.querySelector('input[name="_token"]');
+    const ruta = document.getElementById("addadicion");
+
+    var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
+        maxFileSize: '1000KB',
+        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+        labelIdle:'Carga de archivos adicionales <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading:'Cargando',
+        labelFileProcessing:'Subiendo a E-cont..',
+        labelFileProcessingComplete: 'Carga completa',
+        labelFileProcessingAborted: 'Carga cancelada',
+        labelTapToCancel: 'Presiona para cancelar',
+        allowMultiple: true,
+        //instantUpload: false,
+        acceptedFileTypes: ["application/pdf"],
+        fileValidateTypeDetectType: (source, type) =>
+            new Promise((resolve, reject) => {
+                // Do custom type detection here and return with promise
+
+                resolve(type);
+            }),
+    });
+
+    FilePond.setOptions({
+        name:'adicionalesNuevoCheque',
+     server: {
+           url:'upload2/'+id,
+           headers:{
+               'X-CSRF-TOKEN': token.value
+            }
+        }
+    });
 }
