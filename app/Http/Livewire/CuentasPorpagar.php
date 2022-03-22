@@ -23,6 +23,7 @@ class Cuentasporpagar extends Component
     public $movivinc = [];
     public $btnvinactiv = 0;
     public $btnvinanewctiv = 0;
+    public $searchcfdi;
 
     //Variables que se utilizaran para agregar un nuevo cheque
     public $Nuevo_numcheque,
@@ -141,8 +142,6 @@ class Cuentasporpagar extends Component
            $chequeC->push('doc_relacionados', $this->pushArchivos);
         }
 
-
-
         //Vinculamos los CFDI al movimiento creado recientemente
         foreach($this->movivinc as $mov){
             $xml_r = MetadataR::where('folioFiscal', $mov)->first(); //Consulta a metadata_r
@@ -170,8 +169,6 @@ class Cuentasporpagar extends Component
 
         //Inserta el total de la suma de los cfdis  en importexml para corregir
         $cheque->update(['importexml' => $ImporteTotal]);        
-
-
 
         /// crea la notificacion
         $tipo[]='CA';
@@ -245,25 +242,21 @@ class Cuentasporpagar extends Component
     
             //Inserta el total de la suma de los cfdis  en importexml para corregir
             $cheque->update(['importexml' => $ImporteTotal]);
-
-            return redirect("chequesytransferencias");
+            
+            return redirect("chequesytransferencias")
+            ->with('ChequeID', $this->moviselect)
+            ->with('Empresa', $this->rfcEmpresa);
 
         }catch(Exception $e){
             return redirect("cuentaspagar");
         }
     }
 
+    //Retornamos a la vista cuando agregamos un nuevo movimiento con CFDI vinculados
     public function refresh(){
-        $this->emitUp('chequesRefresh');//actualiza la tabla cheques y transferencias
-
-        $this->Nuevo_numcheque="";
-        $this->Nuevo_fecha="";
-        $this->Nuevo_beneficiario="";
-        $this->Nuevo_importecheque="";
-        $this->Nuevo_tipomov="";
-        $this->Nuevo_tipoopera="";
-        $this->idNuevoCheque=null;
-        $this->step3=true;
+        return redirect("chequesytransferencias")
+            ->with('ChequeID', $this->idNuevoCheque->_id)
+            ->with('Empresa', $this->rfcEmpresa);
     }
 
     //Metodo para ejecutar la vista
@@ -330,7 +323,8 @@ class Cuentasporpagar extends Component
         if(is_array($this->RFC)){
             //Si es arreglo
             $CFDI = MetadataR::
-            where('estado', '<>', 'Cancelado')
+            search($this->searchcfdi)
+            ->where('estado', '<>', 'Cancelado')
             ->where('receptorRfc', $this->rfcEmpresa)
             ->wherein('emisorRfc', $this->RFC)
             ->whereNull('cheques_id')
@@ -340,7 +334,8 @@ class Cuentasporpagar extends Component
         }else{
             //No es arreglo
             $CFDI = MetadataR::
-            where('estado', '<>', 'Cancelado')
+            search($this->searchcfdi)
+            ->where('estado', '<>', 'Cancelado')
             ->where('receptorRfc', $this->rfcEmpresa)
             ->where('emisorRfc', $this->RFC)
             ->whereNull('cheques_id')

@@ -79,7 +79,7 @@
               <div class="col-4">
                 {{--Boton para mostrar la columna de detalles para varios proveedores--}}
                 <div class="invoice-create-btn mb-1">
-                  <button data-toggle="modal" data-target="#detalles" class="btn btn-secondary button2 DesatallesProv" id="BtnDetMoreProvUp" wire:click="EmitRFCArray()" disabled>Destalles Varios Proveedores</button>
+                  <button data-toggle="modal" data-target="#detalles" class="btn btn-secondary button2 DesatallesProv" id="BtnDetMoreProvUp" wire:click="EmitRFCArray()" disabled>Detalles Varios Proveedores</button>
                 </div>
               </div>
             </div>
@@ -260,6 +260,11 @@
                 </div>
 
                 <br>
+
+                {{--Filtro de busqueda--}}
+                <div class="form-inline mr-auto">
+                  <input wire:model.debounce.300ms="searchcfdi" class="form-control" type="text" placeholder="Filtro" aria-label="Search">    
+                </div>
 
                 {{--Generacion de la tabla--}}
                 <div id="resp-table">
@@ -655,12 +660,10 @@
 
                   <br>
 
-                  <button type="button" wire:click="refresh()" class="btn btn-secondary close-btn" data-dismiss="modal">Cerrar</button>
+                  <button type="button" wire:click="refresh()" class="btn btn-secondary close-btn" data-dismiss="modal">Finalizar</button>
                 </div>
-
               </div>
           </div>
       </div>
     </div>
-
 </div>

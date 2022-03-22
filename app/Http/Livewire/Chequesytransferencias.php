@@ -98,7 +98,15 @@ $this->condicion='>=';
 
 
 
-
+public function MostrarVincu($idcheque, $empresa){
+    if(empty($idcheque) && empty($empresa)){
+       
+    }else{
+        $this->rfcEmpresa = $empresa;
+        $this->todos = 1;
+        $this->search = $idcheque;
+    }
+}
 
 
 protected function rules(){
