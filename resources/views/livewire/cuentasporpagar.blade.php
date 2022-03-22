@@ -206,6 +206,7 @@
               {{--Encabezado--}}
               <div class="modal-header">
                   <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;" class="icons fas fa-folder-open">Cuentas por pagar</span></h6>
+                  <h6  class="modal-title" id="exampleModalLabel"><span> Total seleccionado:  {{$totalfactu}}</span></h6>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="CleanRFC()">
                       <span aria-hidden="true close-btn">×</span>
                  </button>
@@ -368,7 +369,7 @@
                           <div class="form-check">
                             {{--Condicional para ocultar el checkbox cuando este es un pago--}}
                             @if ($efecto != "Pago")
-                            <input id="Chk{{$FolioCFDI->folioFiscal}}" class="form-check-input" type="checkbox" wire:model="movivinc" value="{{$FolioCFDI->folioFiscal}}">
+                            <input id="Chk{{$FolioCFDI->folioFiscal}}" class="form-check-input" type="checkbox" wire:click="SumFactu()" wire:model="movivinc" value="{{$FolioCFDI->folioFiscal}}">
                             @endif
                             <label for="Chk{{$FolioCFDI->folioFiscal}}" class="form-check-label">{{$FolioCFDI->folioFiscal}}</label>
                           </div>
@@ -540,8 +541,12 @@
                               <input class="form-control" wire:model="Nuevo_importecheque" type="number"  step="0.01" placeholder="pesos y centavos Ej. 98.50" name="importeCheque">
                           </div>
                           <div class="col">
+                            @php
+                              //Conteo de las facturas seleccionadas
+                              $Datos = count($this->movivinc); 
+                            @endphp
                             <label for="inputPassword4">Total factura(s):</label>
-                            <input class="form-control" type="text" readonly name="importeT" value="">
+                            <input class="form-control" type="text" readonly name="importeT" value="{{$Datos}}">
                           </div>
                         </div>
 

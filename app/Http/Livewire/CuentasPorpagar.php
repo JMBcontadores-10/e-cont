@@ -39,6 +39,9 @@ class Cuentasporpagar extends Component
     $step3,
     $idNuevoCheque;
 
+    //Variable para la suma de totales de las facturas seleccionadas
+    public $sumtotalfactu;
+
     //Metodo para identificar el tipo de usuario
     public function mount()
     {
@@ -59,8 +62,11 @@ class Cuentasporpagar extends Component
     //Metodo para vaciar la variable
     public function CleanRFC()
     {
+        $this->movivinc = [];
         $this->moreprov = [];
         $this->RFC = "";
+        $this->sumtotalfactu = "";
+        $this->moviselect = "";
     }
 
     //Metodo para declarar los campos obligatorios
@@ -271,6 +277,33 @@ class Cuentasporpagar extends Component
             ->with('Empresa', $this->Empresa);
     }
 
+    //Metodo para la suma de las facturas realcionadas
+    public function SumFactu(){
+        //Declaramos las variables que nos servira de acumuladores
+        $TotalIngresos = 0;
+        $TotalEgresos = 0;
+
+        //Ciclo para obtener los valores de las facturas seleccionadas
+        foreach($this->movivinc as $mov){
+
+            // Obtiene el total de facturas vinculadas y suma el total
+            $Ingresos = MetadataR::where(['folioFiscal' => $mov])
+            ->where('efecto','!=','Egreso')
+            ->get()->sum('total');
+
+            $TotalIngresos += round($Ingresos, 2);
+
+            $Egresos = MetadataR::where(['folioFiscal' => $mov])
+            ->where('efecto','Egreso')
+            ->get()->sum('total');
+
+            $TotalEgresos += round($Egresos, 2);
+        }
+
+        //Obtenemos el valor total de la operacion y lo mostramos
+        $this->sumtotalfactu = $TotalIngresos - $TotalEgresos;
+    }
+
     //Metodo para ejecutar la vista
     public function render()
     {
@@ -361,7 +394,7 @@ class Cuentasporpagar extends Component
             ->orderBy('fecha', 'desc')
             ->get();
 
-        return view('livewire.cuentasporpagar', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses, 'col'=>$col, 'CFDI'=>$CFDI, 'Cheques'=>$Cheques])
+        return view('livewire.cuentasporpagar', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses, 'col'=>$col, 'CFDI'=>$CFDI, 'Cheques'=>$Cheques, 'totalfactu'=>$this->sumtotalfactu])
         ->extends('layouts.livewire-layout')
         ->section('content');
     }
