@@ -23,7 +23,7 @@
 
                     {{--Boton para crear un nuevo cheque --}}
                     <div class="invoice-create-btn mb-1">
-                        <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static" data-keyboard="false"    data-target="#nuevo-cheque" class="btn btn-primary glow invoice-create">
+                        <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static" data-keyboard="false" data-target="#nuevo-cheque" class="btn btn-primary glow invoice-create">
                             Nuevo Cheque/Transferencia 
                         </a>
                     </div>
@@ -524,7 +524,7 @@
             <div class="modal-content">
                 {{--Encabezado--}}
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;" class="icons far fa-check-circle"> Movimiento revisado</span></h6>
+                    <h6 class="modal-title" id="TitleRevisado"><span style="text-decoration: none;" class="icons far fa-check-circle"> Movimiento revisado</span></h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true close-btn">×</span>
                    </button>
@@ -547,6 +547,8 @@
         function MostrarNew(){
             if(Id != "" && Empresa != ""){
                 $("#BtnVincu").click();
+            }else{
+                
             }
         }
 

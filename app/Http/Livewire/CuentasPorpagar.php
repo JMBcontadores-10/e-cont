@@ -24,8 +24,7 @@ class Cuentasporpagar extends Component
     public $btnvinactiv = 0;
     public $btnvinanewctiv = 0;
     public $searchcfdi;
-    public $IdMovi;
-    public $Empresa;
+
 
     //Variables que se utilizaran para agregar un nuevo cheque
     public $Nuevo_numcheque,
@@ -251,10 +250,6 @@ class Cuentasporpagar extends Component
             //Inserta el total de la suma de los cfdis  en importexml para corregir
             $cheque->update(['importexml' => $ImporteTotal]);
             
-            //Almacenamos el _id del movimiento y el RFC de la empresa en variables
-            $this->IdMovi = $this->moviselect;
-            $this->Empresa = $this->rfcEmpresa;
-            
             //Redireccionamps a la viste de ChyT junto con las variables como parametro
             return redirect("chequesytransferencias")
             ->with('ChequeID', $this->moviselect)
@@ -267,14 +262,10 @@ class Cuentasporpagar extends Component
 
     //Retornamos a la vista cuando agregamos un nuevo movimiento con CFDI vinculados
     public function GotoChyT(){
-        //Almacenamos el _id del movimiento y el RFC de la empresa en variables
-        $this->IdMovi = $this->idNuevoCheque->_id;
-        $this->Empresa = $this->rfcEmpresa;
-
         //Redireccionamps a la viste de ChyT junto con las variables como parametro
         return redirect("chequesytransferencias")
-            ->with('ChequeID', $this->IdMovi)
-            ->with('Empresa', $this->Empresa);
+            ->with('ChequeID', $this->idNuevoCheque->_id)
+            ->with('Empresa', $this->rfcEmpresa);
     }
 
     //Metodo para la suma de las facturas realcionadas
@@ -302,6 +293,17 @@ class Cuentasporpagar extends Component
 
         //Obtenemos el valor total de la operacion y lo mostramos
         $this->sumtotalfactu = $TotalIngresos - $TotalEgresos;
+    }
+
+    public function refresh(){
+        $this->Nuevo_numcheque="";
+        $this->Nuevo_fecha="";
+        $this->Nuevo_beneficiario="";
+        $this->Nuevo_importecheque="";
+        $this->Nuevo_tipomov="";
+        $this->Nuevo_tipoopera="";
+        $this->idNuevoCheque=null;
+        $this->step3=true;
     }
 
     //Metodo para ejecutar la vista

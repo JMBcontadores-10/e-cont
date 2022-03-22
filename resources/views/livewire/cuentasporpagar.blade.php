@@ -470,7 +470,7 @@
               {{--Encabezado--}}
               <div class="modal-header">
                   <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;" class="icons fas fa-plus">Agrega Cheque/Transferencia</span></h6>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="refresh()">
                       <span aria-hidden="true close-btn">×</span>
                  </button>
               </div>
