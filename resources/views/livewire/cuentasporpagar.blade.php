@@ -564,7 +564,7 @@
                             
                             <label for="inputState">Tipo de operación</label>
                             <select wire:model="Nuevo_tipoopera" class="form-control" name="tipoOperacion" required>
-                                <option  value="" >--Selecciona tipo--</option>
+                                <option  value="">--Selecciona tipo--</option>
                                 <option>Impuestos</option>
                                 <option>Nómina</option>
                                 <option>Gasto y/o compra</option>
@@ -660,7 +660,7 @@
 
                   <br>
 
-                  <button type="button" wire:click="refresh()" class="btn btn-secondary close-btn" data-dismiss="modal">Finalizar</button>
+                  <button type="button" wire:click="GotoChyT()" class="btn btn-secondary close-btn" data-dismiss="modal">Finalizar</button>
                 </div>
               </div>
           </div>

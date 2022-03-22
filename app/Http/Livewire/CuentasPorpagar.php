@@ -24,6 +24,8 @@ class Cuentasporpagar extends Component
     public $btnvinactiv = 0;
     public $btnvinanewctiv = 0;
     public $searchcfdi;
+    public $IdMovi;
+    public $Empresa;
 
     //Variables que se utilizaran para agregar un nuevo cheque
     public $Nuevo_numcheque,
@@ -253,10 +255,15 @@ class Cuentasporpagar extends Component
     }
 
     //Retornamos a la vista cuando agregamos un nuevo movimiento con CFDI vinculados
-    public function refresh(){
+    public function GotoChyT(){
+        //Almacenamos el _id del movimiento y el RFC de la empresa en variables
+        $this->IdMovi = $this->idNuevoCheque->_id;
+        $this->Empresa = $this->rfcEmpresa;
+
+        //Redireccionamps a la viste de ChyT junto con las variables como parametro
         return redirect("chequesytransferencias")
-            ->with('ChequeID', $this->idNuevoCheque->_id)
-            ->with('Empresa', $this->rfcEmpresa);
+            ->with('ChequeID', $this->IdMovi)
+            ->with('Empresa', $this->Empresa);
     }
 
     //Metodo para ejecutar la vista

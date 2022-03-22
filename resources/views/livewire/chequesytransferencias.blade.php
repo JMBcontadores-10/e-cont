@@ -487,16 +487,16 @@
                                     </td>
 
                                     {{--Llamando a las vistas de otros componentes--}}
-                                    <livewire:ajuste :ajusteCheque="$i" :wire:key="'user-profile-one-'.$i->_id"></livewire:ajuste>
-                                    <livewire:comentarios :comentarioCheque="$i" :wire:key="'user-profile-two-'.$i->_id"></livewire:comentarios>
-                                    <livewire:relacionados  :filesrelacionados=$i :wire:key="'user-profile-five-'.$i->_id"></livewire:relacionados>
-                                    <livewire:pdfcheque :pdfcheque=$i :wire:key="'user-profile-tre-'.$i->_id" ></livewire:pdfcheque>
-                                    <livewire:editar  :editCheque=$i :wire:key="'user-profile-four-'.$i->_id"></livewire:editar>
-                                    <livewire:poliza  :polizaCheque=$i :wire:key="'user-profile-six-'.$i->_id" ></livewire:poliza>
-                                    <livewire:eliminar  :eliminarCheque=$i :wire:key="'user-profile-seven-'.$i->_id" ></livewire:eliminar>
+                                    <livewire:ajuste :ajusteCheque="$i" :wire:key="'user-profile-one-'.$i->_id">
+                                    <livewire:comentarios :comentarioCheque="$i" :wire:key="'user-profile-two-'.$i->_id">
+                                    <livewire:relacionados  :filesrelacionados=$i :wire:key="'user-profile-five-'.$i->_id">
+                                    <livewire:pdfcheque :pdfcheque=$i :wire:key="'user-profile-tre-'.$i->_id">
+                                    <livewire:editar  :editCheque=$i :wire:key="'user-profile-four-'.$i->_id">
+                                    <livewire:poliza  :polizaCheque=$i :wire:key="'user-profile-six-'.$i->_id">
+                                    <livewire:eliminar  :eliminarCheque=$i :wire:key="'user-profile-seven-'.$i->_id">
                                         
                                     @if(!$i->faltaxml ==0)
-                                        <livewire:facturas-vinculadas  :facturaVinculada=$i :wire:key="'user-profile-eight-'.$i->_id" ></livewire:facturas-vinculadas>
+                                        <livewire:facturas-vinculadas  :facturaVinculada=$i :wire:key="'user-profile-eight-'.$i->_id">
                                     @endif
 
                                 </tr>
@@ -512,8 +512,8 @@
     </div>
 
     {{--Llamamos a las vistas de otros componentes--}}
-    <livewire:agregarcheque></livewire:agregarcheque>
-    <livewire:uploadrelacionados></livewire:uploadrelacionados>
+    <livewire:agregarcheque>
+    <livewire:uploadrelacionados>
     @include('livewire.demo')
 
     {{--Modal para las acciones bloqueadas por movimientos revisadps--}}
@@ -539,11 +539,19 @@
 
     <script>
     $(document).ready(function(){
+        //Guardamos en variables los datos enviados del controlador de cuentas por pagar
         var Id = "{{ session('ChequeID') }}"
         var Empresa = "{{ session('Empresa') }}"
-        if(Id != "" && Empresa != ""){
-            $("#BtnVincu").click();
+
+        //Creamos una funcion que activara la accion de insertar los datos de las variables a los inputs correspondiente
+        function MostrarNew(){
+            if(Id != "" && Empresa != ""){
+                $("#BtnVincu").click();
+            }
         }
+
+        //Al cargar la pagina espraremos medio segundo para activar la funcion
+        setTimeout(MostrarNew,500);
     });
     </script>
 </div>
