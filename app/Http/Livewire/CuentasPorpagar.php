@@ -245,6 +245,11 @@ class Cuentasporpagar extends Component
             //Inserta el total de la suma de los cfdis  en importexml para corregir
             $cheque->update(['importexml' => $ImporteTotal]);
             
+            //Almacenamos el _id del movimiento y el RFC de la empresa en variables
+            $this->IdMovi = $this->moviselect;
+            $this->Empresa = $this->rfcEmpresa;
+            
+            //Redireccionamps a la viste de ChyT junto con las variables como parametro
             return redirect("chequesytransferencias")
             ->with('ChequeID', $this->moviselect)
             ->with('Empresa', $this->rfcEmpresa);
