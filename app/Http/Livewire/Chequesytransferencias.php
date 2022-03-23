@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use Illuminate\Http\Request;
 
 
 
@@ -52,7 +53,7 @@ class Chequesytransferencias extends Component
     protected $paginationTheme = 'bootstrap';// para dar e estilo numerico al paginador
 
 
-    public function mount()
+    public function mount(Request $request)
     {
 
         $this->Crear=new Cheques();
@@ -71,7 +72,10 @@ if(auth()->user()->tipo){
 //$this->importe=0;
 $this->condicion='>=';
 
-
+    //Condicional para agregar los datos del nuevo cheque
+    $this->rfcEmpresa = $request->input('empresa');
+    $this->todos = $request->input('todos');
+    $this->search = $request->input('id');
     }
 
 
@@ -90,24 +94,9 @@ $this->condicion='>=';
     }
 
 
-
-
     protected $listeners = [
         'chequesRefresh' => '$refresh',
      ];
-
-
-
-public function MostrarVincu($idcheque, $empresa){
-    if(empty($idcheque) && empty($empresa)){
-       
-    }else{
-        $this->rfcEmpresa = $empresa;
-        $this->todos = 1;
-        $this->search = $idcheque;
-    }
-}
-
 
 protected function rules(){
 

@@ -18,9 +18,6 @@
         <div class="content-wrapper">
             <div class="content-body">
                 <section class="invoice-list-wrapper">
-                    {{--Boton oculto para llenar los input del movimiento que se vinculo en cuentas por pagar--}}
-                    <button id="BtnVincu" style="display: none" wire:click="MostrarVincu('{{ session('ChequeID') }}', '{{ session('Empresa') }}')">Vincular</button>
-
                     {{--Boton para crear un nuevo cheque --}}
                     <div class="invoice-create-btn mb-1">
                         <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static" data-keyboard="false" data-target="#nuevo-cheque" class="btn btn-primary glow invoice-create">
@@ -31,7 +28,7 @@
                     {{--Condicional para mostrar un listado de empresas--}}
                     @empty(!$empresas)
                     <label for="inputState">Empresa: {{$empresa}}</label>
-                    <select wire:loading.attr="disabled"   wire:model="rfcEmpresa" id="inputState1" class=" select form-control"  >
+                    <select wire:loading.attr="disabled" wire:model="rfcEmpresa" id="inputState1" class=" select form-control">
                         <option  value="00" >--Selecciona Empresa--</option>
                         <?php $rfc=0; $rS=1;foreach($empresas as $fila){
                             echo '<option value="' . $fila[$rfc] . '">'. $fila[$rS] . '</option>';
@@ -506,6 +503,15 @@
                         {{ $colCheques->links() }}
                         @livewireScripts
                     </div>
+
+                    {{--Condicional para verificar que se pasaron correctamente los datos--}}
+                    @if (session()->has('ChequeId') && session()->has('Empresa'))
+                    <div class="alert alert-success">
+                        {{ session('ChequeId') }}
+                        {{ session('Empresa') }}
+                    </div>
+                    @endif
+
                 </section>
             </div>
         </div>
@@ -525,35 +531,15 @@
                 {{--Encabezado--}}
                 <div class="modal-header">
                     <h6 class="modal-title" id="TitleRevisado"><span style="text-decoration: none;" class="icons far fa-check-circle"> Movimiento revisado</span></h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button id="BtnCloseRevi" type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true close-btn">×</span>
                    </button>
                 </div>
                 {{--Cuerpo del modal--}}
                 <div class="modal-body">
-                    <p>No puedes realizar esta acción en un movimiento revisado</p>
+                    <p id="ModalRevi">No puedes realizar esta acción en un movimiento revisado</p>
                 </div>
             </div>
         </div>
     </div>
-
-    <script>
-    $(document).ready(function(){
-        //Guardamos en variables los datos enviados del controlador de cuentas por pagar
-        var Id = "{{ session('ChequeID') }}"
-        var Empresa = "{{ session('Empresa') }}"
-
-        //Creamos una funcion que activara la accion de insertar los datos de las variables a los inputs correspondiente
-        function MostrarNew(){
-            if(Id != "" && Empresa != ""){
-                $("#BtnVincu").click();
-            }else{
-                
-            }
-        }
-
-        //Al cargar la pagina espraremos medio segundo para activar la funcion
-        setTimeout(MostrarNew,500);
-    });
-    </script>
 </div>

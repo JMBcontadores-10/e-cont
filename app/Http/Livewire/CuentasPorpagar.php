@@ -41,6 +41,7 @@ class Cuentasporpagar extends Component
     //Variable para la suma de totales de las facturas seleccionadas
     public $sumtotalfactu;
 
+
     //Metodo para identificar el tipo de usuario
     public function mount()
     {
@@ -82,7 +83,7 @@ class Cuentasporpagar extends Component
     //Metodo para guardar un cheque nuevo con el CFDI vinculado
     public function AgregarChequeCFDI(){
         try{
-            $dtz = new DateTimeZone("America/Mexico_City");
+        $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
         $Id = $dt->format('H\Mi\SsA');
         $Id = $dt->format('Y\Hh\Mi\SsA');// obtener año y hora con segundos para evitar repetidos
@@ -222,50 +223,45 @@ class Cuentasporpagar extends Component
 
     //Vincular un CFDI a un movimiento
     public function VincuCFDIMovi(){
-        try{
-            foreach($this->movivinc as $mov){
-                $xml_r = MetadataR::where('folioFiscal', $mov)->first(); //Consulta a metadata_r
-                $cheque = Cheques::find($this->moviselect);
-                $cheque->metadata_r()->save($xml_r);
-                
-                // Obtiene el total de facturas vinculadas y suma el total
-                $Ingresos = MetadataR::where(['cheques_id' => $this->moviselect])
-                ->where('efecto','!=','Egreso')
-                ->get()->sum('total');
-    
-                $TotalIngresos = round($Ingresos, 2);
-    
-                $Egresos = MetadataR::where(['cheques_id' => $this->moviselect])
-                ->where('efecto','Egreso')
-                ->get()->sum('total');
-    
-                $TotalEgresos= round($Egresos, 2);
-    
-                //Actualiza el contador faltaxml descontando cada factura
-                $cheque->update(['faltaxml'=> $cheque->faltaxml + 1]);
-            }
-    
-            $ImporteTotal = $TotalIngresos - $TotalEgresos;
-    
-            //Inserta el total de la suma de los cfdis  en importexml para corregir
-            $cheque->update(['importexml' => $ImporteTotal]);
+        foreach($this->movivinc as $mov){
+            $xml_r = MetadataR::where('folioFiscal', $mov)->first(); //Consulta a metadata_r
+            $cheque = Cheques::find($this->moviselect);
+            $cheque->metadata_r()->save($xml_r);
             
-            //Redireccionamps a la viste de ChyT junto con las variables como parametro
-            return redirect("chequesytransferencias")
-            ->with('ChequeID', $this->moviselect)
-            ->with('Empresa', $this->rfcEmpresa);
+            // Obtiene el total de facturas vinculadas y suma el total
+            $Ingresos = MetadataR::where(['cheques_id' => $this->moviselect])
+            ->where('efecto','!=','Egreso')
+            ->get()->sum('total');
 
-        }catch(Exception $e){
-            return redirect("cuentaspagar");
+            $TotalIngresos = round($Ingresos, 2);
+
+            $Egresos = MetadataR::where(['cheques_id' => $this->moviselect])
+            ->where('efecto','Egreso')
+            ->get()->sum('total');
+
+            $TotalEgresos= round($Egresos, 2);
+
+            //Actualiza el contador faltaxml descontando cada factura
+            $cheque->update(['faltaxml'=> $cheque->faltaxml + 1]);
         }
+
+        $ImporteTotal = $TotalIngresos - $TotalEgresos;
+
+        //Inserta el total de la suma de los cfdis  en importexml para corregir
+        $cheque->update(['importexml' => $ImporteTotal]);
+        
+        //Redireccionamps a la viste de ChyT junto con las variables como parametro
+        session()->flash('ChequeId', $this->moviselect);
+        session()->flash('Empresa', $this->rfcEmpresa);
+        return redirect()->to('/chequesytransferencias');
     }
 
     //Retornamos a la vista cuando agregamos un nuevo movimiento con CFDI vinculados
     public function GotoChyT(){
         //Redireccionamps a la viste de ChyT junto con las variables como parametro
-        return redirect("chequesytransferencias")
-            ->with('ChequeID', $this->idNuevoCheque->_id)
-            ->with('Empresa', $this->rfcEmpresa);
+        session()->flash('ChequeId', $this->idNuevoCheque->_id);
+        session()->flash('Empresa', $this->rfcEmpresa);
+        return redirect()->to('/chequesytransferencias');
     }
 
     //Metodo para la suma de las facturas realcionadas
