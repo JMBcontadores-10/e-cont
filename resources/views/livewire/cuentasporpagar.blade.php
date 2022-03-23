@@ -4,12 +4,8 @@
     use App\Models\MetadataR;
     use App\Models\ListaNegra;
     use App\Models\XmlR;
-<<<<<<< HEAD
-
-=======
     use App\Models\Cheques;
-  
->>>>>>> 7e55d6c84abdd90d59fd117282923f488945c8b4
+
     //Obtenemos la clase para agregar a la tabla
     $rfc = Auth::user()->RFC;
     $class='';
@@ -72,7 +68,7 @@
 
             <br>
 
-            <p> xx{{ $variosP}}</p>
+            {{-- <p> xx{{ $variosP}}</p> --}}
 
             {{--Botones para mas provvedores--}}
             <div class="row">
@@ -85,11 +81,7 @@
               <div class="col-4">
                 {{--Boton para mostrar la columna de detalles para varios proveedores--}}
                 <div class="invoice-create-btn mb-1">
-<<<<<<< HEAD
-                  <button data-toggle="modal" data-target="#detalles" wire:click class="btn btn-secondary button2 DesatallesProv" id="BtnDetMoreProvUp" disabled>Destalles Varios Proveedores</button>
-=======
                   <button data-toggle="modal" data-target="#detalles" class="btn btn-secondary button2 DesatallesProv" id="BtnDetMoreProvUp" wire:click="EmitRFCArray()" disabled>Detalles Varios Proveedores</button>
->>>>>>> 7e55d6c84abdd90d59fd117282923f488945c8b4
                 </div>
               </div>
             </div>
@@ -164,11 +156,7 @@
                       {{--Contenido de la columna para vincular varios--}}
                       <td class="text-center align-middle VincVarProv">
                         <div id="checkbox-group" class="checkbox-group">
-<<<<<<< HEAD
-                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox"  wire:model.defer="variosP" value="{{$i->emisorRfc}}"/>
-=======
                           <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" wire:model.defer="moreprov" value="{{$i->emisorRfc}}"/>
->>>>>>> 7e55d6c84abdd90d59fd117282923f488945c8b4
                         </div>
                       </td>
                       <td class="text-center align-middle">
@@ -278,7 +266,7 @@
 
                 {{--Filtro de busqueda--}}
                 <div class="form-inline mr-auto">
-                  <input wire:model.debounce.300ms="searchcfdi" class="form-control" type="text" placeholder="Filtro" aria-label="Search">    
+                  <input wire:model.debounce.300ms="searchcfdi" class="form-control" type="text" placeholder="Filtro" aria-label="Search">
                 </div>
 
                 {{--Generacion de la tabla--}}
@@ -323,7 +311,7 @@
                         $anio = (string) (int) substr($fechaE, 0, 4);
                         $mees=$espa->fecha_es($mesNombre);
 
-                        //Se asignan las rutas donde está almacenado el 
+                        //Se asignan las rutas donde está almacenado el
                         //Condicional para saber si el RFC es un arreglo
                         if(is_array($RFC)){
                           //Si es un arreglo
@@ -337,7 +325,7 @@
                           $rutaPdf = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
                         }
 
-                      
+
                         //Condicional para saber si el efecto es un egreso
                         if ($efecto == 'Egreso'){
                           //Si es un egreso entonces se saca el valor absoluto del total para descontar
@@ -474,9 +462,6 @@
           </div>
       </div>
   </div>
-<<<<<<< HEAD
-</div>
-=======
 
     {{--Llamamos a las modales--}}
     {{--Modal de detalles de cuentas por pagar--}}
@@ -553,14 +538,14 @@
                               {{---tooltip---}}
                               <i id="info" class="fa fa-info-circle" aria-hidden="true"></i>
                               <span id="pagado" class="tooltiptext">La cantidad que se pagó con pesos y centavos.</span>
-                              
+
                               <label for="inputEmail4">Total pagado</label>
                               <input class="form-control" wire:model="Nuevo_importecheque" type="number"  step="0.01" placeholder="pesos y centavos Ej. 98.50" name="importeCheque">
                           </div>
                           <div class="col">
                             @php
                               //Conteo de las facturas seleccionadas
-                              $Datos = count($this->movivinc); 
+                              $Datos = count($this->movivinc);
                             @endphp
                             <label for="inputPassword4">Total factura(s):</label>
                             <input class="form-control" type="text" readonly name="importeT" value="{{$Datos}}">
@@ -574,7 +559,7 @@
                             {{---tooltip---}}
                             <i id="info" class="fa fa-info-circle" aria-hidden="true"></i>
                             <span id="beneficiario" class="tooltiptext"> Razón social a quien realizó el pago.</span>
-                            
+
                             <label for="inputCity">Beneficiario</label>
                             <input class="form-control" wire:model="Nuevo_beneficiario" type="text" name="beneficiario" placeholder="A quien realizó el pago" required>
                           </div>
@@ -583,7 +568,7 @@
                             <i id="info" class="fa fa-info-circle" aria-hidden="true"></i>
                             <span id="operacion" class="tooltiptext"> Seleccione que fue lo que pagó.
                             </span>
-                            
+
                             <label for="inputState">Tipo de operación</label>
                             <select wire:model="Nuevo_tipoopera" class="form-control" name="tipoOperacion" required>
                                 <option  value="">--Selecciona tipo--</option>
@@ -605,7 +590,7 @@
                           </div>
                           Creando cheque ...
                         </div>
-                    
+
                         <br>
 
                         {{--Boton para enviar el form--}}
@@ -689,4 +674,3 @@
       </div>
     </div>
 </div>
->>>>>>> 7e55d6c84abdd90d59fd117282923f488945c8b4
