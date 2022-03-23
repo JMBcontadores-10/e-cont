@@ -155,7 +155,7 @@ class Cuentasporpagar extends Component
             $xml_r = MetadataR::where('folioFiscal', $mov)->first(); //Consulta a metadata_r
             $cheque = Cheques::find($this->idNuevoCheque->_id);
             $cheque->metadata_r()->save($xml_r);
-            
+
             // Obtiene el total de facturas vinculadas y suma el total
             $Ingresos = MetadataR::where(['cheques_id' => $this->idNuevoCheque->_id])
             ->where('efecto','!=','Egreso')
@@ -176,7 +176,7 @@ class Cuentasporpagar extends Component
         $ImporteTotal = $TotalIngresos - $TotalEgresos;
 
         //Inserta el total de la suma de los cfdis  en importexml para corregir
-        $cheque->update(['importexml' => $ImporteTotal]);        
+        $cheque->update(['importexml' => $ImporteTotal]);
 
         /// crea la notificacion
         $tipo[]='CA';

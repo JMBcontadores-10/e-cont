@@ -107,7 +107,7 @@ $n=0;
 
                 if ($estado== 'Cancelado'){
              $noti= Notificaciones::where('folioFiscal',$folioF)->get();
-            echo  $noti;
+            // echo  $noti;
              if(count($noti)==0){
                     Notificaciones::create([
 
@@ -124,7 +124,7 @@ $n=0;
 
         ]);
 
-        echo "vacio";
+        // echo "vacio";
                 }
 
         }
@@ -413,17 +413,23 @@ $iva_Egreso [] = $vIva;
 @endforeach
 @php
 
-
+             if( is_array($sub_Egreso)){
 			$suma_subEgreso = array_sum($sub_Egreso); //Aqu� sumo el arreglo que contiene todos los egresos.
 
 		  $suma_sub=array_sum($a) - $suma_subEgreso; // Aqu� hago la resta de los ingresos menos egresos para as� obtener el total
 
+             }
 
+             if( is_array($egreso)){
 	            $sumaEgreso= array_sum($egreso); //Sumo el array completo del Total de los egresos
 		 $suma_total = array_sum($t)-$sumaEgreso; // Aqu� hago la resta del array total de los egresos menos el array total de los ingresos
+             }
 
+             if( is_array($iva_Egreso)){
 		$suma_Iva_Egreso = array_sum($iva_Egreso);
 		$suma_iva = array_sum($Iv) - $suma_Iva_Egreso;
+
+             }
 
 		@endphp
 
@@ -444,9 +450,12 @@ $iva_Egreso [] = $vIva;
 
 
         <div class="table-body-cell"><b> Total </b></div>
+        @if(isset($suma_sub))
 			<div class="table-body-cell"><b> $ {{number_format($suma_sub, 2)}}</b> </div>
                 <div class="table-body-cell"><b> $ {{number_format($suma_iva, 2)}}</b> </div>
                     <div class="table-body-cell"><b> $ {{number_format($suma_total, 2)}}</b> </div>
+
+                    @endif
 		@else
 
         <div class="table-body-cell"></div>
