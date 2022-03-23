@@ -83,7 +83,11 @@ $("[data-dismiss=modal]").trigger({ type: "click" });// cerrar modal por data-di
 @endphp
 
 {{--Mostramos el total de archivos--}}
-     <p class="pf LblArchExist"><b>Total de archivos adicionales {{$TotalArchivos}}</b></p>
+    @if (isset($TotalArchivos))
+    <p class="pf LblArchExist"><b>Total de archivos adicionales {{$TotalArchivos}}</b></p>
+    @else
+    <p class="pf LblArchExist"><b>Total de archivos adicionales</b></p>
+    @endif
 </div>
 
                     <div id="#relacionadosView{{$datos1->_id}}" class="dropzone">

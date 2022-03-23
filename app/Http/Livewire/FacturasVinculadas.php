@@ -66,8 +66,6 @@ $cheques=Cheques::where('_id',$xml_r->cheques_id)->first();///consulta cheques
 
 if($xml_r->efecto =="Egreso"){
 
-
-
 //// actualiza el importe descontando el importe del cheque del metadata_r
 $cheques->update(['importexml'=> $cheques->importexml+$xml_r->total]);
 

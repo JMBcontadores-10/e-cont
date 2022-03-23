@@ -138,7 +138,6 @@ class Agregarcheque extends Component
         'pendi' => 1,
         'lista' => 0,
         'ajuste' => 0,
-
        ]);
 
       $this->idNuevoCheque=$chequeC;
