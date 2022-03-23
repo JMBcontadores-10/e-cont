@@ -13,6 +13,8 @@ class Cuentasporpagar extends Component
     public $rfcEmpresa;
     public int $perPage=20;
     public $search;
+    public $variosP=[];
+
 
     //Variables para mostrar los CFDI
     public $RFC = "";
@@ -21,7 +23,7 @@ class Cuentasporpagar extends Component
     {
         $this->RFC = $EmitRFC;
     }
-    
+
 
     //Metodo para identificar el tipo de usuario
     public function mount()
@@ -32,11 +34,18 @@ class Cuentasporpagar extends Component
         else{
             $this->rfcEmpresa=auth()->user()->RFC;
         }
+
+
+        $this->variosP='';
     }
 
     //Metodo para ejecutar la vista
     public function render()
     {
+
+
+
+
         if(!empty(auth()->user()->tipo)){
             $e=array();
             $largo=sizeof(auth()->user()->empresas);
@@ -87,7 +96,11 @@ class Cuentasporpagar extends Component
         ->orderBy('fechaEmision', 'desc')
         ->get();
 
-        return view('livewire.cuentasporpagar', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses, 'col'=>$col, 'CFDI'=>$CFDI])
+
+
+
+
+        return view('livewire.cuentasporpagar', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses, 'col'=>$col, 'CFDI'=>$CFDI, 'variosP'=>$this->variosP])
         ->extends('layouts.livewire-layout')
         ->section('content');
     }
