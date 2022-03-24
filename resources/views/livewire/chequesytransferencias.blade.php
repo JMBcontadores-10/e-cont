@@ -168,10 +168,10 @@
                             }else {
                                 $diferencia = $importeC - abs($sumaxml);
                                 $diferencia = $diferencia - $ajuste;
-                            }
+                            } 
                             if ($diferencia > 1 or $diferencia < -1) {
                                 $diferenciaP = 0;
-                            }else {
+                            }else { 
                                 $diferenciaP = 1;
                             }
 
@@ -503,15 +503,6 @@
                         {{ $colCheques->links() }}
                         @livewireScripts
                     </div>
-
-                    {{--Condicional para verificar que se pasaron correctamente los datos--}}
-                    @if (session()->has('ChequeId') && session()->has('Empresa'))
-                    <div class="alert alert-success">
-                        {{ session('ChequeId') }}
-                        {{ session('Empresa') }}
-                    </div>
-                    @endif
-
                 </section>
             </div>
         </div>

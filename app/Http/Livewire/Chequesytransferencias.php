@@ -53,7 +53,7 @@ class Chequesytransferencias extends Component
     protected $paginationTheme = 'bootstrap';// para dar e estilo numerico al paginador
 
 
-    public function mount(Request $request)
+    public function mount()
     {
 
         $this->Crear=new Cheques();
@@ -71,11 +71,6 @@ if(auth()->user()->tipo){
 
 //$this->importe=0;
 $this->condicion='>=';
-
-    //Condicional para agregar los datos del nuevo cheque
-    $this->rfcEmpresa = $request->input('empresa');
-    $this->todos = $request->input('todos');
-    $this->search = $request->input('id');
     }
 
 

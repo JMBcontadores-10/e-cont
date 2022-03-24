@@ -680,18 +680,6 @@ function submitBlock() {
     setTimeout("$('#reg-cheque').show()", 250);
 }
 
-
-//Funcion para abrir el modal
-function OpenModalDetail(){
-    $('#detalles').modal({backdrop: 'static', keyboard: false});
-}
-
-//Funcion para abrir el modal de agregar un nuevo cheque con CFDI vinculados
-function OpenModalNewCheque(){
-    $('#newchequevinc').modal({backdrop: 'static', keyboard: false});
-}
-
-
 //FilePond para los input de cuentas por pagar
 //Para agregar PDF
 function AddPDFChequeCFDI(id){

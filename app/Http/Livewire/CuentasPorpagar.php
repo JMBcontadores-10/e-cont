@@ -355,9 +355,9 @@ class Cuentasporpagar extends Component
 
         $col = MetadataR::
         search($this->search)
+        ->select('emisorNombre', 'emisorRfc')
         ->where('receptorRfc', $this->rfcEmpresa)
         ->groupBy('emisorRfc')
-        ->groupBy('emisorNombre')
         ->orderBy('emisorRfc', 'asc')
         ->get();
 
