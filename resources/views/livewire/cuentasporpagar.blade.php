@@ -165,7 +165,7 @@
                     @endif
 
                     {{--Llamando a las vistas de otros componentes--}}
-                    <livewire:detalles :factu=$i :wire:key="'user-profile-one-'.$i->emisorRfc" :empresa=$empresa>
+                    <livewire:detalles :factu=$i :wire:key="'user-profile-one-'.$i->emisorRfc" :rfcEmpresa=$empresa>
                     @endforeach
                   </tbody>
                 </table>

@@ -137,7 +137,7 @@
                           $mesNombre = (string) (int) substr($fechaE, 5, 2);
                           $anio = (string) (int) substr($fechaE, 0, 4);
                           $mees=$espa->fecha_es($mesNombre);
-                          $RFC = $this->facturas->emisorRfc;
+                          $RFC = $this->factu->emisorRfc;
   
                           //Se asignan las rutas donde está almacenando
                           $rutaXml = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
