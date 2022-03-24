@@ -32,18 +32,19 @@ class MetadataR extends Model
     {
         return empty($search) ? static::query()
         : static::query()->where('emisorRfc', 'like', '%'.$search.'%')
-        ->orWhere('emisorNombre', 'like', '%'.$search.'%');
+        ->orWhere('emisorNombre', 'like', '%'.$search.'%')
+        ->orWhere('folioFiscal', 'like', '%'.$search.'%');
     }
 
     public function fecha_es($mes){
 
 
         $mes=$mes;
-    
-    
+
+
     // swich para convertir Int mes en String
         switch ($mes){
-    
+
          case 1 :
             $mes="Enero";
              break;
@@ -83,5 +84,6 @@ class MetadataR extends Model
     }
     return $mes;
     }
+
     
 }

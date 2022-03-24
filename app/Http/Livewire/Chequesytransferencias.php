@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use Illuminate\Http\Request;
 
 
 
@@ -70,8 +71,6 @@ if(auth()->user()->tipo){
 
 //$this->importe=0;
 $this->condicion='>=';
-
-
     }
 
 
@@ -90,16 +89,9 @@ $this->condicion='>=';
     }
 
 
-
-
     protected $listeners = [
         'chequesRefresh' => '$refresh',
      ];
-
-
-
-
-
 
 protected function rules(){
 

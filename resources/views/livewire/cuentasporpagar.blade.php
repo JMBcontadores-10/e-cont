@@ -4,13 +4,16 @@
     use App\Models\MetadataR;
     use App\Models\ListaNegra;
     use App\Models\XmlR;
-
+    use App\Models\Cheques;
     //Obtenemos la clase para agregar a la tabla
     $rfc = Auth::user()->RFC;
     $class='';
     if(empty($class)){
       $class="table nowrap dataTable no-footer";
       }
+
+    //Obtenemos el valor de la fecha del dia de hoy
+    $date=date('Y-m-d');
     @endphp
 
 
@@ -44,20 +47,18 @@
 
             <br>
 
-            <p> xx{{ $variosP}}</p>
-
             {{--Botones para mas provvedores--}}
             <div class="row">
               <div class="col-4">
                 {{--Boton para mostrar la columna de vincular mas--}}
                 <div class="invoice-create-btn mb-1">
-                  <a class="btn btn-primary button2" wire:model="botonVarios" id="BtnMoreProv">Vincular Varios Proveedores</a>
+                  <a class="btn btn-primary button2" id="BtnMoreProv">Vincular Varios Proveedores</a>
                 </div>
               </div>
               <div class="col-4">
                 {{--Boton para mostrar la columna de detalles para varios proveedores--}}
                 <div class="invoice-create-btn mb-1">
-                  <button data-toggle="modal" data-target="#detalles" wire:click class="btn btn-secondary button2 DesatallesProv" id="BtnDetMoreProvUp" disabled>Destalles Varios Proveedores</button>
+                  <button data-toggle="modal" data-target="#detalles" class="btn btn-secondary button2 DesatallesProv" id="BtnDetMoreProvUp" disabled>Detalles Varios Proveedores</button>
                 </div>
               </div>
             </div>
@@ -132,7 +133,7 @@
                       {{--Contenido de la columna para vincular varios--}}
                       <td class="text-center align-middle VincVarProv">
                         <div id="checkbox-group" class="checkbox-group">
-                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox"  wire:model.defer="variosP" value="{{$i->emisorRfc}}"/>
+                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" wire:model.defer="moreprov" value="{{$i->emisorRfc}}"/>
                         </div>
                       </td>
                       <td class="text-center align-middle">
@@ -156,11 +157,15 @@
                         <span class="invoice-amount">${{number_format($SumTotal, 2)}}</span>
                       </td>
                       <td class="text-center align-middle">
-                        <a data-toggle="modal" data-target="#detalles" class="icons fas fa-eye" wire:click="EmitRFC('{{$i->emisorRfc}}')"></a>
+                        {{--Boton para abrir el modal--}}
+                        <a class="icons fas fa-eye" data-toggle="modal" data-target="#detalles{{$i->emisorRfc}}"></a>
                       </td>
                       <td class="text-center align-middle"></td>
                     </tr>
                     @endif
+
+                    {{--Llamando a las vistas de otros componentes--}}
+                    <livewire:detalles :factu=$i :wire:key="'user-profile-one-'.$i->emisorRfc" :rfcEmpresa=$empresa>
                     @endforeach
                   </tbody>
                 </table>
@@ -173,200 +178,5 @@
           </section>
         </div>
     </div>
-  </div>
-
-    {{--Llamamos a las modales--}}
-    {{--Modal de detalles de cuentas por pagar--}}
-    {{--Creacion del modal--}}
-    <div wire:ignore.self class="modal fade" id="detalles" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
-          <div class="modal-content">
-              {{--Encabezado--}}
-              <div class="modal-header">
-                  <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;" class="icons fas fa-folder-open">Cuentas por pagar</span></h6>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true close-btn">×</span>
-                 </button>
-              </div>
-              {{--Cuerpo del modal--}}
-              <div class="modal-body">
-                {{--Generacion de la tabla--}}
-                <div id="resp-table">
-                  <div id="resp-table-body">
-                    {{--Encabezado de la tabla--}}
-                      <div class="resp-table-row">
-                          <div class="tr table-body-cell">UUID</div>
-                          <div class="tr table-body-cell">Fecha Emisión</div>
-                          <div class="tr table-body-cell">Emisor</div>
-                          <div class="tr table-body-cell">Concepto</div>
-                          <div class="tr table-body-cell">Metodo - Pago</div>
-                          <div class="tr table-body-cell">UUID Relacionado</div>
-                          <div class="tr table-body-cell">Folio</div>
-                          <div class="tr table-body-cell">Efecto</div>
-                          <div class="tr table-body-cell">Total</div>
-                          <div class="tr table-body-cell">Estado</div>
-                          <div class="tr table-body-cell">Descargar</div>
-                      </div>
-
-                      {{--Cuerpo de la tabla--}}
-                      @foreach ($CFDI as $FolioCFDI)
-                      {{--Obtenemos los datos del XMLRecibidos--}}
-                      @php
-                        //Guardamos el folio fiscal en una variable
-                        $folioF = $FolioCFDI->folioFiscal;
-
-                        //Contador de conceptos
-                        $ConceptCount = 0;
-
-                        //Variables que contiene los resultados de la consulta
-                        $efecto = $FolioCFDI->efecto;
-                        $total = $FolioCFDI->total;
-                        $estado = $FolioCFDI->estado;
-                        $fechaE = $FolioCFDI->fechaEmision;
-                        $nUR = 0;
-
-                        //Rutas de archivos
-                        $espa=new MetadataR();
-                        $numero = (string) (int) substr($fechaE, 5, 2);
-                        $mesNombre = (string) (int) substr($fechaE, 5, 2);
-                        $anio = (string) (int) substr($fechaE, 0, 4);
-                        $mees=$espa->fecha_es($mesNombre);
-
-                        // Se asignan las rutas donde está almacenado el archivo
-                        $rutaXml = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
-                        $rutaPdf = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
-
-                        //Condicional para saber si el efecto es un egreso
-                        if ($efecto == 'Egreso'){
-                          //Si es un egreso entonces se saca el valor absoluto del total para descontar
-                          $total = -1 * abs($total);
-                        }
-
-                        //Consulta de los datos
-                        $XmlReci = XmlR::
-                        where('UUID', $folioF)
-                        ->get();
-
-                        //Condicional para revisa si la consulta nos arrojo algo
-                        if (!$XmlReci->isEmpty()){
-                          //Por medio de un foreach guardaremos los datos requeridos
-                          foreach ($XmlReci as $CompleCFDI) {
-                          $Concept = $CompleCFDI['Conceptos.Concepto'];
-                          $Folio = $CompleCFDI['Folio'];
-                          $MetodPago = $CompleCFDI['MetodoPago'];
-
-                          if ($efecto == 'Pago'){
-                            $docRel = $CompleCFDI['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
-                            $MetodPago = '-';
-                            if (!isset($docRel)){
-                              $docRel = $CompleCFDI['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'];
-                            }
-                          } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso'){
-                            $docRel = $CompleCFDI['CfdiRelacionados.CfdiRelacionado'];
-                          }
-                        }
-                      }
-                      //En caso de campos vacios estas se cambiaran por X
-                      else {
-                          $Concept = "X";
-                          $Folio = "X";
-                          $MetodPago = "X";
-                          $UUIDRef = 'X';
-                      }
-                      @endphp
-
-                      <div class="resp-table-row">
-                        {{--UUID--}}
-                        <div class="table-body-cell">
-                          <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="{{$FolioCFDI->folioFiscal}}">
-                            <label class="form-check-label">{{$FolioCFDI->folioFiscal}}</label>
-                          </div>
-                        </div>
-
-                        {{--Fecha emision--}}
-                        <div class="table-body-cell">{{$FolioCFDI->fechaEmision}}</div>
-
-                        {{--Emisor--}}
-                        <div class="table-body-cell">{{$FolioCFDI->emisorNombre}}</div>
-
-                        {{--Concepto--}}
-                        <div class="table-body-cell">
-                          @if (!$XmlReci->isEmpty())
-                            @foreach ($Concept as $c)
-                               {{++$ConceptCount}}.- {{$c['Descripcion']}}
-                              <br>
-                            @endforeach
-                          @else
-                            {{ $Concept }}
-                          @endif
-                        </div>
-
-                        {{--Metodo/Pago--}}
-                        <div class="table-body-cell">
-                          {{$MetodPago}}
-                        </div>
-
-                        {{--UUID Relacionado--}}
-                        <div class="table-body-cell">
-                          @if (!$XmlReci->isEmpty())
-                            @if ($efecto == 'Pago')
-                              @if (is_array($docRel) || is_object($docRel))
-                                @foreach ($docRel as $d)
-                                  {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
-                                @endforeach
-                              @else
-                                {{ ++$nUR }}. {{ $docRel }}
-                              @endif
-                            @elseif ($efecto == 'Egreso' and !$docRel == null or $efecto == 'Ingreso' and !$docRel == null)
-                              @foreach ($docRel as $d)
-                                {{ ++$nUR }}. {{ $d['UUID'] }}<br>
-                              @endforeach
-                            @else
-                              -
-                            @endif
-                          @else
-                            {{ $UUIDRef }}
-                          @endif
-                        </div>
-
-                        {{--Folio--}}
-                        <div class="table-body-cell">
-                          {{$Folio}}
-                        </div>
-
-                        {{--Efecto--}}
-                        <div class="table-body-cell">
-                          {{$efecto}}
-                        </div>
-
-                        {{--Total--}}
-                        <div class="table-body-cell">
-                          ${{number_format($total, 2)}}
-                        </div>
-
-                        {{--Estado--}}
-                        <div class="table-body-cell">
-                          {{$estado}}
-                        </div>
-
-                        {{--Descargar--}}
-                        <div class="table-body-cell">
-                          @if ($estado != 'Cancelado')
-                                    <a href="{{ $rutaXml }}" download="{{ $folioF }}.xml">
-                                        <i class="fas fa-file-download fa-2x"></i>
-                                    </a>
-                                    <a href="{{ $rutaPdf }}" target="_blank">
-                                        <i class="fas fa-file-pdf fa-2x" style="color: rgb(202, 19, 19)"></i>
-                                    </a>
-                                @endif
-                        </div>
-                    </div>
-                      @endforeach
-                  </div>
-                </div>
-              </div>
-          </div>
-      </div>
   </div>
 </div>
