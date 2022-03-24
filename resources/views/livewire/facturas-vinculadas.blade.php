@@ -39,6 +39,7 @@ $class='';
 
 
 <div class="modal-body" style="color:#545252;"><!--modal body -->
+  aqui pagos{{$Pagos;}}
 @if ($total==0)
 <button disabled class="btn btn-secondary mr-1 mb-1" wire:click="desvincular()">Desvincular factura</button>
 @else
@@ -82,7 +83,8 @@ $class='';
             </div>{{-------fin row-------}}
 
             @php
-            $arrRfc = [];
+$arrRfc = [];
+$Pagos=[];
 $a=[];
 $t=[];
 $egreso=[];
@@ -146,8 +148,9 @@ $n=0;
                  --}}
 
                 <div class="table-body-cell">
-                     {{-- Si el cheque no está verificado se puede desvincular --}}
-                     @if ($datos->verificado == 0)
+                     {{-- Si el cheque no está verificado se puede desvincular solo se pueden desvicular los que no seas pagos --}}
+
+                     @if ($datos->verificado == 0 && $efecto !=='Pago')
 
                          <div id="checkbox-group" class="checkbox-group">
                              <input wire:model="checkedDesvincular" class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"

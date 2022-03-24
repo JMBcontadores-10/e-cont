@@ -15,17 +15,32 @@ class FacturasVinculadas extends Component
 
 
 
-    public $checkedDesvincular=[];
+    public $checkedDesvincular=[] ,$Pagos=[];
     public float  $total=0;
 
     public Cheques $facturaVinculada;/// modelo
 
 public function mount(){
 
-
+$this->Pagos='';
 
 }
 
+
+protected function rules(){
+
+    return [
+
+        'Pagos'=>'',
+
+
+
+        //======== modal ajuste =====//
+
+
+
+    ];
+}
 
 
     public function render()
@@ -47,7 +62,7 @@ if($this->checkedDesvincular){
 
 
 
-        return view('livewire.facturas-vinculadas',['colM'=>$colM,'datos'=>$this->facturaVinculada,'total'=>$this->total,'cheque_id'=>$this->facturaVinculada->_id]);
+        return view('livewire.facturas-vinculadas',['colM'=>$colM,'datos'=>$this->facturaVinculada,'total'=>$this->total,'cheque_id'=>$this->facturaVinculada->_id,'Pagos'=>$this->Pagos]);
     }
 
 public function desvincular(){
@@ -80,11 +95,20 @@ $cheques->update(['importexml'=> $cheques->importexml-$xml_r->total]);
 }
 /// actualiza el contador faltaxml descontando cada factura
 $cheques->update(['faltaxml'=> $cheques->faltaxml-1]);
-///  desvincula las facturas
+
+
+
+
+///  desvincula las facturas generales
 MetadataR::where('folioFiscal', $i)
 ->update([
     'cheques_id' => null,
 ]);
+
+///desvincula Pagos///
+MetadataR::where('cheques_id', $xml_r->cheques_id)
+->pull('cheques_id' ,$xml_r->cheques_id);
+
 
 $this->checkedDesvincular=[];/// reset array para evitar conflicto
 
