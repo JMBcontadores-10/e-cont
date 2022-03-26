@@ -381,6 +381,6 @@ if($this->impresion){
 
 
 
-
+    
 
 }/// fin de la clase principal

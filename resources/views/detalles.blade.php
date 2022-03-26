@@ -79,6 +79,7 @@ use App\Models\XmlR;
                         @endphp
                         <tr>
                             <td class="text-center align-middle">{{ ++$n }}</td>
+                            @if ($efecto != "Pago" )
                             <td class="text-center align-middle allcheck">
                                 @if ($estado != 'Cancelado')
                                     <div id="checkbox-group" class="checkbox-group">
@@ -87,6 +88,10 @@ use App\Models\XmlR;
                                     </div>
                                 @endif
                             </td>
+                            @else
+                            <td class="text-center align-middle allcheck">
+                            </td>
+                            @endif
                             {{-- @if ($varios == 'Varios Proveedores')
                                 <td class="text-center align-middle">{{ $emisorRfc }}</td>
                                 <td class="text-center align-middle">{{ $emisorNombre }}</td>

@@ -5,8 +5,6 @@ namespace App\Http\Livewire;
 use Livewire\Component;
 use App\Models\MetadataR;
 use App\Models\Notificaciones;
-use Illuminate\Support\Facades\DB;
-use Exception;
 use App\Models\Cheques;
 use DateTime;
 use DateTimeZone;
@@ -14,9 +12,9 @@ use DateTimeZone;
 class Detalles extends Component
 {
     //Variables globales
-    public MetadataR $factu;
-    public $rfcEmpresa;
-    public $RFC;
+    public $factu;
+    public $empresa;
+    public $selectempresa;
     public $moviselect;
     public $movivinc = [];
     public $btnvinactiv = 0;
@@ -46,6 +44,7 @@ class Detalles extends Component
         $this->Nuevo_nombrec='0';
         $this->idNuevoCheque=null;
         $this->step3=true;
+        $this->selectempresa = $this->empresa;
     }
 
     //Metodo para vaciar la variable
@@ -55,6 +54,7 @@ class Detalles extends Component
         $this->RFC = "";
         $this->sumtotalfactu = "";
         $this->moviselect = "";
+        $this->searchcfdi = "";
     }
 
     //Metodo para declarar los campos obligatorios
@@ -93,8 +93,8 @@ class Detalles extends Component
         $nombrec = "$Id2$mesActualEs$Id&$subir_archivo";
         }
 
-        $ruta="contarappv1_descargas/".$this->rfcEmpresa."/".$anioPago."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
-        $rutaRelacionados="contarappv1_descargas/".$this->rfcEmpresa."/".$anioPago."/Cheques_Transferencias/Documentos_Relacionados/".$espa->fecha_es($mesfPago)."/";
+        $ruta="contarappv1_descargas/".$this->empresa."/".$anioPago."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
+        $rutaRelacionados="contarappv1_descargas/".$this->empresa."/".$anioPago."/Cheques_Transferencias/Documentos_Relacionados/".$espa->fecha_es($mesfPago)."/";
 
         $this->validate();
 
@@ -106,7 +106,7 @@ class Detalles extends Component
             'importecheque' => $importeCheque,
             'Beneficiario' => $this->Nuevo_beneficiario,
             'tipoopera' => $this->Nuevo_tipoopera,
-            'rfc' => $this->rfcEmpresa,
+            'rfc' => $this->empresa,
             'nombrec' => $nombrec,
             'rnfcrep' => '0',
             'importexml' => 0,
@@ -173,7 +173,7 @@ class Detalles extends Component
         'importecheque' => $importeCheque,
         'Beneficiario' => $this->Nuevo_beneficiario,
         'tipoopera' => $this->Nuevo_tipoopera,
-        'rfc' => $this->rfcEmpresa,
+        'rfc' => $this->empresa,
         'read_at' => 0,
         'tipo'=> 'CA',
         ]);
@@ -192,11 +192,6 @@ class Detalles extends Component
     public function Subirrela(){
         $this->dispatchBrowserEvent('agregarrela', []);
         $this->step3=false;
-    }
-
-    //Metodo para meter el arreglo generado en la variable publica
-    public function EmitRFCArray(){
-        $this->RFC = $this->moreprov;
     }
 
     //Vincular un CFDI a un movimiento
@@ -228,17 +223,14 @@ class Detalles extends Component
         //Inserta el total de la suma de los cfdis  en importexml para corregir
         $cheque->update(['importexml' => $ImporteTotal]);
         
-        //Redireccionamps a la viste de ChyT junto con las variables como parametro
-        session()->flash('ChequeId', $this->moviselect);
-        session()->flash('Empresa', $this->rfcEmpresa);
+        //Redireccionamps a la vista de ChyT junto con las variables como parametro
         return redirect()->to('/chequesytransferencias');
+
     }
 
     //Retornamos a la vista cuando agregamos un nuevo movimiento con CFDI vinculados
     public function GotoChyT(){
         //Redireccionamps a la viste de ChyT junto con las variables como parametro
-        session()->flash('ChequeId', $this->idNuevoCheque->_id);
-        session()->flash('Empresa', $this->rfcEmpresa);
         return redirect()->to('/chequesytransferencias');
     }
 
@@ -296,37 +288,22 @@ class Detalles extends Component
             $this->btnvinanewctiv = 0;
         }
 
-        //Consulta para obtener los datos de CFDI
-        //Condicional para saber si el valor de RFC es un arreglo o un string
-        if(is_array($this->RFC)){
-            //Si es arreglo
-            $CFDI = MetadataR::
-            search($this->searchcfdi)
-            ->where('estado', '<>', 'Cancelado')
-            ->where('receptorRfc', $this->rfcEmpresa)
-            ->wherein('emisorRfc', $this->RFC)
-            ->whereNull('cheques_id')
-            ->orderBy('fechaEmision', 'desc')
-            ->get();
-
-        }else{
-            //No es arreglo
-            $CFDI = MetadataR::
-            search($this->searchcfdi)
-            ->where('estado', '<>', 'Cancelado')
-            ->where('receptorRfc', $this->rfcEmpresa)
-            ->where('emisorRfc', $this->factu->emisorRfc)
-            ->whereNull('cheques_id')
-            ->orderBy('fechaEmision', 'desc')
-            ->get();
-        }
+        //Consulta para obtener los datos de las facturas a vincular
+        $CFDI = MetadataR::
+        search($this->searchcfdi)
+        ->where('estado', '<>', 'Cancelado')
+        ->where('receptorRfc', $this->empresa)
+        ->where('emisorRfc', $this->factu)
+        ->whereNull('cheques_id')
+        ->orderBy('fechaEmision', 'desc')
+        ->get();
 
         //Consulta de los cheques vinculados
         $Cheques = Cheques::
-            where('rfc', $this->rfcEmpresa)
+            where('rfc', $this->empresa)
             ->orderBy('fecha', 'desc')
             ->get();
 
-        return view('livewire.detalles', ['empresa'=>$this->rfcEmpresa, 'CFDI'=>$CFDI, 'Cheques'=>$Cheques, 'totalfactu'=>$this->sumtotalfactu, 'facturas'=>$this->factu]);
+        return view('livewire.detalles', ['empresa'=>$this->empresa, 'CFDI'=>$CFDI, 'Cheques'=>$Cheques, 'totalfactu'=>$this->sumtotalfactu, 'facturas'=>$this->factu]);
     }
 }
