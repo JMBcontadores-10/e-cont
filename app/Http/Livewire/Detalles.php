@@ -210,7 +210,7 @@ class Detalles extends Component
             $xml_r = MetadataR::where('folioFiscal', $mov)->first(); //Consulta a metadata_r
             $cheque = Cheques::find($this->moviselect);
             $cheque->metadata_r()->save($xml_r);
-            
+
             // Obtiene el total de facturas vinculadas y suma el total
             $Ingresos = MetadataR::where(['cheques_id' => $this->moviselect])
             ->where('efecto','!=','Egreso')
@@ -232,8 +232,8 @@ class Detalles extends Component
 
         //Inserta el total de la suma de los cfdis  en importexml para corregir
         $cheque->update(['importexml' => $ImporteTotal]);
-        
-        //Redireccionamos a la vista de ChyT junto con las variables como parametro
+
+        //Redireccionamps a la vista de ChyT junto con las variables como parametro
         return redirect()->to('/chequesytransferencias');
 
     }
@@ -271,16 +271,7 @@ class Detalles extends Component
         $this->sumtotalfactu = $TotalIngresos - $TotalEgresos;
     }
 
-    public function refresh(){
-        $this->Nuevo_numcheque="";
-        $this->Nuevo_fecha="";
-        $this->Nuevo_beneficiario="";
-        $this->Nuevo_importecheque="";
-        $this->Nuevo_tipomov="";
-        $this->Nuevo_tipoopera="";
-        $this->idNuevoCheque=null;
-        $this->step3=true;
-    }
+
 
     public function render()
     {

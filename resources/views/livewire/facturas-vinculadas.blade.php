@@ -5,6 +5,7 @@
 
     @php
 use App\Models\XmlR;
+use App\Models\MetadataR;
 use App\Models\Cheques;
 use App\Models\Notificaciones;
 
@@ -39,7 +40,7 @@ $class='';
 
 
 <div class="modal-body" style="color:#545252;"><!--modal body -->
-  aqui pagos{{$Pagos;}}
+
 @if ($total==0)
 <button disabled class="btn btn-secondary mr-1 mb-1" wire:click="desvincular()">Desvincular factura</button>
 @else
@@ -83,7 +84,7 @@ $class='';
 
             @php
 $arrRfc = [];
-$Pagos=[];
+
 $a=[];
 $t=[];
 $egreso=[];
@@ -96,6 +97,51 @@ $n=0;
         @endphp
         @foreach ($colM as $i)
             @php
+
+
+// $folio=$i->folioFiscal;
+
+
+//     $products = MetadataR::raw(function ($collection) use ($folio)  {
+//             return $collection->aggregate([
+//                 [
+//                     '$match' => [
+//                         'folioFiscal' =>$folio,
+//                     ]
+//                 ],
+//                 [
+//                     '$lookup' => [
+//                         'from' => 'xmlrecibidos',
+//                         'foreignField' => 'UUID',
+//                         'localField' => 'folioFiscal',
+//                         'as' => 'union',
+
+
+//                     ]
+//                 ]
+
+//             ]);
+//         })
+//         ->first();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 $emisorRfc = $i->emisorRfc;
                 $arrRfc[] = $emisorRfc;
@@ -149,7 +195,7 @@ $n=0;
                 <div class="table-body-cell">
                      {{-- Si el cheque no está verificado se puede desvincular solo se pueden desvicular los que no seas pagos --}}
 
-                     @if ($datos->verificado == 0 && $efecto !=='Pago')
+                     @if ($datos->verificado == 0 && $efecto !=='Pago' )
 
                          <div id="checkbox-group" class="checkbox-group">
                              <input wire:model="checkedDesvincular" class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"
@@ -270,6 +316,13 @@ $iva_Egreso [] = $vIva;
 
                        }elseif ($efecto == 'Egreso' or $efecto == 'Ingreso') {
                            $docRel = $v['CfdiRelacionados.CfdiRelacionado'];
+                           if(!isset($docRel)){
+
+                            $docRel =$v['CfdiRelacionados.0.CfdiRelacionado'];
+
+                        }
+
+
                        }
 
 }
@@ -329,7 +382,7 @@ $iva_Egreso [] = $vIva;
         @if($efecto =='Egreso')
 
         <div class="table-body-cell" style="color: rgb(255, 85, 85);">{{ $efecto }}</div>
-        @elseif($efecto = 'Ingreso')
+        @elseif($efecto == 'Ingreso')
         <div class="table-body-cell">{{ $efecto }}</div>
         @else
         <div class="table-body-cell">{{ $efecto }}</div>
@@ -453,9 +506,9 @@ $iva_Egreso [] = $vIva;
 
         <div class="table-body-cell"><b> Total </b></div>
         @if(isset($suma_sub))
-			<div class="table-body-cell"><b> $ {{number_format($suma_sub, 2)}}</b> </div>
-                <div class="table-body-cell"><b> $ {{number_format($suma_iva, 2)}}</b> </div>
-                    <div class="table-body-cell"><b> $ {{number_format($suma_total, 2)}}</b> </div>
+			<div class="table-body-cell"><b>{{ "$".number_format($suma_sub, 2)}}</b> </div>
+                <div class="table-body-cell"><b>  {{ "$".number_format($suma_iva, 2)}}</b> </div>
+                    <div class="table-body-cell"><b> {{ "$".number_format($suma_total, 2)}}</b> </div>
 
                     @endif
 		@else
@@ -469,9 +522,9 @@ $iva_Egreso [] = $vIva;
         <div class="table-body-cell"></div>
 
         <div class="table-body-cell"><b>Total</b></div>
-			<div class="table-body-cell"><b> $ {{number_format($suma_sub, 2)}} </b> </div>
-                <div class="table-body-cell"><b> $ {{number_format($suma_iva, 2)}}</b> </div>
-                    <div class="table-body-cell"><b> $ {{number_format($suma_total, 2)}}</b> </div>
+			<div class="table-body-cell"><b> {{ "$".number_format($suma_sub, 2)}} </b> </div>
+                <div class="table-body-cell"><b> {{ "$".number_format($suma_iva, 2)}}</b> </div>
+                    <div class="table-body-cell"><b> {{ "$".number_format($suma_total, 2)}}</b> </div>
 
 
 

@@ -13,6 +13,9 @@
     }
     @endphp
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
     {{--Contenedor--}}
     <div class="app-content content">
         <div class="content-wrapper">
@@ -21,12 +24,30 @@
                     {{--Boton para crear un nuevo cheque --}}
                     <div class="invoice-create-btn mb-1">
                         <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static" data-keyboard="false" data-target="#nuevo-cheque" class="btn btn-primary glow invoice-create">
-                            Nuevo Cheque/Transferencia 
+                            Nuevo Cheque/Transferencia
                         </a>
                     </div>
 
+                    <button id="btn">Eviar Correo </button>
+                    <div class="conten">
+
+                        <div id="notificacion" class="notEmail">
+                            <div class="mensaje_not">
+                                Correo enviado con éxito 1
+                            </div>
+                            <img src="https://fotos.subefotos.com/9d3c5e949d2642e2db4d2b28a4fe0ef5o.gif">
+                        </div>
+
+                        </div>
+                      <script>
+                            $("#btn").click(function () {
+                                estilos();
+                            });
+                        </script>
+
                     {{--Condicional para mostrar un listado de empresas--}}
                     @empty(!$empresas)
+
                     <label for="inputState">Empresa: {{$empresa}}</label>
                     <select wire:loading.attr="disabled" wire:model="rfcEmpresa" id="inputState1" class=" select form-control">
                         <option  value="00" >--Selecciona Empresa--</option>
@@ -41,8 +62,9 @@
 
                     {{--Filtros de busqueda--}}
                     <div class="form-inline mr-auto">
+
                         {{--Busqueda por texto--}}
-                        <input wire:loading.attr="readonly"  wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Filtro" aria-label="Search">
+                        <input   wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Filtro" aria-label="Search">
                         &nbsp;&nbsp;
 
                         {{--Busqueda por mes--}}
@@ -74,23 +96,23 @@
                         &nbsp;&nbsp;
 
                         {{--Busqueda por importe--}}
-                        <input wire:model.debounce.300ms="importe" class="form-control"  placeholder="Importe $"  type="number"  step="0.01" aria-label="importe" style="width:110px;" >
+                        <input wire:model.debounce.300ms="importe"  class="form-control"  placeholder="Importe $"  type="number"  step="0.01" aria-label="importe" style="width:110px;" >
                         &nbsp;&nbsp;
 
                         {{--Busqueda por condicion--}}
-                        <select wire:loading.attr="disabled" wire:model="condicion" id="inputState1" class=" select form-control"  >
+                     <select wire:loading.attr="disabled" wire:model="condicion" id="inputState1" class=" select form-control"  >
                             <option  value=">=" >--Condición--</option>
                             <option value="=" >igual</option>
                             <option value=">" >mayor que</option>
                             <option value="<" >menor que</option>
                         </select>
-                        &nbsp;&nbsp;
 
-                        {{--Busqueda por estado--}}
+                        &nbsp;&nbsp;
+                         {{--Busqueda por estado--}}
                         <select wire:loading.attr="disabled" wire:model="estatus" id="inputState1" class=" select form-control"  >
                             <option  value="">--Estatus--</option>
                             <option value="pendi" >Pendientes</option>
-                
+
                             @if(auth()->user()->tipo)
                             <option value="sin_revisar" >Sin Revisar</option>
                             <option value="sin_conta" >Sin Contabilizar</option>
@@ -138,7 +160,7 @@
                             </thead>
 
                             {{--Acciones previas a mostrar el cuerpo de la tabla--}}
-                            @php 
+                            @php
                             $arreglo="";
                             $totalVinculadas=0;
                             @endphp
@@ -168,10 +190,10 @@
                             }else {
                                 $diferencia = $importeC - abs($sumaxml);
                                 $diferencia = $diferencia - $ajuste;
-                            } 
+                            }
                             if ($diferencia > 1 or $diferencia < -1) {
                                 $diferenciaP = 0;
-                            }else { 
+                            }else {
                                 $diferenciaP = 1;
                             }
 
@@ -197,14 +219,14 @@
                             $poliza = $i->poliza;
                             $comentario = $i->comentario;
                             $impresion = $i['impresion'];
-                            
+
                             if(strpos($nombreCheque, '/')!==false){
                                 $p = explode("/", $nombreCheque);
                                 $i->update([  // actualiza el campo nombrec a 0
                                 'nombrec' => $p[1],
                             ]);
                         }
-                        
+
                             if(strpos($docAdi[0], '/')!==false){
                             foreach ($i->doc_relacionados as $doc)
                             {
@@ -235,18 +257,18 @@
                                                 @case(0)
                                                 <a class="parpadea icons fa fa-check" style="color: green" aria-hidden="true" onclick="alert('Revisado')"></a>
                                                 @break
-                                                
+
                                                 @case(1)
                                                 <a class="parpadea icons fas fa-calculator" style="color: blue" aria-hidden="true" onclick="alert('Contabilizado')"></a>
                                                 @break
-                                                
+
                                                 @default
                                             @endswitch
                                             @endif
                                         @endif
                                          {{$fecha}} &nbsp;
                                   </td>
-                                  
+
                                   {{--Num de factura--}}
                                   <td>
                                     <a style="color:#3498DB" >{{ Str::limit($numCheque, 20); }}</a>
@@ -293,7 +315,7 @@
                                         <a style="color:#3498DB">{{$numCheque}}</a>
                                         &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                                         {{$beneficiario}}
-                       
+
                                         <br>
 
                                         {{--Contenido--}}
@@ -308,13 +330,10 @@
                                                         @php $class="icons" @endphp
                                                     @endif
                                                     {{--Condicional para las acciones de movimientos ya revisados--}}
-                                                    @if ($verificado == 1)
-                                                    <a class="{{$class}} fas fa-balance-scale"
-                                                    data-toggle="modal" data-target="#Revisado"></a>
-                                                    @else
+
                                                     <a class="{{$class}} fas fa-balance-scale"
                                                     data-toggle="modal" data-target="#ajuste{{$id}}"></a>
-                                                    @endif
+
                                                 </div>
                                             @endif
 
@@ -338,7 +357,7 @@
                                                 @else
                                                     @php $class_p="icons" @endphp
                                                 @endif
-                          
+
                                                 @if ($nombreCheque =="0")
                                                     <a id="{{$id}}" class="{{$class_p}} fas fa-file-pdf"
                                                     data-toggle="modal" data-target="#pdfcheque{{$id}}"  data-backdrop="static" data-keyboard="false"   onclick="filepondEditCheque(this.id)" > </a>
@@ -356,18 +375,18 @@
                                                     onclick="alert('ya esta revisado no puedes hacer nada :)')"></a>
                                                 @else
                                                     <a class="icons fas fa-upload"
-                                                    data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"  
+                                                    data-toggle="modal" data-controls-modal="#uploadRelacionados"  name="{{$id}}"
                                                     data-backdrop="static" data-keyboard="false"   onclick="filepond(this.name)" data-target="#uploadRelacionados"></a>
                                                 @endif
-                                                
+
                                                 &nbsp; | &nbsp;
-                                                
+
                                                 @if (!$docAdi['0'] == '')
                                                     @php $class="content_true" @endphp
                                                 @else
                                                     @php $class="icons" @endphp
                                                 @endif
-                                                
+
                                                 <a  class="{{$class}} fas fa-folder-open"
                                                 data-toggle="modal"  wire:click="$emitTo('relacionados', 'refreshComponent')"
                                                 data-target="#relacionados-{{$id}}" ></a>
@@ -377,7 +396,7 @@
                                             @if ($faltaxml != 0)
                                             <div>
                                                 <div class="tr">Vinculadas</div>
-                                                <a class="icons fas fa-eye"
+                                                <a class="icons fas fa-eye" style="color: #3498DB"
                                                 data-toggle="modal" data-target="#facturasVinculadas{{$id}}"></a>
                                             </div>
                                             @endif
@@ -437,7 +456,7 @@
                                                 @else
                                                     <div class="tr">Póliza</div>
                                                 @endif
-                                        
+
                                                 @if ($verificado == 1 and $contabilizado == 0)
                                                     <a class="icons fas fa-file-contract"
                                                     data-toggle="modal" data-target="#poliza{{$id}}"></a>
@@ -452,7 +471,7 @@
                                                     </div>
                                                 </div>
                                                 @endif
-                                        
+
                                                 @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                                     @php Cheques::find($id)->update(['pendi' => 1]); @endphp
                                                 @endif
@@ -491,7 +510,7 @@
                                     <livewire:editar  :editCheque=$i :wire:key="'user-profile-four-'.$i->_id">
                                     <livewire:poliza  :polizaCheque=$i :wire:key="'user-profile-six-'.$i->_id">
                                     <livewire:eliminar  :eliminarCheque=$i :wire:key="'user-profile-seven-'.$i->_id">
-                                        
+
                                     @if(!$i->faltaxml ==0)
                                         <livewire:facturas-vinculadas  :facturaVinculada=$i :wire:key="'user-profile-eight-'.$i->_id">
                                     @endif
@@ -528,7 +547,11 @@
                 </div>
                 {{--Cuerpo del modal--}}
                 <div class="modal-body">
+
+
+
                     <p id="ModalRevi">No puedes realizar esta acción en un movimiento revisado</p>
+
                 </div>
             </div>
         </div>

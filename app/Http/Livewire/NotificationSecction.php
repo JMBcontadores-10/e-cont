@@ -34,18 +34,14 @@ Factura Cancelada = FC
  $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
 
 
-
-
-
-
  $rfc=auth()->user()->empresas;
- $noti = Notificaciones::
-  whereIn('rfc', auth()->user()->empresas)
-  ->orwhereIn('emisorMensaje', auth()->user()->empresas)
+ $noti = Notificaciones::whereIn('rfc',$rfc)
+ ->where('tipo','CA')
   ->where('read_at', 0)
-  ->orWhere('tipo','CA')
-  ->orWhere('tipo','FC')
-  ->orWhere('tipo','M')
+
+
+
+
   ->orderBy('fecha', 'desc')
   ->orderBy('created_at', 'desc')
 
@@ -55,10 +51,9 @@ Factura Cancelada = FC
         }elseif(empty(auth()->user()->tipo)){
 
             $rfc=auth()->user()->empresas;
-            $noti = Notificaciones::where('rfc',auth()->user()->RFC)
-            ->orWhere('receptorMensaje', 'CDI1801116Y9')
+            $noti = Notificaciones::where('receptorMensaje', 'CDI1801116Y9')
             ->where('read_at', 0)
-            ->orWhere('tipo','FC')
+
 
          //    ->orWhereNotNull('folioFiscal')
             ->orderBy('fecha', 'desc')

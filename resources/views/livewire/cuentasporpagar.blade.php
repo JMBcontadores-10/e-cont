@@ -98,13 +98,18 @@
                   <tbody>
                     {{--Contenido de nuestra tabla--}}
                     {{--Llenamos nuestra tabla con un foreach--}}
+
                     @foreach ($col as $i)
                     @php
                     //Obtenemos el rfcemisor para enviarlo a los modales
                     $RFCEmit = $i->emisorRfc;
 
                     //Variable para obtener el total
+
+
                     $SumTotal = 0;
+
+
 
                     //Obtener el numero de CFDI
                     $DatosMetaR = MetadataR::

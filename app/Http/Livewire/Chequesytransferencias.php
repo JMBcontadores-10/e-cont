@@ -41,16 +41,14 @@ class Chequesytransferencias extends Component
     public $Nuevo_numcheque,$Nuevo_tipomov,$Nuevo_fecha,$Nuevo_importecheque,$Nuevo_beneficiario,
     $Nuevo_tipoopera,$Nuevo_pdf,$relacionadosUp =[];
 
-
    ///======================= fin variables nuevo-cheque====================///
-
 
     public $mes;
     public $anio;
     public $todos;
     public $rfcEmpresa;
 
-    protected $paginationTheme = 'bootstrap';// para dar e estilo numerico al paginador
+    protected $paginationTheme='bootstrap';//para dar e estilo numerico al paginador
 
 
     public function mount()
@@ -69,7 +67,7 @@ if(auth()->user()->tipo){
 }
 
 
-//$this->importe=0;
+$this->importe=0.0;
 $this->condicion='>=';
     }
 
@@ -84,6 +82,8 @@ $this->condicion='>=';
     }
 
     public function updatingImporte(){
+
+
 
         $this->resetPage();
     }
@@ -224,13 +224,35 @@ $e=array();
 
        ->get();
 
-       foreach($e as $em)
+       foreach($e as $em){
 
 
        $emp[]= array( $em['RFC'],$em['nombre']);
+       }
       }
 
-    }else{
+    }elseif(!empty(auth()->user()->TipoSE)){
+
+        $e=array();
+              $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
+
+
+              for($i=0; $i <$largo; $i++) {
+
+              $rfc=auth()->user()->empresas[$i];
+               $e=DB::Table('clientes')
+               ->select('RFC','nombre')
+
+               ->where('RFC', $rfc)
+
+               ->get();
+
+               foreach($e as $em)
+
+
+               $emp[]= array( $em['RFC'],$em['nombre']);
+              }
+              }else{
 
 $emp='';
 
