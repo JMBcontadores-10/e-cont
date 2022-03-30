@@ -382,12 +382,10 @@
                         {{--Concepto--}}
                         <div class="table-body-cell">
                           @if (!$XmlReci->isEmpty())
-                            @foreach ($Concept as $c)
-                            @if (isset($c['Descripcion']))
-                            {{++$ConceptCount}}.- {{$c['Descripcion']}}
+                            @if (isset($Concept[0]['Descripcion']))
+                            {{++$ConceptCount}}.- {{Str::limit($Concept[0]['Descripcion'], 20)}}
                             <br>
                             @endif
-                            @endforeach
                           @else
                             {{ $Concept }}
                           @endif

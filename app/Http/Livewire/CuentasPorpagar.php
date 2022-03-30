@@ -380,9 +380,9 @@ class Cuentasporpagar extends Component
         search($this->search)
         ->select('emisorNombre', 'emisorRfc')
         ->where('receptorRfc', $this->rfcEmpresa)
-
+        ->groupBy('emisorRfc')
         ->orderBy('emisorRfc', 'asc')
-        ->paginate($this->perPage);
+        ->get();
 
 
 
