@@ -682,14 +682,14 @@ function submitBlock() {
 
 //FilePond para los input de cuentas por pagar
 //Para agregar PDF
-function AddPDFChequeCFDI(id){
+function AddPDFChequeCFDI(id, rutaid){
     // registrar plugin validacion filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateType);
     // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateSize);
 
     const token = document.querySelector('input[name="_token"]');
-    const ruta = document.getElementById("addpdf");
+    const ruta = document.getElementById(rutaid);
 
     var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
         maxFileSize: '1000KB',
@@ -723,14 +723,14 @@ function AddPDFChequeCFDI(id){
 }
 
 //Para agregar los relacionados
-function AddRelChequeCFDI(id){
+function AddRelChequeCFDI(id, rutaid){
     // registrar plugin validacion filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateType);
     // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateSize);
 
     const token = document.querySelector('input[name="_token"]');
-    const ruta = document.getElementById("addadicion");
+    const ruta = document.getElementById(rutaid);
 
     var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
         maxFileSize: '1000KB',

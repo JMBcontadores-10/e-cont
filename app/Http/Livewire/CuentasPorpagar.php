@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\MetadataR;
 use App\Models\Cheques;
 use App\Models\Notificaciones;
-use Exception;
 use DateTime;
 use DateTimeZone;
 
@@ -41,7 +40,6 @@ class Cuentasporpagar extends Component
     //Variable para la suma de totales de las facturas seleccionadas
     public $sumtotalfactu;
 
-
     //Metodo para identificar el tipo de usuario
     public function mount()
     {
@@ -67,6 +65,7 @@ class Cuentasporpagar extends Component
         $this->RFC = "";
         $this->sumtotalfactu = "";
         $this->moviselect = "";
+        $this->searchcfdi = "";
     }
 
     //Metodo para declarar los campos obligatorios
@@ -82,7 +81,6 @@ class Cuentasporpagar extends Component
 
     //Metodo para guardar un cheque nuevo con el CFDI vinculado
     public function AgregarChequeCFDI(){
-        try{
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
         $Id = $dt->format('H\Mi\SsA');
@@ -199,21 +197,12 @@ class Cuentasporpagar extends Component
         $this->Nuevo_tipoopera="";
 
         $this->dispatchBrowserEvent('agregarpdf', []);
-
-        }catch(Exception $e){
-            return redirect("cuentaspagar");
-        }
     }
 
     //Metodo para pasar de la seccion de subir PDF a subir relacionados
     public function Subirrela(){
         $this->dispatchBrowserEvent('agregarrela', []);
         $this->step3=false;
-    }
-
-    //Metodo para meter emitido en la variable publica
-    public function EmitRFC($EmitRFC){
-        $this->RFC = $EmitRFC;
     }
 
     //Metodo para meter el arreglo generado en la variable publica
@@ -259,8 +248,6 @@ class Cuentasporpagar extends Component
     //Retornamos a la vista cuando agregamos un nuevo movimiento con CFDI vinculados
     public function GotoChyT(){
         //Redireccionamps a la viste de ChyT junto con las variables como parametro
-        session()->flash('ChequeId', $this->idNuevoCheque->_id);
-        session()->flash('Empresa', $this->rfcEmpresa);
         return redirect()->to('/chequesytransferencias');
     }
 
