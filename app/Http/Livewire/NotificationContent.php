@@ -22,28 +22,26 @@ class NotificationContent extends Component
 
 
 
-               $rfc=auth()->user()->empresas;
-               $noti = Notificaciones::
-                whereIn('rfc', auth()->user()->empresas)
-                ->orwhereIn('emisorMensaje', auth()->user()->empresas)
-                ->where('read_at', 0)
-                ->orWhere('tipo','CA')
-                ->orWhere('tipo','FC')
-                ->orWhere('tipo','M')
-                ->orderBy('fecha', 'desc')
-                ->orderBy('created_at', 'desc')
+            $rfc=auth()->user()->empresas;
+            $noti = Notificaciones::whereIn('rfc',$rfc)
+            ->where('tipo','CA')
+             ->where('read_at', 0)
+
+
+
+
+             ->orderBy('fecha', 'desc')
+             ->orderBy('created_at', 'desc')
 
                 ->get();
 
                    }elseif(empty(auth()->user()->tipo)){
 
                $rfc=auth()->user()->empresas;
-               $noti = Notificaciones::where('rfc',auth()->user()->RFC)
-               ->orWhere('receptorMensaje', 'CDI1801116Y9')
+               $noti = Notificaciones::Where('receptorMensaje', 'CDI1801116Y9')
                ->where('read_at', 0)
-               ->orWhere('tipo','FC')
 
-            //    ->orWhereNotNull('folioFiscal')
+            //   ->orWhereNotNull('folioFiscal')
                ->orderBy('fecha', 'desc')
                ->orderBy('created_at', 'desc')
                ->get();

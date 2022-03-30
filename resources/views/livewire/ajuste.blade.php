@@ -1,10 +1,10 @@
 <div>
-  
-    
 
 
 
- 
+
+
+
 <!--
 
 </a>-->
@@ -32,9 +32,9 @@
  <p>Se realizo por: ${{ $datos->ajuste }} mxn. </p>
  @endif
 
- 
+ @if($datos->verificado!==1)
  <form  wire:submit.prevent="guardar">
-    @csrf    
+    @csrf
 <input type="hidden" name="id" value="{{ $datos->id }}">
 <input wire:model.defer="ajuste" type="number" step="any" name="ajuste" class="form-control">
 
@@ -42,7 +42,7 @@
     <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
       <div></div>
       <div></div>
-      
+
   </div>
   Guardando ajuste
   </div>
@@ -52,10 +52,10 @@
 
      </form>
 
+@endif
 
 
 
- 
 
  </div>
              </div>
@@ -66,7 +66,7 @@
  </div>
 
 
- 
+
 
 
 

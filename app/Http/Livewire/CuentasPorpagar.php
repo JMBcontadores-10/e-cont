@@ -227,7 +227,7 @@ class Cuentasporpagar extends Component
             $xml_r = MetadataR::where('folioFiscal', $mov)->first(); //Consulta a metadata_r
             $cheque = Cheques::find($this->moviselect);
             $cheque->metadata_r()->save($xml_r);
-            
+
             // Obtiene el total de facturas vinculadas y suma el total
             $Ingresos = MetadataR::where(['cheques_id' => $this->moviselect])
             ->where('efecto','!=','Egreso')
@@ -249,7 +249,7 @@ class Cuentasporpagar extends Component
 
         //Inserta el total de la suma de los cfdis  en importexml para corregir
         $cheque->update(['importexml' => $ImporteTotal]);
-        
+
         //Redireccionamps a la viste de ChyT junto con las variables como parametro
         session()->flash('ChequeId', $this->moviselect);
         session()->flash('Empresa', $this->rfcEmpresa);
@@ -357,9 +357,11 @@ class Cuentasporpagar extends Component
         search($this->search)
         ->select('emisorNombre', 'emisorRfc')
         ->where('receptorRfc', $this->rfcEmpresa)
-        ->groupBy('emisorRfc')
+
         ->orderBy('emisorRfc', 'asc')
-        ->get();
+        ->paginate($this->perPage);
+
+
 
         //Consulta para obtener los datos de CFDI
         //Condicional para saber si el valor de RFC es un arreglo o un string

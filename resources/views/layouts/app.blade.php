@@ -276,6 +276,7 @@ $empresa=auth()->user->tipo;
 
 <livewire:notification-secction>
 
+
     <!--========NOTIFICATION SECTION=============== -->
 
     <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0);" data-toggle="dropdown">

@@ -84,6 +84,20 @@ class vinculacionAutomaticaCfdi extends Controller
                'JCO2105043Y1',
             ];
 
+
+          ////////DESVICULAR TODOS LOS PAGOS/////
+
+        //     $desvicularTodos=MetadataR::whereNotNull('cheques_id')->where('efecto','Pago')->get();
+
+        //    foreach($desvicularTodos as $d):
+        //     $desvicular=MetadataR::where('folioFiscal',$d->folioFiscal)->where('efecto','Pago')->first();
+        //     $desvicular->unset('cheques_id');
+        //     echo $d->folioFiscal."&nbsp; Desvicnulado.. <br>";
+
+        // endforeach;
+
+
+
 #======================= se obtienen  xmlr PPD que estan vinculados a un cheque =================================================================#
             // $cheque=Cheques::whereIn('rfc',$rfcs)->where('faltaxml','!=',0)->select('_id')->get();
             // $ids=[];

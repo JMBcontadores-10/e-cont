@@ -99,10 +99,15 @@
                   <tbody>
                     {{--Contenido de nuestra tabla--}}
                     {{--Llenamos nuestra tabla con un foreach--}}
+
                     @foreach ($col as $i)
                     @php
                     //Variable para obtener el total
+
+
                     $SumTotal = 0;
+
+
 
                     //Obtener el numero de CFDI
                     $DatosMetaR = MetadataR::
