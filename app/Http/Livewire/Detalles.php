@@ -37,6 +37,16 @@ class Detalles extends Component
     //Variable para la suma de totales de las facturas seleccionadas
     public $sumtotalfactu;
 
+    protected $listeners = [
+        'mostmovi' => 'mostmovi',
+     ];
+
+    public function mostmovi($data)
+    {
+        $this->rfcEmpresa = $data['empresa'];
+        $this->moviselect = $data['idmovi'];
+    }
+
     public function mount()
     {
         //Le damos un valor a las variables declaradas
@@ -223,7 +233,7 @@ class Detalles extends Component
         //Inserta el total de la suma de los cfdis  en importexml para corregir
         $cheque->update(['importexml' => $ImporteTotal]);
         
-        //Redireccionamps a la vista de ChyT junto con las variables como parametro
+        //Redireccionamos a la vista de ChyT junto con las variables como parametro
         return redirect()->to('/chequesytransferencias');
 
     }

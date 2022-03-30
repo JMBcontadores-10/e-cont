@@ -40,6 +40,26 @@ class Cuentasporpagar extends Component
     //Variable para la suma de totales de las facturas seleccionadas
     public $sumtotalfactu;
 
+    protected $listeners = [
+        'mostmovi' => 'mostmovi',
+     ];
+
+    public function mostmovi($data)
+    {
+        $this->rfcEmpresa = $data['empresa'];
+        $this->moviselect = $data['idmovi'];
+
+        $CollectMovi = MetadataR::
+        where('receptorRfc', $this->rfcEmpresa)
+        ->get();
+
+        foreach($CollectMovi as $MovAll){
+            array_push($this->moreprov, $MovAll->emisorRfc);
+        }
+
+        $this->RFC = $this->moreprov;
+    }
+
     //Metodo para identificar el tipo de usuario
     public function mount()
     {
@@ -238,7 +258,7 @@ class Cuentasporpagar extends Component
 
         //Inserta el total de la suma de los cfdis  en importexml para corregir
         $cheque->update(['importexml' => $ImporteTotal]);
-        
+
         //Redireccionamps a la vista de ChyT junto con las variables como parametro
         return redirect()->to('/chequesytransferencias');
     }
@@ -319,7 +339,23 @@ class Cuentasporpagar extends Component
                 foreach($e as $em)
                 $emp[]= array($em['RFC'],$em['nombre']);
             }
-        }else{
+        }else if(!empty(auth()->user()->TipoSE)){
+            $e=array();
+            $largo=sizeof(auth()->user()->empresas);
+            for($i=0; $i <$largo; $i++) {
+                $rfc=auth()->user()->empresas[$i];
+
+                $e=DB::Table('clientes')
+                ->select('RFC','nombre')
+                ->where('RFC', $rfc)
+                ->get();
+
+                foreach($e as $em)
+                $emp[]= array($em['RFC'],$em['nombre']);
+            }
+        }
+        else{
+
             $emp='';
         }
 
