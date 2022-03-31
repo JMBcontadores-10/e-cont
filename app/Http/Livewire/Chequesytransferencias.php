@@ -95,6 +95,7 @@ $this->condicion='>=';
 
 protected function rules(){
 
+
     return [
         'user_id' => '',
         'name' => '',
@@ -403,6 +404,6 @@ if($this->impresion){
 
 
 
-    
+
 
 }/// fin de la clase principal
