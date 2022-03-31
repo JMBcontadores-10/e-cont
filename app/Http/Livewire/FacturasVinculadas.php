@@ -187,6 +187,4 @@ public function export($facturas){
 
 
 
-
-
 }

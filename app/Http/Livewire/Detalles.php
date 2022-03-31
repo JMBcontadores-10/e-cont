@@ -37,6 +37,16 @@ class Detalles extends Component
     //Variable para la suma de totales de las facturas seleccionadas
     public $sumtotalfactu;
 
+    protected $listeners = [
+        'mostmovi' => 'mostmovi',
+     ];
+
+    public function mostmovi($data)
+    {
+        $this->rfcEmpresa = $data['empresa'];
+        $this->moviselect = $data['idmovi'];
+    }
+
     public function mount()
     {
         //Le damos un valor a las variables declaradas

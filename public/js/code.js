@@ -762,3 +762,8 @@ function AddRelChequeCFDI(id, rutaid){
         }
     });
 }
+
+function GuardarMovi(id, empresa){
+    sessionStorage.setItem('idmovicheq', id);
+    sessionStorage.setItem('empresacheq', empresa);
+}

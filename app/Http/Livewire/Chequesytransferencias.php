@@ -28,7 +28,7 @@ class Chequesytransferencias extends Component
 
     public  $users, $name, $email, $user_id,$fecha,$ajuste2,$datos1,$user;
     public $cheque;
-    public  float $importe;
+    public $importe = "";
     public $condicion;
     public $revisado;
     public $estatus;
@@ -91,9 +91,18 @@ $this->condicion='>=';
 
     protected $listeners = [
         'chequesRefresh' => '$refresh',
+        'mostvincu' => 'mostmovivincu'
      ];
 
+public function mostmovivincu($data)
+{
+    $this->todos = 1;
+    $this->search = $data['idmovi'];
+    $this->rfcEmpresa = $data['empresa'];
+}
+
 protected function rules(){
+
 
     return [
         'user_id' => '',
@@ -127,107 +136,78 @@ protected function rules(){
 
            }
 
-
-
         $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
 
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
 
-      if($this->todos){
 
-        $cheque = Cheques::
-        search($this->search)
-        ->where('rfc',$this->rfcEmpresa)
-        ->orderBy('fecha', 'desc')
-        ->orderBy('updated_at', 'desc')
+        //Condicional para saber si de va a buscar todos los registros o se aplicacran los filtros
+        if($this->todos){
+            //Consulta para mostrar todos los registros
+            $cheque = Cheques::
+            search($this->search)
+            ->where('rfc',$this->rfcEmpresa)
+            ->orderBy('fecha', 'desc')
+            ->orderBy('updated_at', 'desc')
+            ->paginate($this->perPage);
 
+          }else{
+              //Convertimos el importe en flotante
+              $this->importe = floatval($this->importe);
 
-        ->paginate($this->perPage);
+              //switch para caer en los fitros si no esta seleccionado la opcion de todos
+              switch($this->estatus){
+                  case 'sin_conta':
+                    $cheque = Cheques::
+                    search($this->search)
+                    ->where('rfc',$this->rfcEmpresa)
+                    ->where('importecheque',$this->condicion, $this->importe)
+                    ->where('conta',0)
+                    ->where('fecha', 'like','%'.$this->anio."-".'%')
+                    ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
+                    ->orderBy('fecha', 'desc')
+                    ->paginate($this->perPage);
+                    break;
 
-      }elseif($this->estatus=='pendi'){
+                  case 'sin_revisar':
+                    $cheque = Cheques::
+                    search($this->search)
+                    ->where('rfc',$this->rfcEmpresa)
+                    ->where('importecheque',$this->condicion,$this->importe)
+                    ->where('verificado',0)
+                    ->where('fecha', 'like','%'.$this->anio."-".'%')
+                    ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
+                    ->orderBy('fecha', 'desc')
+                    ->paginate($this->perPage);
+                    break;
 
-        $cheque = Cheques::
-        search($this->search)
-        ->where('rfc',$this->rfcEmpresa)
-        ->where('importecheque',$this->condicion,$this->importe)
-        ->where('pendi',1)
-        ->where('fecha', 'like','%'.$this->anio."-".'%')
-        ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
-        ->orderBy('fecha', 'desc')
+                  case 'pendi':
+                    $cheque = Cheques::
+                    search($this->search)
+                    ->where('rfc',$this->rfcEmpresa)
+                    ->where('importecheque',$this->condicion,$this->importe)
+                    ->where('pendi',1)
+                    ->where('fecha', 'like','%'.$this->anio."-".'%')
+                    ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
+                    ->orderBy('fecha', 'desc')
+                    ->paginate($this->perPage);
+                    break;
 
-        ->paginate($this->perPage);
-
-
-
-      }elseif($this->estatus=='sin_revisar'){
-
-        $cheque = Cheques::
-        search($this->search)
-        ->where('rfc',$this->rfcEmpresa)
-        ->where('importecheque',$this->condicion,$this->importe)
-        ->where('verificado',0)
-        ->where('pendi',0)
-        ->where('fecha', 'like','%'.$this->anio."-".'%')
-        ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
-        ->orderBy('fecha', 'desc')
-
-        ->paginate($this->perPage);
-
-
-
-      }elseif($this->estatus=='sin_conta'){
-
-        $cheque = Cheques::
-        search($this->search)
-        ->where('rfc',$this->rfcEmpresa)
-        ->where('importecheque',$this->condicion,$this->importe)
-        ->where('conta',0)
-        ->where('verificado',1)
-        ->where('fecha', 'like','%'.$this->anio."-".'%')
-        ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
-        ->orderBy('fecha', 'desc')
-
-        ->paginate($this->perPage);
-
-
-
-
-      }
-      else{
-
-        // $ch = Cheques::
-        // search($this->search)
-        // ->where('rfc',$this->rfcEmpresa)
-        // ->get();
-
-
-
-        // Cheques::where('rfc',$this->rfcEmpresa)->update([
-        //     'verificado' => 1,
-        //     'pendi' => 0,
-        //     'revisado_fecha' => $dt->format('Y-m-d\TH:i:s'),
-        // ]);
-
-
-        $cheque = Cheques::
-        search($this->search)
-        ->where('rfc',$this->rfcEmpresa)
-        ->where('importecheque',$this->condicion,$this->importe)
-
-        ->where('fecha', 'like','%'.$this->anio."-".'%')
-        ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
-        ->orderBy('fecha', 'desc')
-        ->orderBy('created_at', 'desc')
-
-        ->paginate($this->perPage);
-
-
-
-      }
-
-
+                  default:
+                    $cheque = Cheques::
+                    search($this->search)
+                    ->where('rfc',$this->rfcEmpresa)
+                    ->where('importecheque',$this->condicion,$this->importe)
+                    ->where('fecha', 'like','%'.$this->anio."-".'%')
+                    ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
+                    ->orderBy('fecha', 'desc')
+                    ->orderBy('created_at', 'desc')
+                    ->paginate($this->perPage);
+                    break;
+              }
+          }
 
 if(!empty(auth()->user()->tipo)){
 
@@ -403,6 +383,6 @@ if($this->impresion){
 
 
 
-    
+
 
 }/// fin de la clase principal

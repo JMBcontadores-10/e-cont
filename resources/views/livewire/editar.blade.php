@@ -76,6 +76,7 @@ function miFunc() {
                                 <option {{ $datos->tipomov == 'Transferencia' ? 'selected' : '' }}>Transferencia</option>
                                 <option {{ $datos->tipomov == 'Domiciliación' ? 'selected' : '' }}>Domiciliación</option>
                                 <option {{ $datos->tipomov == 'Efectivo' ? 'selected' : '' }}>Efectivo</option>
+                                <option {{ $datos->tipomov == 'Débito' ? 'selected' : '' }}>Débito</option>
                             </select>
 
 
