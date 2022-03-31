@@ -594,6 +594,7 @@
                           </div>
                         </div>
 
+
                         {{--Carga--}}
                         <div wire:loading wire:target="guardar_nuevo_cheque" >
                           <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
