@@ -146,6 +146,7 @@ document.getElementById("tipo").disabled = false;
            <option>Transferencia</option>
            <option>Domiciliación</option>
            <option>Efectivo</option>
+           <option>Débito</option>
        </select>
      </div>
 

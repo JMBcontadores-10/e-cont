@@ -56,9 +56,8 @@ $class='';
   Desvinculando Cheque...
   </div>
 
-
   <a class="btn btn-success shadow mr-1 mb-1 BtnVinculadas" href="{{ url('exportar', ['facturas' => $datos->_id])}}">Exportar a Excel</a>
-  <a class="btn btn-primary shadow mr-1 mb-1 BtnVinculadas" href="{{ url('cuentasporpagar') }}">Ir a Cuentas por pagar</a>
+  <a class="btn btn-primary shadow mr-1 mb-1 BtnVinculadas" onclick="GuardarMovi('{{$datos->_id}}', '{{$datos->rfc}}')" href="{{ url('cuentaspagar')}}">Ir a Cuentas por pagar</a>
 
     <div id="resp-table">
         <div id="resp-table-body">
@@ -413,7 +412,7 @@ $iva_Egreso [] = $vIva;
 
                               @if ($item['TasaOCuota']=="0.160000")
 
-                              {{  $item['Importe']}}
+                              ${{ number_format($item['Importe'], 2) }}
 
                                @endif
                               @endforeach
@@ -433,7 +432,7 @@ $iva_Egreso [] = $vIva;
 
                                 @if ($itemm['TasaOCuota']=="0.160000")
 
-                                {{  $itemm['Importe']}}
+                                ${{ number_format($itemm['Importe'], 2) }}
 
                                 @else
 
