@@ -37,22 +37,23 @@
                         $rfc = Auth::user()->RFC;
                         $tipo = Session::get('tipoU');
                         @endphp
-        
+
                         <h2 id="txtsaludo">{{$saludo}}</h2>
                         @if(!empty(auth()->user()->tipo))
                         <h5>Contador@</h5>
                         @endif
-        
+
                         @if(Auth::check())
-        
+
                         <h6>{{auth()->user()->RFC}}</h6>
-                        
+
                                 @endif
                                {{----------contenido seccion---------}}
-        
+
          {{----------contenido seccion---------}}
                 </div>
                 </div>
+
 
                 {{--SECCION PARA MOSTRAR LOS PENDIENTES DE CHEQUES Y TRANSFERENCIAS--}}
                 <div class="row">

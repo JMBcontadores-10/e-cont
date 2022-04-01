@@ -5,6 +5,7 @@
     use App\Models\ListaNegra;
     use App\Models\XmlR;
     use App\Models\Cheques;
+
     //Obtenemos la clase para agregar a la tabla
     $rfc = Auth::user()->RFC;
     $class='';
@@ -15,26 +16,6 @@
     //Obtenemos el valor de la fecha del dia de hoy
     $date=date('Y-m-d');
     @endphp
-
-    {{--Scrips para mostrar las modales--}}
-    <script>
-      window.addEventListener('agregarpdf', event => {
-      $(".step1").fadeOut("slow");
-      $(".step1").hide();
-
-      $(".step2").fadeIn("slow");
-    });
-
-    window.addEventListener('agregarrela', event => {
-      $(".step1").fadeOut("slow");
-      $(".step1").hide();
-
-      $(".step2").fadeOut("slow");
-      $(".step2").hide();
-
-      $(".step3").fadeIn("slow");
-    });
-    </script>
 
     {{--Contenedor para mantener responsivo el contenido del modulo--}}
     <div class="app-content content">
@@ -49,14 +30,6 @@
             </div>
 
             <br>
-
-            {{--Mensaje de error por si no se realizo correctamente la accion--}}
-            @if (session()->has('errorvincu'))
-            <div class="alert alert-danger">
-                {{ session('errorvincu') }}
-            </div>
-            <br>
-            @endif
 
             {{--Select para selccionar la empresa (Contadores)--}}
             @empty(!$empresas)
@@ -126,10 +99,11 @@
                   <tbody>
                     {{--Contenido de nuestra tabla--}}
                     {{--Llenamos nuestra tabla con un foreach--}}
+
                     @foreach ($col as $i)
                     @php
                     //Obtenemos el rfcemisor para enviarlo a los modales
-                    $RFCEmit = $i->emisorRfc;
+                    $RFCEmit = $i['emisorRfc'];
 
                     //Variable para obtener el total
                     $SumTotal = 0;
@@ -138,7 +112,7 @@
                     $DatosMetaR = MetadataR::
                     select('total', 'efecto')
                     ->where('receptorRfc', $this->rfcEmpresa)
-                    ->where('emisorRfc', $i->emisorRfc)
+                    ->where('emisorRfc', $i['emisorRfc'])
                     ->where('estado', '<>', 'Cancelado')
                     ->whereNull('cheques_id')
                     ->get();
@@ -163,14 +137,14 @@
                       {{--Contenido de la columna para vincular varios--}}
                       <td class="text-center align-middle VincVarProv">
                         <div id="checkbox-group" class="checkbox-group">
-                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" wire:model.defer="moreprov" value="{{$i->emisorRfc}}"/>
+                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" wire:model.defer="moreprov" value="{{$i['emisorRfc']}}"/>
                         </div>
                       </td>
                       <td class="text-center align-middle">
-                        <span style="color:#3498DB" class="invoice-amount">{{$i->emisorRfc}}</span>
+                        <span style="color:#3498DB" class="invoice-amount">{{$i['emisorRfc']}}</span>
                       </td>
                       <td class="text-center align-middle">
-                        <span class="invoice-amount">{{ Str::limit($i->emisorNombre, 20); }}</span>
+                        <span class="invoice-amount">{{ Str::limit($i['emisorNombre'], 20); }}</span>
                       </td>
 
                       {{-- Valida si existe una coincidencia de RFC en la lista negra --}}
@@ -188,17 +162,30 @@
                       </td>
                       <td class="text-center align-middle">
                         {{--Boton para abrir el modal--}}
-                        <a class="icons fas fa-eye" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#detalles{{$i->emisorRfc}}"></a>
+                        <a class="icons fas fa-eye" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#detalles{{$i['emisorRfc']}}"></a>
                       </td>
                       <td class="text-center align-middle"></td>
                     </tr>
                     {{--Llamando a las vistas de otros componentes--}}
-                    <livewire:detalles :factu=$RFCEmit :empresa=$empresa :wire:key="time().$i->emisorRfc" >
+                    <livewire:detalles :factu=$RFCEmit :empresa=$empresa :wire:key="time().$i['emisorRfc']" >
                     @endif
                     @endforeach
                   </tbody>
                 </table>
+                {{--Paginacion--}}
+                <button wire:click="minusreg()">menos</button>
+                <button wire:click="morereg()">mas</button>
               </div>
+              <div wire:loading>
+                <br>
+                <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+                  <div></div>
+                  <div></div>
+                </div>
+                <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
+                <br>
+              </div>
+
               <br>
               {{--Boton para mostrar la columna de detalles para varios proveedores--}}
               <div class="invoice-create-btn mb-1">
@@ -218,7 +205,7 @@
               {{--Encabezado--}}
               <div class="modal-header">
                   <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;" class="icons fas fa-folder-open">Cuentas por pagar</span></h6>
-                  <h6  class="modal-title" id="exampleModalLabel"><span> Total seleccionado: ${{$totalfactu}}</span></h6>
+                  <h6  class="modal-title" id="exampleModalLabel"><span> Total seleccionado: ${{number_format(floatval($sumtotalfactu), 2)}}</span></h6>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="CleanRFC()">
                       <span aria-hidden="true close-btn">×</span>
                  </button>
@@ -229,7 +216,7 @@
                  <label>Movimiento: </label>
 
                  {{--Select que contiene la lista de los cheques--}}
-                 <select class="select form-control" wire:model="moviselect">
+                 <select wire:loading.attr="disabled" id="selectmovimul" class="select form-control" wire:model="moviselect">
                   <option  value="" >--Selecciona Movimiento--</option>
                   @foreach ($Cheques as $i)
                     <option value="{{ $i->_id }}">
@@ -248,7 +235,7 @@
                     {{--Condicional para activar o desactivar el boton--}}
                     @if ($btnvinactiv == 1)
                     <div class="invoice-create-btn mb-1">
-                      <button class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
+                      <button id="Btnvincufact" class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
                     </div>
                     @else
                     <div class="invoice-create-btn mb-1">
@@ -270,6 +257,15 @@
                     </div>
                     @endif
                   </div>
+                </div>
+
+                {{--Animacion de cargando--}}
+                <div wire:loading>
+                  <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
                 </div>
 
                 <br>
@@ -381,7 +377,7 @@
                           <div class="form-check">
                             {{--Condicional para ocultar el checkbox cuando este es un pago--}}
                             @if ($efecto != "Pago")
-                            <input wire:loading.attr="disabled" id="Chkmul{{$FolioCFDI->folioFiscal}}" class="form-check-input" type="checkbox" wire:click="SumFactu()" wire:model="movivinc" value="{{$FolioCFDI->folioFiscal}}">
+                            <input wire:loading.attr="disabled" id="Chkmul{{$FolioCFDI->folioFiscal}}" class="form-check-input ChkMul" type="checkbox" wire:click="SumFactu()" wire:model="movivinc" value="{{$FolioCFDI->folioFiscal}}">
                             @endif
                             <label for="Chkmul{{$FolioCFDI->folioFiscal}}" class="form-check-label">{{$FolioCFDI->folioFiscal}}</label>
                           </div>
@@ -396,10 +392,10 @@
                         {{--Concepto--}}
                         <div class="table-body-cell">
                           @if (!$XmlReci->isEmpty())
-                            @foreach ($Concept as $c)
-                               {{++$ConceptCount}}.- {{$c['Descripcion']}}
-                              <br>
-                            @endforeach
+                            @if (isset($Concept[0]['Descripcion']))
+                            {{++$ConceptCount}}.- {{Str::limit($Concept[0]['Descripcion'], 20)}}
+                            <br>
+                            @endif
                           @else
                             {{ $Concept }}
                           @endif
@@ -512,6 +508,7 @@
                               <option>Transferencia</option>
                               <option>Domiciliación</option>
                               <option>Efectivo</option>
+                              <option>Débito</option>
                             </select>
                           </div>
 
@@ -555,7 +552,7 @@
                           </div>
                           <div class="col">
                             <label for="inputPassword4">Total factura(s):</label>
-                            <input class="form-control" type="text" readonly name="importeT" value="${{$totalfactu}}">
+                            <input class="form-control" type="text" readonly name="importeT" value="${{ number_format(floatval($totalfactu), 2)}}">
                           </div>
                         </div>
 
@@ -589,6 +586,7 @@
                           </div>
                         </div>
 
+
                         {{--Carga--}}
                         <div wire:loading wire:target="guardar_nuevo_cheque" >
                           <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
@@ -601,7 +599,7 @@
                         <br>
 
                         {{--Boton para enviar el form--}}
-                       <button type="submit"  wire:loading.attr="disabled" class="btn btn-primary">Siguiente</button>
+                       <button type="submit" onclick="DataNewMov()"  wire:loading.attr="disabled" class="btn btn-primary">Siguiente</button>
                       </form>
                     </div>
                   </div>
@@ -612,6 +610,10 @@
                   @if($idNuevoCheque!==null)
                     @if($step3)
                     <script>
+                      //Guardamos los datos en sessionstorage para mostrarlos en el modulo de cheques (vinculacion a movimiento nuevo)
+                      sessionStorage.setItem('idmovi', '{{$idNuevoCheque->_id}}');
+                      sessionStorage.setItem('empresa', '{{$empresa}}');
+
                       AddPDFChequeCFDI('{{$idNuevoCheque->_id}}', 'addpdfmul');
                     </script>
                     @endif
@@ -680,4 +682,36 @@
           </div>
       </div>
     </div>
+      <script>
+        $(document).ready(function(){
+          //Variable de bandera para realizar la accion del scroll
+          var movicheq = sessionStorage.getItem('idmovicheq');
+          var empresacheq = sessionStorage.getItem('empresacheq');
+
+          //Condicion para saber si las variables no estan vacias
+          if(movicheq !== null && empresacheq !== null){
+              //Emitimos los datos al controlador
+              window.livewire.emit('mostmovi', {idmovi : movicheq, empresa : empresacheq});
+              $("#detalles").modal("show");
+              sessionStorage.clear();
+            }
+        });
+
+        window.addEventListener('agregarpdf', event => {
+          $(".step1").fadeOut("slow");
+          $(".step1").hide();
+    
+          $(".step2").fadeIn("slow");
+        });
+    
+        window.addEventListener('agregarrela', event => {
+          $(".step1").fadeOut("slow");
+          $(".step1").hide();
+    
+          $(".step2").fadeOut("slow");
+          $(".step2").hide();
+    
+          $(".step3").fadeIn("slow");
+        });
+        </script>
 </div>

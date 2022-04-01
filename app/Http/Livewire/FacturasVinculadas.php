@@ -8,6 +8,7 @@ use Livewire\Component;
 
 use App\Exports\FacturasExport;
 use App\Models\Notificaciones;
+use App\Models\XmlR;
 use Maatwebsite\Excel\Facades\Excel;
 
 class FacturasVinculadas extends Component
@@ -15,17 +16,32 @@ class FacturasVinculadas extends Component
 
 
 
-    public $checkedDesvincular=[];
+    public $checkedDesvincular=[] ,$Pagos=[];
     public float  $total=0;
 
     public Cheques $facturaVinculada;/// modelo
 
 public function mount(){
 
-
+$this->Pagos='';
 
 }
 
+
+protected function rules(){
+
+    return [
+
+        'Pagos'=>'',
+
+
+
+        //======== modal ajuste =====//
+
+
+
+    ];
+}
 
 
     public function render()
@@ -47,7 +63,7 @@ if($this->checkedDesvincular){
 
 
 
-        return view('livewire.facturas-vinculadas',['colM'=>$colM,'datos'=>$this->facturaVinculada,'total'=>$this->total,'cheque_id'=>$this->facturaVinculada->_id]);
+        return view('livewire.facturas-vinculadas',['colM'=>$colM,'datos'=>$this->facturaVinculada,'total'=>$this->total,'cheque_id'=>$this->facturaVinculada->_id,'Pagos'=>$this->Pagos]);
     }
 
 public function desvincular(){
@@ -58,10 +74,45 @@ foreach ($this->checkedDesvincular as $i) {
 
 
 
+    ///// union de metadato con xml
+
+// $folio=$i;
+// $coleccion=MetadataR::raw(function ($collection) use ($folio)  {
+//         return $collection->aggregate([
+//             [
+//                 '$match' => [
+//                     'folioFiscal' =>$folio,
+//                 ]
+//             ],
+//             [
+//                 '$lookup' => [
+//                     'from' => 'xmlrecibidos',
+//                     'foreignField' => 'UUID',
+//                     'localField' => 'folioFiscal',
+//                     'as' => 'union',
+
+//                 ]
+//             ]
+
+//         ]);
+//     })
+//     ->first();
+
+
 
 
 $xml_r=MetadataR::where('folioFiscal', $i)->first(); ///consulta a metadata_r
+$xmlppd=XmlR::where('UUID',$i)->first();/// enlasar l xml del ppd
 $cheques=Cheques::where('_id',$xml_r->cheques_id)->first();///consulta cheques
+$xml =MetadataR::whereIn('cheques_id',$xml_r->cheques_id)->where('efecto','Pago')->get();/// obtener pagos que estan en este cheque _id para despues comparar y desvincular
+
+
+
+
+
+
+
+
 
 
 if($xml_r->efecto =="Egreso"){
@@ -78,11 +129,21 @@ $cheques->update(['importexml'=> $cheques->importexml-$xml_r->total]);
 }
 /// actualiza el contador faltaxml descontando cada factura
 $cheques->update(['faltaxml'=> $cheques->faltaxml-1]);
-///  desvincula las facturas
+
+
+
+
+///  desvincula las facturas generales
 MetadataR::where('folioFiscal', $i)
 ->update([
     'cheques_id' => null,
 ]);
+
+
+///desvincula Pagos//////
+
+
+
 
 $this->checkedDesvincular=[];/// reset array para evitar conflicto
 
@@ -123,8 +184,6 @@ public function export($facturas){
     $cheque =Cheques::where(['_id' => $facturas])->first();
     return Excel::download(new FacturasExport($facturas), $cheque->numcheque.'FacturasVinculadas.xlsx');
 }
-
-
 
 
 

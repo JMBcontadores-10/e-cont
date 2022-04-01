@@ -25,7 +25,7 @@
                 {{--Encabezado--}}
                 <div class="modal-header">
                     <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;" class="icons fas fa-folder-open">Cuentas por pagar</span></h6>
-                    <h6  class="modal-title" id="exampleModalLabel"><span> Total seleccionado: ${{$sumtotalfactu}}</span></h6>
+                    <h6  class="modal-title" id="exampleModalLabel"><span> Total seleccionado: ${{number_format(floatval($sumtotalfactu), 2)}}</span></h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="CleanRFC()">
                         <span aria-hidden="true close-btn">×</span>
                    </button>
@@ -35,7 +35,7 @@
                   {{--Listado de cheques a vincular--}}
                   <label>Movimiento: </label>
                   {{--Select que contiene la lista de los cheques--}}
-                  <select class="select form-control" wire:model="moviselect">
+                  <select id="selectmovi" class="select form-control" wire:model="moviselect">
                     <option  value="" >--Selecciona Movimiento--</option>
                     @foreach ($Cheques as $i)
                       <option value="{{ $i->_id }}">
@@ -54,7 +54,7 @@
                       {{--Condicional para activar o desactivar el boton--}}
                       @if ($btnvinactiv == 1)
                       <div class="invoice-create-btn mb-1">
-                        <button class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
+                        <button id="Btnvincufact" class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
                       </div>
                       @else
                       <div class="invoice-create-btn mb-1">
@@ -142,7 +142,7 @@
                           $XmlReci = XmlR::
                           where('UUID', $folioF)
                           ->get();
-  
+
                           //Condicional para revisa si la consulta nos arrojo algo
                           if (!$XmlReci->isEmpty()){
                             //Por medio de un foreach guardaremos los datos requeridos
@@ -192,12 +192,12 @@
                           {{--Concepto--}}
                           <div class="table-body-cell">
                             @if (!$XmlReci->isEmpty())
-                              @foreach ($Concept as $c)
-                                 {{++$ConceptCount}}.- {{$c['Descripcion']}}
-                                <br>
-                              @endforeach
+                              @if (isset($Concept[0]['Descripcion']))
+                              {{++$ConceptCount}}.- {{Str::limit($Concept[0]['Descripcion'], 20)}}
+                              <br>
+                              @endif
                             @else
-                              {{$Concept}}
+                              {{ $Concept }}
                             @endif
                           </div>
   
@@ -303,11 +303,12 @@
                             <label for="inputEmail4">Forma de pago</label>
 
                             <select wire:model="Nuevo_tipomov" name="tipo" id="tipo" class="agregarInputs form-control" required >
-                              <option  value="" >--Selecciona Forma--</option>
+                              <option value="" >--Selecciona Forma--</option>
                               <option>Cheque</option>
                               <option>Transferencia</option>
                               <option>Domiciliación</option>
                               <option>Efectivo</option>
+                              <option>Débito</option>
                             </select>
                           </div>
 
@@ -351,7 +352,7 @@
                           </div>
                           <div class="col">
                             <label for="inputPassword4">Total factura(s):</label>
-                            <input class="form-control" type="text" readonly name="importeT" value="${{$totalfactu}}">
+                            <input class="form-control" type="text" readonly name="importeT" value="${{ number_format(floatval($totalfactu), 2)}}">
                           </div>
                         </div>
 
@@ -408,7 +409,10 @@
                   @if($idNuevoCheque!==null)
                     @if($step3)
                     <script>
-                      //Guardamos las variables en variables locales
+                      //Guardamos los datos en sessionstorage para mostrarlos en el modulo de cheques (vinculacion a movimiento nuevo)
+                      sessionStorage.setItem('idmovi', '{{$idNuevoCheque->_id}}');
+                      sessionStorage.setItem('empresa', '{{$empresa}}');
+                      
                       AddPDFChequeCFDI('{{$idNuevoCheque->_id}}', 'addpdf');
                     </script>
                     @endif

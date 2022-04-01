@@ -93,16 +93,16 @@
         </div>
 
         {{--Condicional para la accion eliminar, cuando el movimiento esta revisado--}}
-        {{-- @if ($datos->verificado == 0) --}}
+        @if ($datos->verificado == 0)
         <div class="BotonesPDFContainer">
             <!--Eliminar PDF-->
             <div class="BtnDelPDF" wire:click="eliminar()" wire:loading.attr="disabled">
                 <i class="icons fas fa-trash-alt"></i>
             </div>
         </div>
-        {{-- @endif --}}
+        @endif
 
-        
+
      </div>
    @endif
 

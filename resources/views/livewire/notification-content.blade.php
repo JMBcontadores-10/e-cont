@@ -116,6 +116,7 @@ window.addEventListener('PushNotifaction', event => {
                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->numcheque}}</span> ¡Cancelo una factura!<br>FolioFiscal:&nbsp; {{$noti->folioFiscal}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>  Fecha de cancelación:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
 
                              @elseif($noti->tipo=="M")
+<<<<<<< HEAD
                              <a wire:click="notificationLinks('{{$noti->cheques_id}}')">
                              <h6 class="media-heading"><span class="text-bold-500">Tu contador</span> ¡te dejo un mensaje!<br>En :&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>{{$noti->created_at->diffForHumans()}}</small>
                              </a>
@@ -126,6 +127,11 @@ window.addEventListener('PushNotifaction', event => {
                                 <input type="text"  name="idc" value="{{$noti->cheques_id}}">
                                 <input class="btn-linkj" type="submit" value="Enviar">
                              </form>
+=======
+                             <h6 class="media-heading"><span class="text-bold-500">Tu contador</span> ¡te dejo un mensaje!<br>En :&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>{{$noti->created_at->diffForHumans()}}</small>
+
+
+>>>>>>> 43a0efeba45327ddfdb931706bb1664b76c79f2b
                              @endif
                           </div>
 

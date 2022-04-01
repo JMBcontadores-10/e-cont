@@ -14,7 +14,7 @@ class Cuentasporpagar extends Component
 {
     //Variables globales
     public $rfcEmpresa;
-    public int $perPage=20;
+    public int $perPage = 5; //La paginacion en esta caso se utilizara con la funcion de take()
     public $search;
     public $moreprov = [];
     public $RFC;
@@ -24,6 +24,9 @@ class Cuentasporpagar extends Component
     public $btnvinanewctiv = 0;
     public $searchcfdi;
 
+    //Variables de paginacion
+    public $paginici = 0; //Vamos a iniciar en le index 0
+    public $paglapso = 5; //Se mostrra en un paso de 5 registros
 
     //Variables que se utilizaran para agregar un nuevo cheque
     public $Nuevo_numcheque,
@@ -33,12 +36,46 @@ class Cuentasporpagar extends Component
     $Nuevo_beneficiario,
     $Nuevo_tipoopera,
     $Nuevo_nombrec,
-    $pushArchivos=[],
+    $pushArchivos = [],
     $step3,
     $idNuevoCheque;
 
     //Variable para la suma de totales de las facturas seleccionadas
     public $sumtotalfactu;
+
+    protected $listeners = [
+        'mostmovi' => 'mostmovi',
+        'morerow' => 'morerow',
+     ];
+
+    //Metodo para mostrar el modal con el movimiento seleccionado de cheques y transferencias
+    public function mostmovi($data)
+    {
+        $this->rfcEmpresa = $data['empresa'];
+        $this->moviselect = $data['idmovi'];
+
+        $CollectMovi = MetadataR::
+        where('receptorRfc', $this->rfcEmpresa)
+        ->get();
+
+        foreach($CollectMovi as $MovAll){
+            array_push($this->moreprov, $MovAll->emisorRfc);
+        }
+
+        $this->RFC = $this->moreprov;
+    }
+
+    //Metodo para realizar la paginacion (aumento de registro)
+    public function morereg(){
+        //Daremos saltos de 5 registros
+        $this->paginici = $this->paginici + 5;
+    }
+
+    //Metodo para realizar la paginacion (diminucion de registro)
+    public function minusreg(){
+        //Daremos saltos de 5 registros
+        $this->paginici = $this->paginici - 5;
+    }
 
     //Metodo para identificar el tipo de usuario
     public function mount()
@@ -216,7 +253,7 @@ class Cuentasporpagar extends Component
             $xml_r = MetadataR::where('folioFiscal', $mov)->first(); //Consulta a metadata_r
             $cheque = Cheques::find($this->moviselect);
             $cheque->metadata_r()->save($xml_r);
-            
+
             // Obtiene el total de facturas vinculadas y suma el total
             $Ingresos = MetadataR::where(['cheques_id' => $this->moviselect])
             ->where('efecto','!=','Egreso')
@@ -238,8 +275,10 @@ class Cuentasporpagar extends Component
 
         //Inserta el total de la suma de los cfdis  en importexml para corregir
         $cheque->update(['importexml' => $ImporteTotal]);
-        
-        //Redireccionamps a la vista de ChyT junto con las variables como parametro
+
+        //Redireccionamps a la viste de ChyT junto con las variables como parametro
+        session()->flash('ChequeId', $this->moviselect);
+        session()->flash('Empresa', $this->rfcEmpresa);
         return redirect()->to('/chequesytransferencias');
     }
 
@@ -319,7 +358,23 @@ class Cuentasporpagar extends Component
                 foreach($e as $em)
                 $emp[]= array($em['RFC'],$em['nombre']);
             }
-        }else{
+        }else if(!empty(auth()->user()->TipoSE)){
+            $e=array();
+            $largo=sizeof(auth()->user()->empresas);
+            for($i=0; $i <$largo; $i++) {
+                $rfc=auth()->user()->empresas[$i];
+
+                $e=DB::Table('clientes')
+                ->select('RFC','nombre')
+                ->where('RFC', $rfc)
+                ->get();
+
+                foreach($e as $em)
+                $emp[]= array($em['RFC'],$em['nombre']);
+            }
+        }
+        else{
+
             $emp='';
         }
 
@@ -342,9 +397,14 @@ class Cuentasporpagar extends Component
         search($this->search)
         ->select('emisorNombre', 'emisorRfc')
         ->where('receptorRfc', $this->rfcEmpresa)
+        ->where('estado', '<>', 'Cancelado')
+        ->whereNull('cheques_id')
         ->groupBy('emisorRfc')
         ->orderBy('emisorRfc', 'asc')
         ->get();
+
+        $col = $col->toArray();
+        $col = array_slice($col, $this->paginici, $this->paglapso, true);
 
         //Consulta para obtener los datos de CFDI
         //Condicional para saber si el valor de RFC es un arreglo o un string

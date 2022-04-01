@@ -39,8 +39,8 @@ class Editar extends ModalComponent
     protected function rules(){
 
         return[
-            
-            
+
+
             'editCheque.numcheque'=>'required',
             'editCheque.tipomov' => 'required',
             'editCheque.fecha' => 'required',
@@ -80,7 +80,7 @@ class Editar extends ModalComponent
         $anioValue = strtotime($this->editCheque->fecha);
         $anioo = date('Y',$dateValue);
 
-      
+
 
         // ================================//
         // definir ruta origen //
@@ -93,17 +93,36 @@ class Editar extends ModalComponent
         //$espa->fecha_es($mes);
 
 
-        $rutaOrigen="/contarappv1_descargas/".$cheque->rfc."/".$anioOrigen."/Cheques_Transferencias/".$espa->fecha_es($mesOrigen)."/";
-        $rutaDestino="/contarappv1_descargas/".$cheque->rfc."/".$anioo."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
+     $rutaOrigen="storage/contarappv1_descargas/".$cheque->rfc."/".$anioOrigen."/Cheques_Transferencias/".$espa->fecha_es($mesOrigen)."/".$this->editCheque->nombrec;
 
-$rutaRelacionadosOrigen="contarappv1_descargas/".$cheque->rfc."/".$anioOrigen."/Cheques_Transferencias/Documentos_Relacionados/".$espa->fecha_es($mesOrigen)."/";
+
+     if (file_exists($rutaOrigen)) {
+        $rutaOrigen="/contarappv1_descargas/".$cheque->rfc."/".$anioOrigen."/Cheques_Transferencias/".$espa->fecha_es($mesOrigen)."/";
+
+    }else{
+        $rutaOrigen="/contarappv1_descargas/".$cheque->rfc."/".$anioOrigen."/Cheques_Transferencias/";
+
+    }
+
+     $rutaDestino="/contarappv1_descargas/".$cheque->rfc."/".$anioo."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
+
+
+
+     /////// rutas Realcionados//////
+
+
+
+
+
+
+
 $rutaRelacionadosDestino="contarappv1_descargas/".$cheque->rfc."/".$anioo."/Cheques_Transferencias/Documentos_Relacionados/". $espa->fecha_es($mesfPago)."/";
 
 
 
         $this->validate();
 
-    
+
 
 
 /* verifica si existe el pdf en el dir. y lo elimina si se va a remplazar */
@@ -117,7 +136,7 @@ $fecha=$this->editCheque->fecha;
 $Beneficiario=$this->editCheque->Beneficiario;
 $tipoopera=$this->editCheque->tipoopera;
 $valor = floatval($this->editCheque->importecheque);
-    
+
 $data=[
 
      'numcheque'=> $numcheque,
@@ -152,7 +171,7 @@ if(strcmp($rutaOrigen.$this->editCheque->nombrec , $rutaDestino.$this->editChequ
 }else{
     Storage::disk('public2')->move($rutaOrigen.$this->editCheque->nombrec,  $rutaDestino.$this->editCheque->nombrec);
 
-    
+
 }
 
 }
@@ -168,15 +187,28 @@ foreach ($this->editCheque->doc_relacionados as  $rel) {
     // }
     // $porcionesrel = explode("/", $rel);
 
+
+    $rutaRelacionadosOrigen="storage/contarappv1_descargas/".$cheque->rfc."/".$anioOrigen."/Cheques_Transferencias/Documentos_Relacionados/".$espa->fecha_es($mesOrigen)."/".$rel;
+    if (file_exists($rutaRelacionadosOrigen)) {
+        $rutaRelacionadosOrigen="contarappv1_descargas/".$cheque->rfc."/".$anioOrigen."/Cheques_Transferencias/Documentos_Relacionados/".$espa->fecha_es($mesOrigen)."/";
+
+    }else{
+        $rutaRelacionadosOrigen="contarappv1_descargas/".$cheque->rfc."/".$anioOrigen."/Cheques_Transferencias/Documentos_Relacionados/";
+
+    }
+
+
 if($rel!=""){
 
     if(strcmp($rutaRelacionadosOrigen.$rel, $rutaRelacionadosDestino.$rel) == 0){/// compara las rutas para ver si son iguales y no mover archivo
 
 /// no se ejecuta nada
-       
+
 
 
     }else{
+
+
 
         Storage::disk('public2')->move($rutaRelacionadosOrigen.$rel,  $rutaRelacionadosDestino.$rel);
 
