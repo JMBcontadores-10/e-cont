@@ -103,6 +103,7 @@ public function mostmovivincu($data)
 
 protected function rules(){
 
+
     return [
         'user_id' => '',
         'name' => '',
@@ -382,6 +383,6 @@ if($this->impresion){
 
 
 
-    
+
 
 }/// fin de la clase principal
