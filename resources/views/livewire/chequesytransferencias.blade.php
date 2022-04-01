@@ -50,7 +50,7 @@
 
                     <label for="inputState">Empresa: {{$empresa}}</label>
                     <select wire:loading.attr="disabled" wire:model="rfcEmpresa" id="inputState1" class=" select form-control">
-                        <option  value="00" >--Selecciona Empresa--</option>
+                        <option value="">--Selecciona Empresa--</option>
                         <?php $rfc=0; $rS=1;foreach($empresas as $fila){
                             echo '<option value="' . $fila[$rfc] . '">'. $fila[$rS] . '</option>';
                         }?>
@@ -565,14 +565,11 @@
             var Empresa = sessionStorage.getItem('empresa');
 
             //Condicion para saber si las variables no estan vacias
-            if(IdMovi.length > 2 && Empresa.length > 2){
+            if(IdMovi !== null && Empresa !== null){
                 //Emitimos los datos al controlador
                 window.livewire.emit('mostvincu', {idmovi : IdMovi, empresa : Empresa});
+                sessionStorage.clear();
             }
-
-            //Vaciamos las variables
-            sessionStorage.setItem('idmovi', "");
-            sessionStorage.setItem('empresa', "");
         });
     </script>
 </div>

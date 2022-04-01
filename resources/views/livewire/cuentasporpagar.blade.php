@@ -5,6 +5,7 @@
     use App\Models\ListaNegra;
     use App\Models\XmlR;
     use App\Models\Cheques;
+
     //Obtenemos la clase para agregar a la tabla
     $rfc = Auth::user()->RFC;
     $class='';
@@ -102,20 +103,16 @@
                     @foreach ($col as $i)
                     @php
                     //Obtenemos el rfcemisor para enviarlo a los modales
-                    $RFCEmit = $i->emisorRfc;
+                    $RFCEmit = $i['emisorRfc'];
 
                     //Variable para obtener el total
-
-
                     $SumTotal = 0;
-
-
 
                     //Obtener el numero de CFDI
                     $DatosMetaR = MetadataR::
                     select('total', 'efecto')
                     ->where('receptorRfc', $this->rfcEmpresa)
-                    ->where('emisorRfc', $i->emisorRfc)
+                    ->where('emisorRfc', $i['emisorRfc'])
                     ->where('estado', '<>', 'Cancelado')
                     ->whereNull('cheques_id')
                     ->get();
@@ -140,14 +137,14 @@
                       {{--Contenido de la columna para vincular varios--}}
                       <td class="text-center align-middle VincVarProv">
                         <div id="checkbox-group" class="checkbox-group">
-                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" wire:model.defer="moreprov" value="{{$i->emisorRfc}}"/>
+                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" wire:model.defer="moreprov" value="{{$i['emisorRfc']}}"/>
                         </div>
                       </td>
                       <td class="text-center align-middle">
-                        <span style="color:#3498DB" class="invoice-amount">{{$i->emisorRfc}}</span>
+                        <span style="color:#3498DB" class="invoice-amount">{{$i['emisorRfc']}}</span>
                       </td>
                       <td class="text-center align-middle">
-                        <span class="invoice-amount">{{ Str::limit($i->emisorNombre, 20); }}</span>
+                        <span class="invoice-amount">{{ Str::limit($i['emisorNombre'], 20); }}</span>
                       </td>
 
                       {{-- Valida si existe una coincidencia de RFC en la lista negra --}}
@@ -165,17 +162,30 @@
                       </td>
                       <td class="text-center align-middle">
                         {{--Boton para abrir el modal--}}
-                        <a class="icons fas fa-eye" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#detalles{{$i->emisorRfc}}"></a>
+                        <a class="icons fas fa-eye" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#detalles{{$i['emisorRfc']}}"></a>
                       </td>
                       <td class="text-center align-middle"></td>
                     </tr>
                     {{--Llamando a las vistas de otros componentes--}}
-                    <livewire:detalles :factu=$RFCEmit :empresa=$empresa :wire:key="time().$i->emisorRfc" >
+                    <livewire:detalles :factu=$RFCEmit :empresa=$empresa :wire:key="time().$i['emisorRfc']" >
                     @endif
                     @endforeach
                   </tbody>
                 </table>
+                {{--Paginacion--}}
+                <button wire:click="minusreg()">menos</button>
+                <button wire:click="morereg()">mas</button>
               </div>
+              <div wire:loading>
+                <br>
+                <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+                  <div></div>
+                  <div></div>
+                </div>
+                <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
+                <br>
+              </div>
+
               <br>
               {{--Boton para mostrar la columna de detalles para varios proveedores--}}
               <div class="invoice-create-btn mb-1">
@@ -225,7 +235,7 @@
                     {{--Condicional para activar o desactivar el boton--}}
                     @if ($btnvinactiv == 1)
                     <div class="invoice-create-btn mb-1">
-                      <button class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
+                      <button id="Btnvincufact" class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
                     </div>
                     @else
                     <div class="invoice-create-btn mb-1">
@@ -455,22 +465,6 @@
                   </div>
                 </div>
               </div>
-              <script>
-                //Funcion para alamcenar los datos al carga el modal
-                function GuardMovi(){
-                  var selectmovi = $("#selectmovimul").val();
-                  var selectempre = $("#inputState1").val();
-                  sessionStorage.setItem('empresa', selectempre);
-                  sessionStorage.setItem('idmovi', selectmovi);
-                }
-
-                //Guardamos los datos en sessionstorage para mostrarlos en el modulo de cheques (vinculacion a movimiento existente)
-                $("#selectmovimul").change(function(){
-                    var selectmovi = $("#selectmovimul").val();
-                    sessionStorage.setItem('empresa', '{{$empresa}}');
-                    sessionStorage.setItem('idmovi', selectmovi);
-                  });
-              </script>
           </div>
       </div>
   </div>
@@ -687,24 +681,19 @@
           </div>
       </div>
     </div>
-
-      {{--Scrips para mostrar las modales--}}
       <script>
         $(document).ready(function(){
+          //Variable de bandera para realizar la accion del scroll
           var movicheq = sessionStorage.getItem('idmovicheq');
           var empresacheq = sessionStorage.getItem('empresacheq');
 
           //Condicion para saber si las variables no estan vacias
-          if(movicheq.length > 2 && empresacheq.length > 2){
+          if(movicheq !== null && empresacheq !== null){
               //Emitimos los datos al controlador
               window.livewire.emit('mostmovi', {idmovi : movicheq, empresa : empresacheq});
               $("#detalles").modal("show");
+              sessionStorage.clear();
             }
-
-          sessionStorage.setItem('idmovicheq', "");
-          sessionStorage.setItem('empresacheq', "");
-
-          setTimeout(GuardMovi, 5000);
         });
 
         window.addEventListener('agregarpdf', event => {

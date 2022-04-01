@@ -54,7 +54,7 @@
                       {{--Condicional para activar o desactivar el boton--}}
                       @if ($btnvinactiv == 1)
                       <div class="invoice-create-btn mb-1">
-                        <button class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
+                        <button id="Btnvincufact" class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
                       </div>
                       @else
                       <div class="invoice-create-btn mb-1">
@@ -265,14 +265,6 @@
                     </div>
                   </div>
                 </div>
-                <script>
-                  //Guardamos los datos en sessionstorage para mostrarlos en el modulo de cheques (vinculacion a movimiento existente)
-                  $("#selectmovi").change(function(){
-                    var selectmovi = $("#selectmovi").val();
-                    sessionStorage.setItem('empresa', '{{$empresa}}');
-                    sessionStorage.setItem('idmovi', selectmovi);
-                  });
-                </script>
             </div>
         </div>
     </div>
