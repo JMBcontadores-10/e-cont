@@ -449,13 +449,13 @@
                         if(is_array($RFC)){
                           //Si es un arreglo
                           foreach ($RFC as $RFCArray) {
-                            $rutaXml = "storage/contarappv1_descargas/$RFCArray/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
-                            $rutaPdf = "storage/contarappv1_descargas/$RFCArray/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
+                            $rutaXml = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
+                            $rutaPdf = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
                           }
                         }else {
                           //Si no es un arreglo
-                          $rutaXml = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
-                          $rutaPdf = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
+                          $rutaXml = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
+                          $rutaPdf = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
                         }
 
 

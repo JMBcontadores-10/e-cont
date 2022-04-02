@@ -128,8 +128,8 @@
                           $RFC = $this->factu;
   
                           //Se asignan las rutas donde está almacenando
-                          $rutaXml = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
-                          $rutaPdf = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
+                          $rutaXml = "storage/contarappv1_descargas/$empresa/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
+                          $rutaPdf = "storage/contarappv1_descargas/$empresa/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
   
   
                           //Condicional para saber si el efecto es un egreso
