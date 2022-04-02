@@ -172,9 +172,120 @@
                     @endforeach
                   </tbody>
                 </table>
-                {{--Paginacion--}}
-                <button wire:click="minusreg()">menos</button>
-                <button wire:click="morereg()">mas</button>
+                @if ($rfcEmpresa)
+                <div>
+                  <nav>
+                    <ul class="pagination">
+                      {{--Boton de avanzar--}}
+                      <li id="minusreg" class="page-item" aria-disabled="true" aria-label="« Previous">
+                        <button class="page-link" type="button" rel="next" aria-label="Next »" wire:click="minusreg()">‹</button>
+                      </li>
+
+                      {{--Paginas de navegacion--}}
+                      {{--Ciclo para mostrar las paginas--}}
+                      {{--Si el numeor de paginas es mas de 10--}}
+                      @if ($totalpagi > 10)
+                        {{--Mostramos los primeros 2 registros--}}
+                        @for ($i = 1; $i <= 2; $i++)
+                        {{--Boton activo--}}
+                        <li class="page-item inicpagi btnselect{{$i}}">
+                          <button type="button" class="page-link" wire:click="navpagi('{{($i - 1) * 10}}', '{{$i}}')">{{$i}}</button>
+                        </li>
+                        @endfor
+
+                        {{--Tres puntos de separador--}}
+                        <li class="page-item disabled inicpagi" aria-disabled="true"><span class="page-link">...</span></li>
+                        
+
+
+                        @if ($pagiselect < ceil($totalpagi/2))
+                          {{--Paginacion central--}}
+                          @for ($i = 1; $i <= ceil($totalpagi/2) ; $i++)
+                          {{--Boton activo--}}
+                          <li class="page-item btnselect{{$i}}">
+                            <button type="button" class="page-link" wire:click="navpagi('{{($i - 1) * 10}}', '{{$i}}')">{{$i}}</button>
+                          </li>
+                          @endfor
+                        @else
+                          {{--Paginacion central--}}
+                          @for ($i = ceil($totalpagi/2); $i <= $totalpagi ; $i++)
+                          {{--Boton activo--}}
+                          <li class="page-item btnselect{{$i}}">
+                            <button type="button" class="page-link" wire:click="navpagi('{{($i - 1) * 10}}', '{{$i}}')">{{$i}}</button>
+                          </li>
+                          @endfor
+                        @endif
+
+
+
+                        {{--Tres puntos de separador--}}
+                        <li class="page-item disabled finpagi" aria-disabled="true"><span class="page-link">...</span></li>
+
+                        {{--Mostramos los ultimos 2 registros--}}
+                        @for ($i = ($totalpagi - 1); $i <= $totalpagi; $i++)
+                        {{--Boton activo--}}
+                        <li class="page-item finpagi btnselect{{$i}}">
+                          <button type="button" class="page-link" wire:click="navpagi('{{($i - 1) * 10}}', '{{$i}}')">{{$i}}</button>
+                        </li>
+                        @endfor
+                      
+                      {{--Si es menor de 10 registros--}}
+                      @else
+                        @for ($i = 1; $i <= $totalpagi; $i++)
+                        {{--Boton activo--}}
+                        <li class="page-item btnselect{{$i}}">
+                          <button type="button" class="page-link" wire:click="navpagi('{{($i - 1) * 10}}', '{{$i}}')">{{$i}}</button>
+                        </li>
+                        @endfor
+                      @endif
+
+                      {{--Boton de retroceso--}}
+                      <li id="morereg" class="page-item">
+                        <button class="page-link" type="button" rel="next" aria-label="Next »" wire:click="morereg()">›</button>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+
+                {{--Js para la paginacion--}}
+                <script>
+                  $(document).ready(function() {
+                    //Accion para mostrar el efecto de seleccion en el boton
+                    $(".btnselect"+{{$pagiselect}}).addClass('active');
+
+                    //Condicion para saber si estamos al principio de la paginacion o al final
+                    switch('{{$pagiselect}}'){
+                      //Si llegamos al inicio
+                      case "1":
+                        $("#minusreg").addClass('disabled');
+                        $("#morereg").removeClass('disabled');
+                        break;
+                      //Si llegamos al final
+                      case '{{$totalpagi}}':
+                        $("#minusreg").removeClass('disabled');
+                        $("#morereg").addClass('disabled');
+                        break;
+                      //Si estamos en otra pagina
+                      default:
+                        $("#minusreg").removeClass('disabled');
+                        $("#morereg").removeClass('disabled');
+                        break;
+                    }
+
+                    //Condicional para mostrar lapaginacion particionada
+                    if({{$pagiselect}} < 10){
+                      //Si es menor de 10
+                      $(".inicpagi").hide();
+                      $(".finpagi").show();
+                    }else{
+                      //Si es mayo de 10
+                      $(".inicpagi").show();
+                      $(".finpagi").hide();
+                    }
+                  });
+                  
+                </script>
+                @endif
               </div>
               <div wire:loading>
                 <br>
@@ -227,6 +338,22 @@
                 </select>
 
                 <br>
+                {{--Select de los proveedores--}}
+                @if ($showselect == 1)
+                {{--Listado de cheques a vincular--}}
+                <label>Proveedor: </label>
+
+                {{--Select que contiene la lista de los cheques--}}
+                <select wire:loading.attr="disabled" id="selectprov" class="select form-control" wire:model="proveselect" wire:change="sendrfc()">
+                 <option  value="" >--Selecciona un proveedor--</option>
+                 @foreach ($provselect as $i)
+                   <option value="{{ $i->emisorRfc }}">
+                    {{ $i->emisorRfc }} - {{ Str::limit($i->emisorNombre, 50) }}
+                   </option>
+                 @endforeach
+               </select>
+                @endif
+                <br>
 
                 {{--Seccion de botones--}}
                 <div class="row">
@@ -235,7 +362,7 @@
                     {{--Condicional para activar o desactivar el boton--}}
                     @if ($btnvinactiv == 1)
                     <div class="invoice-create-btn mb-1">
-                      <button id="Btnvincufact" class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
+                      <button id="Btnvincufact" class="btn btn-primary" wire:click="VincuCFDIMovi()" onclick="guardarfactu('{{$moviselect}}', '{{$rfcEmpresa}}')">Vincular a Movimiento</button>
                     </div>
                     @else
                     <div class="invoice-create-btn mb-1">
@@ -692,7 +819,11 @@
           if(movicheq !== null && empresacheq !== null){
               //Emitimos los datos al controlador
               window.livewire.emit('mostmovi', {idmovi : movicheq, empresa : empresacheq});
-              $("#detalles").modal("show");
+              $("#detalles").modal({
+                backdrop: 'static',
+                keyboard: false
+              });
+
               sessionStorage.clear();
             }
         });

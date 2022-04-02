@@ -54,7 +54,7 @@
                       {{--Condicional para activar o desactivar el boton--}}
                       @if ($btnvinactiv == 1)
                       <div class="invoice-create-btn mb-1">
-                        <button id="Btnvincufact" class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
+                        <button id="Btnvincufact" class="btn btn-primary" wire:click="VincuCFDIMovi()" onclick="guardarfactu('{{$moviselect}}', '{{$empresa}}')">Vincular a Movimiento</button>
                       </div>
                       @else
                       <div class="invoice-create-btn mb-1">
@@ -67,7 +67,7 @@
                       {{--Condicional para activar o desactivar el boton--}}
                       @if ($btnvinanewctiv == 1)
                       <div class="invoice-create-btn mb-1">
-                        <button class="btn btn-secondary" id="Btnmostrarnewcheq" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#newchequevinc">Vincular a nuevo Movimiento</button>
+                        <button class="btn btn-secondary" id="Btnmostrarnewcheq" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#newchequevinc{{$facturas}}">Vincular a nuevo Movimiento</button>
                       </div>
                       @else
                       <div class="invoice-create-btn mb-1">
@@ -273,7 +273,7 @@
         {{--Llamamos a las modales--}}
     {{--Modal de detalles de cuentas por pagar--}}
     {{--Creacion del modal--}}
-    <div wire:ignore.self class="modal fade" id="newchequevinc" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="newchequevinc{{$facturas}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog modal-dialog-scrollable" role="document">
           <div class="modal-content">
               {{--Encabezado--}}
@@ -413,13 +413,13 @@
                       sessionStorage.setItem('idmovi', '{{$idNuevoCheque->_id}}');
                       sessionStorage.setItem('empresa', '{{$empresa}}');
                       
-                      AddPDFChequeCFDI('{{$idNuevoCheque->_id}}', 'addpdf');
+                      AddPDFChequeCFDI('{{$idNuevoCheque->_id}}', 'addpdf{{$facturas}}');
                     </script>
                     @endif
                   @endif
 
                   {{--Input filepond--}}
-                  <input name="addpdf" type="file" id="addpdf"/>
+                  <input name="addpdf" type="file" id="addpdf{{$facturas}}"/>
 
                   <div style="background-color: #61A2C8; color:white;"  class="alert  alert-dismissible mb-2" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -452,13 +452,13 @@
                   @if($idNuevoCheque!==null)
                     @if(!$step3)
                     <script>
-                      AddRelChequeCFDI('{{$idNuevoCheque->_id}}', 'addadicion');
+                      AddRelChequeCFDI('{{$idNuevoCheque->_id}}', 'addadicion{{$facturas}}');
                     </script>
                     @endif
                   @endif
 
                   {{--Input filepond--}}
-                  <input name="addadicion" type="file" id="addadicion"/>
+                  <input name="addadicion" type="file" id="addadicion{{$facturas}}"/>
 
                   <div style="background-color: #61A2C8; color:white;"  class="alert  alert-dismissible mb-2" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">

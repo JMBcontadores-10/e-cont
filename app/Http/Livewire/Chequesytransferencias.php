@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
-use Illuminate\Http\Request;
+
 
 
 
