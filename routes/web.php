@@ -40,7 +40,7 @@ Route::match(['get', 'post'], '/home', [App\Http\Controllers\Login1Controller::c
 
 Route::get('/descargasv2', [App\Http\Controllers\DescargasControllerv2::class, 'index'])->name('descargasv2');
 Route::post('/async', [App\Http\Controllers\Async::class, 'index'])->name('async');
-Route::get('/cuentasporpagar', [App\Http\Controllers\CuentasPorPagar::class, 'index'])->name('cuentasporpagar');
+Route::get('/cuentaspagar', [App\Http\Controllers\CuentasPorPagar::class, 'index'])->name('cuentaspagar');
 Route::get('/detalles', [App\Http\Controllers\CuentasPorPagar::class, 'detalles'])->name('detalles');
 Route::match(['get', 'post'], '/cheques-transferencias', [App\Http\Controllers\ChequesYTransferenciasController::class, 'index'])->name('cheques-transferencias');
 Route::post('/vincular-cheque', [App\Http\Controllers\ChequesYTransferenciasController::class, 'vincularCheque'])->name('vincular-cheque');
@@ -100,5 +100,5 @@ Route::get('zip-download/{id}', [Eliminar::class, 'descargarZip']);
 Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
 
 //Ruta de la vista de cuentas por pagar en livewire
-Route::get('/cuentaspagar', Cuentasporpagar::class)->name('cuentaspagar');
+Route::get('/cuentasporpagar', Cuentasporpagar::class)->name('cuentasporpagar');
 Route::get('/modules', Home::class)->name('modules');
