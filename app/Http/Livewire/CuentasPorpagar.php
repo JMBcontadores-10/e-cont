@@ -124,6 +124,8 @@ class Cuentasporpagar extends Component
         $this->searchcfdi = "";
         $this->showselect = 0;
         $this->proveselect = "";
+        $this->pagiselect = 1;
+        $this->paginici = 0;
     }
 
     //Metodo para declarar los campos obligatorios

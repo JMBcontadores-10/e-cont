@@ -35,7 +35,7 @@
             @empty(!$empresas)
              {{--Mostramos el RFC de la empresa que se selecciona--}}
               <label for="inputState">Empresa: {{$empresa}}</label>
-              <select wire:model="rfcEmpresa" id="inputState1" class="select form-control"  >
+              <select wire:model="rfcEmpresa" id="inputState1" class="select form-control" wire:change="CleanRFC()">
                 <option  value="" >--Selecciona Empresa--</option>
 
                 {{--Llenamos el select con las empresa vinculadas--}}
@@ -251,7 +251,7 @@
                 <script>
                   $(document).ready(function() {
                     //Accion para mostrar el efecto de seleccion en el boton
-                    $(".btnselect"+{{$pagiselect}}).addClass('active');
+                    $(".btnselect" + {{$pagiselect}}).addClass('active');
 
                     //Condicion para saber si estamos al principio de la paginacion o al final
                     switch('{{$pagiselect}}'){
