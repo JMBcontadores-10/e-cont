@@ -51,7 +51,7 @@ Factura Cancelada = FC
         }elseif(empty(auth()->user()->tipo)){
 
             $rfc=auth()->user()->empresas;
-            $noti = Notificaciones::where('receptorMensaje', 'CDI1801116Y9')
+            $noti = Notificaciones::where('receptorMensaje', auth()->user()->RFC)
             ->where('read_at', 0)
 
 

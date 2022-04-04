@@ -28,7 +28,7 @@
                         </a>
                     </div>
 
-                    <button id="btn">Eviar Correo </button>
+                    {{-- <button id="btn">Eviar Correo </button>
                     <div class="conten">
 
                         <div id="notificacion" class="notEmail">
@@ -43,7 +43,36 @@
                             $("#btn").click(function () {
                                 estilos();
                             });
-                        </script>
+                        </script> --}}
+
+
+@if (session()->has('id'))
+<div class="alert alert-success">
+    {{ session('id') }}
+</div>
+
+<script>
+
+    $(document).ready(function() {
+
+     window.livewire.emit('notivincu','{{session('id')}}' );
+
+
+
+     document.querySelector('#show62448d76a9450000d70052e6').click();
+
+
+
+
+
+
+} );
+
+
+</script>
+
+
+@endif
 
                     {{--Condicional para mostrar un listado de empresas--}}
                     @empty(!$empresas)
@@ -239,7 +268,7 @@
 
                             <tbody>
                                 {{--Cuerpo de la tabla con la funcion de expancion--}}
-                                <tr onclick="showHideRow('{{$id}}');">
+                                <tr  onclick="showHideRow('{{$id}}');">
                                     {{--Fecha--}}
                                     <td>
                                         @if ($tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
@@ -345,7 +374,7 @@
                                                 @else
                                                     @php $class_c="icons" @endphp
                                                 @endif
-                                                <a class="{{$class_c}} fas fa-sticky-note" data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
+                                                <a id="nota{{$id}}" class="{{$class_c}} fas fa-sticky-note" data-toggle="modal" data-target="#comentarios-{{$id}}"> </a>
                                             </div>
 
                                             {{--PDF--}}

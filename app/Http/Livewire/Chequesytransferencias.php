@@ -76,6 +76,8 @@ $this->condicion='>=';
     public $search;
 
 
+
+
     public function updatingSearch(){
 
         $this->resetPage();
