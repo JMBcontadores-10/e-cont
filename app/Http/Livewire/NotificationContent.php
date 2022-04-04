@@ -38,7 +38,7 @@ class NotificationContent extends Component
                    }elseif(empty(auth()->user()->tipo)){
 
                $rfc=auth()->user()->empresas;
-               $noti = Notificaciones::Where('receptorMensaje', 'CDI1801116Y9')
+               $noti = Notificaciones::Where('receptorMensaje',auth()->user()->RFC )
                ->where('read_at', 0)
 
             //   ->orWhereNotNull('folioFiscal')
@@ -73,9 +73,17 @@ class NotificationContent extends Component
                     'read_at' => 1,
                 ]);
 
-
-
-
-
   }
+
+public function notificacionLink($id){
+
+    session()->flash('id', $id);
+
+    return redirect()->to('/chequesytransferencias');
+}
+
+
+
+
+
 }

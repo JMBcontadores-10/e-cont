@@ -76,6 +76,8 @@ $this->condicion='>=';
     public $search;
 
 
+
+
     public function updatingSearch(){
 
         $this->resetPage();
@@ -91,7 +93,17 @@ $this->condicion='>=';
 
     protected $listeners = [
         'chequesRefresh' => '$refresh',
+        'notivincu'=>'vinculoNoti',
      ];
+
+
+
+     public function vinculoNoti($id){
+
+        $this->todos=1;
+        $this->search=$id;
+
+    }
 
 protected function rules(){
 

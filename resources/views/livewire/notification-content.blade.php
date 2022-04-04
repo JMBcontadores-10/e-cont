@@ -115,8 +115,9 @@ window.addEventListener('PushNotifaction', event => {
                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->numcheque}}</span> ¡Cancelo una factura!<br>FolioFiscal:&nbsp; {{$noti->folioFiscal}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>  Fecha de cancelación:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
 
                              @elseif($noti->tipo=="M")
+                                  <a wire:click="notificacionLink('{{$noti->cheques_id}}')">
                              <h6 class="media-heading"><span class="text-bold-500">Tu contador</span> ¡te dejo un mensaje!<br>En :&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>{{$noti->created_at->diffForHumans()}}</small>
-
+                                  </a>
 
                              @endif
                           </div>
