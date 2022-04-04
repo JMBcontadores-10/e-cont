@@ -5,6 +5,7 @@ use App\Http\Livewire\Chequesytransferencias;
 use App\Http\Livewire\vinculacionAutomatica;
 use App\Http\Livewire\CuentasPorpagar;
 use App\Http\Livewire\Cheques;
+use App\Http\Livewire\Descargas;
 use App\Http\Livewire\Eliminar;
 use App\Http\Livewire\Home;
 use App\Http\Livewire\FacturasVinculadas;
@@ -101,4 +102,7 @@ Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
 
 //Ruta de la vista de cuentas por pagar en livewire
 Route::get('/cuentasporpagar', Cuentasporpagar::class)->name('cuentasporpagar');
+//Ruta de la vista de descargar
+Route::get('/descargas', Descargas::class)->name('descargas');
+//Ruta de la vista de home (pagina de inicio)
 Route::get('/modules', Home::class)->name('modules');
