@@ -29,11 +29,39 @@ class MetadataR extends Model
 
 
     public static function search($search)
-    {
+    {   
         return empty($search) ? static::query()
         : static::query()->where('emisorRfc', 'like', '%'.$search.'%')
         ->orWhere('emisorNombre', 'like', '%'.$search.'%')
         ->orWhere('folioFiscal', 'like', '%'.$search.'%');
+    }
+
+    public static function searchxml($search)
+    {   
+        //Creamos un array vacio donde ingresaremos los UUID
+        $Collect = [];
+
+        //Realizaremos una consulta a los xml
+        $XmlResult = XmlR::
+        select('UUID')
+        ->where('Emisor.Rfc', 'like', '%'.$search.'%')
+        ->orwhere('Emisor.Nombre', 'like', '%'.$search.'%')
+        ->orWhere('UUID', 'like', '%'.$search.'%')
+        ->orWhere('Folio', 'like', '%'.$search.'%')
+        ->orWhere('Complemento.Pagos.Pago.DoctoRelacionado.IdDocumento', 'like', '%'.$search.'%')
+        ->orWhere('Complemento.Pagos.Pago.DoctoRelacionado', 'like', '%'.$search.'%')
+        ->orWhere('CfdiRelacionados.CfdiRelacionado.UUID', 'like', '%'.$search.'%')
+        ->orWhere('CfdiRelacionados.CfdiRelacionado', 'like', '%'.$search.'%')
+        ->get();
+
+        //Con un foreach metemos a nuestro arreglo los UUID que obtuvo de la consulta
+        foreach ($XmlResult as $UUID) {
+            array_push($Collect, $UUID->UUID);
+        }
+
+        //Retornamos los metadatos que el folio fiscal coincida con UUID recien obtenidos
+        return empty($search) ? static::query()
+        : static::query()->wherein('folioFiscal', $Collect);
     }
 
     public function fecha_es($mes){

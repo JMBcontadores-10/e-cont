@@ -542,14 +542,14 @@
                             @if ($efecto == 'Pago')
                               @if (is_array($docRel) || is_object($docRel))
                                 @foreach ($docRel as $d)
-                                  {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
+                                  {{ ++$nUR }}. {{ strtoupper($d['IdDocumento']) }}<br>
                                 @endforeach
                               @else
-                                {{ ++$nUR }}. {{ $docRel }}
+                                {{ ++$nUR }}. {{ strtoupper($docRel) }}
                               @endif
                             @elseif ($efecto == 'Egreso' and !$docRel == null or $efecto == 'Ingreso' and !$docRel == null)
                               @foreach ($docRel as $d)
-                                {{ ++$nUR }}. {{ $d['UUID'] }}<br>
+                                {{ ++$nUR }}. {{ strtoupper($d['UUID']) }}<br>
                               @endforeach
                             @else
                               -

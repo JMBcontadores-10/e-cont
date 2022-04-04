@@ -445,7 +445,7 @@ class Cuentasporpagar extends Component
         if(is_array($this->RFC)){
             //Si es arreglo
             $CFDI = MetadataR::
-            search($this->searchcfdi)
+            searchxml($this->searchcfdi)
             ->where('estado', '<>', 'Cancelado')
             ->where('receptorRfc', $this->rfcEmpresa)
             ->wherein('emisorRfc', $this->RFC)
@@ -456,7 +456,7 @@ class Cuentasporpagar extends Component
         }else{
             //No es arreglo
             $CFDI = MetadataR::
-            search($this->searchcfdi)
+            searchxml($this->searchcfdi)
             ->where('estado', '<>', 'Cancelado')
             ->where('receptorRfc', $this->rfcEmpresa)
             ->where('emisorRfc', $this->RFC)

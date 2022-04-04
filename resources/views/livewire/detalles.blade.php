@@ -211,26 +211,26 @@
   
                           {{--UUID Relacionado--}}
                           <div class="table-body-cell">
-                            @if (!$XmlReci->isEmpty())
-                              @if ($efecto == 'Pago')
-                                @if (is_array($docRel) || is_object($docRel))
-                                  @foreach ($docRel as $d)
-                                    {{ ++$nUR }}. {{ $d['IdDocumento'] }}<br>
-                                  @endforeach
-                                @else
-                                  {{ ++$nUR }}. {{ $docRel }}
-                                @endif
-                              @elseif ($efecto == 'Egreso' and !$docRel == null or $efecto == 'Ingreso' and !$docRel == null)
+                          @if (!$XmlReci->isEmpty())
+                            @if ($efecto == 'Pago')
+                              @if (is_array($docRel) || is_object($docRel))
                                 @foreach ($docRel as $d)
-                                  {{ ++$nUR }}. {{ $d['UUID'] }}<br>
+                                  {{ ++$nUR }}. {{ strtoupper($d['IdDocumento']) }}<br>
                                 @endforeach
                               @else
-                                -
+                                {{ ++$nUR }}. {{ strtoupper($docRel) }}
                               @endif
+                            @elseif ($efecto == 'Egreso' and !$docRel == null or $efecto == 'Ingreso' and !$docRel == null)
+                              @foreach ($docRel as $d)
+                                {{ ++$nUR }}. {{ strtoupper($d['UUID']) }}<br>
+                              @endforeach
                             @else
-                              {{ $UUIDRef }}
+                              -
                             @endif
-                          </div>
+                          @else
+                            {{ $UUIDRef }}
+                          @endif
+                        </div>
   
                           {{--Folio--}}
                           <div class="table-body-cell">

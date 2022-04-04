@@ -300,7 +300,7 @@ class Detalles extends Component
 
         //Consulta para obtener los datos de las facturas a vincular
         $CFDI = MetadataR::
-        search($this->searchcfdi)
+        searchxml($this->searchcfdi)
         ->where('estado', '<>', 'Cancelado')
         ->where('receptorRfc', $this->empresa)
         ->where('emisorRfc', $this->factu)
