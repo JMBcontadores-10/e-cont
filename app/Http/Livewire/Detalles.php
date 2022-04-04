@@ -37,6 +37,16 @@ class Detalles extends Component
     //Variable para la suma de totales de las facturas seleccionadas
     public $sumtotalfactu;
 
+    protected $listeners = [
+        'mostmovi' => 'mostmovi',
+     ];
+
+    public function mostmovi($data)
+    {
+        $this->rfcEmpresa = $data['empresa'];
+        $this->moviselect = $data['idmovi'];
+    }
+
     public function mount()
     {
         //Le damos un valor a las variables declaradas
@@ -261,7 +271,16 @@ class Detalles extends Component
         $this->sumtotalfactu = $TotalIngresos - $TotalEgresos;
     }
 
-
+    public function refresh(){
+        $this->Nuevo_numcheque="";
+        $this->Nuevo_fecha="";
+        $this->Nuevo_beneficiario="";
+        $this->Nuevo_importecheque="";
+        $this->Nuevo_tipomov="";
+        $this->Nuevo_tipoopera="";
+        $this->idNuevoCheque=null;
+        $this->step3=true;
+    }
 
     public function render()
     {

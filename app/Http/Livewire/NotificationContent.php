@@ -64,6 +64,14 @@ class NotificationContent extends Component
     }
 
 
+    public function notificationLinks($id){
+
+
+        session()->flash('id',$id);
+
+        return redirect()->to('/chequesytransferencias');
+    }
+
   public function cerrarNotificacion($id){
 
 

@@ -14,7 +14,7 @@ class Cuentasporpagar extends Component
 {
     //Variables globales
     public $rfcEmpresa;
-    public int $perPage=20;
+    public int $perPage = 5; //La paginacion en esta caso se utilizara con la funcion de take()
     public $search;
     public $moreprov = [];
     public $RFC;
@@ -23,7 +23,16 @@ class Cuentasporpagar extends Component
     public $btnvinactiv = 0;
     public $btnvinanewctiv = 0;
     public $searchcfdi;
+    public $showselect;
+    public $proveselect;
 
+    //Variables de paginacion
+    public $paginici = 0; //Vamos a iniciar en le index 0
+    public $paglapso = 10; //Se mostrra en un paso de 5 registros
+    public $totalprov; //Total de registros de los proovedores
+    public $totalpagi = 1; //Referencias al total de paginas de la paginacion
+    public $pagiselect = 1; //Pagina seleccionada
+    
 
     //Variables que se utilizaran para agregar un nuevo cheque
     public $Nuevo_numcheque,
@@ -33,12 +42,59 @@ class Cuentasporpagar extends Component
     $Nuevo_beneficiario,
     $Nuevo_tipoopera,
     $Nuevo_nombrec,
-    $pushArchivos=[],
+    $pushArchivos = [],
     $step3,
     $idNuevoCheque;
 
     //Variable para la suma de totales de las facturas seleccionadas
     public $sumtotalfactu;
+
+    protected $listeners = [
+        'mostmovi' => 'mostmovi',
+        'morerow' => 'morerow',
+     ];
+
+    //Metodo para mostrar el modal con el movimiento seleccionado de cheques y transferencias
+    public function mostmovi($data)
+    {
+        $this->rfcEmpresa = $data['empresa'];
+        $this->moviselect = $data['idmovi'];
+
+        //Activamo la bandera para mostrar el select de proveedores
+        $this->showselect = 1;
+    }
+
+    //Metodo para recibir el RFC del select de proveedores
+    public function sendrfc(){
+        $this->RFC = $this->proveselect;
+    }
+
+    //Metodo para realizar la paginacion (aumento de registro)
+    public function morereg(){
+        //Daremos saltos de n registros
+        $this->paginici = $this->paginici + $this->paglapso;
+
+        //Guardamos el valor de la pagina que se selecciono
+        $this->pagiselect = $this->pagiselect + 1;
+    }
+
+    //Metodo para realizar la paginacion (diminucion de registro)
+    public function minusreg(){
+        //Daremos saltos de n registros
+        $this->paginici = $this->paginici - $this->paglapso;
+
+        //Guardamos el valor de la pagina que se selecciono
+        $this->pagiselect = $this->pagiselect - 1;
+    }
+
+    //Metodo para navegar entre los botones de la paginacion
+    public function navpagi($pagiact, $indexpagi){
+        //Vamos a pasarnos de un punto a otro
+        $this->paginici = $pagiact;
+
+        //Guardamos el valor de la pagina que se selecciono
+        $this->pagiselect = $indexpagi;
+    }
 
     //Metodo para identificar el tipo de usuario
     public function mount()
@@ -66,6 +122,10 @@ class Cuentasporpagar extends Component
         $this->sumtotalfactu = "";
         $this->moviselect = "";
         $this->searchcfdi = "";
+        $this->showselect = 0;
+        $this->proveselect = "";
+        $this->pagiselect = 1;
+        $this->paginici = 0;
     }
 
     //Metodo para declarar los campos obligatorios
@@ -321,7 +381,23 @@ class Cuentasporpagar extends Component
                 foreach($e as $em)
                 $emp[]= array($em['RFC'],$em['nombre']);
             }
-        }else{
+        }else if(!empty(auth()->user()->TipoSE)){
+            $e=array();
+            $largo=sizeof(auth()->user()->empresas);
+            for($i=0; $i <$largo; $i++) {
+                $rfc=auth()->user()->empresas[$i];
+
+                $e=DB::Table('clientes')
+                ->select('RFC','nombre')
+                ->where('RFC', $rfc)
+                ->get();
+
+                foreach($e as $em)
+                $emp[]= array($em['RFC'],$em['nombre']);
+            }
+        }
+        else{
+
             $emp='';
         }
 
@@ -344,11 +420,25 @@ class Cuentasporpagar extends Component
         search($this->search)
         ->select('emisorNombre', 'emisorRfc')
         ->where('receptorRfc', $this->rfcEmpresa)
-
+        ->where('estado', '<>', 'Cancelado')
+        ->whereNull('cheques_id')
+        ->groupBy('emisorRfc')
         ->orderBy('emisorRfc', 'asc')
-        ->paginate($this->perPage);
+        ->get();
 
+        $this->totalprov = count($col);
+        $this->totalpagi = ceil($this->totalprov / $this->paglapso);
+        $col = $col->toArray();
+        $col = array_slice($col, $this->paginici, $this->paglapso, true);
 
+        $provselect = MetadataR::
+        select('emisorNombre', 'emisorRfc')
+        ->where('receptorRfc', $this->rfcEmpresa)
+        ->where('estado', '<>', 'Cancelado')
+        ->whereNull('cheques_id')
+        ->groupBy('emisorRfc')
+        ->orderBy('emisorRfc', 'asc')
+        ->get();
 
         //Consulta para obtener los datos de CFDI
         //Condicional para saber si el valor de RFC es un arreglo o un string
@@ -381,7 +471,7 @@ class Cuentasporpagar extends Component
             ->orderBy('fecha', 'desc')
             ->get();
 
-        return view('livewire.cuentasporpagar', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses, 'col'=>$col, 'CFDI'=>$CFDI, 'Cheques'=>$Cheques, 'totalfactu'=>$this->sumtotalfactu])
+        return view('livewire.cuentasporpagar', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses, 'col'=>$col, 'CFDI'=>$CFDI, 'Cheques'=>$Cheques, 'totalfactu'=>$this->sumtotalfactu, 'provselect'=>$provselect])
         ->extends('layouts.livewire-layout')
         ->section('content');
     }

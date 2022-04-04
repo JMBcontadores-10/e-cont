@@ -5,6 +5,7 @@
     use App\Models\ListaNegra;
     use App\Models\XmlR;
     use App\Models\Cheques;
+
     //Obtenemos la clase para agregar a la tabla
     $rfc = Auth::user()->RFC;
     $class='';
@@ -15,26 +16,6 @@
     //Obtenemos el valor de la fecha del dia de hoy
     $date=date('Y-m-d');
     @endphp
-
-    {{--Scrips para mostrar las modales--}}
-    <script>
-      window.addEventListener('agregarpdf', event => {
-      $(".step1").fadeOut("slow");
-      $(".step1").hide();
-
-      $(".step2").fadeIn("slow");
-    });
-
-    window.addEventListener('agregarrela', event => {
-      $(".step1").fadeOut("slow");
-      $(".step1").hide();
-
-      $(".step2").fadeOut("slow");
-      $(".step2").hide();
-
-      $(".step3").fadeIn("slow");
-    });
-    </script>
 
     {{--Contenedor para mantener responsivo el contenido del modulo--}}
     <div class="app-content content">
@@ -50,19 +31,11 @@
 
             <br>
 
-            {{--Mensaje de error por si no se realizo correctamente la accion--}}
-            @if (session()->has('errorvincu'))
-            <div class="alert alert-danger">
-                {{ session('errorvincu') }}
-            </div>
-            <br>
-            @endif
-
             {{--Select para selccionar la empresa (Contadores)--}}
             @empty(!$empresas)
              {{--Mostramos el RFC de la empresa que se selecciona--}}
               <label for="inputState">Empresa: {{$empresa}}</label>
-              <select wire:model="rfcEmpresa" id="inputState1" class="select form-control"  >
+              <select wire:model="rfcEmpresa" id="inputState1" class="select form-control" wire:change="CleanRFC()">
                 <option  value="" >--Selecciona Empresa--</option>
 
                 {{--Llenamos el select con las empresa vinculadas--}}
@@ -130,20 +103,16 @@
                     @foreach ($col as $i)
                     @php
                     //Obtenemos el rfcemisor para enviarlo a los modales
-                    $RFCEmit = $i->emisorRfc;
+                    $RFCEmit = $i['emisorRfc'];
 
                     //Variable para obtener el total
-
-
                     $SumTotal = 0;
-
-
 
                     //Obtener el numero de CFDI
                     $DatosMetaR = MetadataR::
                     select('total', 'efecto')
                     ->where('receptorRfc', $this->rfcEmpresa)
-                    ->where('emisorRfc', $i->emisorRfc)
+                    ->where('emisorRfc', $i['emisorRfc'])
                     ->where('estado', '<>', 'Cancelado')
                     ->whereNull('cheques_id')
                     ->get();
@@ -168,14 +137,14 @@
                       {{--Contenido de la columna para vincular varios--}}
                       <td class="text-center align-middle VincVarProv">
                         <div id="checkbox-group" class="checkbox-group">
-                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" wire:model.defer="moreprov" value="{{$i->emisorRfc}}"/>
+                          <input style="transform: scale(1.5);" class="mis-checkboxes ChkMasProv" type="checkbox" wire:model.defer="moreprov" value="{{$i['emisorRfc']}}"/>
                         </div>
                       </td>
                       <td class="text-center align-middle">
-                        <span style="color:#3498DB" class="invoice-amount">{{$i->emisorRfc}}</span>
+                        <span style="color:#3498DB" class="invoice-amount">{{$i['emisorRfc']}}</span>
                       </td>
                       <td class="text-center align-middle">
-                        <span class="invoice-amount">{{ Str::limit($i->emisorNombre, 20); }}</span>
+                        <span class="invoice-amount">{{ Str::limit($i['emisorNombre'], 20); }}</span>
                       </td>
 
                       {{-- Valida si existe una coincidencia de RFC en la lista negra --}}
@@ -193,17 +162,141 @@
                       </td>
                       <td class="text-center align-middle">
                         {{--Boton para abrir el modal--}}
-                        <a class="icons fas fa-eye" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#detalles{{$i->emisorRfc}}"></a>
+                        <a class="icons fas fa-eye" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#detalles{{$i['emisorRfc']}}"></a>
                       </td>
                       <td class="text-center align-middle"></td>
                     </tr>
                     {{--Llamando a las vistas de otros componentes--}}
-                    <livewire:detalles :factu=$RFCEmit :empresa=$empresa :wire:key="time().$i->emisorRfc" >
+                    <livewire:detalles :factu=$RFCEmit :empresa=$empresa :wire:key="time().$i['emisorRfc']" >
                     @endif
                     @endforeach
                   </tbody>
                 </table>
+                @if ($rfcEmpresa)
+                <div>
+                  <nav>
+                    <ul class="pagination">
+                      {{--Boton de avanzar--}}
+                      <li id="minusreg" class="page-item" aria-disabled="true" aria-label="« Previous">
+                        <button class="page-link" type="button" rel="next" aria-label="Next »" wire:click="minusreg()">‹</button>
+                      </li>
+
+                      {{--Paginas de navegacion--}}
+                      {{--Ciclo para mostrar las paginas--}}
+                      {{--Si el numeor de paginas es mas de 10--}}
+                      @if ($totalpagi > 10)
+                        {{--Mostramos los primeros 2 registros--}}
+                        @for ($i = 1; $i <= 2; $i++)
+                        {{--Boton activo--}}
+                        <li class="page-item inicpagi btnselect{{$i}}">
+                          <button type="button" class="page-link" wire:click="navpagi('{{($i - 1) * 10}}', '{{$i}}')">{{$i}}</button>
+                        </li>
+                        @endfor
+
+                        {{--Tres puntos de separador--}}
+                        <li class="page-item disabled inicpagi" aria-disabled="true"><span class="page-link">...</span></li>
+                        
+
+
+                        @if ($pagiselect < ceil($totalpagi/2))
+                          {{--Paginacion central--}}
+                          @for ($i = 1; $i <= ceil($totalpagi/2) ; $i++)
+                          {{--Boton activo--}}
+                          <li class="page-item btnselect{{$i}}">
+                            <button type="button" class="page-link" wire:click="navpagi('{{($i - 1) * 10}}', '{{$i}}')">{{$i}}</button>
+                          </li>
+                          @endfor
+                        @else
+                          {{--Paginacion central--}}
+                          @for ($i = ceil($totalpagi/2); $i <= $totalpagi ; $i++)
+                          {{--Boton activo--}}
+                          <li class="page-item btnselect{{$i}}">
+                            <button type="button" class="page-link" wire:click="navpagi('{{($i - 1) * 10}}', '{{$i}}')">{{$i}}</button>
+                          </li>
+                          @endfor
+                        @endif
+
+
+
+                        {{--Tres puntos de separador--}}
+                        <li class="page-item disabled finpagi" aria-disabled="true"><span class="page-link">...</span></li>
+
+                        {{--Mostramos los ultimos 2 registros--}}
+                        @for ($i = ($totalpagi - 1); $i <= $totalpagi; $i++)
+                        {{--Boton activo--}}
+                        <li class="page-item finpagi btnselect{{$i}}">
+                          <button type="button" class="page-link" wire:click="navpagi('{{($i - 1) * 10}}', '{{$i}}')">{{$i}}</button>
+                        </li>
+                        @endfor
+                      
+                      {{--Si es menor de 10 registros--}}
+                      @else
+                        @for ($i = 1; $i <= $totalpagi; $i++)
+                        {{--Boton activo--}}
+                        <li class="page-item btnselect{{$i}}">
+                          <button type="button" class="page-link" wire:click="navpagi('{{($i - 1) * 10}}', '{{$i}}')">{{$i}}</button>
+                        </li>
+                        @endfor
+                      @endif
+
+                      {{--Boton de retroceso--}}
+                      <li id="morereg" class="page-item">
+                        <button class="page-link" type="button" rel="next" aria-label="Next »" wire:click="morereg()">›</button>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+
+                {{--Js para la paginacion--}}
+                <script>
+                  $(document).ready(function() {
+                    //Accion para mostrar el efecto de seleccion en el boton
+                    $(".btnselect" + {{$pagiselect}}).addClass('active');
+
+                    //Condicion para saber si estamos al principio de la paginacion o al final
+                    switch('{{$pagiselect}}'){
+                      //Si llegamos al inicio
+                      case "1":
+                        $("#minusreg").addClass('disabled');
+                        $("#morereg").removeClass('disabled');
+                        break;
+                      //Si llegamos al final
+                      case '{{$totalpagi}}':
+                        $("#minusreg").removeClass('disabled');
+                        $("#morereg").addClass('disabled');
+                        break;
+                      //Si estamos en otra pagina
+                      default:
+                        $("#minusreg").removeClass('disabled');
+                        $("#morereg").removeClass('disabled');
+                        break;
+                    }
+
+                    //Condicional para mostrar lapaginacion particionada
+                    if({{$pagiselect}} < 10){
+                      //Si es menor de 10
+                      $(".inicpagi").hide();
+                      $(".finpagi").show();
+                    }else{
+                      //Si es mayo de 10
+                      $(".inicpagi").show();
+                      $(".finpagi").hide();
+                    }
+                  });
+                  
+                </script>
+                @endif
               </div>
+              <div wire:loading>
+                <br>
+                <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+                  <div></div>
+                  <div></div>
+                </div>
+                <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
+                <br>
+              </div>
+
               <br>
               {{--Boton para mostrar la columna de detalles para varios proveedores--}}
               <div class="invoice-create-btn mb-1">
@@ -223,7 +316,7 @@
               {{--Encabezado--}}
               <div class="modal-header">
                   <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;" class="icons fas fa-folder-open">Cuentas por pagar</span></h6>
-                  <h6  class="modal-title" id="exampleModalLabel"><span> Total seleccionado: ${{$totalfactu}}</span></h6>
+                  <h6  class="modal-title" id="exampleModalLabel"><span> Total seleccionado: ${{number_format(floatval($sumtotalfactu), 2)}}</span></h6>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="CleanRFC()">
                       <span aria-hidden="true close-btn">×</span>
                  </button>
@@ -234,7 +327,7 @@
                  <label>Movimiento: </label>
 
                  {{--Select que contiene la lista de los cheques--}}
-                 <select class="select form-control" wire:model="moviselect">
+                 <select wire:loading.attr="disabled" id="selectmovimul" class="select form-control" wire:model="moviselect">
                   <option  value="" >--Selecciona Movimiento--</option>
                   @foreach ($Cheques as $i)
                     <option value="{{ $i->_id }}">
@@ -245,6 +338,22 @@
                 </select>
 
                 <br>
+                {{--Select de los proveedores--}}
+                @if ($showselect == 1)
+                {{--Listado de cheques a vincular--}}
+                <label>Proveedor: </label>
+
+                {{--Select que contiene la lista de los cheques--}}
+                <select wire:loading.attr="disabled" id="selectprov" class="select form-control" wire:model="proveselect" wire:change="sendrfc()">
+                 <option  value="" >--Selecciona un proveedor--</option>
+                 @foreach ($provselect as $i)
+                   <option value="{{ $i->emisorRfc }}">
+                    {{ $i->emisorRfc }} - {{ Str::limit($i->emisorNombre, 50) }}
+                   </option>
+                 @endforeach
+               </select>
+                @endif
+                <br>
 
                 {{--Seccion de botones--}}
                 <div class="row">
@@ -253,7 +362,7 @@
                     {{--Condicional para activar o desactivar el boton--}}
                     @if ($btnvinactiv == 1)
                     <div class="invoice-create-btn mb-1">
-                      <button class="btn btn-primary" wire:click="VincuCFDIMovi()">Vincular a Movimiento</button>
+                      <button id="Btnvincufact" class="btn btn-primary" wire:click="VincuCFDIMovi()" onclick="guardarfactu('{{$moviselect}}', '{{$rfcEmpresa}}')">Vincular a Movimiento</button>
                     </div>
                     @else
                     <div class="invoice-create-btn mb-1">
@@ -275,6 +384,15 @@
                     </div>
                     @endif
                   </div>
+                </div>
+
+                {{--Animacion de cargando--}}
+                <div wire:loading>
+                  <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
                 </div>
 
                 <br>
@@ -331,13 +449,13 @@
                         if(is_array($RFC)){
                           //Si es un arreglo
                           foreach ($RFC as $RFCArray) {
-                            $rutaXml = "storage/contarappv1_descargas/$RFCArray/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
-                            $rutaPdf = "storage/contarappv1_descargas/$RFCArray/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
+                            $rutaXml = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
+                            $rutaPdf = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
                           }
                         }else {
                           //Si no es un arreglo
-                          $rutaXml = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
-                          $rutaPdf = "storage/contarappv1_descargas/$RFC/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
+                          $rutaXml = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
+                          $rutaPdf = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
                         }
 
 
@@ -361,14 +479,17 @@
                           $MetodPago = $CompleCFDI['MetodoPago'];
 
                           if ($efecto == 'Pago'){
-                            $docRel = $CompleCFDI['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
-                            $MetodPago = '-';
-                            if (!isset($docRel)){
-                              $docRel = $CompleCFDI['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'];
+                              $docRel = $CompleCFDI['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
+                              $metodoPago = '-';
+                              if (!isset($docRel)) {
+                                $docRel = $CompleCFDI['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'];
+                              }
+                            } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso'){
+                              $docRel = $CompleCFDI['CfdiRelacionados.CfdiRelacionado'];
+                              if(!isset($docRel)){
+                                $docRel =$CompleCFDI['CfdiRelacionados.0.CfdiRelacionado'];
+                              }
                             }
-                          } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso'){
-                            $docRel = $CompleCFDI['CfdiRelacionados.CfdiRelacionado'];
-                          }
                         }
                       }
                       //En caso de campos vacios estas se cambiaran por X
@@ -386,7 +507,7 @@
                           <div class="form-check">
                             {{--Condicional para ocultar el checkbox cuando este es un pago--}}
                             @if ($efecto != "Pago")
-                            <input wire:loading.attr="disabled" id="Chkmul{{$FolioCFDI->folioFiscal}}" class="form-check-input" type="checkbox" wire:click="SumFactu()" wire:model="movivinc" value="{{$FolioCFDI->folioFiscal}}">
+                            <input wire:loading.attr="disabled" id="Chkmul{{$FolioCFDI->folioFiscal}}" class="form-check-input ChkMul" type="checkbox" wire:click="SumFactu()" wire:model="movivinc" value="{{$FolioCFDI->folioFiscal}}">
                             @endif
                             <label for="Chkmul{{$FolioCFDI->folioFiscal}}" class="form-check-label">{{$FolioCFDI->folioFiscal}}</label>
                           </div>
@@ -401,10 +522,10 @@
                         {{--Concepto--}}
                         <div class="table-body-cell">
                           @if (!$XmlReci->isEmpty())
-                            @foreach ($Concept as $c)
-                               {{++$ConceptCount}}.- {{$c['Descripcion']}}
-                              <br>
-                            @endforeach
+                            @if (isset($Concept[0]['Descripcion']))
+                            {{++$ConceptCount}}.- {{Str::limit($Concept[0]['Descripcion'], 20)}}
+                            <br>
+                            @endif
                           @else
                             {{ $Concept }}
                           @endif
@@ -517,6 +638,7 @@
                               <option>Transferencia</option>
                               <option>Domiciliación</option>
                               <option>Efectivo</option>
+                              <option>Débito</option>
                             </select>
                           </div>
 
@@ -560,7 +682,7 @@
                           </div>
                           <div class="col">
                             <label for="inputPassword4">Total factura(s):</label>
-                            <input class="form-control" type="text" readonly name="importeT" value="${{$totalfactu}}">
+                            <input class="form-control" type="text" readonly name="importeT" value="${{ number_format(floatval($totalfactu), 2)}}">
                           </div>
                         </div>
 
@@ -594,6 +716,7 @@
                           </div>
                         </div>
 
+
                         {{--Carga--}}
                         <div wire:loading wire:target="guardar_nuevo_cheque" >
                           <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
@@ -606,7 +729,7 @@
                         <br>
 
                         {{--Boton para enviar el form--}}
-                       <button type="submit"  wire:loading.attr="disabled" class="btn btn-primary">Siguiente</button>
+                       <button type="submit" onclick="DataNewMov()"  wire:loading.attr="disabled" class="btn btn-primary">Siguiente</button>
                       </form>
                     </div>
                   </div>
@@ -617,6 +740,10 @@
                   @if($idNuevoCheque!==null)
                     @if($step3)
                     <script>
+                      //Guardamos los datos en sessionstorage para mostrarlos en el modulo de cheques (vinculacion a movimiento nuevo)
+                      sessionStorage.setItem('idmovi', '{{$idNuevoCheque->_id}}');
+                      sessionStorage.setItem('empresa', '{{$empresa}}');
+
                       AddPDFChequeCFDI('{{$idNuevoCheque->_id}}', 'addpdfmul');
                     </script>
                     @endif
@@ -685,4 +812,40 @@
           </div>
       </div>
     </div>
+      <script>
+        $(document).ready(function(){
+          //Variable de bandera para realizar la accion del scroll
+          var movicheq = sessionStorage.getItem('idmovicheq');
+          var empresacheq = sessionStorage.getItem('empresacheq');
+
+          //Condicion para saber si las variables no estan vacias
+          if(movicheq !== null && empresacheq !== null){
+              //Emitimos los datos al controlador
+              window.livewire.emit('mostmovi', {idmovi : movicheq, empresa : empresacheq});
+              $("#detalles").modal({
+                backdrop: 'static',
+                keyboard: false
+              });
+
+              sessionStorage.clear();
+            }
+        });
+
+        window.addEventListener('agregarpdf', event => {
+          $(".step1").fadeOut("slow");
+          $(".step1").hide();
+    
+          $(".step2").fadeIn("slow");
+        });
+    
+        window.addEventListener('agregarrela', event => {
+          $(".step1").fadeOut("slow");
+          $(".step1").hide();
+    
+          $(".step2").fadeOut("slow");
+          $(".step2").hide();
+    
+          $(".step3").fadeIn("slow");
+        });
+        </script>
 </div>

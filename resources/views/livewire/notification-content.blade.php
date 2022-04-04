@@ -103,6 +103,7 @@ window.addEventListener('PushNotifaction', event => {
               @foreach ($notifications as $noti)
 
 
+
                         <div class="media d-flex align-items-center" >
                           <div class="media-left pr-0">
                            <!-- <div class="avatar mr-1 m-0"><img src="app-assets/images/portrait/small/avatar-s-11.jpg" alt="avatar" height="39" width="39"></div>-->
@@ -116,8 +117,20 @@ window.addEventListener('PushNotifaction', event => {
 
                              @elseif($noti->tipo=="M")
                                   <a wire:click="notificacionLink('{{$noti->cheques_id}}')">
+
+                             <a wire:click="notificationLinks('{{$noti->cheques_id}}')">
+                             <h6 class="media-heading"><span class="text-bold-500">Tu contador</span> ¡te dejo un mensaje!<br>En :&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>{{$noti->created_at->diffForHumans()}}</small>
+                             </a>
+
+
+                             <form action="{{ url('chequesytransferencias') }}">
+                                @csrf
+                                <input type="text"  name="idc" value="{{$noti->cheques_id}}">
+                                <input class="btn-linkj" type="submit" value="Enviar">
+                             </form>
                              <h6 class="media-heading"><span class="text-bold-500">Tu contador</span> ¡te dejo un mensaje!<br>En :&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>{{$noti->created_at->diffForHumans()}}</small>
                                   </a>
+
 
                              @endif
                           </div>

@@ -79,7 +79,7 @@
 
                     <label for="inputState">Empresa: {{$empresa}}</label>
                     <select wire:loading.attr="disabled" wire:model="rfcEmpresa" id="inputState1" class=" select form-control">
-                        <option  value="00" >--Selecciona Empresa--</option>
+                        <option value="">--Selecciona Empresa--</option>
                         <?php $rfc=0; $rS=1;foreach($empresas as $fila){
                             echo '<option value="' . $fila[$rfc] . '">'. $fila[$rS] . '</option>';
                         }?>
@@ -271,7 +271,7 @@
                                 <tr  onclick="showHideRow('{{$id}}');">
                                     {{--Fecha--}}
                                     <td>
-                                        @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+                                        @if ($tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                             @php
                                             Cheques::find($id)->update(['pendi' => 1]);
                                             @endphp
@@ -585,4 +585,20 @@
             </div>
         </div>
     </div>
+
+    <script>
+        //Emitir los datos de la empresa al componente
+        $(document).ready(function(){
+            //Guardamos en variables locales el contenido de sessionstorage
+            var IdMovi = sessionStorage.getItem('idmovi');
+            var Empresa = sessionStorage.getItem('empresa');
+
+            //Condicion para saber si las variables no estan vacias
+            if(IdMovi !== null && Empresa !== null){
+                //Emitimos los datos al controlador
+                window.livewire.emit('mostvincu', {idmovi : IdMovi, empresa : Empresa});
+                sessionStorage.clear();
+            }
+        });
+    </script>
 </div>
