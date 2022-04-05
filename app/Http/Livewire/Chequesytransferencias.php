@@ -93,15 +93,37 @@ $this->condicion='>=';
 
     protected $listeners = [
         'chequesRefresh' => '$refresh',
-        'mostvincu' => 'mostmovivincu'
+        'mostvincu' => 'mostmovivincu',
+        'notivincu'=>'notivinculo',
+        'vercheq'=>'vercheque',
      ];
 
 public function mostmovivincu($data)
 {
-    $this->todos = 1;
-    $this->search = $data['idmovi'];
-    $this->rfcEmpresa = $data['empresa'];
+    $this->todos =1;
+    $this->search =$data['idmovi'];
+    $this->rfcEmpresa =$data['empresa'];
 }
+
+public function notivinculo($id,$rfc){
+    $this->todos = 1;
+    $this->search =$id;
+    $this->rfcEmpresa =$rfc;
+
+}
+
+public function vercheque($rfc,$id){
+
+    $this->todos = 1;
+
+    $this->rfcEmpresa=$rfc;
+    $this->search = $id;
+
+
+
+}
+
+
 
 protected function rules(){
 

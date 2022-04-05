@@ -4,6 +4,8 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Notificaciones;
+use Illuminate\Contracts\Session\Session;
+
 
 class NotificationContent extends Component
 {
@@ -24,11 +26,9 @@ class NotificationContent extends Component
 
             $rfc=auth()->user()->empresas;
             $noti = Notificaciones::whereIn('rfc',$rfc)
-            ->where('tipo','CA')
+            ->orWhereIn('emisorMensaje',$rfc)
+
              ->where('read_at', 0)
-
-
-
 
              ->orderBy('fecha', 'desc')
              ->orderBy('created_at', 'desc')
@@ -41,7 +41,8 @@ class NotificationContent extends Component
                $noti = Notificaciones::Where('receptorMensaje',auth()->user()->RFC )
                ->where('read_at', 0)
 
-            //   ->orWhereNotNull('folioFiscal')
+
+            //  ->orWhereNotNull('folioFiscal')
                ->orderBy('fecha', 'desc')
                ->orderBy('created_at', 'desc')
                ->get();
@@ -64,10 +65,16 @@ class NotificationContent extends Component
     }
 
 
-    public function notificationLinks($id){
+    public function notificacionLink($id,$rfc,$idNoti){
 
+        session()->put('idns', $id);
+        session()->put('rfcn', $rfc);
 
-        session()->flash('id',$id);
+        Notificaciones::
+            where('_id', $idNoti)
+        ->update([
+            'read_at' => 1,
+        ]);
 
         return redirect()->to('/chequesytransferencias');
     }
@@ -83,14 +90,28 @@ class NotificationContent extends Component
 
   }
 
-public function notificacionLink($id){
+// public function notificacionLink($id){
 
-    session()->flash('id', $id);
+//     session()->flash('id', $id);
+
+//     return redirect()->to('/chequesytransferencias');
+// }
+
+public function verchequeLink($rfc,$id,$idNoti){
+
+
+    session()->put('rfc', $rfc);
+    session()->put('id', $id);
+
+    Notificaciones::
+        where('_id', $idNoti)
+    ->update([
+        'read_at' => 1,
+    ]);
+
 
     return redirect()->to('/chequesytransferencias');
 }
-
-
 
 
 

@@ -46,32 +46,54 @@
                         </script> --}}
 
 
-@if (session()->has('id'))
-<div class="alert alert-success">
-    {{ session('id') }}
-</div>
+@if (session()->get('idns'))
+
+{{-- <div class="alert alert-success">
+</div> --}}
+@php
+
+   $name = Session::get('idns');
+//    echo $name;
+@endphp
 
 <script>
 
     $(document).ready(function() {
 
-     window.livewire.emit('notivincu','{{session('id')}}' );
+     window.livewire.emit('notivincu','{{Session::get('idns')}}','{{Session::get('rfcn')}}' );
 
 
-
-     document.querySelector('#show62448d76a9450000d70052e6').click();
-
-
-
-
-
-
-} );
-
+     });
 
 </script>
 
+@php
+  Session::forget('idns');
+  Session::forget('rfcn');
+ @endphp
 
+@endif
+
+
+@if (session()->get('rfc'))
+{{-- <div class="alert alert-success">
+
+</div> --}}
+
+<script>
+
+$(document).ready(function() {
+// alert('{{session('id')}}');
+window.livewire.emit('vercheq','{{Session::get('rfc')}}','{{Session::get('id')}}');
+
+});
+
+</script>
+
+@php
+  Session::forget('id');
+  Session::forget('rfc');
+@endphp
 @endif
 
                     {{--Condicional para mostrar un listado de empresas--}}
