@@ -469,7 +469,7 @@
                               if (!isset($docRel)) {
                                 $docRel = $CompleCFDI['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'];
                               }
-                            } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso'){
+                            } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso' or $efecto == 'Traslado'){
                               $docRel = $CompleCFDI['CfdiRelacionados.CfdiRelacionado'];
                               if(!isset($docRel)){
                                 $docRel =$CompleCFDI['CfdiRelacionados.0.CfdiRelacionado'];

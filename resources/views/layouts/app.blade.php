@@ -331,8 +331,13 @@ $empresa=auth()->user->tipo;
           </li>
           <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()" href=""><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Expediente Digital</span></a>
           </li>
+
+          {{--Modulo solo para gasolinerias y contadores--}}
+          @if (auth()->user()->gas == 1 || auth()->user()->tipo)
           <li id="volumetrico"><a class="d-flex align-items-center" href="{{('volumetrico')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Control Volumetrico</span></a>
           </li>
+          @endif
+
           <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Expediente Fiscal</span></a>
           </li>
           <li id="auditoria"><a class="d-flex align-items-center" href="{{('auditoria')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Auditoria</span></a>
