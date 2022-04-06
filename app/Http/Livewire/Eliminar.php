@@ -6,6 +6,7 @@ use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cheques;
 use App\Models\MetadataR;
+use App\Models\Notificaciones;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Component;
 use LivewireUI\Modal\ModalComponent;
@@ -49,16 +50,16 @@ class Eliminar extends ModalComponent
     }
 
 
-    public function descargarZip($id) 
+    public function descargarZip($id)
     {
         $Archivos = [];
         $cheque = Cheques::where(['_id' => $id])->get()->first();
-       
+
         $dateValue = strtotime($cheque->fecha);
         $anio = date('Y',$dateValue);
         $mes=date('m',$dateValue);
        $fecha=date('Y-m-d');
-      
+
         $espa=new Cheques();
         $ruta="/storage/contarappv1_descargas/".$cheque->rfc."/".$anio."/Cheques_Transferencias/".$espa->fecha_es($mes)."/";
         $rutaRelacionados ='/storage/contarappv1_descargas/'.$cheque->rfc."/".$anio."/Cheques_Transferencias/Documentos_Relacionados/".$espa->fecha_es($mes)."/";
@@ -72,15 +73,15 @@ class Eliminar extends ModalComponent
 
 
         if(!$cheque->doc_relacionados[0] == null){
-          
+
             foreach($cheque->doc_relacionados as $doc){
                 /** Store the names of the invoices with full path inside the paymentFiles variable */
-               $Archivos[] = public_path().$rutaRelacionados. $doc;    
+               $Archivos[] = public_path().$rutaRelacionados. $doc;
             }
 
 }
     	return Zip::create("econt$fecha.zip",$Archivos);
-    }  
+    }
 
 
     public function eliminar(){
@@ -103,7 +104,7 @@ $rutaRelacionados ='contarappv1_descargas/'.$this->eliminarCheque->rfc."/".$anio
 
 Storage::disk('public2')->delete($ruta.$this->eliminarCheque->nombrec);
 
-//////// se eliminan los documentos relacionados 
+//////// se eliminan los documentos relacionados
         $cheque = Cheques::where(['_id' => $this->eliminarCheque->_id])->get()->first();
         if (!$this->eliminarCheque->doc_relacionados[0]==null) {
             foreach ($this->eliminarCheque->doc_relacionados as $c) {
@@ -112,17 +113,37 @@ Storage::disk('public2')->delete($ruta.$this->eliminarCheque->nombrec);
             }
         }
 
-############ fin seccion eliminacion de archivos ########################        
+############ fin seccion eliminacion de archivos ########################
 
 ///// se desvinculan las facturas de cuentas por pagar (cheques_id)////
 $colM =  MetadataR::where(['cheques_id' => $this->eliminarCheque->_id])->get();
-        
+
         foreach ($colM as $i) {
             MetadataR::where('cheques_id', $i->cheques_id)
                 ->update([
                     'cheques_id' => null,
                 ]);
         }
+
+
+####################### se crea notificacion de eliminacion ################
+
+/// crea la notificacion
+
+$notiE=Notificaciones::where('cheques_id', $this->eliminarCheque->_id)
+->where('tipo', 'CA');
+$notiE->update(
+    [
+
+        'tipo'=> 'CE',
+    ]
+
+);
+
+
+
+
+
 
 ////////// se elimina el movimiento completamente
 $this->eliminarCheque->delete();

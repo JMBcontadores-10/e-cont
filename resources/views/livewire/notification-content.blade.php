@@ -58,12 +58,19 @@ window.addEventListener('PushNotifaction', event => {
                              <h6 class="media-heading"><span class="text-bold-500">  {{$noti->numcheque}}</span> ¡Cancelo una factura!<br>FolioFiscal:&nbsp; {{$noti->folioFiscal}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>  Fecha de cancelación:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
 
                              @elseif($noti->tipo=="CA")
+                             <a wire:click="verchequeLink('{{$noti->rfc}}','{{$noti->cheques_id}}','{{$noti->_id}}')">
                              <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Agrego un nuevo cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
+                             </a>
+                             @elseif($noti->tipo=="CE")
 
-                           @else
+                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Elimino un Cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
+
+
+                             @elseif($noti->tipo=="M")
+                           <a wire:click="notificacionLink('{{$noti->cheques_id}}','{{$noti->emisorMensaje}}' ,'{{$noti->_id}}')">
 
                            <h6 class="media-heading"><span class="text-bold-500">  {{$noti->emisorMensaje}}</span> ¡Te dejo un mensaje en un cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>Fecha:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
-
+                           </a>
 
 
                              @endif
@@ -116,38 +123,21 @@ window.addEventListener('PushNotifaction', event => {
                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->numcheque}}</span> ¡Cancelo una factura!<br>FolioFiscal:&nbsp; {{$noti->folioFiscal}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>  Fecha de cancelación:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
 
                              @elseif($noti->tipo=="M")
-                                  <a wire:click="notificacionLink('{{$noti->cheques_id}}')">
+                                  <a wire:click="notificacionLink('{{$noti->cheques_id}}','{{$noti->receptorMensaje}}'); cerrarNotificacion('{{$noti->_id}}');">
 
-                             <a wire:click="notificationLinks('{{$noti->cheques_id}}')">
                              <h6 class="media-heading"><span class="text-bold-500">Tu contador</span> ¡te dejo un mensaje!<br>En :&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>{{$noti->created_at->diffForHumans()}}</small>
                              </a>
-
-
-                             <form action="{{ url('chequesytransferencias') }}">
-                                @csrf
-                                <input type="text"  name="idc" value="{{$noti->cheques_id}}">
-                                <input class="btn-linkj" type="submit" value="Enviar">
-                             </form>
-                             <h6 class="media-heading"><span class="text-bold-500">Tu contador</span> ¡te dejo un mensaje!<br>En :&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>{{$noti->created_at->diffForHumans()}}</small>
-                                  </a>
-
 
                              @endif
                           </div>
 
-                              <button wire:click="cerrarNotificacion('{{$noti->_id}}')"  type="button" class="btn btn-icon rounded-circle btn-light-danger mr-1 mb-1">
+                              <button   wire:click="cerrarNotificacion('{{$noti->_id}}')"  type="button" class="btn btn-icon rounded-circle btn-light-danger mr-1 mb-1">
                                 <i class="bx bxs-message-square-x"></i></button>
 
-                        </div> <hr>  <br>
-
-
-
+                        </div><hr><br>
 
 
           @endforeach
-
-
-
 
               @endif
 

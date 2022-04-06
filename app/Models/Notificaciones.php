@@ -28,6 +28,7 @@ class Notificaciones extends Model
         'emisorMensaje',
         'receptorMensaje',
         'tipo',
+        'cheques_id',
     ];
 
     protected $collection = 'notificaciones';

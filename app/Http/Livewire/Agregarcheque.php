@@ -173,6 +173,7 @@ $chequeC = Notificaciones::create([
         'importecheque' => $importeCheque,
         'Beneficiario' => $this->Nuevo_beneficiario,
         'tipoopera' => $this->Nuevo_tipoopera,
+        'cheques_id' => $chequeC->_id,
         'rfc' => $this->rfcEmpresa,
         'read_at' => 0,
         'tipo'=> 'CA',

@@ -23,48 +23,50 @@ class NotificationSecction extends Component
 
 /* Tipo de notificaciones
 Cheque Agregado = CA
+Cheque Eliminado =CE
 Notificacion de Mensaje= M
 Factura Cancelada = FC
 
 */
 
 
-        if(!empty(auth()->user()->tipo)){
 
- $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
+if(!empty(auth()->user()->tipo)){
 
-
- $rfc=auth()->user()->empresas;
- $noti = Notificaciones::whereIn('rfc',$rfc)
- ->where('tipo','CA')
-  ->where('read_at', 0)
+    $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
 
 
 
+    $rfc=auth()->user()->empresas;
+    $noti = Notificaciones::whereIn('rfc',$rfc)
+    ->orWhereIn('emisorMensaje',$rfc)
 
-  ->orderBy('fecha', 'desc')
-  ->orderBy('created_at', 'desc')
+     ->where('read_at', 0)
 
-  ->get();
+     ->orderBy('fecha', 'desc')
+     ->orderBy('created_at', 'desc')
+
+        ->get();
+
+           }elseif(empty(auth()->user()->tipo)){
+
+       $rfc=auth()->user()->empresas;
+       $noti = Notificaciones::Where('receptorMensaje',auth()->user()->RFC )
+       ->where('read_at', 0)
 
 
-        }elseif(empty(auth()->user()->tipo)){
+    //  ->orWhereNotNull('folioFiscal')
+       ->orderBy('fecha', 'desc')
+       ->orderBy('created_at', 'desc')
+       ->get();
 
-            $rfc=auth()->user()->empresas;
-            $noti = Notificaciones::where('receptorMensaje', auth()->user()->RFC)
-            ->where('read_at', 0)
 
 
-         //    ->orWhereNotNull('folioFiscal')
-            ->orderBy('fecha', 'desc')
-            ->orderBy('created_at', 'desc')
-            ->get();
+           }else{
 
-        }else{
+             $noti=[];
 
-            $noti=[];/// array notifiaciones contador vacio
-
-        }
+           }
 
 
 
