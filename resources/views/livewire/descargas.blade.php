@@ -1,73 +1,4 @@
 <div>
-  @php
-      //Calendario
-      //Obtenemos la zona horaria
-      date_default_timezone_set('America/Mexico_City');
-
-      //Condicional para saber si el mes y año tiene algun valor
-      if (isset($anio) || isset($mes)) {
-        //Si tiene algo obtenemos el valor de las variables
-        $ym = $anio."-".$mes;
-      } else {
-        //De lo contario no vamos al mes y año actual
-        $ym = date('Y-m');
-      }
-
-      //Establecemos el inicio del calendario
-      $timestamp = strtotime($ym . '-01');
-      if ($timestamp === false) {
-        $ym = date('Y-m');
-        $timestamp = strtotime($ym . '-01');
-      }
-
-      //Obtenemos el dia de hoy
-      $today = date('Y-m-j', time());
-
-      //Obtenemos lo dias que tiene el mes
-      $day_count = date('t', $timestamp);
-      
-      // 0:Sun 1:Mon 2:Tue ...
-      $str = date('w', mktime(0, 0, 0, date('m', $timestamp), 1, date('Y', $timestamp)));
-
-      //Variables para la creacion del calendario
-      $weeks = array();
-      $week = '';
-
-      //Campos vacios
-      $week .= str_repeat('<td></td>', $str);
-
-      //Ciclo for para llenar los campos con los dias que le pertenece
-      for ( $day = 1; $day <= $day_count; $day++, $str++) {
-        $date = $ym . '-' . $day;
-
-        //Condicional para saber si el dia creado pertenece al dia de hoy
-        if ($today == $date) {
-          $week .= '<td class="hoy">' . $day;
-        } else {
-          $week .= '<td>' . $day;
-        }
-
-        //Creamos los demas dias
-        $week .= '</td>';
-          
-        //Condicional para saber si llegamos el final de la semana o mes
-        if ($str % 7 == 6 || $day == $day_count) {
-
-          //Condicion para saber si el dia pertenece al final de los dias contados
-          if ($day == $day_count) {
-            //Agregamos un campo vacio
-            $week .= str_repeat('<td></td>', 6 - ($str % 7));
-          }
-
-          //Todas las semanas las agregas en un arreglo
-          $weeks[] = '<tr>' . $week . '</tr>';
-
-          //Limpiamos la variable para agregar ora semana
-          $week = '';
-        }
-      }
-  @endphp
-
     {{--Contenedor para mantener responsivo el contenido del modulo--}}
     <div class="app-content content">
         <div class="content-wrapper">
@@ -79,8 +10,6 @@
                     <h1 style="font-weight: bold">{{ ucfirst(Auth::user()->nombre) }}</h1>
                     <h5 style="font-weight: bold">{{ Auth::user()->RFC }}</h5>
                 </div>
-                
-                <br>
 
             {{--Select para selccionar la empresa (Contadores)--}}
             @empty(!$empresas)
@@ -211,7 +140,7 @@
 
             {{--Formato calendario--}}
             <div class="table-responsive">
-              <table class="table table-bordered">
+              <table class="table table-bordered calemitreci">
                 <thead>
                   <tr>
                     <th>Domingo</th>

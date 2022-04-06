@@ -804,9 +804,13 @@ text-align: center;
 }
 
 /*Seleccionar el campo del dia de hoy*/
-.hoy {
+.hoy, .recibi {
     background: #397ac4;
     color: white;
+}
+
+.calemitreci td{
+    padding: 12px !important;
 }
 
 .conten{
