@@ -291,6 +291,7 @@ window.livewire.emit('vercheq','{{Session::get('rfc')}}','{{Session::get('id')}}
                             <tbody>
                                 {{--Cuerpo de la tabla con la funcion de expancion--}}
                                 <tr  onclick="showHideRow('{{$id}}');">
+
                                     {{--Fecha--}}
                                     <td>
                                         @if ($tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
