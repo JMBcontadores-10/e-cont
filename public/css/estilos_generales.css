@@ -797,10 +797,17 @@ text-align: center;
     width: 50% !important; /*Important ya que afecta un diseño de bootstrap*/
 }
 
+/*DESCARGAS*/
+/*Ocultar los mensaje de confirmacion*/
+#MnsSuccess, #MnsDanger{
+    display: none;
+}
 
-
-
-
+/*Seleccionar el campo del dia de hoy*/
+.hoy {
+    background: #397ac4;
+    color: white;
+}
 
 .conten{
     position: absolute;
