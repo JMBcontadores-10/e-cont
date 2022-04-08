@@ -287,21 +287,6 @@
                 </script>
                 @endif
               </div>
-              <div wire:loading>
-                <br>
-                <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
-                  <div></div>
-                  <div></div>
-                </div>
-                <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
-                <br>
-              </div>
-
-              <br>
-              {{--Boton para mostrar la columna de detalles para varios proveedores--}}
-              <div class="invoice-create-btn mb-1">
-                <button data-toggle="modal" data-target="#detalles" wire:click="EmitRFCArray()" data-backdrop="static" data-keyboard="false" class="btn btn-secondary button2 DesatallesProv" id="BtnMoreProvDown" disabled>Destalles Varios Proveedores</button>
-              </div>
           </section>
         </div>
     </div>
@@ -484,7 +469,7 @@
                               if (!isset($docRel)) {
                                 $docRel = $CompleCFDI['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'];
                               }
-                            } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso'){
+                            } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso' or $efecto == 'Traslado'){
                               $docRel = $CompleCFDI['CfdiRelacionados.CfdiRelacionado'];
                               if(!isset($docRel)){
                                 $docRel =$CompleCFDI['CfdiRelacionados.0.CfdiRelacionado'];

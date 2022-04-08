@@ -797,10 +797,21 @@ text-align: center;
     width: 50% !important; /*Important ya que afecta un diseño de bootstrap*/
 }
 
+/*DESCARGAS*/
+/*Ocultar los mensaje de confirmacion y filtros*/
+#MnsSuccess, #MnsDanger, #filtemit{
+    display: none;
+}
 
+/*Seleccionar el campo del dia de hoy*/
+.hoy, .recibi {
+    background: #397ac4;
+    color: white;
+}
 
-
-
+.calemitreci td{
+    padding: 12px !important;
+}
 
 .conten{
     position: absolute;

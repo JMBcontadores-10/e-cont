@@ -311,6 +311,8 @@ class Detalles extends Component
         //Consulta de los cheques vinculados
         $Cheques = Cheques::
             where('rfc', $this->empresa)
+            ->where('verificado','=', 0)
+            ->where('conta','=', 0)
             ->orderBy('fecha', 'desc')
             ->get();
 
