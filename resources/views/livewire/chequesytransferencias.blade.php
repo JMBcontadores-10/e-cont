@@ -355,6 +355,7 @@ window.livewire.emit('vercheq','{{Session::get('rfc')}}','{{Session::get('id')}}
                                     <span class="invoice-amount">${{ $diferencia }}</span>
                                   </td>
 
+
                                   {{--...--}}
                                   <td></td>
                                 </tr>
