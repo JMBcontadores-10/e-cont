@@ -131,38 +131,36 @@ class Descargas extends Component
             $requestId = $query->getRequestId();
             $terminado = true;
 
-        while ($terminado) {
-            // consultar el servicio de verificación
-            $verify = $service->verify($requestId);
+            while ($terminado) {
+                // consultar el servicio de verificación
+                $verify = $service->verify($requestId);
 
-            // revisar que el proceso de verificación fue correcto
-            if (!$verify->getStatus()->isAccepted()) {
-                $this->mnsinic = "Fallo al verificar la consulta {$requestId}: {$verify->getStatus()->getMessage()}";
+                // revisar que el proceso de verificación fue correcto
+                if (!$verify->getStatus()->isAccepted()) {
+                    $this->mnsinic = "Fallo al verificar la consulta {$requestId}: {$verify->getStatus()->getMessage()}";
+                }
+
+                // revisar que la consulta no haya sido rechazada
+                if (!$verify->getCodeRequest()->isAccepted()) {
+                    $this->mnsinic = "La solicitud {$requestId} fue rechazada: {$verify->getCodeRequest()->getMessage()}";
+                }
+
+                // revisar el progreso de la generación de los paquetes
+                $statusRequest = $verify->getStatusRequest();
+                if ($statusRequest->isExpired() || $statusRequest->isFailure() || $statusRequest->isRejected()) {
+                    $this->mnsinic = "La solicitud {$requestId} no se puede completar";
+                }
+                if ($statusRequest->isInProgress() || $statusRequest->isAccepted()) {
+                    $this->mnsinic = "La solicitud {$requestId} se está procesando";
+                }
+                if ($statusRequest->isFinished()) {
+                    $this->mnsinic = "La solicitud {$requestId} está lista";
+                    $terminado = false;
+                }
             }
 
-            // revisar que la consulta no haya sido rechazada
-            if (!$verify->getCodeRequest()->isAccepted()) {
-                $this->mnsinic = "La solicitud {$requestId} fue rechazada: {$verify->getCodeRequest()->getMessage()}";
-            }
-
-            // revisar el progreso de la generación de los paquetes
-            $statusRequest = $verify->getStatusRequest();
-            if ($statusRequest->isExpired() || $statusRequest->isFailure() || $statusRequest->isRejected()) {
-                $this->mnsinic = "La solicitud {$requestId} no se puede completar";
-            }
-            if ($statusRequest->isInProgress() || $statusRequest->isAccepted()) {
-                $this->mnsinic = "La solicitud {$requestId} se está procesando";
-            }
-            if ($statusRequest->isFinished()) {
-                $this->mnsinic = "La solicitud {$requestId} está lista";
-                $terminado = false;
-            }
-
-        }
-
-        //Si es valido
-        $this->statemns = 1;
-
+            //Si es valido
+            $this->statemns = 1;
         } catch (Exception $e) {
             //Si no es valido
             $this->mnsinic = "Verifique que los archivos corresponden con la contraseña e intente nuevamente";

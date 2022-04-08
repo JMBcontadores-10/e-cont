@@ -506,7 +506,7 @@
                                                 @if (Auth::user()->tipo)
                                                     <div>
                                                         <div class="tr">Revisado</div>
-                                                        @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+                                                        @if ($tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                                             @php Cheques::find($id)->update(['pendi' => 1]); @endphp
                                                         @elseif($verificado == 0)
                                                             <div class="form-check">
@@ -565,7 +565,7 @@
                                                             </div>
                                                         @endif
 
-                                                        @if ($tipo != 'Efectivo' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+                                                        @if ($tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                                             @php Cheques::find($id)->update(['pendi' => 1]); @endphp
                                                         @endif
                                                     </div>
