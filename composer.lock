@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6fdca02405e38c82bdd741625a3d9849",
+    "content-hash": "fd1d32b0d33a62f37e25c60f50af720a",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -3157,16 +3157,16 @@
         },
         {
             "name": "phpcfdi/sat-ws-descarga-masiva",
-            "version": "v0.4.3",
+            "version": "v0.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpcfdi/sat-ws-descarga-masiva.git",
-                "reference": "71c494b7b2afbff6516a26429cdef1d64be81b59"
+                "reference": "38746cac278a348ddca471999a7340923ef810d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpcfdi/sat-ws-descarga-masiva/zipball/71c494b7b2afbff6516a26429cdef1d64be81b59",
-                "reference": "71c494b7b2afbff6516a26429cdef1d64be81b59",
+                "url": "https://api.github.com/repos/phpcfdi/sat-ws-descarga-masiva/zipball/38746cac278a348ddca471999a7340923ef810d5",
+                "reference": "38746cac278a348ddca471999a7340923ef810d5",
                 "shasum": ""
             },
             "require": {
@@ -3174,6 +3174,7 @@
                 "eclipxe/micro-catalog": "^0.1.2",
                 "ext-dom": "*",
                 "ext-json": "*",
+                "ext-mbstring": "*",
                 "ext-openssl": "*",
                 "ext-zip": "*",
                 "php": ">=7.3",
@@ -3221,7 +3222,7 @@
                 "issues": "https://github.com/phpcfdi/sat-ws-descarga-masiva/issues",
                 "source": "https://github.com/phpcfdi/sat-ws-descarga-masiva"
             },
-            "time": "2022-02-19T07:13:28+00:00"
+            "time": "2022-04-04T03:55:37+00:00"
         },
         {
             "name": "phpoffice/phpspreadsheet",
@@ -9504,5 +9505,5 @@
         "php": "^7.3|^8.0"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

@@ -129,7 +129,9 @@ class Descargas extends Component
             }
 
             $requestId = $query->getRequestId();
+            $terminado = true;
 
+        while ($terminado) {
             // consultar el servicio de verificación
             $verify = $service->verify($requestId);
 
@@ -153,11 +155,14 @@ class Descargas extends Component
             }
             if ($statusRequest->isFinished()) {
                 $this->mnsinic = "La solicitud {$requestId} está lista";
+                $terminado = false;
             }
 
+        }
 
-            //Si es valido
-            $this->statemns = 1;
+        //Si es valido
+        $this->statemns = 1;
+
         } catch (Exception $e) {
             //Si no es valido
             $this->mnsinic = "Verifique que los archivos corresponden con la contraseña e intente nuevamente";
