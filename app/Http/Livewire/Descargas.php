@@ -3,20 +3,18 @@
 namespace App\Http\Livewire;
 
 //Clases para acceder a la sesion del SAT
-use PhpCfdi\SatWsDescargaMasiva\RequestBuilder\FielRequestBuilder\Fiel;
-use PhpCfdi\SatWsDescargaMasiva\RequestBuilder\FielRequestBuilder\FielRequestBuilder;
-use PhpCfdi\SatWsDescargaMasiva\Service;
-use PhpCfdi\SatWsDescargaMasiva\WebClient\GuzzleWebClient;
-
-//Clases para realizar consultas de emitidos y recibidos
-use PhpCfdi\SatWsDescargaMasiva\Services\Query\QueryParameters;
-use PhpCfdi\SatWsDescargaMasiva\Shared\DateTimePeriod;
-use PhpCfdi\SatWsDescargaMasiva\Shared\DownloadType;
-use PhpCfdi\SatWsDescargaMasiva\Shared\RequestType;
+use PhpCfdi\CfdiSatScraper\SatScraper;
+use PhpCfdi\CfdiSatScraper\Sessions\Fiel\FielSessionManager;
+use PhpCfdi\CfdiSatScraper\Sessions\Fiel\FielSessionData;
+use PhpCfdi\Credentials\Credential;
+use PhpCfdi\CfdiSatScraper\QueryByFilters;
+use PhpCfdi\CfdiSatScraper\ResourceType;
+use PhpCfdi\CfdiSatScraper\Sessions\Ciec\CiecSessionManager;
 
 use App\Models\CalendarioR;
 use App\Models\CalendarioE;
 use App\Models\User;
+use DateTimeImmutable;
 use Exception;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -96,71 +94,30 @@ class Descargas extends Component
     //Metodo para la autenticacion
     public function AuthEmpre()
     {
-        //Try catch para saber si se realizo el servicio correctamente
-        try {
-            // Creación de la FIEL, puede leer archivos DER (como los envía el SAT) o PEM (convertidos con openssl)
-            $fiel = Fiel::create(
-                file_get_contents('storage/' . $this->dircer),
-                file_get_contents('storage/' . $this->dirkey),
-                $this->pwd
-            );
+        //Consultar emitidos y reciobidos (INICIAL)
+            //Variables para el certificado
+            $certificate = 'storage/' . $this->dircer;
+            $privateKey = 'storage/' . $this->dirkey;
+            $passPhrase = $this->pwd;
 
-            //Creación del web client basado en Guzzle que implementa WebClientInterface
-            $webClient = new GuzzleWebClient();
-
-            //Creación del objeto encargado de crear las solicitudes firmadas usando una FIEL
-            $requestBuilder = new FielRequestBuilder($fiel);
-
-            //Creación del servicio
-            $service = new Service($requestBuilder, $webClient);
-
-            $request = QueryParameters::create(
-                DateTimePeriod::createFromValues("2022-01-01T00:00:00", "2022-03-26T23:59:59"),
-                DownloadType::received(),
-                RequestType::metadata()
-            );
-
-            // presentar la consulta
-            $query = $service->query($request);
-
-            // verificar que el proceso de consulta fue correcto
-            if (!$query->getStatus()->isAccepted()) {
-                $this->mnsinic = "Fallo al presentar la consulta: {$query->getStatus()->getMessage()}";
+            //Creamos al credenciales de acceso
+            // crear la credencial
+            $credential = Credential::create(file_get_contents($certificate), file_get_contents($privateKey), $passPhrase);
+            if (!$credential->isFiel()) {
+                throw new Exception('The certificate and private key is not a FIEL');
+            }
+            if (!$credential->certificate()->validOn()) {
+                throw new Exception('The certificate and private key is not valid at this moment');
             }
 
-            $requestId = $query->getRequestId();
-            $terminado = true;
-
-            while ($terminado) {
-                // consultar el servicio de verificación
-                $verify = $service->verify($requestId);
-
-                // revisar que el proceso de verificación fue correcto
-                if (!$verify->getStatus()->isAccepted()) {
-                    $this->mnsinic = "Fallo al verificar la consulta {$requestId}: {$verify->getStatus()->getMessage()}";
-                }
-
-                // revisar que la consulta no haya sido rechazada
-                if (!$verify->getCodeRequest()->isAccepted()) {
-                    $this->mnsinic = "La solicitud {$requestId} fue rechazada: {$verify->getCodeRequest()->getMessage()}";
-                }
-
-                // revisar el progreso de la generación de los paquetes
-                $statusRequest = $verify->getStatusRequest();
-                if ($statusRequest->isExpired() || $statusRequest->isFailure() || $statusRequest->isRejected()) {
-                    $this->mnsinic = "La solicitud {$requestId} no se puede completar";
-                }
-                if ($statusRequest->isInProgress() || $statusRequest->isAccepted()) {
-                    $this->mnsinic = "La solicitud {$requestId} se está procesando";
-                }
-                if ($statusRequest->isFinished()) {
-                    $this->mnsinic = "La solicitud {$requestId} está lista";
-                    $terminado = false;
-                }
-            }
+            $satScraper = new SatScraper(FielSessionManager::create($credential));
 
             //Si es valido
             $this->statemns = 1;
+
+        //Try catch para saber si se realizo el servicio correctamente
+        try {
+            
         } catch (Exception $e) {
             //Si no es valido
             $this->mnsinic = "Verifique que los archivos corresponden con la contraseña e intente nuevamente";
