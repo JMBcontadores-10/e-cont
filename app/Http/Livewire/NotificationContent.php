@@ -99,7 +99,6 @@ class NotificationContent extends Component
 
 public function verchequeLink($rfc,$id,$idNoti){
 
-
     session()->put('rfc', $rfc);
     session()->put('id', $id);
 

@@ -207,7 +207,7 @@ $this->emitTo( 'notification-secction','avisoPush');
     public function render()
     {
 
-        if(!empty(auth()->user()->tipo)){
+        if(!empty(auth()->user()->tipo) ||!empty(auth()->user()->TipoSE) ){
 
             $e=array();
                   $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas

@@ -622,6 +622,10 @@ window.addEventListener('hola', event => {
   });
 
 
+  window.addEventListener('alerta', event => {
+    alert('hola');
+  });
+
 
   window.addEventListener('disable', event => {
 

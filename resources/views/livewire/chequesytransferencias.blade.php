@@ -447,7 +447,7 @@ window.livewire.emit('vercheq','{{Session::get('rfc')}}','{{Session::get('id')}}
                                             @if ($faltaxml != 0)
                                             <div>
                                                 <div class="tr">Vinculadas</div>
-                                                <a class="icons fas fa-eye" style="color: #3498DB"
+                                                <a wire:click="$emitTo('facturas-vinculadas','refrescarModalFacturas')" class="icons fas fa-eye" style="color: #3498DB"
                                                 data-toggle="modal" data-target="#facturasVinculadas{{$id}}"></a>
                                             </div>
                                             @endif

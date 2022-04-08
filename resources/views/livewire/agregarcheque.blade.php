@@ -103,7 +103,7 @@ $("#step3").fadeIn("slow");
    @csrf
    <div class="form-row">
 
-@if (auth()->user()->tipo)
+@if (auth()->user()->tipo || auth()->user()->TipoSE)
 
 
        <label for="inputState">Empresa</label>
