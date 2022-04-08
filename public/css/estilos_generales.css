@@ -798,8 +798,8 @@ text-align: center;
 }
 
 /*DESCARGAS*/
-/*Ocultar los mensaje de confirmacion*/
-#MnsSuccess, #MnsDanger{
+/*Ocultar los mensaje de confirmacion y filtros*/
+#MnsSuccess, #MnsDanger, #filtemit{
     display: none;
 }
 

@@ -2,11 +2,22 @@
 
 namespace App\Http\Livewire;
 
-use App\Http\Classes\DescargaMasivaCfdi;
-use App\Http\Classes\UtilCertificado;
+//Clases para acceder a la sesion del SAT
+use PhpCfdi\SatWsDescargaMasiva\RequestBuilder\FielRequestBuilder\Fiel;
+use PhpCfdi\SatWsDescargaMasiva\RequestBuilder\FielRequestBuilder\FielRequestBuilder;
+use PhpCfdi\SatWsDescargaMasiva\Service;
+use PhpCfdi\SatWsDescargaMasiva\WebClient\GuzzleWebClient;
+
+//Clases para realizar consultas de emitidos y recibidos
+use PhpCfdi\SatWsDescargaMasiva\Services\Query\QueryParameters;
+use PhpCfdi\SatWsDescargaMasiva\Shared\DateTimePeriod;
+use PhpCfdi\SatWsDescargaMasiva\Shared\DownloadType;
+use PhpCfdi\SatWsDescargaMasiva\Shared\RequestType;
+
 use App\Models\CalendarioR;
 use App\Models\CalendarioE;
 use App\Models\User;
+use Exception;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
@@ -25,26 +36,52 @@ class Descargas extends Component
     public $mnsinic;
     public $statemns; //El valor sera el color que se mostrara en el mensaje
 
+    //Varibles para la tabla de CFDI
+    public $tipo;
+
+    //Variables para el filtro de recibidos
+    public $diareci;
+    public $mesreci;
+    public $anioreci;
+
+    //Variables para el filtro de emitidos
+    //Fechas de inicio
+    public $diaemitinic;
+    public $mesemitinic;
+    public $anioemitinic;
+
+    //Fechas de fin
+    public $diaemitfin;
+    public $mesemitfin;
+    public $anioemitfin;
+
     //Variables para la seccion del calendario
-    public $mes;
-    public $anio;
-    public $dias;
     public $reciboemit = 0; //Variable bandera para saber si es un fecha de recibido/emitido o no
-    public $recibido = 0;//Variable bandera para saber si existe o no datos recibidos
-    
+    public $recibido = 0; //Variable bandera para saber si existe o no datos recibidos
+    public $mescal;
+    public $aniocal;
+
+
+    //Metrodo para reiniciar el modal
+    public function RefreshCal()
+    {
+        //El mes y año iniciamos con los de hoy (calendario)
+        $this->aniocal = date("Y");
+        $this->mescal = date("n");
+    }
 
     //Metodo para obtener los datos de las empresas para la auntenticacion
-    public function ObtAuth(){
-        if(empty($this->rfcEmpresa)){
+    public function ObtAuth()
+    {
+        if (empty($this->rfcEmpresa)) {
             $this->dircer = "";
             $this->dirkey = "";
             $this->pwd = "";
             $this->rfcemp = "";
-        }else{
+        } else {
             //Obtenemos los valores para la auntenticacion
-            $AuntDesca = User::
-            where('RFC', $this->rfcEmpresa)
-            ->get();
+            $AuntDesca = User::where('RFC', $this->rfcEmpresa)
+                ->get();
 
             //Los metemos en las variables dedicadas
             foreach ($AuntDesca as $DatAuthEmpre) {
@@ -57,44 +94,73 @@ class Descargas extends Component
     }
 
     //Metodo para la autenticacion
-    public function AuthEmpre(){
-        //Instanciar clase principal
-        $descargaCfdi = new DescargaMasivaCfdi();
-
-        //Condicional para saber si los datos que se proporcionara son correctos
-        if (!empty($this->dircer) && !empty($this->dirkey) && !empty($this->pwd)) {
-            //Preparamos el certificado del inicio de sesion
-            $certificado = new UtilCertificado();
-            $acceso = $certificado->loadFiles(
-                $this->dircer,
-                $this->dirkey,
+    public function AuthEmpre()
+    {
+        //Try catch para saber si se realizo el servicio correctamente
+        try {
+            // Creación de la FIEL, puede leer archivos DER (como los envía el SAT) o PEM (convertidos con openssl)
+            $fiel = Fiel::create(
+                file_get_contents('storage/' . $this->dircer),
+                file_get_contents('storage/' . $this->dirkey),
                 $this->pwd
             );
 
-            //Switch para el inicio de sesion
-            switch ($acceso) {
-                //Si los certificados son correctos
-                case true:
-                     //Iniciar sesion en el SAT
-                    $acceso = $descargaCfdi->iniciarSesionFiel($certificado);
-                    if ($acceso) {
-                        $this->mnsinic = "Se ha iniciado la sesión";
-                        $this->statemns = 1;
-                    } else {
-                        $this->mnsinic = "Ha ocurrido un error al iniciar sesión. Intente nuevamente";
-                        $this->statemns = 0;
-                    }
-                    break;
-                //Si hay algun error en los certificados
-                case false:
-                    $this->mnsinic = "Verifique que los archivos corresponden con la contraseña e intente nuevamente";
-                    $this->statemns = 0;
-                    break;
-                }
-        } 
-        //Si los datos proporcionado son incorrectos
-        else {
-            $this->mnsinic = "Proporcione todos los datos";
+            //Creación del web client basado en Guzzle que implementa WebClientInterface
+            $webClient = new GuzzleWebClient();
+
+            //Creación del objeto encargado de crear las solicitudes firmadas usando una FIEL
+            $requestBuilder = new FielRequestBuilder($fiel);
+
+            //Creación del servicio
+            $service = new Service($requestBuilder, $webClient);
+
+            $request = QueryParameters::create(
+                DateTimePeriod::createFromValues("2022-01-01T00:00:00", "2022-03-26T23:59:59"),
+                DownloadType::received(),
+                RequestType::metadata()
+            );
+
+            // presentar la consulta
+            $query = $service->query($request);
+
+            // verificar que el proceso de consulta fue correcto
+            if (!$query->getStatus()->isAccepted()) {
+                $this->mnsinic = "Fallo al presentar la consulta: {$query->getStatus()->getMessage()}";
+            }
+
+            $requestId = $query->getRequestId();
+
+            // consultar el servicio de verificación
+            $verify = $service->verify($requestId);
+
+            // revisar que el proceso de verificación fue correcto
+            if (!$verify->getStatus()->isAccepted()) {
+                $this->mnsinic = "Fallo al verificar la consulta {$requestId}: {$verify->getStatus()->getMessage()}";
+            }
+
+            // revisar que la consulta no haya sido rechazada
+            if (!$verify->getCodeRequest()->isAccepted()) {
+                $this->mnsinic = "La solicitud {$requestId} fue rechazada: {$verify->getCodeRequest()->getMessage()}";
+            }
+
+            // revisar el progreso de la generación de los paquetes
+            $statusRequest = $verify->getStatusRequest();
+            if ($statusRequest->isExpired() || $statusRequest->isFailure() || $statusRequest->isRejected()) {
+                $this->mnsinic = "La solicitud {$requestId} no se puede completar";
+            }
+            if ($statusRequest->isInProgress() || $statusRequest->isAccepted()) {
+                $this->mnsinic = "La solicitud {$requestId} se está procesando";
+            }
+            if ($statusRequest->isFinished()) {
+                $this->mnsinic = "La solicitud {$requestId} está lista";
+            }
+
+
+            //Si es valido
+            $this->statemns = 1;
+        } catch (Exception $e) {
+            //Si no es valido
+            $this->mnsinic = "Verifique que los archivos corresponden con la contraseña e intente nuevamente";
             $this->statemns = 0;
         }
 
@@ -105,28 +171,42 @@ class Descargas extends Component
     //Metodo para preparar procesos antes de iniciar
     public function mount()
     {
-        //El mes y año iniciamos con los de hoy
-        $this->anio = date("Y");
-        $this->mes = date("n");
+        //Configuramos la fecha del filtro para que muestre la fecha de hoy (Recibidos)
+        $this->anioreci = date("Y");
+        $this->mesreci = date("n");
+        $this->diareci = date("j");
+
+        //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango inicio)
+        $this->anioemitinic = date("Y");
+        $this->mesemitinic = date("n");
+        $this->diaemitinic = date("j");
+
+        //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango fin)
+        $this->anioemitfin = date("Y");
+        $this->mesemitfin = date("n");
+        $this->diaemitfin = date("j");
+
+        //El mes y año iniciamos con los de hoy (calendario)
+        $this->aniocal = date("Y");
+        $this->mescal = date("n");
 
         //Condicional para saber si es una cuenta de contador o empresa
-        if(auth()->user()->tipo){
-            $this->rfcEmpresa='';
-        }else{
-            $this->rfcEmpresa=auth()->user()->RFC;
+        if (auth()->user()->tipo) {
+            $this->rfcEmpresa = '';
+        } else {
+            $this->rfcEmpresa = auth()->user()->RFC;
         }
 
         //Condicional para saber si el Rfc tiene algo y realiza el almacenado a las variables necesarias
-        if(empty($this->rfcEmpresa)){
+        if (empty($this->rfcEmpresa)) {
             $this->dircer = "";
             $this->dirkey = "";
             $this->pwd = "";
             $this->rfcemp = "";
-        }else{
+        } else {
             //Obtenemos los valores para la auntenticacion
-            $AuntDesca = User::
-            where('RFC', $this->rfcEmpresa)
-            ->get();
+            $AuntDesca = User::where('RFC', $this->rfcEmpresa)
+                ->get();
 
             //Los metemos en las variables dedicadas
             foreach ($AuntDesca as $DatAuthEmpre) {
@@ -145,9 +225,9 @@ class Descargas extends Component
         date_default_timezone_set('America/Mexico_City');
 
         //Condicional para saber si el mes y año tiene algun valor
-        if (isset($this->anio) || isset($this->mes)) {
+        if (isset($this->aniocal) || isset($this->mescal)) {
             //Si tiene algo obtenemos el valor de las variables
-            $ym = $this->anio."-".$this->mes;
+            $ym = $this->aniocal . "-" . $this->mescal;
         } else {
             //De lo contario no vamos al mes y año actual
             $ym = date('Y-n');
@@ -165,7 +245,7 @@ class Descargas extends Component
 
         //Obtenemos lo dias que tiene el mes
         $day_count = date('t', $timestamp);
-        
+
         // 0:Sun 1:Mon 2:Tue ...
         $str = date('w', mktime(0, 0, 0, date('n', $timestamp), 1, date('Y', $timestamp)));
 
@@ -177,143 +257,138 @@ class Descargas extends Component
         $week .= str_repeat('<td></td>', $str);
 
         //Haremos una consulta al calendarios de recibidos
-        $LogRecical = CalendarioR::
-        select('fechaDescarga', 'rfc', 'canceladosRecibidos', 'descargasRecibidos', 'erroresRecibidos', 'totalRecibidos')
-        ->where('rfc', $this->rfcEmpresa)
-        ->groupBy('fechaDescarga', 'descargasRecibidos')
-        ->orderBy('fechaDescarga', 'asc')
-        ->get();
+        $LogRecical = CalendarioR::select('fechaDescarga', 'rfc', 'canceladosRecibidos', 'descargasRecibidos', 'erroresRecibidos', 'totalRecibidos')
+            ->where('rfc', $this->rfcEmpresa)
+            ->groupBy('fechaDescarga')
+            ->orderBy('fechaDescarga', 'asc')
+            ->get();
 
         //Haremos una consulta al calendarios de emitidos
-        $LogEmitcal = CalendarioE::
-        select('fechaDescarga', 'rfc', 'descargasEmitidos', 'erroresEmitidos', 'totalEmitidos')
-        ->where('rfc', $this->rfcEmpresa)
-        ->groupBy('fechaDescarga', 'descargasEmitidos')
-        ->orderBy('fechaDescarga', 'asc')
-        ->get();
+        $LogEmitcal = CalendarioE::select('fechaDescarga', 'rfc', 'descargasEmitidos', 'erroresEmitidos', 'totalEmitidos')
+            ->where('rfc', $this->rfcEmpresa)
+            ->groupBy('fechaDescarga')
+            ->orderBy('fechaDescarga', 'asc')
+            ->get();
 
         //Ciclo for para llenar los campos con los dias que le pertenece
-        for ( $day = 1; $day <= $day_count; $day++, $str++) {
+        for ($day = 1; $day <= $day_count; $day++, $str++) {
 
             //Condicional para formatear el dia de unidades y decenas (ya que en la base de datos tiene un formato diferente)
-            if ($day < 10 && $this->anio > 2021) {
-            $date = $ym . '-0' . $day;
-            }else {
-            $date = $ym . '-' . $day;
+            if ($day < 10 && $this->aniocal > 2021) {
+                $date = $ym . '-0' . $day;
+            } else {
+                $date = $ym . '-' . $day;
             }
-            
+
             //Iniciamos en cero la variable por cada iteracion que se haga
             $this->reciboemit = 0;
 
             //Condicional para saber si el dia creado pertenece al dia de hoy
             if ($today == $date) {
-            //Datos recibidos
-            foreach ($LogRecical as $fechareci) {
-                if ($fechareci->fechaDescarga == $date) {
-                $week .= '<td class="hoy recibi">' . $day . 
-                    "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
-                    "Cancelados: " . $fechareci->canceladosRecibidos . '<br>' .
-                    "Descargados: " . $fechareci->descargasRecibidos . '<br>' .
-                    "Errores: " . $fechareci->erroresRecibidos . '<br>' .
-                    "Total: " . $fechareci->totalRecibidos;
+                //Datos recibidos
+                foreach ($LogRecical as $fechareci) {
+                    if ($fechareci->fechaDescarga == $date) {
+                        $week .= '<td class="hoy recibi">' . $day .
+                            "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
+                            "Cancelados: " . $fechareci->canceladosRecibidos . '<br>' .
+                            "Descargados: " . $fechareci->descargasRecibidos . '<br>' .
+                            "Errores: " . $fechareci->erroresRecibidos . '<br>' .
+                            "Total: " . $fechareci->totalRecibidos;
 
-                $this->reciboemit = 1;
-                $this->recibido = 1;
-                }
-            }
-
-            //Datos emitidos
-            foreach ($LogEmitcal as $fechaemit) {
-                if ($fechaemit->fechaDescarga == $date ) {
-                if($this->recibido == 1){
-                    $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
-                    "Descargados: " . $fechaemit->descargasEmitidos . '<br>' .
-                    "Errores: " . $fechaemit->erroresEmitidos . '<br>' .
-                    "Total: " . $fechaemit->totalEmitidos;
-
-                    $this->recibido = 0;
-
-                }else {
-                    $week .= '<td class="hoy recibi">' . $day . 
-                    "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
-                    "Descargados: " . $fechaemit->descargasEmitidos . '<br>' .
-                    "Errores: " . $fechaemit->erroresEmitidos . '<br>' .
-                    "Total: " . $fechaemit->totalEmitidos;
+                        $this->reciboemit = 1;
+                        $this->recibido = 1;
+                    }
                 }
 
-                    $this->reciboemit = 1;
-                }
-            }
+                //Datos emitidos
+                foreach ($LogEmitcal as $fechaemit) {
+                    if ($fechaemit->fechaDescarga == $date) {
+                        if ($this->recibido == 1) {
+                            $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
+                                "Descargados: " . $fechaemit->descargasEmitidos . '<br>' .
+                                "Errores: " . $fechaemit->erroresEmitidos . '<br>' .
+                                "Total: " . $fechaemit->totalEmitidos;
 
-            //Condicional para saber si hay emitidos o recibidos
-            if ($this->reciboemit == 0) {
-                $week .= '<td class="hoy">' . $day;
-            }
+                            $this->recibido = 0;
+                        } else {
+                            $week .= '<td class="hoy recibi">' . $day .
+                                "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
+                                "Descargados: " . $fechaemit->descargasEmitidos . '<br>' .
+                                "Errores: " . $fechaemit->erroresEmitidos . '<br>' .
+                                "Total: " . $fechaemit->totalEmitidos;
+                        }
+
+                        $this->reciboemit = 1;
+                    }
+                }
+
+                //Condicional para saber si hay emitidos o recibidos
+                if ($this->reciboemit == 0) {
+                    $week .= '<td class="hoy">' . $day;
+                }
             }
 
             //Otro dia
             else {
-            foreach ($LogRecical as $fecha) {
-                if ($fecha->fechaDescarga == $date) {
-                $week .= '<td class="recibi">' . $day . 
-                    "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
-                    "Cancelados: " . $fecha->canceladosRecibidos . '<br>' .
-                    "Descargados: " . $fecha->descargasRecibidos . '<br>' .
-                    "Errores: " . $fecha->erroresRecibidos . '<br>' .
-                    "Total: " . $fecha->totalRecibidos;
+                foreach ($LogRecical as $fecha) {
+                    if ($fecha->fechaDescarga == $date) {
+                        $week .= '<td class="recibi">' . $day .
+                            "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
+                            "Cancelados: " . $fecha->canceladosRecibidos . '<br>' .
+                            "Descargados: " . $fecha->descargasRecibidos . '<br>' .
+                            "Errores: " . $fecha->erroresRecibidos . '<br>' .
+                            "Total: " . $fecha->totalRecibidos;
 
-                    $this->recibido = 1;
-                    $this->reciboemit = 1;
-                }
-            }
-
-            //Datos emitidos
-            foreach ($LogEmitcal as $fechaemit) {
-                if ($fechaemit->fechaDescarga == $date) {
-                if($this->recibido == 1){
-                    $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
-                    "Descargados: " . $fechaemit->descargasEmitidos . '<br>' .
-                    "Errores: " . $fechaemit->erroresEmitidos . '<br>' .
-                    "Total: " . $fechaemit->totalEmitidos;
-
-                    $this->recibido = 0;
-
-                }else {
-                    $week .= '<td class="recibi">' . $day . 
-                    "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
-                    "Descargados: " . $fechaemit->descargasEmitidos . '<br>' .
-                    "Errores: " . $fechaemit->erroresEmitidos . '<br>' .
-                    "Total: " . $fechaemit->totalEmitidos;
+                        $this->recibido = 1;
+                        $this->reciboemit = 1;
+                    }
                 }
 
-                    $this->reciboemit = 1;
+                //Datos emitidos
+                foreach ($LogEmitcal as $fechaemit) {
+                    if ($fechaemit->fechaDescarga == $date) {
+                        if ($this->recibido == 1) {
+                            $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
+                                "Descargados: " . $fechaemit->descargasEmitidos . '<br>' .
+                                "Errores: " . $fechaemit->erroresEmitidos . '<br>' .
+                                "Total: " . $fechaemit->totalEmitidos;
 
+                            $this->recibido = 0;
+                        } else {
+                            $week .= '<td class="recibi">' . $day .
+                                "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
+                                "Descargados: " . $fechaemit->descargasEmitidos . '<br>' .
+                                "Errores: " . $fechaemit->erroresEmitidos . '<br>' .
+                                "Total: " . $fechaemit->totalEmitidos;
+                        }
+
+                        $this->reciboemit = 1;
+                    }
                 }
-            }
 
-            //Condicional para saber si hay emitidos o recibidos
-            if ($this->reciboemit == 0) {
-            $week .= '<td>' . $day;
-            }
+                //Condicional para saber si hay emitidos o recibidos
+                if ($this->reciboemit == 0) {
+                    $week .= '<td>' . $day;
+                }
             }
 
             //Cerramos la celda que pertenece el dia
             $week .= '</td>';
-            
+
             //Condicional para saber si llegamos el final de la semana o mes
             if ($str % 7 == 6 || $day == $day_count) {
 
-            //Condicion para saber si el dia pertenece al final de los dias contados
-            if ($day == $day_count) {
-                //Agregamos un campo vacio
-                $week .= str_repeat('<td></td>', 6 - ($str % 7));
-            }
+                //Condicion para saber si el dia pertenece al final de los dias contados
+                if ($day == $day_count) {
+                    //Agregamos un campo vacio
+                    $week .= str_repeat('<td></td>', 6 - ($str % 7));
+                }
 
-            //Todas las semanas las agregas en un arreglo
-            $weeks[] = '<tr>' . $week . '</tr>';
+                //Todas las semanas las agregas en un arreglo
+                $weeks[] = '<tr>' . $week . '</tr>';
 
-            //Limpiamos la variable para agregar ora semana
-            $week = '';
+                //Limpiamos la variable para agregar ora semana
+                $week = '';
             }
         }
 
@@ -337,41 +412,40 @@ class Descargas extends Component
         $anios = range(2014, date('Y'));
 
         //Condicional para obtener el tipo de usuario y almacenar las empresas viculadas de estas
-        if(!empty(auth()->user()->tipo)){
-            $e=array();
-            $largo=sizeof(auth()->user()->empresas);
-            for($i=0; $i <$largo; $i++) {
-                $rfc=auth()->user()->empresas[$i];
+        if (!empty(auth()->user()->tipo)) {
+            $e = array();
+            $largo = sizeof(auth()->user()->empresas);
+            for ($i = 0; $i < $largo; $i++) {
+                $rfc = auth()->user()->empresas[$i];
 
-                $e=DB::Table('clientes')
-                ->select('RFC','nombre')
-                ->where('RFC', $rfc)
-                ->get();
+                $e = DB::Table('clientes')
+                    ->select('RFC', 'nombre')
+                    ->where('RFC', $rfc)
+                    ->get();
 
-                foreach($e as $em)
-                $emp[]= array($em['RFC'],$em['nombre']);
+                foreach ($e as $em)
+                    $emp[] = array($em['RFC'], $em['nombre']);
             }
-        }else if(!empty(auth()->user()->TipoSE)){
-            $e=array();
-            $largo=sizeof(auth()->user()->empresas);
-            for($i=0; $i <$largo; $i++) {
-                $rfc=auth()->user()->empresas[$i];
+        } else if (!empty(auth()->user()->TipoSE)) {
+            $e = array();
+            $largo = sizeof(auth()->user()->empresas);
+            for ($i = 0; $i < $largo; $i++) {
+                $rfc = auth()->user()->empresas[$i];
 
-                $e=DB::Table('clientes')
-                ->select('RFC','nombre')
-                ->where('RFC', $rfc)
-                ->get();
+                $e = DB::Table('clientes')
+                    ->select('RFC', 'nombre')
+                    ->where('RFC', $rfc)
+                    ->get();
 
-                foreach($e as $em)
-                $emp[]= array($em['RFC'],$em['nombre']);
+                foreach ($e as $em)
+                    $emp[] = array($em['RFC'], $em['nombre']);
             }
-        }
-        else{
-            $emp='';
+        } else {
+            $emp = '';
         }
 
-        return view('livewire.descargas', ['empresa'=>$this->rfcEmpresa, 'empresas'=>$emp, 'meses'=>$meses,'anios'=>$anios, 'week'=>$week, 'weeks'=>$weeks])
-        ->extends('layouts.livewire-layout')
-        ->section('content');
+        return view('livewire.descargas', ['empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'meses' => $meses, 'anios' => $anios, 'week' => $week, 'weeks' => $weeks])
+            ->extends('layouts.livewire-layout')
+            ->section('content');
     }
 }
