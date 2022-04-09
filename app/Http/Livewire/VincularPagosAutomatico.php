@@ -43,7 +43,7 @@ public function vincularAutomatico(){
           /* OBTENCION DE PAGOS PARA VINCULAR */
 
 /// se obtienen todos los metadatos que no tengan vinculo y que sean pagos
-    $metadataPago =MetadataR::whereNull('cheques_id')->where('efecto','Pago')->get();
+    $metadataPago =MetadataR::whereNull('cheques_id')->where('efecto','Pago')->where('estado','Vigente')->get();
 ////// se pasan los folios fiscales obtenidos aun arreglo
 foreach($metadataPago as $meta){ $foliosmetaSinVinculo[]=$meta->folioFiscal; }
         unset($meta); // rompe la referencia con el último elemento

@@ -82,9 +82,9 @@ $class='';
 
             </div>{{-------fin row-------}}
 
-            @php
-$arrRfc = [];
 
+    @php
+$arrRfc = [];
 $a=[];
 $t=[];
 $egreso=[];
@@ -100,9 +100,7 @@ $n=0;
 
 
 // $folio=$i->folioFiscal;
-
-
-//     $products = MetadataR::raw(function ($collection) use ($folio)  {
+//   $products = MetadataR::raw(function ($collection) use ($folio)  {
 //             return $collection->aggregate([
 //                 [
 //                     '$match' => [
@@ -116,32 +114,12 @@ $n=0;
 //                         'localField' => 'folioFiscal',
 //                         'as' => 'union',
 
-
 //                     ]
 //                 ]
 
 //             ]);
 //         })
 //         ->first();
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 $emisorRfc = $i->emisorRfc;
                 $arrRfc[] = $emisorRfc;
@@ -166,8 +144,6 @@ $n=0;
                 'read_at' => 0,
                 'tipo'=>'FC',
                 'cheques_id'=>$i->cheques_id,
-
-
 
         ]);
 
@@ -391,7 +367,6 @@ $iva_Egreso [] = $vIva;
 			@if($efecto =='Egreso')
             @if (isset($subtotal))
 
-
             <div class="table-body-cell" style="color: rgb(255, 85, 85);">${{ number_format($subtotal,2) }}</div>
             @endif
 			@elseif($efecto = 'Ingreso')
@@ -427,14 +402,14 @@ $iva_Egreso [] = $vIva;
                             @else
 
 
-                            <div class="table-body-cell">
-                                @foreach ($ivaa as $itemm)
+                         <div class="table-body-cell">
+                         @foreach ($ivaa as $itemm)
 
-                                @if ($itemm['TasaOCuota']=="0.160000")
+                         @if ($itemm['TasaOCuota']=="0.160000")
 
-                                ${{ number_format($itemm['Importe'], 2) }}
+                        ${{ number_format($itemm['Importe'], 2) }}
 
-                                @else
+                             @else
 
                                  @endif
                                 @endforeach
@@ -500,7 +475,6 @@ $iva_Egreso [] = $vIva;
         <div class="table-body-cell"></div>
         <div class="table-body-cell"></div>
         <div class="table-body-cell"></div>
-
 
 
 
