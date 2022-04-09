@@ -1,6 +1,6 @@
 <div>
-    {{-- Obtener los dias --}}
     @php
+        //Obtener los dias
         //Recibidos
         
         //Recibimos el mes y el año
@@ -27,6 +27,12 @@
         $fechaemitinic = strtotime($mesanioemitinic . '-01');
         //Establecemos el total de dias que tiene la fecha creada
         $totaldayemitinic = date('t', $fechaemitinic);
+        
+        //Obtenemos la clase al cargar la tabla
+        $class = '';
+        if (empty($class)) {
+            $class = 'table nowrap dataTable no-footer';
+        }
     @endphp
 
     {{-- Contenedor para mantener responsivo el contenido del modulo --}}
@@ -55,32 +61,9 @@
                                 echo '<option value="' . $fila[$rfc] . '">' . $fila[$rS] . '</option>';
                             } ?>
                         </select>
-
-                        <br>
                     @endempty
 
-                    {{-- Boton de inicio de sesión --}}
-                    <button class="btn btn-success BtnVinculadas" wire:click="AuthEmpre()">Iniciar sesión</button>
-
                     <br>
-
-                    {{-- Mensaje de alerta del inicio de sesion --}}
-                    {{-- Mensaje correcto --}}
-                    <div id="MnsSuccess">
-                        <br>
-                        <div class="alert alert-success">
-                            <label class="Lblmsn"> - </label>
-                        </div>
-                    </div>
-
-                    {{-- Mensaje error --}}
-                    <div id="MnsDanger">
-                        <br>
-                        <div class="alert alert-danger">
-                            <label class="Lblmsn"> - </label>
-                        </div>
-                    </div>
-
                     <br>
 
                     {{-- Animacion de cargando --}}
@@ -104,8 +87,7 @@
                         <div class="col-4">
                             <label for="selecttipocfdi">Tipo:</label>
                             <select wire:model="tipo" name="selecttipocfdi" id="selecttipocfdi"
-                                class="select form-control">
-                                <option value="">--Selecciona un tipo--</option>
+                                wire:change="ResetParamColsul()" class="select form-control">
                                 <option value="Recibidos">Recibidos</option>
                                 <option value="Emitidos">Emitidos</option>
                             </select>
@@ -132,7 +114,7 @@
                         <div class="form-inline mr-auto">
                             {{-- Busqueda por dia --}}
                             <label for="diareci">Dia</label>
-                            <select wire:model="diareci" id="diareci" wire:loading.attr="disabled"
+                            <select wire:model.defer="diareci" id="diareci" wire:loading.attr="disabled"
                                 class="select form-control">
                                 @php
                                     for ($i = 1; $i <= $totaldayreci; $i++) {
@@ -144,7 +126,7 @@
 
                             {{-- Busqueda por mes --}}
                             <label for="mesreci">Mes</label>
-                            <select wire:model="mesreci" id="mesreci" wire:loading.attr="disabled"
+                            <select wire:model.defer="mesreci" id="mesreci" wire:loading.attr="disabled"
                                 class=" select form-control">
                                 <?php foreach ($meses as $key => $value) {
                                     echo '<option value="' . $key . '">' . $value . '</option>';
@@ -155,12 +137,16 @@
 
                             {{-- Busqueda por año --}}
                             <label for="anioreci">Año</label>
-                            <select wire:loading.attr="disabled" wire:model="anioreci" id="anioreci"
+                            <select wire:loading.attr="disabled" wire:model.defer="anioreci" id="anioreci"
                                 class="select form-control">
                                 <?php foreach (array_reverse($anios) as $value) {
                                     echo '<option value="' . $value . '">' . $value . '</option>';
                                 } ?>
                             </select>
+                            &nbsp;&nbsp;
+
+                            {{-- Boton de busqueda --}}
+                            <button class="btn btn-secondary BtnVinculadas" wire:click="ConsultSAT()">Buscar</button>
                             &nbsp;&nbsp;
                         </div>
                     @elseif ($tipo == 'Emitidos')
@@ -176,7 +162,7 @@
                                 <div class="form-inline mr-auto">
                                     {{-- Busqueda por dia --}}
                                     <label for="diaemitinic">Dia</label>
-                                    <select wire:model="diaemitinic" id="diaemitinic" wire:loading.attr="disabled"
+                                    <select wire:model.defer="diaemitinic" id="diaemitinic" wire:loading.attr="disabled"
                                         class="select form-control">
                                         @php
                                             for ($i = 1; $i <= $totaldayemitinic; $i++) {
@@ -188,7 +174,7 @@
 
                                     {{-- Busqueda por mes --}}
                                     <label for="mesemitinic">Mes</label>
-                                    <select wire:model="mesemitinic" id="mesemitinic" wire:loading.attr="disabled"
+                                    <select wire:model.defer="mesemitinic" id="mesemitinic" wire:loading.attr="disabled"
                                         class=" select form-control">
                                         <?php foreach ($meses as $key => $value) {
                                             echo '<option value="' . $key . '">' . $value . '</option>';
@@ -199,8 +185,8 @@
 
                                     {{-- Busqueda por año --}}
                                     <label for="anioemitinic">Año</label>
-                                    <select wire:loading.attr="disabled" wire:model="anioemitinic" id="anioemitinic"
-                                        class="select form-control">
+                                    <select wire:loading.attr="disabled" wire:model.defer="anioemitinic"
+                                        id="anioemitinic" class="select form-control">
                                         <?php foreach (array_reverse($anios) as $value) {
                                             echo '<option value="' . $value . '">' . $value . '</option>';
                                         } ?>
@@ -216,7 +202,7 @@
                                 <div class="form-inline mr-auto">
                                     {{-- Busqueda por dia --}}
                                     <label for="diaemitfin">Dia</label>
-                                    <select wire:model="diaemitfin" id="diaemitfin" wire:loading.attr="disabled"
+                                    <select wire:model.defer="diaemitfin" id="diaemitfin" wire:loading.attr="disabled"
                                         class="select form-control">
                                         @php
                                             for ($i = 1; $i <= $totaldayemitinic; $i++) {
@@ -228,7 +214,7 @@
 
                                     {{-- Busqueda por mes --}}
                                     <label for="mesemitfin">Mes</label>
-                                    <select wire:model="mesemitfin" id="mesemitfin" wire:loading.attr="disabled"
+                                    <select wire:model.defer="mesemitfin" id="mesemitfin" wire:loading.attr="disabled"
                                         class=" select form-control">
                                         <?php foreach ($meses as $key => $value) {
                                             echo '<option value="' . $key . '">' . $value . '</option>';
@@ -238,73 +224,96 @@
 
                                     {{-- Busqueda por año --}}
                                     <label for="anioemitfin">Año</label>
-                                    <select wire:loading.attr="disabled" wire:model="anioemitfin" id="anioemitfin"
+                                    <select wire:loading.attr="disabled" wire:model.defer="anioemitfin" id="anioemitfin"
                                         class="select form-control">
                                         <?php foreach (array_reverse($anios) as $value) {
                                             echo '<option value="' . $value . '">' . $value . '</option>';
                                         } ?>
                                     </select>
                                     &nbsp;&nbsp;
+
+                                    {{-- Boton de busqueda --}}
+                                    <button class="btn btn-secondary BtnVinculadas"
+                                        wire:click="ConsultSAT()">Buscar</button>
+                                    &nbsp;&nbsp;
                                 </div>
                             </div>
                         </div>
-                    @else
-                        {{-- Si no se selecciono nada --}}
                     @endif
 
+                    <br>
+
+                    {{var_dump($list)}}
+
+                    {{-- Tabla de consulta --}}
+
+                    {{-- Condicional para mostrar la tabla de cada tipo --}}
+                    @if ($tipo == 'Recibidos')
+                        {{-- Tabla de recibidos --}}
+                        <div class="table-responsive">
+                            <table id="example" class="{{ $class }}" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">N°</th>
+                                        <th class="text-center align-middle">XML <input type="checkbox" /></th>
+                                        <th class="text-center align-middle">R. Imp. <input type="checkbox" /></th>
+                                        <th class="text-center align-middle">Acuse</th>
+                                        <th class="text-center align-middle">Folio Fiscal</th>
+                                        <th class="text-center align-middle">RFC</th>
+                                        <th class="text-center align-middle">Razón Social</th>
+                                        <th class="text-center align-middle">Emisión</th>
+                                        <th class="text-center align-middle">Certificación</th>
+                                        <th class="text-center align-middle">Total</th>
+                                        <th class="text-center align-middle">Efecto</th>
+                                        <th class="text-center align-middle">Estado</th>
+                                        <th class="text-center align-middle">Cancelación</th>
+                                        <th class="text-center align-middle">Aprobación</th>
+                                        <th class="text-center align-middle">Descargado XML</th>
+                                        <th class="text-center align-middle">Descargado PDF</th>
+                                        <th class="text-center align-middle">Descargado Acuse</th>
+                                        <th>...</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    @elseif ($tipo == 'Emitidos')
+                        {{-- Tabla de recibidos --}}
+                        <div class="table-responsive">
+                            <table id="example" class="{{ $class }}" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">N°</th>
+                                        <th class="text-center align-middle">XML <input type="checkbox" /></th>
+                                        <th class="text-center align-middle">R. Imp. <input type="checkbox" /></th>
+                                        <th class="text-center align-middle">Acuse</th>
+                                        <th class="text-center align-middle">Folio Fiscal</th>
+                                        <th class="text-center align-middle">RFC</th>
+                                        <th class="text-center align-middle">Razón Social</th>
+                                        <th class="text-center align-middle">Emisión</th>
+                                        <th class="text-center align-middle">Certificación</th>
+                                        <th class="text-center align-middle">Total</th>
+                                        <th class="text-center align-middle">Efecto</th>
+                                        <th class="text-center align-middle">Estado</th>
+                                        <th class="text-center align-middle">Aprobación</th>
+                                        <th class="text-center align-middle">Descargado XML</th>
+                                        <th class="text-center align-middle">Descargado PDF</th>
+                                        <th class="text-center align-middle">Descargado Acuse</th>
+                                        <th>...</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
                 </section>
             </div>
         </div>
     </div>
-
-    <script>
-        //Mostramos el mensaje de confirmacion de inico de sesion
-        window.addEventListener('mnssesion', event => {
-            //Alamacenamos el mensaje y el estado en variables
-            var mensconfirm = event.detail.mns;
-            var statemns = event.detail.state;
-
-            //Funcion para ocultar los mensajes
-            function hidemsnconfi() {
-                $("#MnsDanger").hide();
-                $("#MnsSuccess").hide();
-            }
-
-            //Condicional para saber si hay un mensaje
-            if (mensconfirm !== null) {
-                //Switch para saber si es un mensaje satisfactorio o de error
-                switch (statemns) {
-                    case 0:
-                        //Mostramos el mensaje deseado y ocultamos el no deseado
-                        $("#MnsDanger").show();
-                        $("#MnsSuccess").hide();
-
-                        //Mostramos label con el mensaje
-                        $(".Lblmsn").text(mensconfirm);
-
-                        //Escondemos el mensaje despues de 5 segundos
-                        setTimeout(() => {
-                            hidemsnconfi();
-                        }, 5000);
-                        break;
-
-                    case 1:
-                        //Mostramos el mensaje deseado y ocultamos el no deseado
-                        $("#MnsDanger").hide();
-                        $("#MnsSuccess").show();
-
-                        //Mostramos label con el mensaje
-                        $(".Lblmsn").text(mensconfirm);
-
-                        //Escondemos el mensaje despues de 5 segundos
-                        setTimeout(() => {
-                            hidemsnconfi();
-                        }, 5000);
-                        break;
-                }
-            }
-        });
-    </script>
 
     {{-- Modal del calendario --}}
     {{-- Creacion del modal --}}
