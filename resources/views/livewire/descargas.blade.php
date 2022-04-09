@@ -243,7 +243,7 @@
 
                     <br>
 
-                    {{var_dump($list)}}
+                    {{ var_dump($list) }}
 
                     {{-- Tabla de consulta --}}
 
@@ -254,7 +254,6 @@
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center align-middle">N°</th>
                                         <th class="text-center align-middle">XML <input type="checkbox" /></th>
                                         <th class="text-center align-middle">R. Imp. <input type="checkbox" /></th>
                                         <th class="text-center align-middle">Acuse</th>
@@ -275,7 +274,156 @@
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @foreach ($list as $listrecibi)
+                                        <tr>
+                                            {{-- XML Checkbox --}}
+                                            <td class="text-center align-middle">
+                                                @if (empty($listrecibi->urlCancelVoucher))
+                                                    <div id="checkbox-group" class="checkbox-group">
+                                                        <input style="transform: scale(1.5);"
+                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                    </div>
+                                                @else
+                                                    <span class="invoice-amount"> - </span>
+                                                @endif
+                                            </td>
 
+                                            {{-- R.Imp --}}
+                                            <td class="text-center align-middle">
+                                                @if (empty($listrecibi->urlCancelVoucher))
+                                                    <div id="checkbox-group" class="checkbox-group">
+                                                        <input style="transform: scale(1.5);"
+                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                    </div>
+                                                @else
+                                                    <span class="invoice-amount"> - </span>
+                                                @endif
+                                            </td>
+
+                                            {{-- Acuse --}}
+                                            <td class="text-center align-middle">
+                                                @if (empty($listrecibi->urlCancelVoucher))
+                                                    <span class="invoice-amount"> - </span>
+                                                @else
+                                                    <div id="checkbox-group" class="checkbox-group">
+                                                        <input style="transform: scale(1.5);"
+                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                    </div>
+                                                @endif
+                                            </td>
+
+                                            {{-- Folio fiscal --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span
+                                                        class="invoice-amount">{{ strtoupper($listrecibi->uuid) }}</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- RFC Emisor --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span class="invoice-amount">{{ $listrecibi->rfcEmisor }}</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- Razon social (nombre del emisor) --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->nombreEmisor }}</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- Fecha emision --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->fechaEmision }}</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- Fecha certificcion --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->fechaCertificacion }}</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- Total --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span class="invoice-amount">{{ $listrecibi->total }}</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- Efecto --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->efectoComprobante }}</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- Estado --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->estadoComprobante }}</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- Fecha de cancelacion --}}
+                                            <td class="text-center align-middle">
+                                                @if (empty($listrecibi->fechaProcesoCancelacion))
+                                                    <div id="checkbox-group" class="checkbox-group">
+                                                        <span class="invoice-amount"> - </span>
+                                                    </div>
+                                                @else
+                                                    <div id="checkbox-group" class="checkbox-group">
+                                                        <span
+                                                            class="invoice-amount">{{ $listrecibi->fechaProcesoCancelacion }}</span>
+                                                    </div>
+                                                @endif
+                                            </td>
+
+                                            {{-- Aprobacion --}}
+                                            <td class="text-center align-middle">
+                                                @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                    <img src="img/ima.png">
+                                                @else
+                                                    <img src="img/ima2.png">
+                                                @endif
+                                            </td>
+
+
+                                            {{-- Desc XML --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span style="color:#3498DB" class="invoice-amount">Pendiente</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- Desc PDF --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span style="color:#3498DB" class="invoice-amount">Pendiente</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- Desc ACUSE --}}
+                                            <td class="text-center align-middle">
+                                                <div id="checkbox-group" class="checkbox-group">
+                                                    <span style="color:#3498DB" class="invoice-amount">Pendiente</span>
+                                                </div>
+                                            </td>
+
+                                            {{-- ... --}}
+                                            <td class="text-center align-middle">
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
