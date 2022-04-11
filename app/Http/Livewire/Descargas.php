@@ -41,6 +41,11 @@ class Descargas extends Component
     //Varibles para la tabla de CFDI
     public $tipo;
 
+    //Obtener el valor de los checkbox
+    public $cfdiselectxml = []; //Variable que contendra los folios para la descarga de los XML
+    public $cfdiselectpdf = []; //Variable que contendra los folios para la descarga de los PDF
+    public $cfdiselectpdfacuse = []; //Variable que contendra los folios para la descarga de los PDF Acuse
+
     //Variables para el filtro de recibidos
     public $diareci;
     public $mesreci;
@@ -66,57 +71,285 @@ class Descargas extends Component
     //Consultas del SAT (Emitidos o recibidos)
     public function ConsultSAT()
     {
-        /*Como se va a realizar una peticion a la pagina del SAT vamos a realizar un try catch para verificar que la conexion
+        //Condicional para comprobar si hay una empresa (Si es contador)
+        if ($this->rfcEmpresa) {
+            /*Como se va a realizar una peticion a la pagina del SAT vamos a realizar un try catch para verificar que la conexion
         se realizo correctamente*/
-        try {
-            //Variables de cookies de sesion para no volver a realizar el inicio de sesion
-            $cookieJarPath = sprintf('%s\build\cookies\%s.json', getcwd(), $this->rfcEmpresa);
-            //Se almacena ña cookie en un gateway para mandarlo al cliente y este realizar las consultas
-            $gateway = new SatHttpGateway(new Client(), new FileCookieJar($cookieJarPath, true));
+            try {
+                //Variables de cookies de sesion para no volver a realizar el inicio de sesion
+                $cookieJarPath = sprintf('%s\build\cookies\%s.json', getcwd(), $this->rfcEmpresa);
+                //Se almacena ña cookie en un gateway para mandarlo al cliente y este realizar las consultas
+                $gateway = new SatHttpGateway(new Client(), new FileCookieJar($cookieJarPath, true));
 
-            //Obtiene las variables para crear el crtificado
-            $certificate = 'storage/' . $this->dircer;
-            $privateKey = 'storage/' . $this->dirkey;
-            $passPhrase = $this->pwd;
+                //Obtiene las variables para crear el crtificado
+                $certificate = 'storage/' . $this->dircer;
+                $privateKey = 'storage/' . $this->dirkey;
+                $passPhrase = $this->pwd;
 
-            //Creamos al credenciales de acceso
-            $credential = Credential::create(
-                /*En la libreria no utiliza 'file_get_contents', pero si vamos a acceder al certificado
+                //Creamos al credenciales de acceso
+                $credential = Credential::create(
+                    /*En la libreria no utiliza 'file_get_contents', pero si vamos a acceder al certificado
                         por medio de una direccion utiliza la funcion*/
-                file_get_contents($certificate),
-                file_get_contents($privateKey),
-                $passPhrase
-            );
-
-            if (!$credential->isFiel()) {
-                throw new Exception('The certificate and private key is not a FIEL');
-            }
-            if (!$credential->certificate()->validOn()) {
-                throw new Exception('The certificate and private key is not valid at this moment');
-            }
-
-            //Creamos la session utilizando la FIEL
-            $satScraper = new SatScraper(FielSessionManager::create($credential), $gateway);
-
-            //Vamos a realizar una consulta
-            if ($this->tipo == 'Emitidos') {
-                $query = new QueryByFilters(
-                    new DateTimeImmutable($this->anioemitinic . '-' . $this->mesemitinic . '-' . $this->diaemitinic),
-                    new DateTimeImmutable($this->anioemitfin . '-' . $this->mesemitfin . '-' . $this->diaemitfin)
+                    file_get_contents($certificate),
+                    file_get_contents($privateKey),
+                    $passPhrase
                 );
-            } else {
-                $query = new QueryByFilters(
-                    new DateTimeImmutable($this->anioreci . '-' . $this->mesreci . '-' . $this->diareci),
-                    new DateTimeImmutable($this->anioreci . '-' . $this->mesreci . '-' . $this->diareci)
-                );
-                $query->setDownloadType(DownloadType::recibidos());
-            }
 
-            //Retornamos el valor de la consulta
-            return $satScraper->listByPeriod($query);
-        } catch (Exception $e) {
-            //Retornamos un mensaje de error
+                if (!$credential->isFiel()) {
+                    throw new Exception('The certificate and private key is not a FIEL');
+                }
+                if (!$credential->certificate()->validOn()) {
+                    throw new Exception('The certificate and private key is not valid at this moment');
+                }
+
+                //Creamos la session utilizando la FIEL
+                $satScraper = new SatScraper(FielSessionManager::create($credential), $gateway);
+
+                //Vamos a realizar una consulta
+                if ($this->tipo == 'Emitidos') {
+                    $query = new QueryByFilters(
+                        new DateTimeImmutable($this->anioemitinic . '-' . $this->mesemitinic . '-' . $this->diaemitinic),
+                        new DateTimeImmutable($this->anioemitfin . '-' . $this->mesemitfin . '-' . $this->diaemitfin)
+                    );
+                } else {
+                    $query = new QueryByFilters(
+                        new DateTimeImmutable($this->anioreci . '-' . $this->mesreci . '-' . $this->diareci),
+                        new DateTimeImmutable($this->anioreci . '-' . $this->mesreci . '-' . $this->diareci)
+                    );
+                    $query->setDownloadType(DownloadType::recibidos());
+                }
+
+                //Retornamos el valor de la consulta
+                return $satScraper->listByPeriod($query);
+            } catch (Exception $e) {
+                //Retornamos un mensaje de error
+                return "Parece que hubo un error, favor de refrescar la pagina o contáctate con nosotros";
+            }
+        } else {
             return "Sin empresa, de favor seleccione una empresa";
+        }
+    }
+
+    //Metodo para descargar los archivos relacionados
+    public function Descvincucfdi()
+    {
+        //Convertir los meses en el formato carpetado
+        function Meses($mes)
+        {
+            //Mes
+            switch ($mes) {
+                case '1':
+                    return '1.Enero';
+                    break;
+
+                case '2':
+                    return '2.Febrero';
+                    break;
+
+                case '3':
+                    return '3.Marzo';
+                    break;
+
+                case '4':
+                    return '4.Abril';
+                    break;
+
+                case '5':
+                    return '5.Mayo';
+                    break;
+
+                case '6':
+                    return '6.Junio';
+                    break;
+
+                case '7':
+                    return '7.Julio';
+                    break;
+
+                case '8':
+                    return '8.Agosto';
+                    break;
+
+                case '9':
+                    return '9.Septiembre';
+                    break;
+
+                case '10':
+                    return '10.Octubre';
+                    break;
+
+                case '11':
+                    return '11.Noviembre';
+                    break;
+
+                case '12':
+                    return '12.Diciembre';
+                    break;
+            }
+        }
+
+        //Acceso a la sesion
+        //Variables de cookies de sesion para no volver a realizar el inicio de sesion
+        $cookieJarPath = sprintf('%s\build\cookies\%s.json', getcwd(), $this->rfcEmpresa);
+        //Se almacena ña cookie en un gateway para mandarlo al cliente y este realizar las consultas
+        $gateway = new SatHttpGateway(new Client(), new FileCookieJar($cookieJarPath, true));
+
+        //Obtiene las variables para crear el crtificado
+        $certificate = 'storage/' . $this->dircer;
+        $privateKey = 'storage/' . $this->dirkey;
+        $passPhrase = $this->pwd;
+
+        //Creamos al credenciales de acceso
+        $credential = Credential::create(
+            /*En la libreria no utiliza 'file_get_contents', pero si vamos a acceder al certificado
+                por medio de una direccion utiliza la funcion*/
+            file_get_contents($certificate),
+            file_get_contents($privateKey),
+            $passPhrase
+        );
+
+        if (!$credential->isFiel()) {
+            throw new Exception('The certificate and private key is not a FIEL');
+        }
+        if (!$credential->certificate()->validOn()) {
+            throw new Exception('The certificate and private key is not valid at this moment');
+        }
+
+        //Creamos la session utilizando la FIEL
+        $satScraper = new SatScraper(FielSessionManager::create($credential), $gateway);
+
+        //Condicional para saber si pertenece a un emitido o a un recibido
+        switch ($this->tipo) {
+            case "Recibidos":
+                //Para realizar las descargas tenemos que tener una lista de tipo metadata por lo que realizaremos la consulta
+                //Recibidos
+
+                //Consultas
+                //XML
+                $listxmlreci = $satScraper->listByUuids($this->cfdiselectxml, DownloadType::recibidos());
+                //PDF
+                $listpdfreci = $satScraper->listByUuids($this->cfdiselectpdf, DownloadType::recibidos());
+                //PDF Acuse
+                $listpdfacusereci = $satScraper->listByUuids($this->cfdiselectpdfacuse, DownloadType::recibidos());
+
+                //Rutas
+                //Aqui llamamos a la funcion de mese
+                $mesruta = Meses($this->mesreci);
+
+                //XML
+                $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
+                //PDF/Acuse
+                $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
+
+                //Realizamos la descarga
+                //XML
+                $satScraper->resourceDownloader(ResourceType::xml(), $listxmlreci)
+                    ->saveTo($rutaxml, true, 0777);
+
+                //PDF
+                $satScraper->resourceDownloader(ResourceType::pdf(), $listpdfreci)
+                    ->saveTo($rutapdf, true, 0777);
+
+                //PDF Acuse
+                $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $listpdfacusereci)
+                    ->saveTo($rutapdf, true, 0777);
+
+                //Limpiamos los arreglos
+                $this->cfdiselectxml = [];
+                $this->cfdiselectpdf = [];
+                $this->cfdiselectpdfacuse = [];
+                break;
+            case "Emitidos":
+                //Para realizar las descargas tenemos que tener una lista de tipo metadata por lo que realizaremos la consulta
+                //Emitidos
+
+                //Consultas
+                //XML
+                $listxmlemit = $satScraper->listByUuids($this->cfdiselectxml, DownloadType::emitidos());
+                //PDF
+                $listpdfemit = $satScraper->listByUuids($this->cfdiselectpdf, DownloadType::emitidos());
+                //PDF Acuse
+                $listpdfacuseemit = $satScraper->listByUuids($this->cfdiselectpdfacuse, DownloadType::emitidos());
+
+                //Rutas
+                //En emitidos se basa en rangos de fecha (A diferencia de recibidos), por lo que haremos es obtener el mes
+                //XML
+                foreach ($listxmlemit as $listxmlemitdato) {
+                    $mesreciemitxml = $listxmlemitdato->fechaEmision;
+                    $mesreciemitxml = explode("-", $mesreciemitxml);
+                    $mesreciemitxml = intval($mesreciemitxml[1]);
+
+                    //Realizamos una consulta del CFDI que vamos a guardar
+                    $foliofiscal = [$listxmlemitdato->uuid];
+                    $cfdiemitxml = $satScraper->listByUuids($foliofiscal, DownloadType::emitidos());
+
+                    //Aqui llamamos a la funcion de meses
+                    //XML
+                    $mesrutaxml = Meses($mesreciemitxml);
+
+                    //XML
+                    $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesrutaxml/Emitidos/XML/";
+
+                    //Realizamos la descarga
+                    //XML
+                    $satScraper->resourceDownloader(ResourceType::xml(), $cfdiemitxml)
+                        ->saveTo($rutaxml, true, 0777);
+                }
+
+                //PDF
+                foreach ($listpdfemit as $listpdfemitdato) {
+                    $mesreciemitpdf = $listpdfemitdato->fechaEmision;
+                    $mesreciemitpdf = explode("-", $mesreciemitpdf);
+                    $mesreciemitpdf = intval($mesreciemitpdf[1]);
+
+                    //Realizamos una consulta del CFDI que vamos a guardar
+                    $foliofiscal = [$listpdfemitdato->uuid];
+                    $cfdiemitxml = $satScraper->listByUuids($foliofiscal, DownloadType::emitidos());
+
+                    //Aqui llamamos a la funcion de meses
+                    //PDF
+                    $mesrutapdf = Meses($mesreciemitpdf);
+
+                    //PDF
+                    $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesrutapdf/Emitidos/PDF/";
+
+                    //Realizamos la descarga
+                    //PDF
+                    $satScraper->resourceDownloader(ResourceType::pdf(), $cfdiemitxml)
+                        ->saveTo($rutapdf, true, 0777);
+                }
+
+                //PDF Acuse
+                foreach ($listpdfacuseemit as $listpdfacuseemitdato) {
+                    $mesreciemitpdfacu = $listpdfacuseemitdato->fechaEmision;
+                    $mesreciemitpdfacu = explode("-", $mesreciemitpdfacu);
+                    $mesreciemitpdfacu = intval($mesreciemitpdfacu[1]);
+
+                    //Realizamos una consulta del CFDI que vamos a guardar
+                    $foliofiscal = [$listpdfacuseemitdato->uuid];
+                    $cfdiemitxml = $satScraper->listByUuids($foliofiscal, DownloadType::emitidos());
+
+                    //Aqui llamamos a la funcion de meses
+                    //PDF Acuse
+                    $mesrutapdfacuse = Meses($mesreciemitpdfacu);
+
+                    //Acuse
+                    $rutapdfacu = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesrutapdfacuse/Emitidos/PDF/";
+
+                    //Realizamos la descarga
+                    //PDF Acuse
+                    $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $cfdiemitxml)
+                        ->saveTo($rutapdfacu, true, 0777);
+                }
+
+                //Limpiamos los arreglos
+                $this->cfdiselectxml = [];
+                $this->cfdiselectpdf = [];
+                $this->cfdiselectpdfacuse = [];
+                break;
+            default:
+                $this->successdescarga = "No hay tipo";
+                break;
         }
     }
 
@@ -137,6 +370,11 @@ class Descargas extends Component
         $this->anioemitfin = date("Y");
         $this->mesemitfin = date("n");
         $this->diaemitfin = date("j");
+
+        //Reinciamos los arreglos
+        $this->cfdiselectxml = [];
+        $this->cfdiselectpdf = [];
+        $this->cfdiselectpdfacuse = [];
     }
 
     //Metrodo para reiniciar el modal

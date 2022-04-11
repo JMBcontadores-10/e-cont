@@ -1,33 +1,5 @@
 <div>
     @php
-        //Obtener los dias
-        //Recibidos
-        
-        //Recibimos el mes y el año
-        $mesanioreci = $anioreci . '-' . $mesreci;
-        //Con el mes y el año dados establecemos una fecha (en este caso es el dia primero)
-        $fechareci = strtotime($mesanioreci . '-01');
-        //Establecemos el total de dias que tiene la fecha creada
-        $totaldayreci = date('t', $fechareci);
-        
-        //Emitidos inicial
-        
-        //Recibimos el mes y el año
-        $mesanioemitinic = $anioemitinic . '-' . $mesemitinic;
-        //Con el mes y el año dados establecemos una fecha (en este caso es el dia primero)
-        $fechaemitinic = strtotime($mesanioemitinic . '-01');
-        //Establecemos el total de dias que tiene la fecha creada
-        $totaldayemitinic = date('t', $fechaemitinic);
-        
-        //Emitidos final
-        
-        //Recibimos el mes y el año
-        $mesanioemitinic = $mesemitfin . '-' . $mesemitfin;
-        //Con el mes y el año dados establecemos una fecha (en este caso es el dia primero)
-        $fechaemitinic = strtotime($mesanioemitinic . '-01');
-        //Establecemos el total de dias que tiene la fecha creada
-        $totaldayemitinic = date('t', $fechaemitinic);
-        
         //Obtenemos la clase al cargar la tabla
         $class = '';
         if (empty($class)) {
@@ -72,10 +44,11 @@
                             <div></div>
                             <div></div>
                         </div>
-                        <i class="fas fa-mug-hot"></i>&nbsp;Iniciando sesión espere un momento....
+                        <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
                         <br>
                     </div>
 
+                    <br>
 
                     {{-- Seccion de descargas --}}
                     {{-- Descargas --}}
@@ -101,6 +74,15 @@
                                     data-backdrop="static" data-keyboard="false">Calendario de registros</button>
                             </div>
                         </div>
+
+                        {{-- Boton de descarga a los CFDI seleccionados --}}
+                        <div class="col">
+                            <div id="espaciado" style="height: 23.5px"></div>
+                            <div class="invoice-create-btn mb-1">
+                                <button class="btn btn-success BtnVinculadas" wire:click="Descvincucfdi()">Descargar
+                                    seleccionados</button>
+                            </div>
+                        </div>
                     </div>
 
                     <br>
@@ -117,7 +99,7 @@
                             <select wire:model.defer="diareci" id="diareci" wire:loading.attr="disabled"
                                 class="select form-control">
                                 @php
-                                    for ($i = 1; $i <= $totaldayreci; $i++) {
+                                    for ($i = 1; $i <= 31; $i++) {
                                         echo '<option value="' . $i . '">' . $i . '</option>';
                                     }
                                 @endphp
@@ -145,7 +127,6 @@
                             </select>
                             &nbsp;&nbsp;
 
-                            {{-- Boton de busqueda --}}
                             <button class="btn btn-secondary BtnVinculadas" wire:click="ConsultSAT()">Buscar</button>
                             &nbsp;&nbsp;
                         </div>
@@ -165,7 +146,7 @@
                                     <select wire:model.defer="diaemitinic" id="diaemitinic" wire:loading.attr="disabled"
                                         class="select form-control">
                                         @php
-                                            for ($i = 1; $i <= $totaldayemitinic; $i++) {
+                                            for ($i = 1; $i <= 31; $i++) {
                                                 echo '<option value="' . $i . '">' . $i . '</option>';
                                             }
                                         @endphp
@@ -185,8 +166,8 @@
 
                                     {{-- Busqueda por año --}}
                                     <label for="anioemitinic">Año</label>
-                                    <select wire:loading.attr="disabled" wire:model.defer="anioemitinic"
-                                        id="anioemitinic" class="select form-control">
+                                    <select wire:loading.attr="disabled" wire:model.defer="anioemitinic" id="anioemitinic"
+                                        class="select form-control">
                                         <?php foreach (array_reverse($anios) as $value) {
                                             echo '<option value="' . $value . '">' . $value . '</option>';
                                         } ?>
@@ -205,7 +186,7 @@
                                     <select wire:model.defer="diaemitfin" id="diaemitfin" wire:loading.attr="disabled"
                                         class="select form-control">
                                         @php
-                                            for ($i = 1; $i <= $totaldayemitinic; $i++) {
+                                            for ($i = 1; $i <= 31; $i++) {
                                                 echo '<option value="' . $i . '">' . $i . '</option>';
                                             }
                                         @endphp
@@ -232,9 +213,7 @@
                                     </select>
                                     &nbsp;&nbsp;
 
-                                    {{-- Boton de busqueda --}}
-                                    <button class="btn btn-secondary BtnVinculadas"
-                                        wire:click="ConsultSAT()">Buscar</button>
+                                    <button class="btn btn-secondary BtnVinculadas" wire:click="ConsultSAT()">Buscar</button>
                                     &nbsp;&nbsp;
                                 </div>
                             </div>
@@ -242,8 +221,6 @@
                     @endif
 
                     <br>
-
-                    {{ var_dump($list) }}
 
                     {{-- Tabla de consulta --}}
 
@@ -270,160 +247,232 @@
                                         <th class="text-center align-middle">Descargado XML</th>
                                         <th class="text-center align-middle">Descargado PDF</th>
                                         <th class="text-center align-middle">Descargado Acuse</th>
-                                        <th>...</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($list as $listrecibi)
+                                    {{-- Condicional para saber si hay una lista que mostrar o no --}}
+                                    @if (is_string($list))
                                         <tr>
-                                            {{-- XML Checkbox --}}
-                                            <td class="text-center align-middle">
-                                                @if (empty($listrecibi->urlCancelVoucher))
-                                                    <div id="checkbox-group" class="checkbox-group">
-                                                        <input style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
-                                                    </div>
-                                                @else
-                                                    <span class="invoice-amount"> - </span>
-                                                @endif
-                                            </td>
-
-                                            {{-- R.Imp --}}
-                                            <td class="text-center align-middle">
-                                                @if (empty($listrecibi->urlCancelVoucher))
-                                                    <div id="checkbox-group" class="checkbox-group">
-                                                        <input style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
-                                                    </div>
-                                                @else
-                                                    <span class="invoice-amount"> - </span>
-                                                @endif
-                                            </td>
-
-                                            {{-- Acuse --}}
-                                            <td class="text-center align-middle">
-                                                @if (empty($listrecibi->urlCancelVoucher))
-                                                    <span class="invoice-amount"> - </span>
-                                                @else
-                                                    <div id="checkbox-group" class="checkbox-group">
-                                                        <input style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
-                                                    </div>
-                                                @endif
-                                            </td>
-
-                                            {{-- Folio fiscal --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span
-                                                        class="invoice-amount">{{ strtoupper($listrecibi->uuid) }}</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- RFC Emisor --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span class="invoice-amount">{{ $listrecibi->rfcEmisor }}</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- Razon social (nombre del emisor) --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span
-                                                        class="invoice-amount">{{ $listrecibi->nombreEmisor }}</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- Fecha emision --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span
-                                                        class="invoice-amount">{{ $listrecibi->fechaEmision }}</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- Fecha certificcion --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span
-                                                        class="invoice-amount">{{ $listrecibi->fechaCertificacion }}</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- Total --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span class="invoice-amount">{{ $listrecibi->total }}</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- Efecto --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span
-                                                        class="invoice-amount">{{ $listrecibi->efectoComprobante }}</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- Estado --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span
-                                                        class="invoice-amount">{{ $listrecibi->estadoComprobante }}</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- Fecha de cancelacion --}}
-                                            <td class="text-center align-middle">
-                                                @if (empty($listrecibi->fechaProcesoCancelacion))
-                                                    <div id="checkbox-group" class="checkbox-group">
-                                                        <span class="invoice-amount"> - </span>
-                                                    </div>
-                                                @else
-                                                    <div id="checkbox-group" class="checkbox-group">
-                                                        <span
-                                                            class="invoice-amount">{{ $listrecibi->fechaProcesoCancelacion }}</span>
-                                                    </div>
-                                                @endif
-                                            </td>
-
-                                            {{-- Aprobacion --}}
-                                            <td class="text-center align-middle">
-                                                @if ($listrecibi->estadoComprobante == 'Vigente')
-                                                    <img src="img/ima.png">
-                                                @else
-                                                    <img src="img/ima2.png">
-                                                @endif
-                                            </td>
-
-
-                                            {{-- Desc XML --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span style="color:#3498DB" class="invoice-amount">Pendiente</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- Desc PDF --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span style="color:#3498DB" class="invoice-amount">Pendiente</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- Desc ACUSE --}}
-                                            <td class="text-center align-middle">
-                                                <div id="checkbox-group" class="checkbox-group">
-                                                    <span style="color:#3498DB" class="invoice-amount">Pendiente</span>
-                                                </div>
-                                            </td>
-
-                                            {{-- ... --}}
-                                            <td class="text-center align-middle">
+                                            <td colspan="16">
+                                                <span class="invoice-amount"> {{ $list }} </span>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @else
+                                        @foreach ($list as $listrecibi)
+                                            @php
+                                                //Obtenemos las rutas de los CFDI recibidos
+                                                //Mes
+                                                switch ($mesreci) {
+                                                    case '1':
+                                                        $mesruta = '1.Enero';
+                                                        break;
+                                                
+                                                    case '2':
+                                                        $mesruta = '2.Febrero';
+                                                        break;
+                                                
+                                                    case '3':
+                                                        $mesruta = '3.Marzo';
+                                                        break;
+                                                
+                                                    case '4':
+                                                        $mesruta = '4.Abril';
+                                                        break;
+                                                
+                                                    case '5':
+                                                        $mesruta = '5.Mayo';
+                                                        break;
+                                                
+                                                    case '6':
+                                                        $mesruta = '6.Junio';
+                                                        break;
+                                                
+                                                    case '7':
+                                                        $mesruta = '7.Julio';
+                                                        break;
+                                                
+                                                    case '8':
+                                                        $mesruta = '8.Agosto';
+                                                        break;
+                                                
+                                                    case '9':
+                                                        $mesruta = '9.Septiembre';
+                                                        break;
+                                                
+                                                    case '10':
+                                                        $mesruta = '10.Octubre';
+                                                        break;
+                                                
+                                                    case '11':
+                                                        $mesruta = '11.Noviembre';
+                                                        break;
+                                                
+                                                    case '12':
+                                                        $mesruta = '12.Diciembre';
+                                                        break;
+                                                }
+                                                
+                                                //XML
+                                                $rutaxml = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/XML/";
+                                                //PDF
+                                                $rutapdf = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                                                
+                                                //Buscamos si exsiten los archivos (si estn descargados)
+                                                //XML
+                                                $xmlfile = $rutaxml . strtoupper($listrecibi->uuid) . '.xml';
+                                                if (file_exists($xmlfile)) {
+                                                    $existxml = 'Si';
+                                                } else {
+                                                    $existxml = 'No';
+                                                }
+                                                
+                                                //PDF
+                                                $pdffile = $rutapdf . strtoupper($listrecibi->uuid) . '.pdf';
+                                                if (file_exists($pdffile)) {
+                                                    $existpdf = 'Si';
+                                                } else {
+                                                    $existpdf = 'No';
+                                                }
+                                                
+                                                //Acuse
+                                                $acusefile = $rutapdf . strtoupper($listrecibi->uuid) . '-acuse' . '.pdf';
+                                                if (file_exists($acusefile)) {
+                                                    $existpdfacuse = 'Si';
+                                                } else {
+                                                    $existpdfacuse = 'No';
+                                                }
+                                            @endphp
+
+                                            <tr>
+                                                {{-- XML Checkbox --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <div id="checkbox-group" class="checkbox-group">
+                                                            <input value="{{ $listrecibi->uuid }}"
+                                                                wire:model.defer="cfdiselectxml"
+                                                                style="transform: scale(1.5);"
+                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                        </div>
+                                                    @else
+                                                        <span class="invoice-amount"> - </span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- R.Imp --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <div id="checkbox-group" class="checkbox-group">
+                                                            <input value="{{ $listrecibi->uuid }}"
+                                                                wire:model.defer="cfdiselectpdf"
+                                                                style="transform: scale(1.5);"
+                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                        </div>
+                                                    @else
+                                                        <span class="invoice-amount"> - </span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- Acuse --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <span class="invoice-amount"> - </span>
+                                                    @else
+                                                        <div id="checkbox-group" class="checkbox-group">
+                                                            <input value="{{ $listrecibi->uuid }}"
+                                                                wire:model.defer="cfdiselectpdfacuse"
+                                                                style="transform: scale(1.5);"
+                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                        </div>
+                                                    @endif
+                                                </td>
+
+                                                {{-- Folio fiscal --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ strtoupper($listrecibi->uuid) }}</span>
+                                                </td>
+
+                                                {{-- RFC Emisor --}}
+                                                <td class="text-center align-middle">
+                                                    <span class="invoice-amount">{{ $listrecibi->rfcEmisor }}</span>
+                                                </td>
+
+                                                {{-- Razon social (nombre del emisor) --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->nombreEmisor }}</span>
+                                                </td>
+
+                                                {{-- Fecha emision --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->fechaEmision }}</span>
+                                                </td>
+
+                                                {{-- Fecha certificcion --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->fechaCertificacion }}</span>
+                                                </td>
+
+                                                {{-- Total --}}
+                                                <td class="text-center align-middle">
+                                                    <span class="invoice-amount">{{ $listrecibi->total }}</span>
+                                                </td>
+
+                                                {{-- Efecto --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->efectoComprobante }}</span>
+                                                </td>
+
+                                                {{-- Estado --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->estadoComprobante }}</span>
+                                                </td>
+
+                                                {{-- Fecha de cancelacion --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <span class="invoice-amount"> - </span>
+                                                    @else
+                                                        <span
+                                                            class="invoice-amount">{{ $listrecibi->fechaProcesoCancelacion }}</span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- Aprobacion --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <img src="img/ima.png">
+                                                    @else
+                                                        <img src="img/ima2.png">
+                                                    @endif
+                                                </td>
+
+
+                                                {{-- Desc XML --}}
+                                                <td class="text-center align-middle">
+                                                    <span class="invoice-amount">{{ $existxml }}</span>
+                                                </td>
+
+                                                {{-- Desc PDF --}}
+                                                <td class="text-center align-middle">
+                                                    <span class="invoice-amount">{{ $existpdf }}</span>
+                                                </td>
+
+                                                {{-- Desc ACUSE --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <span class="invoice-amount"> - </span>
+                                                    @else
+                                                        <span class="invoice-amount">{{ $existpdfacuse }}</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -433,7 +482,6 @@
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center align-middle">N°</th>
                                         <th class="text-center align-middle">XML <input type="checkbox" /></th>
                                         <th class="text-center align-middle">R. Imp. <input type="checkbox" /></th>
                                         <th class="text-center align-middle">Acuse</th>
@@ -449,11 +497,222 @@
                                         <th class="text-center align-middle">Descargado XML</th>
                                         <th class="text-center align-middle">Descargado PDF</th>
                                         <th class="text-center align-middle">Descargado Acuse</th>
-                                        <th>...</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    @if (is_string($list))
+                                        <tr>
+                                            <td colspan="16">
+                                                <span class="invoice-amount"> {{ $list }} </span>
+                                            </td>
+                                        </tr>
+                                    @else
+                                        @foreach ($list as $listrecibi)
+                                            @php
+                                                //Obtenemos las rutas de los CFDI recibidos
+                                                //Mes
+                                                switch ($mesreci) {
+                                                    case '1':
+                                                        $mesruta = '1.Enero';
+                                                        break;
+                                                
+                                                    case '2':
+                                                        $mesruta = '2.Febrero';
+                                                        break;
+                                                
+                                                    case '3':
+                                                        $mesruta = '3.Marzo';
+                                                        break;
+                                                
+                                                    case '4':
+                                                        $mesruta = '4.Abril';
+                                                        break;
+                                                
+                                                    case '5':
+                                                        $mesruta = '5.Mayo';
+                                                        break;
+                                                
+                                                    case '6':
+                                                        $mesruta = '6.Junio';
+                                                        break;
+                                                
+                                                    case '7':
+                                                        $mesruta = '7.Julio';
+                                                        break;
+                                                
+                                                    case '8':
+                                                        $mesruta = '8.Agosto';
+                                                        break;
+                                                
+                                                    case '9':
+                                                        $mesruta = '9.Septiembre';
+                                                        break;
+                                                
+                                                    case '10':
+                                                        $mesruta = '10.Octubre';
+                                                        break;
+                                                
+                                                    case '11':
+                                                        $mesruta = '11.Noviembre';
+                                                        break;
+                                                
+                                                    case '12':
+                                                        $mesruta = '12.Diciembre';
+                                                        break;
+                                                }
+                                                
+                                                //XML
+                                                $rutaxml = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/XML/";
+                                                //PDF
+                                                $rutapdf = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                                                
+                                                //Buscamos si exsiten los archivos (si estn descargados)
+                                                //XML
+                                                $xmlfile = $rutaxml . strtoupper($listrecibi->uuid) . '.xml';
+                                                if (file_exists($xmlfile)) {
+                                                    $existxml = 'Si';
+                                                } else {
+                                                    $existxml = 'No';
+                                                }
+                                                
+                                                //PDF
+                                                $pdffile = $rutapdf . strtoupper($listrecibi->uuid) . '.pdf';
+                                                if (file_exists($pdffile)) {
+                                                    $existpdf = 'Si';
+                                                } else {
+                                                    $existpdf = 'No';
+                                                }
+                                                
+                                                //Acuse
+                                                $acusefile = $rutapdf . strtoupper($listrecibi->uuid) . '-acuse' . '.pdf';
+                                                if (file_exists($acusefile)) {
+                                                    $existpdfacuse = 'Si';
+                                                } else {
+                                                    $existpdfacuse = 'No';
+                                                }
+                                            @endphp
 
+                                            <tr>
+                                                {{-- XML Checkbox --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <div id="checkbox-group" class="checkbox-group">
+                                                            <input value="{{ $listrecibi->uuid }}"
+                                                                wire:model.defer="cfdiselectxml"
+                                                                style="transform: scale(1.5);"
+                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                        </div>
+                                                    @else
+                                                        <span class="invoice-amount"> - </span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- R.Imp --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <div id="checkbox-group" class="checkbox-group">
+                                                            <input value="{{ $listrecibi->uuid }}"
+                                                                wire:model.defer="cfdiselectpdf"
+                                                                style="transform: scale(1.5);"
+                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                        </div>
+                                                    @else
+                                                        <span class="invoice-amount"> - </span>
+                                                    @endif
+                                                </td>
+
+                                                {{-- Acuse --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <span class="invoice-amount"> - </span>
+                                                    @else
+                                                        <div id="checkbox-group" class="checkbox-group">
+                                                            <input value="{{ $listrecibi->uuid }}"
+                                                                wire:model.defer="cfdiselectpdfacuse"
+                                                                style="transform: scale(1.5);"
+                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                        </div>
+                                                    @endif
+                                                </td>
+
+                                                {{-- Folio fiscal --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ strtoupper($listrecibi->uuid) }}</span>
+                                                </td>
+
+                                                {{-- RFC Emisor --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->rfcReceptor }}</span>
+                                                </td>
+
+                                                {{-- Razon social (nombre del emisor) --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->nombreReceptor }}</span>
+                                                </td>
+
+                                                {{-- Fecha emision --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->fechaEmision }}</span>
+                                                </td>
+
+                                                {{-- Fecha certificcion --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->fechaCertificacion }}</span>
+                                                </td>
+
+                                                {{-- Total --}}
+                                                <td class="text-center align-middle">
+                                                    <span class="invoice-amount">{{ $listrecibi->total }}</span>
+                                                </td>
+
+                                                {{-- Efecto --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->efectoComprobante }}</span>
+                                                </td>
+
+                                                {{-- Estado --}}
+                                                <td class="text-center align-middle">
+                                                    <span
+                                                        class="invoice-amount">{{ $listrecibi->estadoComprobante }}</span>
+                                                </td>
+
+                                                {{-- Aprobacion --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <img src="img/ima.png">
+                                                    @else
+                                                        <img src="img/ima2.png">
+                                                    @endif
+                                                </td>
+
+
+                                                {{-- Desc XML --}}
+                                                <td class="text-center align-middle">
+                                                    <span class="invoice-amount">{{ $existxml }}</span>
+                                                </td>
+
+                                                {{-- Desc PDF --}}
+                                                <td class="text-center align-middle">
+                                                    <span class="invoice-amount">{{ $existpdf }}</span>
+                                                </td>
+
+                                                {{-- Desc ACUSE --}}
+                                                <td class="text-center align-middle">
+                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                        <span class="invoice-amount"> - </span>
+                                                    @else
+                                                        <span class="invoice-amount">{{ $existpdfacuse }}</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
