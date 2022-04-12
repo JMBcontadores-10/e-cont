@@ -23,6 +23,9 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use PhpCfdi\CfdiSatScraper\Filters\DownloadType;
 
+//Funcion para aumentar la ejecucion de los procesos, lo utilizaremos para las descargas
+set_time_limit(3600);
+
 class Descargas extends Component
 {
     //Variables globales
@@ -40,6 +43,8 @@ class Descargas extends Component
 
     //Varibles para la tabla de CFDI
     public $tipo;
+    public $chkxml; //Banderas para saber si extan activos los checks
+    public $chkpdf; //Banderas para saber si extan activos los checks
 
     //Obtener el valor de los checkbox
     public $cfdiselectxml = []; //Variable que contendra los folios para la descarga de los XML
@@ -112,18 +117,33 @@ class Descargas extends Component
                         new DateTimeImmutable($this->anioemitfin . '-' . $this->mesemitfin . '-' . $this->diaemitfin)
                     );
                 } else {
-                    $query = new QueryByFilters(
-                        new DateTimeImmutable($this->anioreci . '-' . $this->mesreci . '-' . $this->diareci),
-                        new DateTimeImmutable($this->anioreci . '-' . $this->mesreci . '-' . $this->diareci)
-                    );
-                    $query->setDownloadType(DownloadType::recibidos());
+                    switch ($this->diareci) {
+                        case "all":
+                            //Obtenemos el valor del ultimo dia
+                            $timestamp = strtotime($this->anioreci . "-" . $this->mesreci . '-01');
+                            $day_count = date('t', $timestamp);
+
+                            $query = new QueryByFilters(
+                                new DateTimeImmutable($this->anioreci . '-' . $this->mesreci . '-01'),
+                                new DateTimeImmutable($this->anioreci . '-' . $this->mesreci . '-' . $day_count)
+                            );
+                            $query->setDownloadType(DownloadType::recibidos());
+                            break;
+                        default:
+                            $query = new QueryByFilters(
+                                new DateTimeImmutable($this->anioreci . '-' . $this->mesreci . '-' . $this->diareci),
+                                new DateTimeImmutable($this->anioreci . '-' . $this->mesreci . '-' . $this->diareci)
+                            );
+                            $query->setDownloadType(DownloadType::recibidos());
+                            break;
+                    }
                 }
 
                 //Retornamos el valor de la consulta
                 return $satScraper->listByPeriod($query);
             } catch (Exception $e) {
                 //Retornamos un mensaje de error
-                return "Parece que hubo un error, favor de refrescar la pagina o contáctate con nosotros";
+                return "Parece que hubo un error: " . $e;
             }
         } else {
             return "Sin empresa, de favor seleccione una empresa";
@@ -258,6 +278,10 @@ class Descargas extends Component
                 $this->cfdiselectxml = [];
                 $this->cfdiselectpdf = [];
                 $this->cfdiselectpdfacuse = [];
+
+                //Ponemos en cero los checks
+                $this->chkxml = 0;
+                $this->chkpdf = 0;
                 break;
             case "Emitidos":
                 //Para realizar las descargas tenemos que tener una lista de tipo metadata por lo que realizaremos la consulta
@@ -346,6 +370,10 @@ class Descargas extends Component
                 $this->cfdiselectxml = [];
                 $this->cfdiselectpdf = [];
                 $this->cfdiselectpdfacuse = [];
+
+                //Ponemos en cero los checks
+                $this->chkxml = 0;
+                $this->chkpdf = 0;
                 break;
             default:
                 $this->successdescarga = "No hay tipo";
@@ -375,6 +403,49 @@ class Descargas extends Component
         $this->cfdiselectxml = [];
         $this->cfdiselectpdf = [];
         $this->cfdiselectpdfacuse = [];
+
+        //Ponemos en cero los checks
+        $this->chkxml = 0;
+        $this->chkpdf = 0;
+    }
+
+    //Metodo para marcar todos los checkbox (XML Recibidos)
+    public function Allchk($tipo)
+    {
+        if ($this->chkxml || $this->chkpdf) {
+            //Condicional para saber que tipo de datos se van a seleccionar
+            switch ($tipo) {
+                case "xmlall":
+                    //Obtenemos la consulta
+                    $list = $this->ConsultSAT();
+                    //Introducimos los valores de la lista (consulta en el arreglo para hacer un check all)
+                    foreach ($list as $UUID) {
+                        array_push($this->cfdiselectxml, $UUID->uuid);
+                    }
+                    break;
+
+                case "pdfall":
+                    //Obtenemos la consulta
+                    $list = $this->ConsultSAT();
+                    //Introducimos los valores de la lista (consulta en el arreglo para hacer un check all)
+                    foreach ($list as $UUID) {
+                        array_push($this->cfdiselectpdf, $UUID->uuid);
+                    }
+                    break;
+            }
+        }
+
+        //Condicional para corroborar que si estan desmarcados
+        if (empty($this->chkxml)) {
+            //Si el checkbox de xml esta desactivado
+            $this->cfdiselectxml = [];
+        }
+
+        //Condicional para corroborar que si estan desmarcados
+        if (empty($this->chkpdf)) {
+            //Si el checkbox de pdf esta desactivado
+            $this->cfdiselectpdf = [];
+        }
     }
 
     //Metrodo para reiniciar el modal

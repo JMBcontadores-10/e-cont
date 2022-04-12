@@ -532,7 +532,7 @@
                               @else
                                 {{ ++$nUR }}. {{ strtoupper($docRel) }}
                               @endif
-                            @elseif ($efecto == 'Egreso' and !$docRel == null or $efecto == 'Ingreso' and !$docRel == null)
+                            @elseif ($efecto == 'Egreso' and !$docRel == null or $efecto == 'Ingreso' and !$docRel == null or $efecto == 'Traslado' and !$docRel == null)
                               @foreach ($docRel as $d)
                                 {{ ++$nUR }}. {{ strtoupper($d['UUID']) }}<br>
                               @endforeach

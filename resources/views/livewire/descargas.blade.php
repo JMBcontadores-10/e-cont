@@ -98,6 +98,7 @@
                             <label for="diareci">Dia</label>
                             <select wire:model.defer="diareci" id="diareci" wire:loading.attr="disabled"
                                 class="select form-control">
+                                <option value="all">Todos</option>
                                 @php
                                     for ($i = 1; $i <= 31; $i++) {
                                         echo '<option value="' . $i . '">' . $i . '</option>';
@@ -166,8 +167,8 @@
 
                                     {{-- Busqueda por año --}}
                                     <label for="anioemitinic">Año</label>
-                                    <select wire:loading.attr="disabled" wire:model.defer="anioemitinic" id="anioemitinic"
-                                        class="select form-control">
+                                    <select wire:loading.attr="disabled" wire:model.defer="anioemitinic"
+                                        id="anioemitinic" class="select form-control">
                                         <?php foreach (array_reverse($anios) as $value) {
                                             echo '<option value="' . $value . '">' . $value . '</option>';
                                         } ?>
@@ -213,7 +214,8 @@
                                     </select>
                                     &nbsp;&nbsp;
 
-                                    <button class="btn btn-secondary BtnVinculadas" wire:click="ConsultSAT()">Buscar</button>
+                                    <button class="btn btn-secondary BtnVinculadas"
+                                        wire:click="ConsultSAT()">Buscar</button>
                                     &nbsp;&nbsp;
                                 </div>
                             </div>
@@ -231,8 +233,8 @@
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center align-middle">XML <input type="checkbox" /></th>
-                                        <th class="text-center align-middle">R. Imp. <input type="checkbox" /></th>
+                                        <th class="text-center align-middle">XML <input wire:click="Allchk('xmlall')" wire:model="chkxml" type="checkbox" /></th>
+                                        <th class="text-center align-middle">R. Imp. <input wire:click="Allchk('pdfall')" wire:model="chkpdf" type="checkbox" /></th>
                                         <th class="text-center align-middle">Acuse</th>
                                         <th class="text-center align-middle">Folio Fiscal</th>
                                         <th class="text-center align-middle">RFC</th>
@@ -347,12 +349,10 @@
                                                 {{-- XML Checkbox --}}
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
-                                                        <div id="checkbox-group" class="checkbox-group">
-                                                            <input value="{{ $listrecibi->uuid }}"
-                                                                wire:model.defer="cfdiselectxml"
-                                                                style="transform: scale(1.5);"
-                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
-                                                        </div>
+                                                        <input value="{{ $listrecibi->uuid }}"
+                                                            wire:model.defer="cfdiselectxml"
+                                                            style="transform: scale(1.5);"
+                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -361,12 +361,10 @@
                                                 {{-- R.Imp --}}
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
-                                                        <div id="checkbox-group" class="checkbox-group">
-                                                            <input value="{{ $listrecibi->uuid }}"
-                                                                wire:model.defer="cfdiselectpdf"
-                                                                style="transform: scale(1.5);"
-                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
-                                                        </div>
+                                                        <input value="{{ $listrecibi->uuid }}"
+                                                            wire:model.defer="cfdiselectpdf"
+                                                            style="transform: scale(1.5);"
+                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -377,12 +375,10 @@
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <span class="invoice-amount"> - </span>
                                                     @else
-                                                        <div id="checkbox-group" class="checkbox-group">
-                                                            <input value="{{ $listrecibi->uuid }}"
-                                                                wire:model.defer="cfdiselectpdfacuse"
-                                                                style="transform: scale(1.5);"
-                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
-                                                        </div>
+                                                        <input value="{{ $listrecibi->uuid }}"
+                                                            wire:model.defer="cfdiselectpdfacuse"
+                                                            style="transform: scale(1.5);"
+                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
                                                     @endif
                                                 </td>
 
@@ -482,8 +478,8 @@
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center align-middle">XML <input type="checkbox" /></th>
-                                        <th class="text-center align-middle">R. Imp. <input type="checkbox" /></th>
+                                        <th class="text-center align-middle">XML <input wire:click="Allchk('xmlall')" wire:model="chkxml" type="checkbox" /></th>
+                                        <th class="text-center align-middle">R. Imp. <input wire:click="Allchk('pdfall')" wire:model="chkpdf" type="checkbox" /></th>
                                         <th class="text-center align-middle">Acuse</th>
                                         <th class="text-center align-middle">Folio Fiscal</th>
                                         <th class="text-center align-middle">RFC</th>
@@ -596,12 +592,10 @@
                                                 {{-- XML Checkbox --}}
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
-                                                        <div id="checkbox-group" class="checkbox-group">
-                                                            <input value="{{ $listrecibi->uuid }}"
-                                                                wire:model.defer="cfdiselectxml"
-                                                                style="transform: scale(1.5);"
-                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
-                                                        </div>
+                                                        <input value="{{ $listrecibi->uuid }}"
+                                                            wire:model.defer="cfdiselectxml"
+                                                            style="transform: scale(1.5);"
+                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -610,12 +604,10 @@
                                                 {{-- R.Imp --}}
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
-                                                        <div id="checkbox-group" class="checkbox-group">
-                                                            <input value="{{ $listrecibi->uuid }}"
-                                                                wire:model.defer="cfdiselectpdf"
-                                                                style="transform: scale(1.5);"
-                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
-                                                        </div>
+                                                        <input value="{{ $listrecibi->uuid }}"
+                                                            wire:model.defer="cfdiselectpdf"
+                                                            style="transform: scale(1.5);"
+                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -626,12 +618,10 @@
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <span class="invoice-amount"> - </span>
                                                     @else
-                                                        <div id="checkbox-group" class="checkbox-group">
-                                                            <input value="{{ $listrecibi->uuid }}"
-                                                                wire:model.defer="cfdiselectpdfacuse"
-                                                                style="transform: scale(1.5);"
-                                                                class="mis-checkboxes ChkMasProv" type="checkbox" />
-                                                        </div>
+                                                        <input value="{{ $listrecibi->uuid }}"
+                                                            wire:model.defer="cfdiselectpdfacuse"
+                                                            style="transform: scale(1.5);"
+                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
                                                     @endif
                                                 </td>
 

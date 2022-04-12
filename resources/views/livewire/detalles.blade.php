@@ -157,7 +157,7 @@
                               if (!isset($docRel)) {
                                 $docRel = $CompleCFDI['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'];
                               }
-                            } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso'){
+                            } elseif ($efecto == 'Egreso' or $efecto == 'Ingreso' or $efecto == 'Traslado'){
                               $docRel = $CompleCFDI['CfdiRelacionados.CfdiRelacionado'];
                               if(!isset($docRel)){
                                 $docRel =$CompleCFDI['CfdiRelacionados.0.CfdiRelacionado'];
@@ -220,7 +220,7 @@
                               @else
                                 {{ ++$nUR }}. {{ strtoupper($docRel) }}
                               @endif
-                            @elseif ($efecto == 'Egreso' and !$docRel == null or $efecto == 'Ingreso' and !$docRel == null)
+                            @elseif ($efecto == 'Egreso' and !$docRel == null or $efecto == 'Ingreso' and !$docRel == null or $efecto == 'Traslado' and !$docRel == null)
                               @foreach ($docRel as $d)
                                 {{ ++$nUR }}. {{ strtoupper($d['UUID']) }}<br>
                               @endforeach
