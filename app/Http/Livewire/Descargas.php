@@ -9,6 +9,7 @@ use PhpCfdi\CfdiSatScraper\SatScraper;
 use PhpCfdi\CfdiSatScraper\Sessions\Fiel\FielSessionManager;
 use PhpCfdi\CfdiSatScraper\Sessions\Fiel\FielSessionData;
 use PhpCfdi\Credentials\Credential;
+use PhpCfdi\CfdiToJson\JsonConverter;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
@@ -16,17 +17,23 @@ use PhpCfdi\CfdiSatScraper\SatHttpGateway;
 
 use App\Models\CalendarioR;
 use App\Models\CalendarioE;
+use App\Models\MetadataE;
+use App\Models\MetadataR;
 use App\Models\User;
+use App\Models\XmlE;
+use App\Models\XmlR;
 use DateTimeImmutable;
+use DirectoryIterator;
 use Exception;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use MongoDB\Operation\Update;
+use PhpCfdi\CfdiCleaner\Cleaner;
+use PhpCfdi\CfdiSatScraper\Contracts\ResourceFileNamerInterface;
 use PhpCfdi\CfdiSatScraper\Filters\DownloadType;
 
-
-
-//Funcion para aumentar la ejecucion de los procesos, lo utilizaremos para las descargas
-set_time_limit(3600);
+//Funcion para aumentar la ejecucion de los procesos, lo utilizaremos para las descargas ()
+set_time_limit(3600); //Tiempo limite dado 1 hora
 
 
 
@@ -49,6 +56,7 @@ class Descargas extends Component
     public $tipo;
     public $chkxml; //Banderas para saber si extan activos los checks
     public $chkpdf; //Banderas para saber si extan activos los checks
+    public $solocfdi = []; //Almacena los UUID de los cfdi seleccionados
 
     //Obtener el valor de los checkbox
     public $cfdiselectxml = []; //Variable que contendra los folios para la descarga de los XML
@@ -76,6 +84,10 @@ class Descargas extends Component
     public $recibido = 0; //Variable bandera para saber si existe o no datos recibidos
     public $mescal;
     public $aniocal;
+
+    public $info;
+
+
 
     //Consultas del SAT (Emitidos o recibidos)
     public function ConsultSAT()
@@ -278,6 +290,119 @@ class Descargas extends Component
                 $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $listpdfacusereci)
                     ->saveTo($rutapdf, true, 0777);
 
+
+                //Almacenamos los metadatos
+                function AlmacMetaReci($listipo)
+                {
+                    //En varaibles guardamos los valores necesarios para la inserción y en el mismo ciclo agrgamos los metadatos
+                    foreach ($listipo as $datapdfreci) {
+                        $urldescxml = $datapdfreci->urlXml;
+                        $urldescpdf = $datapdfreci->urlPdf;
+                        $urldesacuse = $datapdfreci->urlCancelVoucher;
+                        $folifiscal = strtoupper($datapdfreci->uuid); //Convertimos en mayusculas para respetar el formato
+                        $emisorrfc = $datapdfreci->rfcEmisor;
+                        $emisornom = $datapdfreci->nombreEmisor;
+                        $receptorrfc = $datapdfreci->rfcReceptor;
+                        $receptornom = $datapdfreci->nombreReceptor;
+                        $fechaemi = $datapdfreci->fechaEmision;
+                        $fechacerti = $datapdfreci->fechaCertificacion;
+                        $paccerti = $datapdfreci->pacCertifico;
+
+                        $total = $datapdfreci->total;
+                        $total = substr($total, 1);
+                        $total = str_replace(",", ".", $total);
+                        $total = preg_replace('/\.(?=.*\.)/', '', $total);
+
+                        $efecto = $datapdfreci->efectoComprobante;
+                        $estado = $datapdfreci->estadoComprobante;
+                        $edocancel = $datapdfreci->estatusCancelacion;
+                        $edoproccancel = $datapdfreci->estatusProcesoCancelacion;
+                        $fechacancel = $datapdfreci->fechaProcesoCancelacion;
+                        $urlacuse = null; //Este datos es null ya que no se encuentra en los metadata de cancelacion
+
+                        //Almacenamos el metadata
+                        $metadatarecipdf = MetadataR::where(['folioFiscal' => $folifiscal]);
+                        $metadatarecipdf->update([
+                            'urlDescargaXml'            => $urldescxml,
+                            'urlDescargaAcuse'          => $urldesacuse,
+                            'urlDescargaRI'             => $urldescpdf,
+                            'folioFiscal'               => $folifiscal,
+                            'emisorRfc'                 => $emisorrfc,
+                            'emisorNombre'              => $emisornom,
+                            'receptorRfc'               => $receptorrfc,
+                            'receptorNombre'            => $receptornom,
+                            'fechaEmision'              => $fechaemi,
+                            'fechaCertificacion'        => $fechacerti,
+                            'pacCertificado'            => $paccerti,
+                            'total'                     => $total,
+                            'efecto'                    => $efecto,
+                            'estado'                    => $estado,
+                            'estadoCancelacion'         => $edocancel,
+                            'estadoProcesoCancelacion'  => $edoproccancel,
+                            'fechaCancelacion'          => $fechacancel,
+                            'urlAcuseXml'               => $urlacuse,
+                        ], ['upsert' => true]);
+                    }
+                }
+
+                //Almacenamos los XML recibidos
+                function AlmacXMLReci($rutaxml)
+                {
+                    //Establecemos la ruta donde esta el XML descargado mas el nombre del XML
+                    $rutadescxml = $rutaxml;
+
+                    //Obtenemos el contenido de la ruta obtenido
+                    $contentrutaxml = new DirectoryIterator($rutadescxml);
+
+                    //Con el foreach accedemos al contenido del objeto creado
+                    foreach ($contentrutaxml as $infoxmlfile) {
+                        //En la iteracion obtenemos la informacion de los archivos
+                        $fileExt = $infoxmlfile->getExtension();
+                        $fileBaseName = $infoxmlfile->getBasename(".$fileExt");
+                        $filePathname = $infoxmlfile->getPathname();
+                    }
+
+                    //Condicional si el nombre del documento es el adecuado (ejemplo: archivo.jpg)
+                    if (!$infoxmlfile->isDot()) {
+                        //Obtenemos el contenido de la ruta
+                        $contentxmlreci = file_get_contents($filePathname);
+
+                        //Limpiamos el XML descargado
+                        $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
+
+                        //Ahora el cfdi descargado lo convertimos en json
+                        $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
+
+                        //Decodificamos el json creado en un arreglo
+                        $arraycfdireci = json_decode($xmlcfdi, true);
+
+                        //Agregamos los datos del arreglo a la coleccion de XML recibidos
+                        XmlR::where(['UUID' => $fileBaseName])
+                            ->update(
+                                $arraycfdireci,
+                                ['upsert' => true]
+                            );
+                    }
+                }
+
+                //Llamamos la funcion para almacenar los metadatos en la base de datos
+                //PDF
+                AlmacMetaReci($listpdfreci);
+
+                //XML
+                AlmacMetaReci($listxmlreci);
+
+                //Acuse
+                AlmacMetaReci($listpdfacusereci);
+
+                //Vamos a comporbar si la carpeta tiene XML descargados
+                $rutafolder = @scandir($rutaxml);
+
+                //Condicional si existe algun documento
+                if (count($rutafolder) > 2) {
+                    AlmacXMLReci($rutaxml); //Llamamos la funcion de almacenar los XML en la base de datos
+                }
+
                 //Limpiamos los arreglos
                 $this->cfdiselectxml = [];
                 $this->cfdiselectpdf = [];
@@ -288,6 +413,100 @@ class Descargas extends Component
                 $this->chkpdf = 0;
                 break;
             case "Emitidos":
+                //Almacenamos los metadatos
+                function AlmacMetaEmit($listipo)
+                {
+                    //En varaibles guardamos los valores necesarios para la inserción y en el mismo ciclo agrgamos los metadatos
+                    foreach ($listipo as $datapdfreci) {
+                        $urldescxml = $datapdfreci->urlXml;
+                        $urldescpdf = $datapdfreci->urlPdf;
+                        $urldesacuse = $datapdfreci->urlCancelVoucher;
+                        $folifiscal = strtoupper($datapdfreci->uuid); //Convertimos en mayusculas para respetar el formato
+                        $emisorrfc = $datapdfreci->rfcEmisor;
+                        $emisornom = $datapdfreci->nombreEmisor;
+                        $receptorrfc = $datapdfreci->rfcReceptor;
+                        $receptornom = $datapdfreci->nombreReceptor;
+                        $fechaemi = $datapdfreci->fechaEmision;
+                        $fechacerti = $datapdfreci->fechaCertificacion;
+                        $paccerti = $datapdfreci->pacCertifico;
+
+                        $total = $datapdfreci->total;
+                        $total = substr($total, 1);
+                        $total = str_replace(",", ".", $total);
+                        $total = preg_replace('/\.(?=.*\.)/', '', $total);
+
+                        $efecto = $datapdfreci->efectoComprobante;
+                        $estado = $datapdfreci->estadoComprobante;
+                        $edocancel = $datapdfreci->estatusCancelacion;
+                        $edoproccancel = $datapdfreci->estatusProcesoCancelacion;
+                        $fechacancel = $datapdfreci->fechaProcesoCancelacion;
+                        $urlacuse = null; //Este datos es null ya que no se encuentra en los metadata de cancelacion
+
+                        //Almacenamos el metadata
+                        $metadatarecipdf = MetadataE::where(['folioFiscal' => $folifiscal]);
+                        $metadatarecipdf->update([
+                            'urlDescargaXml'            => $urldescxml,
+                            'urlDescargaAcuse'          => $urldesacuse,
+                            'urlDescargaRI'             => $urldescpdf,
+                            'folioFiscal'               => $folifiscal,
+                            'emisorRfc'                 => $emisorrfc,
+                            'emisorNombre'              => $emisornom,
+                            'receptorRfc'               => $receptorrfc,
+                            'receptorNombre'            => $receptornom,
+                            'fechaEmision'              => $fechaemi,
+                            'fechaCertificacion'        => $fechacerti,
+                            'pacCertificado'            => $paccerti,
+                            'total'                     => $total,
+                            'efecto'                    => $efecto,
+                            'estado'                    => $estado,
+                            'estadoCancelacion'         => $edocancel,
+                            'estadoProcesoCancelacion'  => $edoproccancel,
+                            'fechaCancelacion'          => $fechacancel,
+                            'urlAcuseXml'               => $urlacuse,
+                        ], ['upsert' => true]);
+                    }
+                }
+
+                //Almacenamos los XML recibidos
+                function AlmacXMLEmit($rutaxml)
+                {
+                    //Establecemos la ruta donde esta el XML descargado mas el nombre del XML
+                    $rutadescxml = $rutaxml;
+
+                    //Obtenemos el contenido de la ruta obtenido
+                    $contentrutaxml = new DirectoryIterator($rutadescxml);
+
+                    //Con el foreach accedemos al contenido del objeto creado
+                    foreach ($contentrutaxml as $infoxmlfile) {
+                        //En la iteracion obtenemos la informacion de los archivos
+                        $fileExt = $infoxmlfile->getExtension();
+                        $fileBaseName = $infoxmlfile->getBasename(".$fileExt");
+                        $filePathname = $infoxmlfile->getPathname();
+                    }
+
+                    //Condicional si el nombre del documento es el adecuado (ejemplo: archivo.jpg)
+                    if (!$infoxmlfile->isDot()) {
+                        //Obtenemos el contenido de la ruta
+                        $contentxmlreci = file_get_contents($filePathname);
+
+                        //Limpiamos el XML descargado
+                        $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
+
+                        //Ahora el cfdi descargado lo convertimos en json
+                        $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
+
+                        //Decodificamos el json creado en un arreglo
+                        $arraycfdireci = json_decode($xmlcfdi, true);
+
+                        //Agregamos los datos del arreglo a la coleccion de XML recibidos
+                        XmlE::where(['UUID' => $fileBaseName])
+                            ->update(
+                                $arraycfdireci,
+                                ['upsert' => true]
+                            );
+                    }
+                }
+
                 //Para realizar las descargas tenemos que tener una lista de tipo metadata por lo que realizaremos la consulta
                 //Emitidos
 
@@ -322,6 +541,14 @@ class Descargas extends Component
                     //XML
                     $satScraper->resourceDownloader(ResourceType::xml(), $cfdiemitxml)
                         ->saveTo($rutaxml, true, 0777);
+
+                    //Vamos a comporbar si la carpeta tiene XML descargados
+                    $rutafolder = @scandir($rutaxml);
+
+                    //Condicional si existe algun documento
+                    if (count($rutafolder) > 2) {
+                        AlmacXMLEmit($rutaxml); //Llamamos la funcion de almacenar los XML en la base de datos
+                    }
                 }
 
                 //PDF
@@ -369,6 +596,16 @@ class Descargas extends Component
                     $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $cfdiemitxml)
                         ->saveTo($rutapdfacu, true, 0777);
                 }
+
+                //Llamamos la funcion para almacenar los metadatos en la base de datos
+                //PDF
+                AlmacMetaEmit($listpdfemit);
+
+                //XML
+                AlmacMetaEmit($listxmlemit);
+
+                //Acuse
+                AlmacMetaEmit($listpdfacuseemit);
 
                 //Limpiamos los arreglos
                 $this->cfdiselectxml = [];
@@ -420,21 +657,13 @@ class Descargas extends Component
             //Condicional para saber que tipo de datos se van a seleccionar
             switch ($tipo) {
                 case "xmlall":
-                    //Obtenemos la consulta
-                    $list = $this->ConsultSAT();
-                    //Introducimos los valores de la lista (consulta en el arreglo para hacer un check all)
-                    foreach ($list as $UUID) {
-                        array_push($this->cfdiselectxml, $UUID->uuid);
-                    }
+                    //Metemos el arreglo obtenido anteriormente
+                    $this->cfdiselectxml = $this->solocfdi;
                     break;
 
                 case "pdfall":
-                    //Obtenemos la consulta
-                    $list = $this->ConsultSAT();
-                    //Introducimos los valores de la lista (consulta en el arreglo para hacer un check all)
-                    foreach ($list as $UUID) {
-                        array_push($this->cfdiselectpdf, $UUID->uuid);
-                    }
+                    //Metemos el arreglo obtenido anteriormente
+                    $this->cfdiselectpdf = $this->solocfdi;
                     break;
             }
         }
@@ -689,6 +918,14 @@ class Descargas extends Component
 
         //Obtenemos la consulta
         $list = $this->ConsultSAT();
+
+        //Condicional para saber si es un string
+        if (!is_string($list)) {
+            //Almacenamos los UUID
+            foreach ($list as $UUID) {
+                array_push($this->solocfdi, $UUID->uuid);
+            }
+        }
 
         //Arreglo de los meses
         $meses = array(

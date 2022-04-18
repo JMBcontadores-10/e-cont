@@ -79,7 +79,8 @@
                         <div class="col">
                             <div id="espaciado" style="height: 23.5px"></div>
                             <div class="invoice-create-btn mb-1">
-                                <button class="btn btn-success BtnVinculadas" wire:click="Descvincucfdi()">Descargar
+                                <button id="Btndescarcfdi" class="btn btn-success BtnVinculadas"
+                                    wire:click="Descvincucfdi()">Descargar
                                     seleccionados</button>
                             </div>
                         </div>
@@ -96,8 +97,8 @@
                         <div class="form-inline mr-auto">
                             {{-- Busqueda por dia --}}
                             <label for="diareci">Dia</label>
-                            <select wire:model.defer="diareci" id="diareci" wire:loading.attr="disabled"
-                                class="select form-control">
+                            <select wire:model.defer="diareci" id="diareci" class="select form-control"
+                                wire:loading.attr="disabled">
                                 <option value="all">Todos</option>
                                 @php
                                     for ($i = 1; $i <= 31; $i++) {
@@ -109,8 +110,8 @@
 
                             {{-- Busqueda por mes --}}
                             <label for="mesreci">Mes</label>
-                            <select wire:model.defer="mesreci" id="mesreci" wire:loading.attr="disabled"
-                                class=" select form-control">
+                            <select wire:model.defer="mesreci" id="mesreci" class=" select form-control"
+                                wire:loading.attr="disabled">
                                 <?php foreach ($meses as $key => $value) {
                                     echo '<option value="' . $key . '">' . $value . '</option>';
                                 } ?>
@@ -120,8 +121,8 @@
 
                             {{-- Busqueda por año --}}
                             <label for="anioreci">Año</label>
-                            <select wire:loading.attr="disabled" wire:model.defer="anioreci" id="anioreci"
-                                class="select form-control">
+                            <select wire:model.defer="anioreci" id="anioreci" class="select form-control"
+                                wire:loading.attr="disabled">
                                 <?php foreach (array_reverse($anios) as $value) {
                                     echo '<option value="' . $value . '">' . $value . '</option>';
                                 } ?>
@@ -144,20 +145,18 @@
                                 <div class="form-inline mr-auto">
                                     {{-- Busqueda por dia --}}
                                     <label for="diaemitinic">Dia</label>
-                                    <select wire:model.defer="diaemitinic" id="diaemitinic" wire:loading.attr="disabled"
-                                        class="select form-control">
+                                    <select wire:model.defer="diaemitinic" id="diaemitinic"
+                                        class="select form-control selectfilemit" wire:loading.attr="disabled">
                                         @php
                                             for ($i = 1; $i <= 31; $i++) {
                                                 echo '<option value="' . $i . '">' . $i . '</option>';
-                                            }
-                                        @endphp
-                                    </select>
+                                        } @endphp </select>
                                     &nbsp;&nbsp;
 
                                     {{-- Busqueda por mes --}}
                                     <label for="mesemitinic">Mes</label>
-                                    <select wire:model.defer="mesemitinic" id="mesemitinic" wire:loading.attr="disabled"
-                                        class=" select form-control">
+                                    <select wire:model.defer="mesemitinic" id="mesemitinic"
+                                        class=" select form-control selectfilemit" wire:loading.attr="disabled">
                                         <?php foreach ($meses as $key => $value) {
                                             echo '<option value="' . $key . '">' . $value . '</option>';
                                         } ?>
@@ -167,8 +166,8 @@
 
                                     {{-- Busqueda por año --}}
                                     <label for="anioemitinic">Año</label>
-                                    <select wire:loading.attr="disabled" wire:model.defer="anioemitinic"
-                                        id="anioemitinic" class="select form-control">
+                                    <select wire:model.defer="anioemitinic" id="anioemitinic"
+                                        class="select form-control selectfilemit" wire:loading.attr="disabled">
                                         <?php foreach (array_reverse($anios) as $value) {
                                             echo '<option value="' . $value . '">' . $value . '</option>';
                                         } ?>
@@ -184,20 +183,18 @@
                                 <div class="form-inline mr-auto">
                                     {{-- Busqueda por dia --}}
                                     <label for="diaemitfin">Dia</label>
-                                    <select wire:model.defer="diaemitfin" id="diaemitfin" wire:loading.attr="disabled"
-                                        class="select form-control">
+                                    <select wire:model.defer="diaemitfin" id="diaemitfin"
+                                        class="select form-control selectfilemit" wire:loading.attr="disabled">
                                         @php
                                             for ($i = 1; $i <= 31; $i++) {
                                                 echo '<option value="' . $i . '">' . $i . '</option>';
-                                            }
-                                        @endphp
-                                    </select>
+                                        } @endphp </select>
                                     &nbsp;&nbsp;
 
                                     {{-- Busqueda por mes --}}
                                     <label for="mesemitfin">Mes</label>
-                                    <select wire:model.defer="mesemitfin" id="mesemitfin" wire:loading.attr="disabled"
-                                        class=" select form-control">
+                                    <select wire:model.defer="mesemitfin" id="mesemitfin"
+                                        class=" select form-control selectfilemit" wire:loading.attr="disabled">
                                         <?php foreach ($meses as $key => $value) {
                                             echo '<option value="' . $key . '">' . $value . '</option>';
                                         } ?>
@@ -206,9 +203,9 @@
 
                                     {{-- Busqueda por año --}}
                                     <label for="anioemitfin">Año</label>
-                                    <select wire:loading.attr="disabled" wire:model.defer="anioemitfin" id="anioemitfin"
-                                        class="select form-control">
-                                        <?php foreach (array_reverse($anios) as $value) {
+                                    <select wire:model.defer="anioemitfin" id="anioemitfin"
+                                        class="select form-control selectfilemit" wire:loading.attr="disabled">
+                                        <?php foreach (array_reverse($anios) as $key => $value) {
                                             echo '<option value="' . $value . '">' . $value . '</option>';
                                         } ?>
                                     </select>
@@ -218,6 +215,77 @@
                                         wire:click="ConsultSAT()">Buscar</button>
                                     &nbsp;&nbsp;
                                 </div>
+
+                                {{-- Js para los filtros de emitidos --}}
+                                <script>
+                                    $(document).ready(function() {
+                                        //Filtros para limitar el dia y mes 
+                                        function LimitDiasMes() {
+                                            //Antes de iniciar desblqueamos todos los meses
+                                            $('#mesemitfin option').attr('disabled', false);
+                                            //Y tambien los años
+                                            $('#anioemitfin option').attr('disabled', false);
+                                            //Dias
+                                            $('#diaemitfin option').attr('disabled', false);
+
+                                            //Obtenemos los valores iniciales
+                                            //Dia inicial
+                                            var DiaInic = $("#diaemitinic").val();
+                                            //Mes inicial
+                                            var MesInic = $("#mesemitinic").val();
+                                            //Año inicial
+                                            var AnioInic = $("#anioemitinic")[0].selectedIndex;
+                                            var AnioInicVal = $("#anioemitinic").val();
+
+                                            //Obtenemos lo finales
+                                            //Año final
+                                            var AnioFin = $("#anioemitfin").val();
+                                            //Mes final
+                                            var MesFin = $("#mesemitfin").val();
+
+                                            //En base a los datos obtenidos vamos a limitar la fecha
+                                            //Año
+                                            //Para este caso vamos a obtener el tamaño del select
+                                            var Totalopanio = $('#anioemitinic option').length;
+
+                                            for (var i = AnioInic + 1; i < Totalopanio; i++) {
+                                                $('#anioemitfin option:eq(' + i + ')').attr('disabled', true);
+                                            }
+
+                                            //Mes
+                                            if (AnioInicVal == AnioFin) {
+                                                for (var i = 0; i < MesInic - 1; i++) {
+                                                    //Bloquearemos el uso de los meses anteriores al seleccionado
+                                                    $('#mesemitfin option:eq(' + i + ')').attr('disabled', true);
+                                                }
+                                            } else {
+                                                //Si no es lo mismo desbloqueamos los dias
+                                                $('#mesemitfin option').attr('disabled', false);
+                                            }
+
+                                            //Para los dias solo se limitaran cuando estan en el mismo mes
+                                            //Obtenemos el valor del mes final
+                                            if (MesInic == MesFin && AnioInicVal == AnioFin) {
+                                                for (var i = 0; i < DiaInic - 1; i++) {
+                                                    //Bloquearemos el uso de los dias anteriores al seleccionado
+                                                    $('#diaemitfin option:eq(' + i + ')').attr('disabled', true);
+                                                }
+                                            } else {
+                                                //Si no es lo mismo desbloqueamos los dias
+                                                $('#diaemitfin option').attr('disabled', false);
+                                            }
+                                        }
+
+
+                                        //Ejecutamos la funcion al iniciar los filtros de emitidos
+                                        LimitDiasMes();
+
+                                        //Ahora realizaremos lo mismo pero cuando se haga un cambio en el select
+                                        $(".selectfilemit").change(function() {
+                                            LimitDiasMes();
+                                        });
+                                    });
+                                </script>
                             </div>
                         </div>
                     @endif
@@ -233,8 +301,12 @@
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center align-middle">XML <input wire:click="Allchk('xmlall')" wire:model="chkxml" type="checkbox" /></th>
-                                        <th class="text-center align-middle">R. Imp. <input wire:click="Allchk('pdfall')" wire:model="chkpdf" type="checkbox" /></th>
+                                        <th class="text-center align-middle">XML <input wire:click="Allchk('xmlall')"
+                                                wire:model="chkxml" type="checkbox" wire:loading.attr="disabled" /></th>
+                                        <th class="text-center align-middle">R. Imp. <input
+                                                wire:click="Allchk('pdfall')" wire:model="chkpdf" type="checkbox"
+                                                wire:loading.attr="disabled" />
+                                        </th>
                                         <th class="text-center align-middle">Acuse</th>
                                         <th class="text-center align-middle">Folio Fiscal</th>
                                         <th class="text-center align-middle">RFC</th>
@@ -350,9 +422,10 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
+                                                            wire:loading.attr="disabled"
                                                             wire:model.defer="cfdiselectxml"
                                                             style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                            class="mis-checkboxes ChkMasProv chkxml" type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -362,9 +435,10 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
+                                                            wire:loading.attr="disabled"
                                                             wire:model.defer="cfdiselectpdf"
                                                             style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                            class="mis-checkboxes ChkMasProv chkpdf" type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -376,9 +450,11 @@
                                                         <span class="invoice-amount"> - </span>
                                                     @else
                                                         <input value="{{ $listrecibi->uuid }}"
+                                                            wire:loading.attr="disabled"
                                                             wire:model.defer="cfdiselectpdfacuse"
                                                             style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                            class="mis-checkboxes ChkMasProv chkacuse"
+                                                            type="checkbox" />
                                                     @endif
                                                 </td>
 
@@ -478,8 +554,12 @@
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center align-middle">XML <input wire:click="Allchk('xmlall')" wire:model="chkxml" type="checkbox" /></th>
-                                        <th class="text-center align-middle">R. Imp. <input wire:click="Allchk('pdfall')" wire:model="chkpdf" type="checkbox" /></th>
+                                        <th class="text-center align-middle">XML <input wire:click="Allchk('xmlall')"
+                                                wire:model="chkxml" type="checkbox" wire:loading.attr="disabled" /></th>
+                                        <th class="text-center align-middle">R. Imp. <input
+                                                wire:click="Allchk('pdfall')" wire:model="chkpdf" type="checkbox"
+                                                wire:loading.attr="disabled" />
+                                        </th>
                                         <th class="text-center align-middle">Acuse</th>
                                         <th class="text-center align-middle">Folio Fiscal</th>
                                         <th class="text-center align-middle">RFC</th>
@@ -593,9 +673,10 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
+                                                            wire:loading.attr="disabled"
                                                             wire:model.defer="cfdiselectxml"
                                                             style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                            class="mis-checkboxes ChkMasProv chkxml" type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -605,9 +686,10 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
+                                                            wire:loading.attr="disabled"
                                                             wire:model.defer="cfdiselectpdf"
                                                             style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                            class="mis-checkboxes ChkMasProv chkpdf" type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -619,9 +701,11 @@
                                                         <span class="invoice-amount"> - </span>
                                                     @else
                                                         <input value="{{ $listrecibi->uuid }}"
+                                                            wire:loading.attr="disabled"
                                                             wire:model.defer="cfdiselectpdfacuse"
                                                             style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv" type="checkbox" />
+                                                            class="mis-checkboxes ChkMasProv chkacuse"
+                                                            type="checkbox" />
                                                     @endif
                                                 </td>
 
