@@ -638,9 +638,9 @@
                                                 }
                                                 
                                                 //XML
-                                                $rutaxml = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/XML/";
+                                                $rutaxml = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Emitidos/XML/";
                                                 //PDF
-                                                $rutapdf = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                                                $rutapdf = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Emitidos/PDF/";
                                                 
                                                 //Buscamos si exsiten los archivos (si estn descargados)
                                                 //XML

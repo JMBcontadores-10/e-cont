@@ -35,6 +35,25 @@ use PhpCfdi\CfdiSatScraper\Filters\DownloadType;
 //Funcion para aumentar la ejecucion de los procesos, lo utilizaremos para las descargas ()
 set_time_limit(3600); //Tiempo limite dado 1 hora
 
+//Clases para cambiar el nombre a lo archivos
+//XML
+class FileNameXML implements \PhpCfdi\CfdiSatScraper\Contracts\ResourceFileNamerInterface
+{
+    public function nameFor(string $uuid): string
+    {
+        return strtoupper($uuid) . '.xml';
+    }
+}
+
+//PDF
+class FileNamePDF implements \PhpCfdi\CfdiSatScraper\Contracts\ResourceFileNamerInterface
+{
+    public function nameFor(string $uuid): string
+    {
+        return strtoupper($uuid) . '.pdf';
+    }
+}
+
 class Descargas extends Component
 {
     //Variables globales
@@ -278,14 +297,17 @@ class Descargas extends Component
                 //Realizamos la descarga
                 //XML
                 $satScraper->resourceDownloader(ResourceType::xml(), $listxmlreci)
+                    ->setResourceFileNamer(new FileNameXML())
                     ->saveTo($rutaxml, true, 0777);
 
                 //PDF
                 $satScraper->resourceDownloader(ResourceType::pdf(), $listpdfreci)
+                    ->setResourceFileNamer(new FileNamePDF())
                     ->saveTo($rutapdf, true, 0777);
 
                 //PDF Acuse
                 $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $listpdfacusereci)
+                    ->setResourceFileNamer(new FileNamePDF())
                     ->saveTo($rutapdf, true, 0777);
 
 
@@ -505,6 +527,8 @@ class Descargas extends Component
                     }
                 }
 
+
+
                 //Para realizar las descargas tenemos que tener una lista de tipo metadata por lo que realizaremos la consulta
                 //Emitidos
 
@@ -538,6 +562,7 @@ class Descargas extends Component
                     //Realizamos la descarga
                     //XML
                     $satScraper->resourceDownloader(ResourceType::xml(), $cfdiemitxml)
+                        ->setResourceFileNamer(new FileNameXML())
                         ->saveTo($rutaxml, true, 0777);
 
                     //Vamos a comporbar si la carpeta tiene XML descargados
@@ -569,6 +594,7 @@ class Descargas extends Component
                     //Realizamos la descarga
                     //PDF
                     $satScraper->resourceDownloader(ResourceType::pdf(), $cfdiemitxml)
+                        ->setResourceFileNamer(new FileNamePDF())
                         ->saveTo($rutapdf, true, 0777);
                 }
 
@@ -592,6 +618,7 @@ class Descargas extends Component
                     //Realizamos la descarga
                     //PDF Acuse
                     $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $cfdiemitxml)
+                        ->setResourceFileNamer(new FileNamePDF())
                         ->saveTo($rutapdfacu, true, 0777);
                 }
 
