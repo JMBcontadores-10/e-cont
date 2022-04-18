@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+<link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,11 +16,11 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/code.js') }}" defer></script>
     <script src="{{ asset('js/numeros.js') }}" defer></script>
-    <script  src="{{ asset('js/chequesytrasncontrol.js') }}" defer > </script>
-    <script  src="{{ asset('js/General.js') }}" defer > </script>
+    <script src="{{ asset('js/chequesytrasncontrol.js') }}" defer> </script>
+    <script src="{{ asset('js/General.js') }}" defer> </script>
 
     <script src="{{ asset('js/calendar.js') }}" defer></script>
-    <script src="{{ asset('js/calendari.js')}}" defer></script>
+    <script src="{{ asset('js/calendari.js') }}" defer></script>
     <script src="https://kit.fontawesome.com/4b9ba14b0f.js" crossorigin="anonymous"></script>
 
     <script src="{{ asset('js/fullcalendar.js') }}" defer></script>
@@ -27,7 +28,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     <!-- Datatable-->
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" defer></script>
-    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
 
     <!-- Fonts -->
     <link rel="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -44,57 +45,62 @@
     <!-- Styles -->
     <link href="{{ asset('css/fullcalendar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-   {{-- <link href="{{ asset('css/styles.css') }}" rel="stylesheet"> --}}
-   <link href="{{ asset('css/seccionRelacionados.css') }}" rel="stylesheet" >
-<link href="{{ asset('css/estilos_generales.css')}}" rel="stylesheet">
-  {{--------- estilos para el dashbard  ---}}
-  {{--------- estilos para el dashbard  ---}}
+    {{-- <link href="{{ asset('css/styles.css') }}" rel="stylesheet"> --}}
+    <link href="{{ asset('css/seccionRelacionados.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/estilos_generales.css') }}" rel="stylesheet">
+    {{-- ------- estilos para el dashbard - --}}
+    {{-- ------- estilos para el dashbard - --}}
 
-   <!-- BEGIN: Vendor CSS-->
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/vendors.min.css') }}">
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/charts/apexcharts.css') }}">
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/extensions/swiper.min.css') }}">
-   <!-- END: Vendor CSS-->
-
-
-       <!-- BEGIN: Vendor CSS-->
-       <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/vendors.min.css')}}">
-       <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css')}}">
-       <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/tables/datatable/responsive.bootstrap4.min.css')}}">
-       <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/tables/datatable/dataTables.checkboxes.css')}}">
-       <link rel="stylesheet"  href="{{ asset('css/app-assets/vendors/css/tables/datatable/buttons.bootstrap4.min.css')}}">
-       <!-- END: Vendor CSS-->
-
-   <!-- BEGIN: Theme CSS-->
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/bootstrap.min.css')}}">
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/bootstrap-extended.min.css')}}">
-   <link rel="stylesheet"  href="{{ asset('app-assets/css/colors.min.css')}}">
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/components.min.css')}}">
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/themes/dark-layout.min.css')}}">
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/themes/semi-dark-layout.min.css')}}">
-   <!-- END: Theme CSS-->
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" href="{{ asset('css/app-assets/vendors/css/vendors.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-assets/vendors/css/charts/apexcharts.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-assets/vendors/css/extensions/swiper.min.css') }}">
+    <!-- END: Vendor CSS-->
 
 
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/pages/app-invoice.min.css')}}">
-   <!-- END: Page CSS-->
+    <!-- BEGIN: Vendor CSS-->
+    <link rel="stylesheet" href="{{ asset('css/app-assets/vendors/css/vendors.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('css/app-assets/vendors/css/tables/datatable/dataTables.bootstrap4.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('css/app-assets/vendors/css/tables/datatable/responsive.bootstrap4.min.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('css/app-assets/vendors/css/tables/datatable/dataTables.checkboxes.css') }}">
+    <link rel="stylesheet"
+        href="{{ asset('css/app-assets/vendors/css/tables/datatable/buttons.bootstrap4.min.css') }}">
+    <!-- END: Vendor CSS-->
 
-   <!-- BEGIN: Page CSS-->
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/core/menu/menu-types/vertical-menu.min.css')}}">
-   <link rel="stylesheet"  href="{{ asset('css/app-assets/css/pages/dashboard-ecommerce.min.css')}}">
-   <!-- END: Page CSS-->
-
-   <!-- BEGIN: Custom CSS-->
-   <link rel="stylesheet"  href="{{ asset('css/assets/css/style.css')}}">
-   <!-- END: Custom CSS-->
-
-   <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700" rel="stylesheet">
-     {{--------- end estilos para el dashbard  ---}}
+    <!-- BEGIN: Theme CSS-->
+    <link rel="stylesheet" href="{{ asset('css/app-assets/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-assets/css/bootstrap-extended.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('app-assets/css/colors.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-assets/css/components.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-assets/css/themes/dark-layout.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-assets/css/themes/semi-dark-layout.min.css') }}">
+    <!-- END: Theme CSS-->
 
 
+    <link rel="stylesheet" href="{{ asset('css/app-assets/css/pages/app-invoice.min.css') }}">
+    <!-- END: Page CSS-->
+
+    <!-- BEGIN: Page CSS-->
+    <link rel="stylesheet" href="{{ asset('css/app-assets/css/core/menu/menu-types/vertical-menu.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-assets/css/pages/dashboard-ecommerce.min.css') }}">
+    <!-- END: Page CSS-->
+
+    <!-- BEGIN: Custom CSS-->
+    <link rel="stylesheet" href="{{ asset('css/assets/css/style.css') }}">
+    <!-- END: Custom CSS-->
+
+    <link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,600%7CIBM+Plex+Sans:300,400,500,600,700"
+        rel="stylesheet">
+    {{-- ------- end estilos para el dashbard - --}}
 
 
 
-     {{--------- end estilos para el dashbard  ---}}
+
+
+    {{-- ------- end estilos para el dashbard - --}}
 
 
     <script src="https://code.highcharts.com/highcharts.js"></script>
@@ -114,7 +120,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet" />
 
-      {{-----------scripts dashboard --------}}
+    {{-- ---------scripts dashboard ------ --}}
 
 
     <!-- BEGIN: Vendor JS-->
@@ -125,7 +131,7 @@
     <!-- BEGIN Vendor JS-->
 
     <!-- BEGIN: Page Vendor JS-->
-    <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js') }}"defer></script>
+    <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js') }}" defer></script>
     <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/dataTables.bootstrap4.min.js') }}" defer></script>
     <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/datatables.checkboxes.min.js') }}" defer></script>
     <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/dataTables.buttons.min.js') }}" defer></script>
@@ -152,23 +158,23 @@
 
 
 
-      {{----------- end scripts dashboard    ---}}
+    {{-- --------- end scripts dashboard - --}}
 
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-@stack('styles')
+    @stack('styles')
 
-  <!-- estilos para PIKADAY calendario /para el uso de livewire input-date-->
-  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
-  <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
-<!-- cdn para push notifiaciones  -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/0.0.11/push.min.js"></script>
+    <!-- estilos para PIKADAY calendario /para el uso de livewire input-date-->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/pikaday/css/pikaday.css">
+    <script src="https://cdn.jsdelivr.net/npm/pikaday/pikaday.js"></script>
+    <!-- cdn para push notifiaciones  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/push.js/0.0.11/push.min.js"></script>
 
 
-  <!-- Alertas Links -->
-  <script>
+    <!-- Alertas Links -->
+    <script>
         function alerta() {
             alert("¡En Construcción!");
         }
@@ -178,179 +184,233 @@
 </head>
 
 
-<body class="vertical-layout vertical-menu-modern 2-columns navbar-sticky footer-static" data-open="click" data-menu="vertical-menu-modern" data-col="2-columns" >
+<body class="vertical-layout vertical-menu-modern 2-columns navbar-sticky footer-static" data-open="click"
+    data-menu="vertical-menu-modern" data-col="2-columns">
     <!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
-<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-<!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
-<!-- CDN´S para validacion de tamaño filepond</body> -->
-<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
-<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-<!-- CDN´S para validacion de tamaño filepond</body> -->
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js">
+    </script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
+    <!-- CDN´S para validacion de tamaño filepond</body> -->
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js">
+    </script>
+    <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+    <!-- CDN´S para validacion de tamaño filepond</body> -->
 
 
     <script src="https://unpkg.com/filepond@^4/dist/filepond.js"></script>
     <script>
-   $(document).ready(function() {
-    $('#page-loader').fadeOut(500);
-    mostrarSaludo()
-});
-            </script>
+        $(document).ready(function() {
+            $('#page-loader').fadeOut(500);
+            mostrarSaludo()
+        });
+    </script>
 
-@livewire('livewire-ui-modal')
-<!--================ codigo body=======================================  -->
+    @livewire('livewire-ui-modal')
+    <!--================ codigo body=======================================  -->
 
-<!-- begin::preloader-->
-<div id="page-loader"><span class="preloader-interior"></span></div>
-<!-- end::preloader -->
+    <!-- begin::preloader-->
+    <div id="page-loader"><span class="preloader-interior"></span></div>
+    <!-- end::preloader -->
 
-@if(Auth::check())
+    @if (Auth::check())
+        auth()->user();
 
-auth()->user();
-
-$tipo=auth()->user->tipo;
-{{--$rfc=auth()->user()->RFC--}}
-$empresa=auth()->user->tipo;
-
-          @endif
+        $tipo=auth()->user->tipo;
+        {{-- $rfc=auth()->user()->RFC --}}
+        $empresa=auth()->user->tipo;
+    @endif
 
 
+    <!-- BEGIN: Header-->
+    <div class="header-navbar-shadow"></div>
+    <nav class="header-navbar main-header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top ">
+        <div class="navbar-wrapper">
+            <div class="navbar-container content">
+                <div class="navbar-collapse" id="navbar-mobile">
+                    <div class="mr-auto float-left bookmark-wrapper d-flex align-items-center">
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item mobile-menu d-xl-none mr-auto"><a
+                                    class="nav-link nav-menu-main menu-toggle hidden-xs" href="javascript:void(0);"><i
+                                        class="ficon bx bx-menu"></i></a></li>
+                        </ul>
+                        <ul class="nav navbar-nav bookmark-icons">
+                            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link"
+                                    data-toggle="tooltip" data-placement="top" title="Email"><i
+                                        class="ficon bx bx-envelope"></i></a></li>
+
+                            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link"
+                                    data-toggle="tooltip" data-placement="top" title="Chat"><i
+                                        class="ficon bx bx-chat"></i></a></li>
+
+                            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link"
+                                    data-toggle="tooltip" data-placement="top" title="Todo"><i
+                                        class="ficon bx bx-check-circle"></i></a></li>
+
+                            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link"
+                                    data-toggle="tooltip" data-placement="top" title="Calendario"><i
+                                        class="ficon bx bx-calendar-alt"></i></a></li>
+                        </ul>
+
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item d-none d-lg-block"><a class="nav-link bookmark-star"><i
+                                        class="ficon bx bx-star warning"></i></a>
+                                <div class="bookmark-input search-input">
+                                    <div class="bookmark-input-icon"><i class="bx bx-search primary"></i></div>
+                                    <input class="form-control input" type="text" placeholder="Explorar..." tabindex="0"
+                                        data-search="template-search">
+                                    <ul class="search-list"></ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
 
 
+                    <ul class="nav navbar-nav float-right">
 
-
-
-
-
-<!-- BEGIN: Header-->
-<div class="header-navbar-shadow"></div>
-<nav class="header-navbar main-header-navbar navbar-expand-lg navbar navbar-with-menu fixed-top ">
-  <div class="navbar-wrapper">
-    <div class="navbar-container content">
-      <div class="navbar-collapse" id="navbar-mobile">
-        <div class="mr-auto float-left bookmark-wrapper d-flex align-items-center">
-          <ul class="nav navbar-nav">
-            <li class="nav-item mobile-menu d-xl-none mr-auto"><a class="nav-link nav-menu-main menu-toggle hidden-xs" href="javascript:void(0);"><i class="ficon bx bx-menu"></i></a></li>
-          </ul>
-          <ul class="nav navbar-nav bookmark-icons">
-            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link"  data-toggle="tooltip" data-placement="top" title="Email"><i class="ficon bx bx-envelope"></i></a></li>
-
-            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link"  data-toggle="tooltip" data-placement="top" title="Chat"><i class="ficon bx bx-chat"></i></a></li>
-
-            <li class="nav-item d-none d-lg-block" onclick="alerta()" ><a class="nav-link"  data-toggle="tooltip" data-placement="top" title="Todo"><i class="ficon bx bx-check-circle"></i></a></li>
-
-            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link" data-toggle="tooltip" data-placement="top" title="Calendario"><i class="ficon bx bx-calendar-alt"></i></a></li>
-          </ul>
-
-          <ul class="nav navbar-nav">
-            <li class="nav-item d-none d-lg-block"><a class="nav-link bookmark-star"><i class="ficon bx bx-star warning"></i></a>
-              <div class="bookmark-input search-input">
-                <div class="bookmark-input-icon"><i class="bx bx-search primary"></i></div>
-                <input class="form-control input" type="text" placeholder="Explorar..." tabindex="0" data-search="template-search">
-                <ul class="search-list"></ul>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-
-        <ul class="nav navbar-nav float-right">
-
-        <!--
+                        <!--
           <li class="dropdown dropdown-language nav-item"><a class="dropdown-toggle nav-link" id="dropdown-flag" href="javascript:void(0);" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="flag-icon flag-icon-us"></i><span class="selected-language">English</span></a>
             <div class="dropdown-menu" aria-labelledby="dropdown-flag"><a class="dropdown-item" href="javascript:void(0);" data-language="en"><i class="flag-icon flag-icon-us mr-50"></i> English</a><a class="dropdown-item" href="javascript:void(0);" data-language="fr"><i class="flag-icon flag-icon-fr mr-50"></i> French</a><a class="dropdown-item" href="javascript:void(0);" data-language="de"><i class="flag-icon flag-icon-de mr-50"></i> German</a><a class="dropdown-item" href="javascript:void(0);" data-language="pt"><i class="flag-icon flag-icon-pt mr-50"></i> Portuguese</a></div>
           </li>
         -->
-          <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i class="ficon bx bx-fullscreen"></i></a></li>
-          <li class="nav-item nav-search"><a class="nav-link nav-link-search"><i class="ficon bx bx-search"></i></a>
-            <div class="search-input">
-              <div class="search-input-icon"><i class="bx bx-search primary"></i></div>
-              <input class="input" type="text" placeholder="Explorar..." tabindex="-1" data-search="template-search">
-              <div class="search-input-close"><i class="bx bx-x"></i></div>
-              <ul class="search-list"></ul>
+                        <li class="nav-item d-none d-lg-block"><a class="nav-link nav-link-expand"><i
+                                    class="ficon bx bx-fullscreen"></i></a></li>
+                        <li class="nav-item nav-search"><a class="nav-link nav-link-search"><i
+                                    class="ficon bx bx-search"></i></a>
+                            <div class="search-input">
+                                <div class="search-input-icon"><i class="bx bx-search primary"></i></div>
+                                <input class="input" type="text" placeholder="Explorar..." tabindex="-1"
+                                    data-search="template-search">
+                                <div class="search-input-close"><i class="bx bx-x"></i></div>
+                                <ul class="search-list"></ul>
+                            </div>
+                        </li>
+
+                        <!--========NOTIFICATION SECTION=============== -->
+
+
+                        <livewire:notification-secction>
+
+
+                            <!--========NOTIFICATION SECTION=============== -->
+
+                            <li class="dropdown dropdown-user nav-item"><a
+                                    class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0);"
+                                    data-toggle="dropdown">
+                                    <div class="user-nav d-sm-flex d-none"><span
+                                            class="user-name">{{ ucfirst(auth()->user()->nombre) }}</span><span
+                                            class="user-status text-muted"><i
+                                                style="color:#90EE90; box-shadow: 0 0 5px #4f9;"
+                                                class="fas fa-circle"></i>&nbsp;Conectado</span></div><span><img
+                                            class="round" src="img/user.png" alt="avatar" height="40"
+                                            width="40"></span>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item"
+                                        href="page-user-profile.html"><i class="bx bx-user mr-50"></i> Editar
+                                        Perfil</a><a class="dropdown-item" href="app-email.html"><i
+                                            class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item"
+                                        href="app-todo.html"><i class="bx bx-check-square mr-50"></i>Tareas</a><a
+                                        class="dropdown-item" href="app-chat.html"><i
+                                            class="bx bx-message mr-50"></i>Chats</a>
+                                    <div class="dropdown-divider mb-0"></div>
+                                    <form action="{{ route('logout') }}" method="POST">
+                                        @csrf
+                                        <input class="dropdown-item" type="submit" value="Cerrar sesión">
+                                    </form>
+
+                                </div>
+                            </li>
+                    </ul>
+                </div>
             </div>
-          </li>
+        </div>
+    </nav>
 
-<!--========NOTIFICATION SECTION=============== -->
-
-
-<livewire:notification-secction>
+    <!-- END: Header-->
 
 
-    <!--========NOTIFICATION SECTION=============== -->
+    <!-- BEGIN: Main Menu-->
+    <div style="background-color:#397ac4;" class="main-menu menu-fixed menu-light menu-accordion menu-shadow"
+        data-scroll-to-active="true">
+        <div class="navbar-header">
+            <ul class="nav navbar-nav flex-row">
+                <li class="nav-item mr-auto" id="Inicio"><a class="navbar-brand" href="{{ url('modules') }}">
+                        <div class="brand-logo">
 
-    <li class="dropdown dropdown-user nav-item"><a class="dropdown-toggle nav-link dropdown-user-link" href="javascript:void(0);" data-toggle="dropdown">
-        <div class="user-nav d-sm-flex d-none"><span class="user-name">{{ucfirst(auth()->user()->nombre)}}</span><span class="user-status text-muted"><i style="color:#90EE90; box-shadow: 0 0 5px #4f9;" class="fas fa-circle"></i>&nbsp;Conectado</span></div><span><img class="round" src="img/user.png" alt="avatar" height="40" width="40"></span></a>
-      <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item" href="page-user-profile.html"><i class="bx bx-user mr-50"></i> Editar Perfil</a><a class="dropdown-item" href="app-email.html"><i class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item" href="app-todo.html"><i class="bx bx-check-square mr-50"></i>Tareas</a><a class="dropdown-item" href="app-chat.html"><i class="bx bx-message mr-50"></i>Chats</a>
-        <div class="dropdown-divider mb-0"></div>
-        <form action="{{ route('logout') }}" method="POST">
-          @csrf
-          <input class="dropdown-item" type="submit" value="Cerrar sesión">
-      </form>
+                            <img src="img/logo-contarapp-03.png" alt="" class="logo"> </img>
 
-      </div>
-    </li>
-  </ul>
-</div>
-</div>
-</div>
-</nav>
+                        </div>
+                        <h2 class="brand-text mb-0" style="color:#FFFFFF">E-Cont</h2>
+                    </a></li>
+                <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i
+                            class="bx bx-x d-block d-xl-none font-medium-4 primary"></i><i
+                            class="toggle-icon bx bx-disc font-medium-4 d-none d-xl-block primary"
+                            data-ticon="bx-disc"></i></a></li>
+            </ul>
+        </div>
+        <div class="shadow-bottom"></div>
+        <div class="main-menu-content">
 
-<!-- END: Header-->
+            <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation"
+                data-icon-style="lines">
 
+                <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span
+                            class="menu-title text-truncate" data-i18n="Dashboard">Módulos</span></a>
+                    <ul class="menu-content">
 
-<!-- BEGIN: Main Menu-->
-<div style="background-color:#397ac4;"  class="main-menu menu-fixed menu-light menu-accordion menu-shadow" data-scroll-to-active="true">
-  <div class="navbar-header">
-    <ul class="nav navbar-nav flex-row">
-      <li class="nav-item mr-auto" id="Inicio" ><a class="navbar-brand" href="{{ url('modules') }}">
-          <div class="brand-logo">
+                        <li id="chequesytransferencias"><a class="d-flex align-items-center"
+                                href="{{ url('chequesytransferencias') }}"><i class="bx bx-right-arrow-alt"></i><span
+                                    class="menu-item text-truncate" data-i18n="eCommerce">Cheques y
+                                    Transferencias</span></a>
+                        </li>
+                        <li id="cuentasporpagar"><a class="d-flex align-items-center"
+                                href="{{ url('cuentasporpagar') }}"><i class="bx bx-right-arrow-alt"></i><span
+                                    class="menu-item text-truncate" data-i18n="Analytics">Cuentas
+                                    por Pagar</span></a>
+                        </li>
+                        <li id="descargasv2"><a class="d-flex align-items-center" href="{{ url('descargasv2') }}"><i
+                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                    data-i18n="Analytics">Descargas</span></a>
+                        </li>
+                        <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i
+                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                    data-i18n="Analytics">Nóminas</span></a>
+                        </li>
+                        <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()" href=""><i
+                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                    data-i18n="Analytics">Expediente Digital</span></a>
+                        </li>
 
-          <img src="img/logo-contarapp-03.png" alt="" class= "logo"> </img>
+                        {{-- Modulo solo para gasolinerias --}}
+                        @if (auth()->user()->gas == 1)
+                            <li id="volumetrico"><a class="d-flex align-items-center" href="{{ 'volumetrico' }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Control
+                                        Volumetrico</span></a>
+                            </li>
+                        @endif
 
-          </div>
-          <h2 class="brand-text mb-0" style="color:#FFFFFF">E-Cont</h2></a></li>
-      <li class="nav-item nav-toggle"><a class="nav-link modern-nav-toggle pr-0" data-toggle="collapse"><i class="bx bx-x d-block d-xl-none font-medium-4 primary"></i><i class="toggle-icon bx bx-disc font-medium-4 d-none d-xl-block primary" data-ticon="bx-disc"></i></a></li>
-    </ul>
-  </div>
-  <div class="shadow-bottom"></div>
-  <div class="main-menu-content">
+                        <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i
+                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                    data-i18n="Analytics">Expediente Fiscal</span></a>
+                        </li>
+                        <li id="auditoria"><a class="d-flex align-items-center" href="{{ 'auditoria' }}"><i
+                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                    data-i18n="Analytics">Auditoria</span></a>
+                        </li>
+                        <li id="consultas"><a class="d-flex align-items-center" href="{{ 'consultas' }}"><i
+                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                    data-i18n="Analytics">Consultas</span></a>
+                        </li>
+                        <li id="monitoreo"><a class="d-flex align-items-center" href="{{ 'monitoreo' }}"><i
+                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                    data-i18n="Analytics">Monitoreo de facturación</span></a>
+                        </li>
+                    </ul>
 
-    <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation" data-icon-style="lines">
+                </li>
 
-      <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span class="menu-title text-truncate" data-i18n="Dashboard">Módulos</span></a>
-        <ul class="menu-content">
-
-          <li id="chequesytransferencias"><a class="d-flex align-items-center" href="{{ url('chequesytransferencias') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="eCommerce">Cheques y Transferencias</span></a>
-          </li>
-          <li id="cuentasporpagar"><a class="d-flex align-items-center" href="{{ url('cuentasporpagar') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Cuentas por Pagar</span></a>
-          </li>
-          <li id="descargasv2"><a class="d-flex align-items-center" href="{{ url('descargasv2') }}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Descargas</span></a>
-          </li>
-          <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Nóminas</span></a>
-          </li>
-          <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()" href=""><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Expediente Digital</span></a>
-          </li>
-
-          {{--Modulo solo para gasolinerias--}}
-          @if (auth()->user()->gas == 1)
-          <li id="volumetrico"><a class="d-flex align-items-center" href="{{('volumetrico')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Control Volumetrico</span></a>
-          </li>
-          @endif
-
-          <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Expediente Fiscal</span></a>
-          </li>
-          <li id="auditoria"><a class="d-flex align-items-center" href="{{('auditoria')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Auditoria</span></a>
-          </li>
-          <li id="consultas"><a class="d-flex align-items-center" href="{{('consultas')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Consultas</span></a>
-          </li>
-          <li id="monitoreo"><a class="d-flex align-items-center" href="{{('monitoreo')}}"><i class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate" data-i18n="Analytics">Monitoreo de facturación</span></a>
-          </li>
-        </ul>
-
-      </li>
-
-        <!--
+                <!--
       <li class=" navigation-header text-truncate"><span data-i18n="Apps">Apps</span>
       </li>
       <li class=" nav-item"><a href="app-email.html"><i class="#" data-icon="envelope-pull"></i><span class="menu-title text-truncate" data-i18n="Email">Email</span></a>
@@ -396,7 +456,7 @@ $empresa=auth()->user->tipo;
 
                     -->
 
-      <!--
+                <!--
       <li class=" navigation-header text-truncate"><span data-i18n="UI Elements">UI Elements</span>
       </li>
       <li class=" nav-item"><a href="#"><i class="#" data-icon="retweet"></i><span class="menu-title text-truncate" data-i18n="Content">Content</span></a>
@@ -489,7 +549,7 @@ $empresa=auth()->user->tipo;
       </li>
 
                     -->
-        <!--
+                <!--
       <li class=" navigation-header text-truncate"><span data-i18n="Forms &amp; Tables">Forms &amp; Tables</span>
       </li>
       <li class=" nav-item"><a href="#"><i class="#" data-icon="check"></i><span class="menu-title text-truncate" data-i18n="Form Elements">Form Elements</span></a>
@@ -534,7 +594,7 @@ $empresa=auth()->user->tipo;
       </li>
                     -->
 
-        <!--
+                <!--
       <li class=" navigation-header text-truncate"><span data-i18n="Pages">Pages</span>
       </li>
       <li class=" nav-item"><a href="page-user-profile.html"><i class="#" data-icon="user"></i><span class="menu-title text-truncate" data-i18n="User Profile">User Profile</span></a>
@@ -662,10 +722,10 @@ $empresa=auth()->user->tipo;
 
       -->
 
-    </ul>
-  </div>
-</div>
-<!-- END: Main Menu-->
+            </ul>
+        </div>
+    </div>
+    <!-- END: Main Menu-->
 
 
 
@@ -675,14 +735,14 @@ $empresa=auth()->user->tipo;
 
 
 
-@yield('content');
+    @yield('content');
 
-@livewireScripts
+    @livewireScripts
 
 
 
- <!-- BEGIN: Customizer-->
- <!--
+    <!-- BEGIN: Customizer-->
+    <!--
  <div class="customizer d-none d-md-block"><a class="customizer-toggle" href="javascript:void(0);"><i class="bx bx-cog bx bx-spin white"></i></a><div class="customizer-content p-2">
     <h4 class="text-uppercase mb-0">Theme Customizer</h4>
     <small>Customize & Preview in Real Time</small>
@@ -889,179 +949,177 @@ $empresa=auth()->user->tipo;
                     -->
 
 
-  <div class="widget-chat widget-chat-demo d-none">
-    <div class="card mb-0">
-      <div class="card-header border-bottom p-0">
-        <div class="media m-75">
-          <a href="JavaScript:void(0);">
-            <div class="avatar mr-75">
-              <img src="../../../app-assets/images/portrait/small/avatar-s-2.jpg" alt="avtar images" width="32"
-                height="32">
-              <span class="avatar-status-online"></span>
+    <div class="widget-chat widget-chat-demo d-none">
+        <div class="card mb-0">
+            <div class="card-header border-bottom p-0">
+                <div class="media m-75">
+                    <a href="JavaScript:void(0);">
+                        <div class="avatar mr-75">
+                            <img src="../../../app-assets/images/portrait/small/avatar-s-2.jpg" alt="avtar images"
+                                width="32" height="32">
+                            <span class="avatar-status-online"></span>
+                        </div>
+                    </a>
+                    <div class="media-body">
+                        <h6 class="media-heading mb-0 pt-25"><a href="javaScript:void(0);">Kiara Cruiser</a></h6>
+                        <span class="text-muted font-small-3">Active</span>
+                    </div>
+                </div>
+                <div class="heading-elements">
+                    <i class="bx bx-x widget-chat-close float-right my-auto cursor-pointer"></i>
+                </div>
             </div>
-          </a>
-          <div class="media-body">
-            <h6 class="media-heading mb-0 pt-25"><a href="javaScript:void(0);">Kiara Cruiser</a></h6>
-            <span class="text-muted font-small-3">Active</span>
-          </div>
+            <div class="card-body widget-chat-container widget-chat-demo-scroll">
+                <div class="chat-content">
+                    <div class="badge badge-pill badge-light-secondary my-1">today</div>
+                    <div class="chat">
+                        <div class="chat-body">
+                            <div class="chat-message">
+                                <p>How can we help? 😄</p>
+                                <span class="chat-time">7:45 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat chat-left">
+                        <div class="chat-body">
+                            <div class="chat-message">
+                                <p>Hey John, I am looking for the best admin template.</p>
+                                <p>Could you please help me to find it out? 🤔</p>
+                                <span class="chat-time">7:50 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat">
+                        <div class="chat-body">
+                            <div class="chat-message">
+                                <p>Stack admin is the responsive bootstrap 4 admin template.</p>
+                                <span class="chat-time">8:01 AM</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer border-top p-1">
+                <form class="d-flex" onsubmit="widgetChatMessageDemo();" action="javascript:void(0);">
+                    <input type="text" class="form-control chat-message-demo mr-75" placeholder="Type here...">
+                    <button type="submit" class="btn btn-primary glow px-1"><i class="bx bx-paper-plane"></i></button>
+                </form>
+            </div>
         </div>
-        <div class="heading-elements">
-          <i class="bx bx-x widget-chat-close float-right my-auto cursor-pointer"></i>
-        </div>
-      </div>
-      <div class="card-body widget-chat-container widget-chat-demo-scroll">
-        <div class="chat-content">
-          <div class="badge badge-pill badge-light-secondary my-1">today</div>
-          <div class="chat">
-            <div class="chat-body">
-              <div class="chat-message">
-                <p>How can we help? 😄</p>
-                <span class="chat-time">7:45 AM</span>
-              </div>
-            </div>
-          </div>
-          <div class="chat chat-left">
-            <div class="chat-body">
-              <div class="chat-message">
-                <p>Hey John, I am looking for the best admin template.</p>
-                <p>Could you please help me to find it out? 🤔</p>
-                <span class="chat-time">7:50 AM</span>
-              </div>
-            </div>
-          </div>
-          <div class="chat">
-            <div class="chat-body">
-              <div class="chat-message">
-                <p>Stack admin is the responsive bootstrap 4 admin template.</p>
-                <span class="chat-time">8:01 AM</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer border-top p-1">
-        <form class="d-flex" onsubmit="widgetChatMessageDemo();" action="javascript:void(0);">
-          <input type="text" class="form-control chat-message-demo mr-75" placeholder="Type here...">
-          <button type="submit" class="btn btn-primary glow px-1"><i class="bx bx-paper-plane"></i></button>
-        </form>
-      </div>
     </div>
-  </div>
-  <!-- widget chat demo ends -->
+    <!-- widget chat demo ends -->
 
-      </div>
-      <div class="sidenav-overlay"></div>
-      <div class="drag-target"></div>
+    </div>
+    <div class="sidenav-overlay"></div>
+    <div class="drag-target"></div>
 
-      <!-- BEGIN: Footer-->
-   {{-- <footer class="footer footer-static footer-light">
-        <p class="clearfix mb-0"><span class="float-left d-inline-block">{{ date('Y') }} &copy; E-Cont</span><span class="float-right d-sm-inline-block d-none">Creado por<a class="text-uppercase" href="https://1.envato.market/pixinvent_portfolio" target="_blank">JMB CONTADORES</a></span>
-          <button class="btn btn-primary btn-icon scroll-top" type="button"><i class="bx bx-up-arrow-alt"></i></button>
-        </p>
-      </footer>--}}
-      <!-- END: Footer-->
+    <!-- BEGIN: Footer-->
+    {{-- <footer class="footer footer-static footer-light">
+    <p class="clearfix mb-0"><span class="float-left d-inline-block">{{ date('Y') }} &copy; E-Cont</span><span
+        class="float-right d-sm-inline-block d-none">Creado por<a class="text-uppercase"
+          href="https://1.envato.market/pixinvent_portfolio" target="_blank">JMB CONTADORES</a></span>
+      <button class="btn btn-primary btn-icon scroll-top" type="button"><i class="bx bx-up-arrow-alt"></i></button>
+    </p>
+  </footer> --}}
+    <!-- END: Footer-->
 
 
 </body>
 <livewire:notification-content>
-<footer style="margin-top: 20px;">
-  {{--  <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |
-        JMB Contadores</p>--}}
-</footer>
-@stack('scripts')
-</html>
- <!-- =============codigo body fin====================================== -->
-{{--
-<div id="page-loader"><span class="preloader-interior"></span></div>
-<div id="app">
-    @if (Auth::check() && !Route::is('home', 'login', 'modules', 'log') && !Route::is('construccion'))
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/modules') }}">
-                    <img src="img/e-conta-logo-01.png" width="200px">
-                </a>
-                --}}
-                {{-- <button class="navbar-toggler" type="button" data-toggle="collapse"
-                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button> --}}
+    <footer style="margin-top: 20px;">
+        {{-- <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |
+      JMB Contadores</p> --}}
+    </footer>
+    @stack('scripts')
 
-             {{--    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-                    </ul>
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            {{-- @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                            @if (Route::has('registro'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ url('registro') }}">{{ __('Registro') }}</a>
-                                </li>
-                            @endif --}}
-                       {{-- @else
-                            <div>
-                                <a href="{{ route('logout') }}" class="nav-item button1"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                    {{ __('Cerrar Sesión') }}
-                                </a>
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                    class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <div>
-            <nav class="navbar navbar-expand-lg navbar-light " style="background-color:; position: absolute; left:10%; ">
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                  <div class="navbar-nav">
-                    @if (Session::get('tipoU') == '2')
-                    <a class="nav-item nav-link" href="{{ url('descargasv2') }}">Descargas</a>
-                    <a class="nav-item nav-link" href="{{ url('consultas') }}">Consultas</a>
-                    @endif
-                    <a class="nav-item nav-link" href="{{ url('construccion') }}">Expediente Digital</a>
-                    <a class="nav-item nav-link" href="{{ url('volumetrico') }}">Control Volumétrico</a>
-                    <a class="nav-item nav-link" href="{{ url('cuentasporpagar') }}">Cuentas por pagar</a>
-                    <a class="nav-item nav-link" href="{{ url('cheques-transferencias') }}">Cheques y Transferencias</a>
-                    <a class="nav-item nav-link" href="{{ url('construccion') }}">Expediente Fiscal</a>
-                    <a class="nav-item nav-link" href="{{ url('construccion') }}">Nómina</a>
-                    @if (Session::get('tipoU') == '2')
-                    <a class="nav-item nav-link" href="{{ url('monitoreo') }}">Monitoreo</a>
-                    <a class="nav-item nav-link" href="{{ url('auditoria') }}">Auditoría</a>
-                    @endif
-                  </div>
-                </div>
-              </nav>
+</html>
+<!-- =============codigo body fin====================================== -->
+{{-- <div id="page-loader"><span class="preloader-interior"></span></div>
+<div id="app">
+  @if (Auth::check() && !Route::is('home', 'login', 'modules', 'log') && !Route::is('construccion'))
+  <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url('/modules') }}">
+        <img src="img/e-conta-logo-01.png" width="200px">
+      </a> --}}
+{{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+        <span class="navbar-toggler-icon"></span>
+      </button> --}}
+
+{{-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <!-- Left Side Of Navbar -->
+        <ul class="navbar-nav mr-auto">
+        </ul>
+        <!-- Right Side Of Navbar -->
+        <ul class="navbar-nav ml-auto">
+          <!-- Authentication Links -->
+          @guest
+          {{-- @if (Route::has('login'))
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+          </li>
+          @endif
+          @if (Route::has('register'))
+          <li class="nav-item">
+            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+          </li>
+          @endif
+          @if (Route::has('registro'))
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url('registro') }}">{{ __('Registro') }}</a>
+          </li>
+          @endif --}}
+{{-- @else
+          <div>
+            <a href="{{ route('logout') }}" class="nav-item button1"
+              onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+              {{ __('Cerrar Sesión') }}
+            </a>
+            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+              @csrf
+            </form>
+          </div>
+          @endguest
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div>
+    <nav class="navbar navbar-expand-lg navbar-light " style="background-color:; position: absolute; left:10%; ">
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          @if (Session::get('tipoU') == '2')
+          <a class="nav-item nav-link" href="{{ url('descargasv2') }}">Descargas</a>
+          <a class="nav-item nav-link" href="{{ url('consultas') }}">Consultas</a>
+          @endif
+          <a class="nav-item nav-link" href="{{ url('construccion') }}">Expediente Digital</a>
+          <a class="nav-item nav-link" href="{{ url('volumetrico') }}">Control Volumétrico</a>
+          <a class="nav-item nav-link" href="{{ url('cuentasporpagar') }}">Cuentas por pagar</a>
+          <a class="nav-item nav-link" href="{{ url('cheques-transferencias') }}">Cheques y Transferencias</a>
+          <a class="nav-item nav-link" href="{{ url('construccion') }}">Expediente Fiscal</a>
+          <a class="nav-item nav-link" href="{{ url('construccion') }}">Nómina</a>
+          @if (Session::get('tipoU') == '2')
+          <a class="nav-item nav-link" href="{{ url('monitoreo') }}">Monitoreo</a>
+          <a class="nav-item nav-link" href="{{ url('auditoria') }}">Auditoría</a>
+          @endif
         </div>
-        <br>
-        <br>
+      </div>
+    </nav>
+  </div>
+  <br>
+  <br>
+  @endif
+  <main class="py-4">
+    @if (Route::is('home', 'login', 'modules', 'log'))
+    <div class="row justify-content-center mb-3">
+      <img src="{{ asset('img/logo-contarapp-01.png') }}" width="380px">
+    </div>
     @endif
-    <main class="py-4">
-        @if (Route::is('home', 'login', 'modules', 'log'))
-            <div class="row justify-content-center mb-3">
-                <img src="{{ asset('img/logo-contarapp-01.png') }}" width="380px">
-            </div>
-        @endif
-        @yield('content')
-    </main>
+    @yield('content')
+  </main>
 </div>
-@stack('calendario')
---}}
+@stack('calendario') --}}
 
 
 
@@ -1070,10 +1128,17 @@ $empresa=auth()->user->tipo;
 <script type="text/javascript">
     var _smartsupp = _smartsupp || {};
     _smartsupp.key = '487ea2552280af7093a6dd6c9277382bc43b4b39';
-    window.smartsupp||(function(d) {
-      var s,c,o=smartsupp=function(){ o._.push(arguments)};o._=[];
-      s=d.getElementsByTagName('script')[0];c=d.createElement('script');
-      c.type='text/javascript';c.charset='utf-8';c.async=true;
-      c.src='https://www.smartsuppchat.com/loader.js?';s.parentNode.insertBefore(c,s);
+    window.smartsupp || (function(d) {
+        var s, c, o = smartsupp = function() {
+            o._.push(arguments)
+        };
+        o._ = [];
+        s = d.getElementsByTagName('script')[0];
+        c = d.createElement('script');
+        c.type = 'text/javascript';
+        c.charset = 'utf-8';
+        c.async = true;
+        c.src = 'https://www.smartsuppchat.com/loader.js?';
+        s.parentNode.insertBefore(c, s);
     })(document);
-    </script>
+</script>
