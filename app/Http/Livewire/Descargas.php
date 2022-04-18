@@ -104,8 +104,6 @@ class Descargas extends Component
 
     public $info;
 
-
-
     //Consultas del SAT (Emitidos o recibidos)
     public function ConsultSAT()
     {
@@ -274,43 +272,7 @@ class Descargas extends Component
         //Condicional para saber si pertenece a un emitido o a un recibido
         switch ($this->tipo) {
             case "Recibidos":
-                //Para realizar las descargas tenemos que tener una lista de tipo metadata por lo que realizaremos la consulta
-                //Recibidos
-
-                //Consultas
-                //XML
-                $listxmlreci = $satScraper->listByUuids($this->cfdiselectxml, DownloadType::recibidos());
-                //PDF
-                $listpdfreci = $satScraper->listByUuids($this->cfdiselectpdf, DownloadType::recibidos());
-                //PDF Acuse
-                $listpdfacusereci = $satScraper->listByUuids($this->cfdiselectpdfacuse, DownloadType::recibidos());
-
-                //Rutas
-                //Aqui llamamos a la funcion de mese
-                $mesruta = Meses($this->mesreci);
-
-                //XML
-                $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
-                //PDF/Acuse
-                $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
-
-                //Realizamos la descarga
-                //XML
-                $satScraper->resourceDownloader(ResourceType::xml(), $listxmlreci)
-                    ->setResourceFileNamer(new FileNameXML())
-                    ->saveTo($rutaxml, true, 0777);
-
-                //PDF
-                $satScraper->resourceDownloader(ResourceType::pdf(), $listpdfreci)
-                    ->setResourceFileNamer(new FileNamePDF())
-                    ->saveTo($rutapdf, true, 0777);
-
-                //PDF Acuse
-                $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $listpdfacusereci)
-                    ->setResourceFileNamer(new FileNamePDF())
-                    ->saveTo($rutapdf, true, 0777);
-
-
+                //FUNCIONES ----------------------------------------------------------------------------------------------------
                 //Almacenamos los metadatos
                 function AlmacMetaReci($listipo)
                 {
@@ -366,44 +328,65 @@ class Descargas extends Component
                 }
 
                 //Almacenamos los XML recibidos
-                function AlmacXMLReci($rutaxml)
+                function AlmacXMLReci($rutaxml, $uuid)
                 {
-                    //Establecemos la ruta donde esta el XML descargado mas el nombre del XML
-                    $rutadescxml = $rutaxml;
+                    //Obtenemos el contenido de la ruta
+                    $contentxmlreci = file_get_contents($rutaxml);
 
-                    //Obtenemos el contenido de la ruta obtenido
-                    $contentrutaxml = new DirectoryIterator($rutadescxml);
+                    //Limpiamos el XML descargado
+                    $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
 
-                    //Con el foreach accedemos al contenido del objeto creado
-                    foreach ($contentrutaxml as $infoxmlfile) {
-                        //En la iteracion obtenemos la informacion de los archivos
-                        $fileExt = $infoxmlfile->getExtension();
-                        $fileBaseName = $infoxmlfile->getBasename(".$fileExt");
-                        $filePathname = $infoxmlfile->getPathname();
-                    }
+                    //Ahora el cfdi descargado lo convertimos en json
+                    $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
 
-                    //Condicional si el nombre del documento es el adecuado (ejemplo: archivo.jpg)
-                    if (!$infoxmlfile->isDot()) {
-                        //Obtenemos el contenido de la ruta
-                        $contentxmlreci = file_get_contents($filePathname);
+                    //Decodificamos el json creado en un arreglo
+                    $arraycfdireci = json_decode($xmlcfdi, true);
 
-                        //Limpiamos el XML descargado
-                        $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
-
-                        //Ahora el cfdi descargado lo convertimos en json
-                        $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
-
-                        //Decodificamos el json creado en un arreglo
-                        $arraycfdireci = json_decode($xmlcfdi, true);
-
-                        //Agregamos los datos del arreglo a la coleccion de XML recibidos
-                        XmlR::where(['UUID' => $fileBaseName])
-                            ->update(
-                                $arraycfdireci,
-                                ['upsert' => true]
-                            );
-                    }
+                    //Agregamos los datos del arreglo a la coleccion de XML recibidos
+                    XmlR::where(['UUID' => $uuid])
+                        ->update(
+                            $arraycfdireci,
+                            ['upsert' => true]
+                        );
                 }
+                //--------------------------------------------------------------------------------------------------------------
+
+                //Para realizar las descargas tenemos que tener una lista de tipo metadata por lo que realizaremos la consulta
+                //Recibidos
+
+                //Consultas
+                //XML
+                $listxmlreci = $satScraper->listByUuids($this->cfdiselectxml, DownloadType::recibidos());
+                //PDF
+                $listpdfreci = $satScraper->listByUuids($this->cfdiselectpdf, DownloadType::recibidos());
+                //PDF Acuse
+                $listpdfacusereci = $satScraper->listByUuids($this->cfdiselectpdfacuse, DownloadType::recibidos());
+
+                //Rutas
+                //Aqui llamamos a la funcion de mese
+                $mesruta = Meses($this->mesreci);
+
+                //XML
+                $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
+                //PDF/Acuse
+                $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
+
+                //Realizamos la descarga
+                //XML
+                $satScraper->resourceDownloader(ResourceType::xml(), $listxmlreci)
+                    ->setResourceFileNamer(new FileNameXML())
+                    ->saveTo($rutaxml, true, 0777);
+
+                //PDF
+                $satScraper->resourceDownloader(ResourceType::pdf(), $listpdfreci)
+                    ->setResourceFileNamer(new FileNamePDF())
+                    ->saveTo($rutapdf, true, 0777);
+
+                //PDF Acuse
+                $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $listpdfacusereci)
+                    ->setResourceFileNamer(new FileNamePDF())
+                    ->saveTo($rutapdf, true, 0777);
+
 
                 //Llamamos la funcion para almacenar los metadatos en la base de datos
                 //PDF
@@ -419,8 +402,10 @@ class Descargas extends Component
                 $rutafolder = @scandir($rutaxml);
 
                 //Condicional si existe algun documento
-                if (count($rutafolder) > 2) {
-                    AlmacXMLReci($rutaxml); //Llamamos la funcion de almacenar los XML en la base de datos
+                if (count($rutafolder) > count($this->cfdiselectxml) + 1) {
+                    foreach($this->cfdiselectxml as $uuidxmlreci){
+                        AlmacXMLReci($rutaxml . $uuidxmlreci . ".xml", $uuidxmlreci); //Llamamos la funcion de almacenar los XML en la base de datos
+                    }
                 }
 
                 //Limpiamos los arreglos
@@ -433,6 +418,7 @@ class Descargas extends Component
                 $this->chkpdf = 0;
                 break;
             case "Emitidos":
+                //FUNCIONES ----------------------------------------------------------------------------------------------------
                 //Almacenamos los metadatos
                 function AlmacMetaEmit($listipo)
                 {
@@ -488,45 +474,28 @@ class Descargas extends Component
                 }
 
                 //Almacenamos los XML recibidos
-                function AlmacXMLEmit($rutaxml)
+                function AlmacXMLEmit($rutaxml, $uuid)
                 {
-                    //Establecemos la ruta donde esta el XML descargado mas el nombre del XML
-                    $rutadescxml = $rutaxml;
+                    //Obtenemos el contenido de la ruta
+                    $contentxmlemit = file_get_contents($rutaxml);
 
-                    //Obtenemos el contenido de la ruta obtenido
-                    $contentrutaxml = new DirectoryIterator($rutadescxml);
+                    //Limpiamos el XML descargado
+                    $cleanxmlemit = Cleaner::staticClean($contentxmlemit);
 
-                    //Con el foreach accedemos al contenido del objeto creado
-                    foreach ($contentrutaxml as $infoxmlfile) {
-                        //En la iteracion obtenemos la informacion de los archivos
-                        $fileExt = $infoxmlfile->getExtension();
-                        $fileBaseName = $infoxmlfile->getBasename(".$fileExt");
-                        $filePathname = $infoxmlfile->getPathname();
-                    }
+                    //Ahora el cfdi descargado lo convertimos en json
+                    $xmlcfdi = JsonConverter::convertToJson($cleanxmlemit);
 
-                    //Condicional si el nombre del documento es el adecuado (ejemplo: archivo.jpg)
-                    if (!$infoxmlfile->isDot()) {
-                        //Obtenemos el contenido de la ruta
-                        $contentxmlreci = file_get_contents($filePathname);
+                    //Decodificamos el json creado en un arreglo
+                    $arraycfdiemit = json_decode($xmlcfdi, true);
 
-                        //Limpiamos el XML descargado
-                        $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
-
-                        //Ahora el cfdi descargado lo convertimos en json
-                        $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
-
-                        //Decodificamos el json creado en un arreglo
-                        $arraycfdireci = json_decode($xmlcfdi, true);
-
-                        //Agregamos los datos del arreglo a la coleccion de XML recibidos
-                        XmlE::where(['UUID' => $fileBaseName])
-                            ->update(
-                                $arraycfdireci,
-                                ['upsert' => true]
-                            );
-                    }
+                    //Agregamos los datos del arreglo a la coleccion de XML recibidos
+                    XmlE::where(['UUID' => $uuid])
+                        ->update(
+                            $arraycfdiemit,
+                            ['upsert' => true]
+                        );
                 }
-
+                //---------------------------------------------------------------------------------------------------------------
 
 
                 //Para realizar las descargas tenemos que tener una lista de tipo metadata por lo que realizaremos la consulta
@@ -569,8 +538,10 @@ class Descargas extends Component
                     $rutafolder = @scandir($rutaxml);
 
                     //Condicional si existe algun documento
-                    if (count($rutafolder) > 2) {
-                        AlmacXMLEmit($rutaxml); //Llamamos la funcion de almacenar los XML en la base de datos
+                    if (count($rutafolder) > count($this->cfdiselectxml) + 1) {
+                        foreach($this->cfdiselectxml as $uuidxmlemit){
+                            AlmacXMLEmit($rutaxml . $uuidxmlemit . ".xml", $uuidxmlemit); //Llamamos la funcion de almacenar los XML en la base de datos
+                        }
                     }
                 }
 
