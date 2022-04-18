@@ -23,8 +23,12 @@ use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use PhpCfdi\CfdiSatScraper\Filters\DownloadType;
 
+
+
 //Funcion para aumentar la ejecucion de los procesos, lo utilizaremos para las descargas
 set_time_limit(3600);
+
+
 
 class Descargas extends Component
 {
