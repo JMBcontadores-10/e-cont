@@ -390,7 +390,7 @@ class Descargas extends Component
                         //Limpiamos el XML descargado
                         $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
 
-                        //Ahora el cfdi descargado lo convertimos en json 
+                        //Ahora el cfdi descargado lo convertimos en json
                         $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
 
                         //Decodificamos el json creado en un arreglo
@@ -512,7 +512,7 @@ class Descargas extends Component
                         //Limpiamos el XML descargado
                         $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
 
-                        //Ahora el cfdi descargado lo convertimos en json 
+                        //Ahora el cfdi descargado lo convertimos en json
                         $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
 
                         //Decodificamos el json creado en un arreglo
