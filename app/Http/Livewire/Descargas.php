@@ -102,8 +102,6 @@ class Descargas extends Component
     public $mescal;
     public $aniocal;
 
-    public $info;
-
     //Consultas del SAT (Emitidos o recibidos)
     public function ConsultSAT()
     {
