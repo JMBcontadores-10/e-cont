@@ -533,16 +533,6 @@ class Descargas extends Component
                     $satScraper->resourceDownloader(ResourceType::xml(), $cfdiemitxml)
                         ->setResourceFileNamer(new FileNameXML())
                         ->saveTo($rutaxml, true, 0777);
-
-                    //Vamos a comporbar si la carpeta tiene XML descargados
-                    $rutafolder = @scandir($rutaxml);
-
-                    //Condicional si existe algun documento
-                    if (count($rutafolder) > count($this->cfdiselectxml) + 1) {
-                        foreach($this->cfdiselectxml as $uuidxmlemit){
-                            AlmacXMLEmit($rutaxml . $uuidxmlemit . ".xml", $uuidxmlemit); //Llamamos la funcion de almacenar los XML en la base de datos
-                        }
-                    }
                 }
 
                 //PDF
@@ -602,6 +592,16 @@ class Descargas extends Component
 
                 //Acuse
                 AlmacMetaEmit($listpdfacuseemit);
+
+                //Vamos a comporbar si la carpeta tiene XML descargados
+                $rutafolder = @scandir($rutaxml);
+
+                //Condicional si existe algun documento
+                if (count($rutafolder) > count($this->cfdiselectxml) + 1) {
+                    foreach($this->cfdiselectxml as $uuidxmlemit){
+                        AlmacXMLEmit($rutaxml . $uuidxmlemit . ".xml", $uuidxmlemit); //Llamamos la funcion de almacenar los XML en la base de datos
+                    }
+                }
 
                 //Limpiamos los arreglos
                 $this->cfdiselectxml = [];
