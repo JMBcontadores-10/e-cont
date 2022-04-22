@@ -12,6 +12,16 @@
         <div class="content-wrapper">
             <div class="content-body">
                 <section class="invoice-list-wrapper">
+                    
+                    <br>
+                    <br>
+                    Recibidos: {{$inforeci}}
+                    <br>
+                    <br>
+                    Emitidos: {{$infoemit}}
+                    <br>
+                    <br>
+
                     {{-- Aqui va el contenido del modulo --}}
                     {{-- Encabezado del modulo --}}
                     <div class="justify-content-start">
@@ -60,7 +70,7 @@
                         <div class="col-4">
                             <label for="selecttipocfdi">Tipo:</label>
                             <select wire:model="tipo" name="selecttipocfdi" id="selecttipocfdi"
-                                wire:change="ResetParamColsul()" class="select form-control">
+                                wire:change="ResetParamColsul()"  wire:loading.attr="disabled" class="select form-control">
                                 <option value="Recibidos">Recibidos</option>
                                 <option value="Emitidos">Emitidos</option>
                             </select>
@@ -80,7 +90,7 @@
                             <div id="espaciado" style="height: 23.5px"></div>
                             <div class="invoice-create-btn mb-1">
                                 <button id="Btndescarcfdi" class="btn btn-success BtnVinculadas"
-                                    wire:click="Descvincucfdi()">Descargar
+                                    wire:loading.attr="disabled">Descargar
                                     seleccionados</button>
                             </div>
                         </div>
@@ -88,9 +98,19 @@
 
                     <br>
 
+                    <div id="Mnssincfdi" hidden>
+                        <div class="alert alert-danger">
+                            Favor de seleccionar un CFDI
+                        </div>
+                    </div>
+
                     {{-- Condicional para mostrar los filtros de cada tipo --}}
                     @if ($tipo == 'Recibidos')
                         {{-- Recibidos --}}
+                        <label>Total de registros obtenidos: {{$totallist}}</label>
+
+                        <br>
+
                         <label>Selecciona una fecha:</label>
 
                         {{-- Filtros de busqueda --}}
@@ -129,11 +149,16 @@
                             </select>
                             &nbsp;&nbsp;
 
-                            <button class="btn btn-secondary BtnVinculadas" wire:click="ConsultSAT()">Buscar</button>
+                            <button id="BtnConsulSAT" class="btn btn-secondary BtnVinculadas" wire:loading.attr="disabled"
+                                wire:click="ConsultSAT()">Buscar</button>
                             &nbsp;&nbsp;
                         </div>
                     @elseif ($tipo == 'Emitidos')
                         {{-- Emitidos --}}
+                        <label>Total de registros obtenidos: {{$totallist}}</label>
+                        
+                        <br>
+
                         <label>Selecciona un rango de fecha:</label>
 
                         {{-- Rango de incio --}}
@@ -211,7 +236,7 @@
                                     </select>
                                     &nbsp;&nbsp;
 
-                                    <button class="btn btn-secondary BtnVinculadas"
+                                    <button class="btn btn-secondary BtnVinculadas" wire:loading.attr="disabled"
                                         wire:click="ConsultSAT()">Buscar</button>
                                     &nbsp;&nbsp;
                                 </div>
@@ -301,10 +326,9 @@
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center align-middle">XML <input wire:click="Allchk('xmlall')"
-                                                wire:model="chkxml" type="checkbox" wire:loading.attr="disabled" /></th>
-                                        <th class="text-center align-middle">R. Imp. <input
-                                                wire:click="Allchk('pdfall')" wire:model="chkpdf" type="checkbox"
+                                        <th class="text-center align-middle">XML <input id="allxml" type="checkbox"
+                                                wire:loading.attr="disabled" /></th>
+                                        <th class="text-center align-middle">R. Imp. <input id="allpdf" type="checkbox"
                                                 wire:loading.attr="disabled" />
                                         </th>
                                         <th class="text-center align-middle">Acuse</th>
@@ -390,6 +414,8 @@
                                                 $rutaxml = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/XML/";
                                                 //PDF
                                                 $rutapdf = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                                                //Acuse
+                                                $rutapdfacuse = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
                                                 
                                                 //Buscamos si exsiten los archivos (si estn descargados)
                                                 //XML
@@ -409,7 +435,7 @@
                                                 }
                                                 
                                                 //Acuse
-                                                $acusefile = $rutapdf . strtoupper($listrecibi->uuid) . '-acuse' . '.pdf';
+                                                $acusefile = $rutapdfacuse . strtoupper($listrecibi->uuid) . '-acuse' . '.pdf';
                                                 if (file_exists($acusefile)) {
                                                     $existpdfacuse = 'Si';
                                                 } else {
@@ -422,10 +448,9 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled"
-                                                            wire:model.defer="cfdiselectxml"
-                                                            style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv chkxml" type="checkbox" />
+                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
+                                                            name="chkxml" class="mis-checkboxes ChkMasProv chkxml"
+                                                            type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -435,10 +460,9 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled"
-                                                            wire:model.defer="cfdiselectpdf"
-                                                            style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv chkpdf" type="checkbox" />
+                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
+                                                            name="chkpdf" class="mis-checkboxes ChkMasProv chkpdf"
+                                                            type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -450,10 +474,8 @@
                                                         <span class="invoice-amount"> - </span>
                                                     @else
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled"
-                                                            wire:model.defer="cfdiselectpdfacuse"
-                                                            style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv chkacuse"
+                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
+                                                            name="chkacuse" class="mis-checkboxes ChkMasProv chkacuse"
                                                             type="checkbox" />
                                                     @endif
                                                 </td>
@@ -523,7 +545,6 @@
                                                     @endif
                                                 </td>
 
-
                                                 {{-- Desc XML --}}
                                                 <td class="text-center align-middle">
                                                     <span class="invoice-amount">{{ $existxml }}</span>
@@ -554,10 +575,9 @@
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center align-middle">XML <input wire:click="Allchk('xmlall')"
-                                                wire:model="chkxml" type="checkbox" wire:loading.attr="disabled" /></th>
-                                        <th class="text-center align-middle">R. Imp. <input
-                                                wire:click="Allchk('pdfall')" wire:model="chkpdf" type="checkbox"
+                                        <th class="text-center align-middle">XML <input id="allxml" type="checkbox"
+                                                wire:loading.attr="disabled" /></th>
+                                        <th class="text-center align-middle">R. Imp. <input id="allpdf" type="checkbox"
                                                 wire:loading.attr="disabled" />
                                         </th>
                                         <th class="text-center align-middle">Acuse</th>
@@ -641,6 +661,8 @@
                                                 $rutaxml = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Emitidos/XML/";
                                                 //PDF
                                                 $rutapdf = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Emitidos/PDF/";
+                                                //Acuse
+                                                $rutapdfacuse = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Emitidos/ACUSE/";
                                                 
                                                 //Buscamos si exsiten los archivos (si estn descargados)
                                                 //XML
@@ -660,7 +682,7 @@
                                                 }
                                                 
                                                 //Acuse
-                                                $acusefile = $rutapdf . strtoupper($listrecibi->uuid) . '-acuse' . '.pdf';
+                                                $acusefile = $rutapdfacuse . strtoupper($listrecibi->uuid) . '-acuse' . '.pdf';
                                                 if (file_exists($acusefile)) {
                                                     $existpdfacuse = 'Si';
                                                 } else {
@@ -673,10 +695,9 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled"
-                                                            wire:model.defer="cfdiselectxml"
-                                                            style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv chkxml" type="checkbox" />
+                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
+                                                            name="chkxml" class="mis-checkboxes ChkMasProv chkxml"
+                                                            type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -686,10 +707,9 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled"
-                                                            wire:model.defer="cfdiselectpdf"
-                                                            style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv chkpdf" type="checkbox" />
+                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
+                                                            name="chkpdf" class="mis-checkboxes ChkMasProv chkpdf"
+                                                            type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
                                                     @endif
@@ -701,10 +721,8 @@
                                                         <span class="invoice-amount"> - </span>
                                                     @else
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled"
-                                                            wire:model.defer="cfdiselectpdfacuse"
-                                                            style="transform: scale(1.5);"
-                                                            class="mis-checkboxes ChkMasProv chkacuse"
+                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
+                                                            name="chkacuse" class="mis-checkboxes ChkMasProv chkacuse"
                                                             type="checkbox" />
                                                     @endif
                                                 </td>
@@ -916,4 +934,111 @@
             </div>
         </div>
     </div>
+
+    {{-- JS --}}
+    <script>
+        $(document).ready(function() {
+            //Variables
+            var valchkxml = []; //Inicializamos con la variable vacia
+            var valchkpdf = []; //Inicializamos con la variable vacia
+            var valchkacuse = []; //Inicializamos con la variable vacia
+            var activdesc = 0;
+
+            //Accion de marcar todos los checkboxes
+            //XML
+            $("#allxml").change(function() {
+                valchkxml = [];
+
+                //Marcamos los checkboxes
+                $(".chkxml").prop("checked", $(this).prop("checked"));
+
+                //Almacenamos el valor de los checkboxes en un arreglo
+                $("input[name=chkxml]:checked").each(function() {
+                    valchkxml.push(this.value);
+                });
+            });
+
+            //PDF
+            $("#allpdf").change(function() {
+                valchkpdf = [];
+
+                //Marcamos los checkboxes
+                $(".chkpdf").prop("checked", $(this).prop("checked"));
+
+                //Almacenamos el valor de los checkboxes en un arreglo
+                $("input[name=chkpdf]:checked").each(function() {
+                    valchkpdf.push(this.value);
+                });
+            });
+
+            //Boton de descarga
+            $("#Btndescarcfdi").click(function() {
+                //Almacenamos el valor de los checkboxes en un arreglo
+                //PDF
+                $("input[name=chkpdf]:checked").each(function() {
+                    valchkpdf.push(this.value);
+                });
+
+                //XML
+                $("input[name=chkxml]:checked").each(function() {
+                    valchkxml.push(this.value);
+                });
+
+                //Acuses
+                $("input[name=chkacuse]:checked").each(function() {
+                    valchkacuse.push(this.value);
+                });
+
+                //Convertimos los arreglos en una cadena
+                var Serialvalxml = valchkxml.toString();
+                var Serialvalpdf = valchkpdf.toString();
+                var Serialvalacuse = valchkacuse.toString();
+
+                if (Serialvalxml.length > 1 || Serialvalpdf.length > 1 || Serialvalacuse.length > 1) {
+                    //Bloqueamos el boton de buscar
+                    $("#BtnConsulSAT").prop("disabled", true);
+
+                    //Emitimos los valores marcados
+                    window.livewire.emit('addallcfdi', {
+                        xmlval: Serialvalxml,
+                        pdfval: Serialvalpdf,
+                        acuseval: Serialvalacuse
+                    });
+                } else {
+                    $("#Mnssincfdi").prop("hidden", false);
+                    $("#Btndescarcfdi").prop("disabled", true);
+                    setTimeout(function() {
+                        $("#Mnssincfdi").prop("hidden", true);
+                        $("#Btndescarcfdi").prop("disabled", false);
+                    }, 2500);
+                }
+            });
+
+            //Funcion para desmarcar los checkboxes
+            window.addEventListener('deschecked', event => {
+                //PDF
+                $(".chkpdf").prop("checked", false);
+
+                //Acuse
+                $(".chkacuse").prop("checked", false);
+
+                //XML
+                $(".chkxml").prop("checked", false);
+
+                //AllXml
+                $("#allxml").prop("checked", false);
+
+                //AllPdf
+                $("#allpdf").prop("checked", false);
+
+                //Desbloqueamos el boton de buscar
+                $("#BtnConsulSAT").prop("disabled", false);
+
+                //Vaciamos los array
+                valchkxml = [];
+                valchkpdf = [];
+                valchkacuse = [];
+            });
+        });
+    </script>
 </div>
