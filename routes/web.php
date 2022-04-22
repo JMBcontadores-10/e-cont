@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UploadController;
 use App\Http\Livewire\Chequesytransferencias;
+
 use App\Http\Livewire\vinculacionAutomatica;
 use App\Http\Livewire\CuentasPorpagar;
 use App\Http\Livewire\Cheques;
@@ -99,6 +100,12 @@ Route::get('/chequesytransferencias',Chequesytransferencias::class)->name('chequ
 Route::get('/descargascfdi', [App\Http\Controllers\DescargascfdiController::class, 'index'])->name('descargascfdi');
 Route::get('zip-download/{id}', [Eliminar::class, 'descargarZip']);
 Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
+Route::get('/descargasAutomaticas/{valor}', [App\Http\Controllers\DescargasAutomaticas::class, 'ConsultSAT'])->name('descargasAutomaticas');
+// Route::get('/descargasAutomaticas1', [App\Http\Livewire\DescargasAutomaticas::class, 'index'])->name('descargasAutomaticas1');
+
+
+
+// Rutas Angel
 
 //Ruta de la vista de cuentas por pagar en livewire
 Route::get('/cuentasporpagar', Cuentasporpagar::class)->name('cuentasporpagar');

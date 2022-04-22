@@ -94,8 +94,12 @@ $cheques=Cheques::where('_id',$xml_r->cheques_id)->first();///consulta cheques
 foreach($xmlppd as $x):////se recorre el objeto con los CDFID pago
 
 if($x->MetodoPago =='PPD'){
+
 /// se obtienen todos los metadatos que no tengan vinculo y que sean pagos
 $metadataPago =MetadataR::where('cheques_id',$this->facturaVinculada->_id)->where('efecto','Pago')->where('estado','Vigente')->get();
+
+if (count($metadataPago)!=0){
+
 foreach($metadataPago as $meta){ $foliosmetaSinVinculo[]=$meta->folioFiscal; }
         unset($meta); // rompe la referencia con el último elemento
 
@@ -157,7 +161,7 @@ $cheques->update(['faltaxml'=> $cheques->faltaxml-1]);
 
 
         endforeach;
-
+    }
 
 }//// fin del fi MetodoPago
 
@@ -204,7 +208,6 @@ if($cheques->faltaxml==0){
 
     $this->dispatchBrowserEvent('cerrarFacturas', []);// cierra el modal si ya no hay facturas
 }
-
 
 
 
