@@ -77,6 +77,8 @@ class DescargasAutomaticas extends Controller
 {
 
 
+
+
   public $tipo = "Emitidos";
   public $info;
   public $empresas;
@@ -735,6 +737,38 @@ foreach ($allcfdi as $listuuids) {
               }// fin del foreach emitidos y recibidos
 
      }/// fin del foeach clientes
+
+
+     $files = glob('build/cookies/*'); //obtenemos todos los nombres de los ficheros
+     foreach($files as $file){
+    if(is_file($file)){
+
+
+
+            if(file_exists($file)){
+                  unlink($file);
+               }
+                  try{
+
+
+                      $bug = 0;
+                  }
+                  catch(\Exception $e){
+                      $bug = $e->errorInfo[1];
+                  }
+                  if($bug==0){
+                    //   echo "success";
+                  }else{
+                    //   echo 'error';
+                  }
+
+
+
+
+    }
+}
+
+
 
 
 
