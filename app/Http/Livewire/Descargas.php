@@ -19,6 +19,7 @@ use App\Models\CalendarioR;
 use App\Models\CalendarioE;
 use App\Models\MetadataE;
 use App\Models\MetadataR;
+use App\Models\Calendario;
 use App\Models\User;
 use App\Models\XmlE;
 use App\Models\XmlR;
@@ -704,16 +705,15 @@ class Descargas extends Component
             $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
         }
 
-        //Agregar a la base de datos (Temporal)
-        $CalendarioReci = CalendarioR::where(['rfc' => $this->rfcEmpresa, 'fechaDescarga' => $fechadesc, 'fechaDescargaF' => $fechadesc]);
-        $CalendarioReci->update(
+        //Agregar a la base de datos
+        $busca = Calendario::where(['rfc' => $this->rfcEmpresa]);
+        $busca->update(
             [
                 'rfc' => $this->rfcEmpresa,
-                'fechaDescarga' => $fechadesc,
-                'fechaDescargaF' => $fechadesc,
-                'descargasRecibidos' => $cfdidesc,
-                'erroresRecibidos' => $cfdierror,
-                'totalRecibidos' => $cfdirecibi,
+                'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
+                'descargas.' . $fechadesc . '.descargasRecibidos' => $cfdidesc,
+                'descargas.' . $fechadesc . '.erroresRecibidos' => $cfdierror,
+                'descargas.' . $fechadesc . '.totalRecibidos' => $cfdirecibi,
             ],
             ['upsert' => true]
         );
@@ -799,16 +799,15 @@ class Descargas extends Component
                 $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
             }
 
-            //Agregar a la base de datos (Temporal)
-            $CalendarioReci = CalendarioE::where(['rfc' => $this->rfcEmpresa, 'fechaDescarga' => $fechadesc, 'fechaDescargaF' => $fechadesc]);
-            $CalendarioReci->update(
+            //Agregar a la base de datos
+            $busca = Calendario::where(['rfc' => $this->rfcEmpresa]);
+            $busca->update(
                 [
                     'rfc' => $this->rfcEmpresa,
-                    'fechaDescarga' => $fechadesc,
-                    'fechaDescargaF' => $fechadesc,
-                    'descargasEmitidos' => $cfdidesc,
-                    'erroresEmitidos' => $cfdierror,
-                    'totalEmitidos' => $cfdirecibi,
+                    'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
+                    'descargas.' . $fechadesc . '.descargasEmitidos' => $cfdidesc,
+                    'descargas.' . $fechadesc . '.erroresEmitidos' => $cfdierror,
+                    'descargas.' . $fechadesc . '.totalEmitidos' => $cfdirecibi,
                 ],
                 ['upsert' => true]
             );
