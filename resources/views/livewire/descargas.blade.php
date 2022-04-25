@@ -12,16 +12,6 @@
         <div class="content-wrapper">
             <div class="content-body">
                 <section class="invoice-list-wrapper">
-                    
-                    <br>
-                    <br>
-                    Recibidos: {{$inforeci}}
-                    <br>
-                    <br>
-                    Emitidos: {{$infoemit}}
-                    <br>
-                    <br>
-
                     {{-- Aqui va el contenido del modulo --}}
                     {{-- Encabezado del modulo --}}
                     <div class="justify-content-start">
@@ -31,6 +21,8 @@
 
                     {{-- Select para selccionar la empresa (Contadores) --}}
                     @empty(!$empresas)
+                        <br>
+
                         {{-- Mostramos el RFC de la empresa que se selecciona --}}
                         <label for="inputState">Empresa: {{ $empresa }}</label>
                         <select wire:model="rfcEmpresa" id="inputState1" class="select form-control" wire:change="ObtAuth()">
@@ -43,10 +35,9 @@
                                 echo '<option value="' . $fila[$rfc] . '">' . $fila[$rS] . '</option>';
                             } ?>
                         </select>
+                        
+                        <br>
                     @endempty
-
-                    <br>
-                    <br>
 
                     {{-- Animacion de cargando --}}
                     <div wire:loading>
@@ -62,7 +53,7 @@
 
                     {{-- Seccion de descargas --}}
                     {{-- Descargas --}}
-                    <h1 style="font-weight: bold">Descarga</h1>
+                    <h1 style="font-weight: bold">Descargas</h1>
 
                     {{-- Select/mostrar calendario --}}
                     <div class="row">
@@ -70,7 +61,8 @@
                         <div class="col-4">
                             <label for="selecttipocfdi">Tipo:</label>
                             <select wire:model="tipo" name="selecttipocfdi" id="selecttipocfdi"
-                                wire:change="ResetParamColsul()"  wire:loading.attr="disabled" class="select form-control">
+                                wire:change="ResetParamColsul()" wire:loading.attr="disabled"
+                                class="select form-control">
                                 <option value="Recibidos">Recibidos</option>
                                 <option value="Emitidos">Emitidos</option>
                             </select>
@@ -80,8 +72,10 @@
                         <div class="col-4">
                             <div id="espaciado" style="height: 23.5px"></div>
                             <div class="invoice-create-btn mb-1">
-                                <button class="btn btn-primary" data-toggle="modal" data-target="#calendariomodal"
-                                    data-backdrop="static" data-keyboard="false">Calendario de registros</button>
+                                <button id="Btncalendario" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#calendariomodal" data-backdrop="static" data-keyboard="false"
+                                    wire:loading.attr="disabled">Calendario
+                                    de registros</button>
                             </div>
                         </div>
 
@@ -98,26 +92,27 @@
 
                     <br>
 
+                    {{-- Mensaje de alerta cuando no se selecciona CFDI --}}
                     <div id="Mnssincfdi" hidden>
-                        <div class="alert alert-danger">
-                            Favor de seleccionar un CFDI
+                        <div id="mnsexcep" class="alert alert-danger">
                         </div>
                     </div>
+
+                    {{-- Muestra la cantidad de cfdi cosultados --}}
+                    <label>Total de registros obtenidos: {{ $totallist }}</label>
+                    
+                    <br>
 
                     {{-- Condicional para mostrar los filtros de cada tipo --}}
                     @if ($tipo == 'Recibidos')
                         {{-- Recibidos --}}
-                        <label>Total de registros obtenidos: {{$totallist}}</label>
-
-                        <br>
-
                         <label>Selecciona una fecha:</label>
 
                         {{-- Filtros de busqueda --}}
                         <div class="form-inline mr-auto">
                             {{-- Busqueda por dia --}}
                             <label for="diareci">Dia</label>
-                            <select wire:model.defer="diareci" id="diareci" class="select form-control"
+                            <select wire:model.defer="diareci" id="diareci" class="select form-control filtbusc"
                                 wire:loading.attr="disabled">
                                 <option value="all">Todos</option>
                                 @php
@@ -130,7 +125,7 @@
 
                             {{-- Busqueda por mes --}}
                             <label for="mesreci">Mes</label>
-                            <select wire:model.defer="mesreci" id="mesreci" class=" select form-control"
+                            <select wire:model.defer="mesreci" id="mesreci" class=" select form-control filtbusc"
                                 wire:loading.attr="disabled">
                                 <?php foreach ($meses as $key => $value) {
                                     echo '<option value="' . $key . '">' . $value . '</option>';
@@ -141,7 +136,7 @@
 
                             {{-- Busqueda por año --}}
                             <label for="anioreci">Año</label>
-                            <select wire:model.defer="anioreci" id="anioreci" class="select form-control"
+                            <select wire:model.defer="anioreci" id="anioreci" class="select form-control filtbusc"
                                 wire:loading.attr="disabled">
                                 <?php foreach (array_reverse($anios) as $value) {
                                     echo '<option value="' . $value . '">' . $value . '</option>';
@@ -149,178 +144,13 @@
                             </select>
                             &nbsp;&nbsp;
 
-                            <button id="BtnConsulSAT" class="btn btn-secondary BtnVinculadas" wire:loading.attr="disabled"
+                            <button class="btn btn-secondary BtnVinculadas BtnConsulSAT" wire:loading.attr="disabled"
                                 wire:click="ConsultSAT()">Buscar</button>
                             &nbsp;&nbsp;
                         </div>
-                    @elseif ($tipo == 'Emitidos')
-                        {{-- Emitidos --}}
-                        <label>Total de registros obtenidos: {{$totallist}}</label>
-                        
+
                         <br>
 
-                        <label>Selecciona un rango de fecha:</label>
-
-                        {{-- Rango de incio --}}
-
-                        <div class="row">
-                            <div class="col">
-                                <label>Fecha inicial:</label>
-                                {{-- Filtros de busqueda --}}
-                                <div class="form-inline mr-auto">
-                                    {{-- Busqueda por dia --}}
-                                    <label for="diaemitinic">Dia</label>
-                                    <select wire:model.defer="diaemitinic" id="diaemitinic"
-                                        class="select form-control selectfilemit" wire:loading.attr="disabled">
-                                        @php
-                                            for ($i = 1; $i <= 31; $i++) {
-                                                echo '<option value="' . $i . '">' . $i . '</option>';
-                                        } @endphp </select>
-                                    &nbsp;&nbsp;
-
-                                    {{-- Busqueda por mes --}}
-                                    <label for="mesemitinic">Mes</label>
-                                    <select wire:model.defer="mesemitinic" id="mesemitinic"
-                                        class=" select form-control selectfilemit" wire:loading.attr="disabled">
-                                        <?php foreach ($meses as $key => $value) {
-                                            echo '<option value="' . $key . '">' . $value . '</option>';
-                                        } ?>
-                                    </select>
-                                    &nbsp;&nbsp;
-
-
-                                    {{-- Busqueda por año --}}
-                                    <label for="anioemitinic">Año</label>
-                                    <select wire:model.defer="anioemitinic" id="anioemitinic"
-                                        class="select form-control selectfilemit" wire:loading.attr="disabled">
-                                        <?php foreach (array_reverse($anios) as $value) {
-                                            echo '<option value="' . $value . '">' . $value . '</option>';
-                                        } ?>
-                                    </select>
-                                    &nbsp;&nbsp;
-                                </div>
-                            </div>
-                            <div class="col">
-                                {{-- Rango de fin --}}
-
-                                <label>Fecha final:</label>
-                                {{-- Filtros de busqueda --}}
-                                <div class="form-inline mr-auto">
-                                    {{-- Busqueda por dia --}}
-                                    <label for="diaemitfin">Dia</label>
-                                    <select wire:model.defer="diaemitfin" id="diaemitfin"
-                                        class="select form-control selectfilemit" wire:loading.attr="disabled">
-                                        @php
-                                            for ($i = 1; $i <= 31; $i++) {
-                                                echo '<option value="' . $i . '">' . $i . '</option>';
-                                        } @endphp </select>
-                                    &nbsp;&nbsp;
-
-                                    {{-- Busqueda por mes --}}
-                                    <label for="mesemitfin">Mes</label>
-                                    <select wire:model.defer="mesemitfin" id="mesemitfin"
-                                        class=" select form-control selectfilemit" wire:loading.attr="disabled">
-                                        <?php foreach ($meses as $key => $value) {
-                                            echo '<option value="' . $key . '">' . $value . '</option>';
-                                        } ?>
-                                    </select>
-                                    &nbsp;&nbsp;
-
-                                    {{-- Busqueda por año --}}
-                                    <label for="anioemitfin">Año</label>
-                                    <select wire:model.defer="anioemitfin" id="anioemitfin"
-                                        class="select form-control selectfilemit" wire:loading.attr="disabled">
-                                        <?php foreach (array_reverse($anios) as $key => $value) {
-                                            echo '<option value="' . $value . '">' . $value . '</option>';
-                                        } ?>
-                                    </select>
-                                    &nbsp;&nbsp;
-
-                                    <button class="btn btn-secondary BtnVinculadas" wire:loading.attr="disabled"
-                                        wire:click="ConsultSAT()">Buscar</button>
-                                    &nbsp;&nbsp;
-                                </div>
-
-                                {{-- Js para los filtros de emitidos --}}
-                                <script>
-                                    $(document).ready(function() {
-                                        //Filtros para limitar el dia y mes 
-                                        function LimitDiasMes() {
-                                            //Antes de iniciar desblqueamos todos los meses
-                                            $('#mesemitfin option').attr('disabled', false);
-                                            //Y tambien los años
-                                            $('#anioemitfin option').attr('disabled', false);
-                                            //Dias
-                                            $('#diaemitfin option').attr('disabled', false);
-
-                                            //Obtenemos los valores iniciales
-                                            //Dia inicial
-                                            var DiaInic = $("#diaemitinic").val();
-                                            //Mes inicial
-                                            var MesInic = $("#mesemitinic").val();
-                                            //Año inicial
-                                            var AnioInic = $("#anioemitinic")[0].selectedIndex;
-                                            var AnioInicVal = $("#anioemitinic").val();
-
-                                            //Obtenemos lo finales
-                                            //Año final
-                                            var AnioFin = $("#anioemitfin").val();
-                                            //Mes final
-                                            var MesFin = $("#mesemitfin").val();
-
-                                            //En base a los datos obtenidos vamos a limitar la fecha
-                                            //Año
-                                            //Para este caso vamos a obtener el tamaño del select
-                                            var Totalopanio = $('#anioemitinic option').length;
-
-                                            for (var i = AnioInic + 1; i < Totalopanio; i++) {
-                                                $('#anioemitfin option:eq(' + i + ')').attr('disabled', true);
-                                            }
-
-                                            //Mes
-                                            if (AnioInicVal == AnioFin) {
-                                                for (var i = 0; i < MesInic - 1; i++) {
-                                                    //Bloquearemos el uso de los meses anteriores al seleccionado
-                                                    $('#mesemitfin option:eq(' + i + ')').attr('disabled', true);
-                                                }
-                                            } else {
-                                                //Si no es lo mismo desbloqueamos los dias
-                                                $('#mesemitfin option').attr('disabled', false);
-                                            }
-
-                                            //Para los dias solo se limitaran cuando estan en el mismo mes
-                                            //Obtenemos el valor del mes final
-                                            if (MesInic == MesFin && AnioInicVal == AnioFin) {
-                                                for (var i = 0; i < DiaInic - 1; i++) {
-                                                    //Bloquearemos el uso de los dias anteriores al seleccionado
-                                                    $('#diaemitfin option:eq(' + i + ')').attr('disabled', true);
-                                                }
-                                            } else {
-                                                //Si no es lo mismo desbloqueamos los dias
-                                                $('#diaemitfin option').attr('disabled', false);
-                                            }
-                                        }
-
-
-                                        //Ejecutamos la funcion al iniciar los filtros de emitidos
-                                        LimitDiasMes();
-
-                                        //Ahora realizaremos lo mismo pero cuando se haga un cambio en el select
-                                        $(".selectfilemit").change(function() {
-                                            LimitDiasMes();
-                                        });
-                                    });
-                                </script>
-                            </div>
-                        </div>
-                    @endif
-
-                    <br>
-
-                    {{-- Tabla de consulta --}}
-
-                    {{-- Condicional para mostrar la tabla de cada tipo --}}
-                    @if ($tipo == 'Recibidos')
                         {{-- Tabla de recibidos --}}
                         <div class="table-responsive">
                             <table id="example" class="{{ $class }}" style="width:100%">
@@ -547,12 +377,12 @@
 
                                                 {{-- Desc XML --}}
                                                 <td class="text-center align-middle">
-                                                    <span class="invoice-amount">{{ $existxml }}</span>
+                                                    <span class="invoice-amount descxml">{{ $existxml }}</span>
                                                 </td>
 
                                                 {{-- Desc PDF --}}
                                                 <td class="text-center align-middle">
-                                                    <span class="invoice-amount">{{ $existpdf }}</span>
+                                                    <span class="invoice-amount descpdf">{{ $existpdf }}</span>
                                                 </td>
 
                                                 {{-- Desc ACUSE --}}
@@ -560,7 +390,8 @@
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <span class="invoice-amount"> - </span>
                                                     @else
-                                                        <span class="invoice-amount">{{ $existpdfacuse }}</span>
+                                                        <span
+                                                            class="invoice-amount descacuse">{{ $existpdfacuse }}</span>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -570,7 +401,167 @@
                             </table>
                         </div>
                     @elseif ($tipo == 'Emitidos')
-                        {{-- Tabla de recibidos --}}
+                        {{-- Emitidos --}}
+                        <label>Selecciona un rango de fecha:</label>
+
+                        {{-- Rango de incio --}}
+
+                        <div class="row">
+                            <div class="col">
+                                <label>Fecha inicial:</label>
+                                {{-- Filtros de busqueda --}}
+                                <div class="form-inline mr-auto">
+                                    {{-- Busqueda por dia --}}
+                                    <label for="diaemitinic">Dia</label>
+                                    <select wire:model.defer="diaemitinic" id="diaemitinic"
+                                        class="select form-control selectfilemit filtbusc" wire:loading.attr="disabled">
+                                        @php
+                                            for ($i = 1; $i <= 31; $i++) {
+                                                echo '<option value="' . $i . '">' . $i . '</option>';
+                                        } @endphp </select>
+                                    &nbsp;&nbsp;
+
+                                    {{-- Busqueda por mes --}}
+                                    <label for="mesemitinic">Mes</label>
+                                    <select wire:model.defer="mesemitinic" id="mesemitinic"
+                                        class=" select form-control selectfilemit filtbusc"
+                                        wire:loading.attr="disabled">
+                                        <?php foreach ($meses as $key => $value) {
+                                            echo '<option value="' . $key . '">' . $value . '</option>';
+                                        } ?>
+                                    </select>
+                                    &nbsp;&nbsp;
+
+
+                                    {{-- Busqueda por año --}}
+                                    <label for="anioemitinic">Año</label>
+                                    <select wire:model.defer="anioemitinic" id="anioemitinic"
+                                        class="select form-control selectfilemit filtbusc" wire:loading.attr="disabled">
+                                        <?php foreach (array_reverse($anios) as $value) {
+                                            echo '<option value="' . $value . '">' . $value . '</option>';
+                                        } ?>
+                                    </select>
+                                    &nbsp;&nbsp;
+                                </div>
+                            </div>
+                            <div class="col">
+                                {{-- Rango de fin --}}
+
+                                <label>Fecha final:</label>
+                                {{-- Filtros de busqueda --}}
+                                <div class="form-inline mr-auto">
+                                    {{-- Busqueda por dia --}}
+                                    <label for="diaemitfin">Dia</label>
+                                    <select wire:model.defer="diaemitfin" id="diaemitfin"
+                                        class="select form-control selectfilemit filtbusc" wire:loading.attr="disabled">
+                                        @php
+                                            for ($i = 1; $i <= 31; $i++) {
+                                                echo '<option value="' . $i . '">' . $i . '</option>';
+                                        } @endphp </select>
+                                    &nbsp;&nbsp;
+
+                                    {{-- Busqueda por mes --}}
+                                    <label for="mesemitfin">Mes</label>
+                                    <select wire:model.defer="mesemitfin" id="mesemitfin"
+                                        class=" select form-control selectfilemit filtbusc"
+                                        wire:loading.attr="disabled">
+                                        <?php foreach ($meses as $key => $value) {
+                                            echo '<option value="' . $key . '">' . $value . '</option>';
+                                        } ?>
+                                    </select>
+                                    &nbsp;&nbsp;
+
+                                    {{-- Busqueda por año --}}
+                                    <label for="anioemitfin">Año</label>
+                                    <select wire:model.defer="anioemitfin" id="anioemitfin"
+                                        class="select form-control selectfilemit filtbusc" wire:loading.attr="disabled">
+                                        <?php foreach (array_reverse($anios) as $key => $value) {
+                                            echo '<option value="' . $value . '">' . $value . '</option>';
+                                        } ?>
+                                    </select>
+                                    &nbsp;&nbsp;
+
+                                    <button class="btn btn-secondary BtnVinculadas BtnConsulSAT"
+                                        wire:loading.attr="disabled" wire:click="ConsultSAT()">Buscar</button>
+                                    &nbsp;&nbsp;
+                                </div>
+
+                                {{-- Js para los filtros de emitidos --}}
+                                <script>
+                                    $(document).ready(function() {
+                                        //Filtros para limitar el dia y mes 
+                                        function LimitDiasMes() {
+                                            //Antes de iniciar desblqueamos todos los meses
+                                            $('#mesemitfin option').attr('disabled', false);
+                                            //Y tambien los años
+                                            $('#anioemitfin option').attr('disabled', false);
+                                            //Dias
+                                            $('#diaemitfin option').attr('disabled', false);
+
+                                            //Obtenemos los valores iniciales
+                                            //Dia inicial
+                                            var DiaInic = $("#diaemitinic").val();
+                                            //Mes inicial
+                                            var MesInic = $("#mesemitinic").val();
+                                            //Año inicial
+                                            var AnioInic = $("#anioemitinic")[0].selectedIndex;
+                                            var AnioInicVal = $("#anioemitinic").val();
+
+                                            //Obtenemos lo finales
+                                            //Año final
+                                            var AnioFin = $("#anioemitfin").val();
+                                            //Mes final
+                                            var MesFin = $("#mesemitfin").val();
+
+                                            //En base a los datos obtenidos vamos a limitar la fecha
+                                            //Año
+                                            //Para este caso vamos a obtener el tamaño del select
+                                            var Totalopanio = $('#anioemitinic option').length;
+
+                                            for (var i = AnioInic + 1; i < Totalopanio; i++) {
+                                                $('#anioemitfin option:eq(' + i + ')').attr('disabled', true);
+                                            }
+
+                                            //Mes
+                                            if (AnioInicVal == AnioFin) {
+                                                for (var i = 0; i < MesInic - 1; i++) {
+                                                    //Bloquearemos el uso de los meses anteriores al seleccionado
+                                                    $('#mesemitfin option:eq(' + i + ')').attr('disabled', true);
+                                                }
+                                            } else {
+                                                //Si no es lo mismo desbloqueamos los dias
+                                                $('#mesemitfin option').attr('disabled', false);
+                                            }
+
+                                            //Para los dias solo se limitaran cuando estan en el mismo mes
+                                            //Obtenemos el valor del mes final
+                                            if (MesInic == MesFin && AnioInicVal == AnioFin) {
+                                                for (var i = 0; i < DiaInic - 1; i++) {
+                                                    //Bloquearemos el uso de los dias anteriores al seleccionado
+                                                    $('#diaemitfin option:eq(' + i + ')').attr('disabled', true);
+                                                }
+                                            } else {
+                                                //Si no es lo mismo desbloqueamos los dias
+                                                $('#diaemitfin option').attr('disabled', false);
+                                            }
+                                        }
+
+
+                                        //Ejecutamos la funcion al iniciar los filtros de emitidos
+                                        LimitDiasMes();
+
+                                        //Ahora realizaremos lo mismo pero cuando se haga un cambio en el select
+                                        $(".selectfilemit").change(function() {
+                                            LimitDiasMes();
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+                        <br>
+
+                        {{-- Tabla de emitidos --}}
                         <div class="table-responsive">
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
@@ -786,12 +777,12 @@
 
                                                 {{-- Desc XML --}}
                                                 <td class="text-center align-middle">
-                                                    <span class="invoice-amount">{{ $existxml }}</span>
+                                                    <span class="invoice-amount descxml">{{ $existxml }}</span>
                                                 </td>
 
                                                 {{-- Desc PDF --}}
                                                 <td class="text-center align-middle">
-                                                    <span class="invoice-amount">{{ $existpdf }}</span>
+                                                    <span class="invoice-amount descpdf">{{ $existpdf }}</span>
                                                 </td>
 
                                                 {{-- Desc ACUSE --}}
@@ -799,7 +790,8 @@
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <span class="invoice-amount"> - </span>
                                                     @else
-                                                        <span class="invoice-amount">{{ $existpdfacuse }}</span>
+                                                        <span
+                                                            class="invoice-amount descacuse">{{ $existpdfacuse }}</span>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -938,16 +930,80 @@
     {{-- JS --}}
     <script>
         $(document).ready(function() {
+            //Funcion para marcar los checkboxes no descargados
+            function checksindesc() {
+                //Obtenemos el valor del select
+                var Tiposelect = $("#selecttipocfdi").val();
+
+                //Condicional para saber si el select es un emitido o recibido
+                if (Tiposelect == "Recibidos") {
+                    //Vamos a pasar por todas las filas
+                    $("#example tbody tr").each(function() {
+                        //Obtenemos el valor de las columnas
+                        var xmldesc = $(this).find("td:eq(13)").text();
+                        var pdfdesc = $(this).find("td:eq(14)").text();
+                        var pdfacusedesc = $(this).find("td:eq(15)").text();
+
+                        //Eliminamos los espacios en blanco
+                        xmldesc = xmldesc.trim();
+                        pdfdesc = pdfdesc.trim();
+                        pdfacusedesc = pdfacusedesc.trim();
+
+                        //Marcamos el checkbox cuando estos no existan
+                        if (xmldesc == "No") {
+                            $(this).find("td:eq(0) input").prop("checked", true);
+                        }
+
+                        if (pdfdesc == "No") {
+                            $(this).find("td:eq(1) input").prop("checked", true);
+                        }
+
+                        if (pdfacusedesc == "No") {
+                            $(this).find("td:eq(2) input").prop("checked", true);
+                        }
+                    });
+                } else {
+                    //Vamos a pasar por todas las filas
+                    $("#example tbody tr").each(function() {
+                        //Obtenemos el valor de las columnas
+                        var xmldesc = $(this).find("td:eq(12)").text();
+                        var pdfdesc = $(this).find("td:eq(13)").text();
+                        var pdfacusedesc = $(this).find("td:eq(14)").text();
+
+                        //Eliminamos los espacios en blanco
+                        xmldesc = xmldesc.trim();
+                        pdfdesc = pdfdesc.trim();
+                        pdfacusedesc = pdfacusedesc.trim();
+
+                        //Marcamos el checkbox cuando estos no existan
+                        if (xmldesc == "No") {
+                            $(this).find("td:eq(0) input").prop("checked", true);
+                        }
+
+                        if (pdfdesc == "No") {
+                            $(this).find("td:eq(1) input").prop("checked", true);
+                        }
+
+                        if (pdfacusedesc == "No") {
+                            $(this).find("td:eq(2) input").prop("checked", true);
+                        }
+                    });
+                }
+            }
+
             //Variables
             var valchkxml = []; //Inicializamos con la variable vacia
             var valchkpdf = []; //Inicializamos con la variable vacia
             var valchkacuse = []; //Inicializamos con la variable vacia
             var activdesc = 0;
 
+            //Al iniciar el modulo se ejecutara la funcion de marcado
+            checksindesc();
+
             //Accion de marcar todos los checkboxes
             //XML
             $("#allxml").change(function() {
-                valchkxml = [];
+                valchkxml = []; //Vaciamos el arreglo
 
                 //Marcamos los checkboxes
                 $(".chkxml").prop("checked", $(this).prop("checked"));
@@ -960,7 +1016,7 @@
 
             //PDF
             $("#allpdf").change(function() {
-                valchkpdf = [];
+                valchkpdf = []; //Vaciamos el arreglo
 
                 //Marcamos los checkboxes
                 $(".chkpdf").prop("checked", $(this).prop("checked"));
@@ -969,6 +1025,18 @@
                 $("input[name=chkpdf]:checked").each(function() {
                     valchkpdf.push(this.value);
                 });
+            });
+
+            //Acciones al cambiar de tipo
+            $("#selecttipocfdi").change(function() {
+                //Bloqueamos el boton de consulta
+                $(".BtnConsulSAT").prop("disabled", true);
+
+                //Bloqueamos el boton de calendario
+                $("#Btncalendario").prop("disabled", true);
+
+                //Bloqueamos los select de fechas
+                $(".filtbusc").prop("disabled", true);
             });
 
             //Boton de descarga
@@ -994,17 +1062,39 @@
                 var Serialvalpdf = valchkpdf.toString();
                 var Serialvalacuse = valchkacuse.toString();
 
+                //Condicional para saber si se selecciono algun cfdi
                 if (Serialvalxml.length > 1 || Serialvalpdf.length > 1 || Serialvalacuse.length > 1) {
-                    //Bloqueamos el boton de buscar
-                    $("#BtnConsulSAT").prop("disabled", true);
+                    //Condicional para saber si excedemos las 10000 descargas (permitidas por el SAT)
+                    if (valchkxml.length > 10000 || valchkpdf.length > 10000 || valchkacuse.length >
+                        10000) {
+                        $("#mnsexcep").text(
+                            "Lo sentimos el portal SAT no permite realizar mas de 10,000 descargas");
+                        $("#Mnssincfdi").prop("hidden", false);
+                        $("#Btndescarcfdi").prop("disabled", true);
+                        setTimeout(function() {
+                            $("#Mnssincfdi").prop("hidden", true);
+                            $("#Btndescarcfdi").prop("disabled", false);
+                        }, 2500);
+                    } else {
+                        //Bloqueamos el boton de buscar
+                        $(".BtnConsulSAT").prop("disabled", true);
 
-                    //Emitimos los valores marcados
-                    window.livewire.emit('addallcfdi', {
-                        xmlval: Serialvalxml,
-                        pdfval: Serialvalpdf,
-                        acuseval: Serialvalacuse
-                    });
+                        //Bloqueamos el boton de calendario
+                        $("#Btncalendario").prop("disabled", true);
+
+                        //Bloqueamos los select de fechas
+                        $(".filtbusc").prop("disabled", true);
+
+                        //Emitimos los valores marcados
+                        window.livewire.emit('addallcfdi', {
+                            xmlval: Serialvalxml,
+                            pdfval: Serialvalpdf,
+                            acuseval: Serialvalacuse
+                        });
+                    }
                 } else {
+                    $("#mnsexcep").text(
+                        "Favor de seleccionar un CFDI");
                     $("#Mnssincfdi").prop("hidden", false);
                     $("#Btndescarcfdi").prop("disabled", true);
                     setTimeout(function() {
@@ -1032,12 +1122,21 @@
                 $("#allpdf").prop("checked", false);
 
                 //Desbloqueamos el boton de buscar
-                $("#BtnConsulSAT").prop("disabled", false);
+                $(".BtnConsulSAT").prop("disabled", false);
+
+                //Desbloqueamos el boton de calendario
+                $("#Btncalendario").prop("disabled", false);
+
+                //Desbloqueamos los select de fechas
+                $(".filtbusc").prop("disabled", false);
 
                 //Vaciamos los array
                 valchkxml = [];
                 valchkpdf = [];
                 valchkacuse = [];
+
+                //Cuando se realice el proceso de desmaracar todos los checkboxes, marcamos lo que no se han descargado
+                checksindesc();
             });
         });
     </script>

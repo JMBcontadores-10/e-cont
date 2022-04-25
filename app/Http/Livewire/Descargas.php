@@ -19,6 +19,7 @@ use App\Models\CalendarioR;
 use App\Models\CalendarioE;
 use App\Models\MetadataE;
 use App\Models\MetadataR;
+use App\Models\Calendario;
 use App\Models\User;
 use App\Models\XmlE;
 use App\Models\XmlR;
@@ -79,6 +80,7 @@ class Descargas extends Component
 
     //Varibles para la tabla de CFDI
     public $tipo;
+    public $totallist;
 
     //Obtener el valor de los checkbox
     public $cfdiselectxml = []; //Variable que contendra los folios para la descarga de los XML
@@ -106,9 +108,6 @@ class Descargas extends Component
     public $recibido = 0; //Variable bandera para saber si existe o no datos recibidos
     public $mescal;
     public $aniocal;
-
-    public $inforeci;
-    public $infoemit;
 
 
     //Recibimos los emitidos de livewire
@@ -272,6 +271,9 @@ class Descargas extends Component
                             break;
                     }
                 }
+
+                //Emitimos una accion para recibirlo en la vista
+                $this->dispatchBrowserEvent('deschecked', []);
 
                 //Retornamos el valor de la consulta
                 return $satScraper->listByPeriod($query);
@@ -465,6 +467,9 @@ class Descargas extends Component
                     }
                 }
 
+                //Metodo para mostrar el resultado de las descargas
+                $this->AddCalReci();
+
                 //Limpiamos los arreglos
                 $this->cfdiselectxml = [];
                 $this->cfdiselectpdf = [];
@@ -485,7 +490,7 @@ class Descargas extends Component
                 //Rutas
                 //En emitidos se basa en rangos de fecha (A diferencia de recibidos), por lo que haremos es obtener el mes
                 //Para optimizar la descarga de emitidos y ahorrar tiempo se hara una condicional donde se compara si el mes inicial es igual que la final
-                if ($this->mesemitinic == $this->mesemitfin) {
+                if ($this->mesemitinic . "-" . $this->anioemitinic == $this->mesemitfin . "-" . $this->anioemitfin) {
                     //Rutas
                     //Aqui llamamos a la funcion de meses
                     $mesruta = $this->Meses($this->mesemitinic);
@@ -528,12 +533,14 @@ class Descargas extends Component
                             $this->SaveXML($rutaGuardar . "XML/" . $fileName, $fileBaseName, $this->tipo);
                         }
                     }
+
+                    //Metodo para mostrar el resultado de las descargas
+                    $this->AddCalEmit();
                 } else {
                     //XML
                     foreach ($listxmlemit as $listxmlemitdato) {
-                        $mesreciemitxml = $listxmlemitdato->fechaEmision;
-                        $mesreciemitxml = explode("-", $mesreciemitxml);
-                        $mesreciemitxml = intval($mesreciemitxml[1]);
+                        $mesreciemitxml = date("n", strtotime($listxmlemitdato->fechaEmision)); //Descomponemos la fecha al mes
+                        $anioreciemitxml = date("Y", strtotime($listxmlemitdato->fechaEmision)); //Descomponemos la fecha el año
 
                         //Realizamos una consulta del CFDI que vamos a guardar
                         $foliofiscal = [$listxmlemitdato->uuid];
@@ -544,7 +551,7 @@ class Descargas extends Component
                         $mesrutaxml = $this->Meses($mesreciemitxml);
 
                         //XML
-                        $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesrutaxml/Emitidos/XML/";
+                        $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioreciemitxml/Descargas/$mesrutaxml/Emitidos/XML/";
 
                         //Realizamos la descarga
                         //XML
@@ -571,9 +578,8 @@ class Descargas extends Component
 
                     //PDF
                     foreach ($listpdfemit as $listpdfemitdato) {
-                        $mesreciemitpdf = $listpdfemitdato->fechaEmision;
-                        $mesreciemitpdf = explode("-", $mesreciemitpdf);
-                        $mesreciemitpdf = intval($mesreciemitpdf[1]);
+                        $mesreciemitpdf = date("n", strtotime($listpdfemitdato->fechaEmision)); //Descomponemos la fecha al mes
+                        $anioreciemitpdf = date("Y", strtotime($listpdfemitdato->fechaEmision)); //Descomponemos la fecha el año
 
                         //Realizamos una consulta del CFDI que vamos a guardar
                         $foliofiscal = [$listpdfemitdato->uuid];
@@ -584,7 +590,7 @@ class Descargas extends Component
                         $mesrutapdf = $this->Meses($mesreciemitpdf);
 
                         //PDF
-                        $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesrutapdf/Emitidos/PDF/";
+                        $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioreciemitpdf/Descargas/$mesrutapdf/Emitidos/PDF/";
 
                         //Realizamos la descarga
                         //PDF
@@ -595,9 +601,8 @@ class Descargas extends Component
 
                     //PDF Acuse
                     foreach ($listpdfacuseemit as $listpdfacuseemitdato) {
-                        $mesreciemitpdfacu = $listpdfacuseemitdato->fechaEmision;
-                        $mesreciemitpdfacu = explode("-", $mesreciemitpdfacu);
-                        $mesreciemitpdfacu = intval($mesreciemitpdfacu[1]);
+                        $mesreciemitpdfacu = date("n", strtotime($listpdfacuseemitdato->fechaEmision)); //Descomponemos la fecha al mes
+                        $anioreciemitpdfacu = date("Y", strtotime($listpdfacuseemitdato->fechaEmision)); //Descomponemos la fecha el año
 
                         //Realizamos una consulta del CFDI que vamos a guardar
                         $foliofiscal = [$listpdfacuseemitdato->uuid];
@@ -609,7 +614,7 @@ class Descargas extends Component
 
                         //Acuse
                         //Acuse
-                        $rutaacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesrutapdfacuse/Emitidos/ACUSE/";
+                        $rutaacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioreciemitpdfacu/Descargas/$mesrutapdfacuse/Emitidos/ACUSE/";
 
                         //Realizamos la descarga
                         //PDF Acuse
@@ -629,6 +634,9 @@ class Descargas extends Component
                 //Acuse
                 $this->SaveMetadatos($listpdfacuseemit, $this->tipo);
 
+                //Metodo para mostrar el resultado de las descargas
+                $this->AddCalEmit();
+
                 //Limpiamos los arreglos
                 $this->cfdiselectxml = [];
                 $this->cfdiselectpdf = [];
@@ -645,11 +653,165 @@ class Descargas extends Component
     public function AddCalReci()
     {
         //Variables
-        $cfdidesc = 0; //Contador de total descargas
-        $cfdierror = 0; //Contador de total error
-        $cfdirecibi = 0; //Contador de total recibido
+        $totaldesc = 0; //Total de descargados
+        $totalcfdi = $this->totallist; //Total de cfdi
+        $allcfdi = []; //arreglo donde se guardaran todos los uuids
+
+        //Variables para el guardados de la base
         $fechadesc = $this->anioreci . '-' . $this->mesreci . '-' . $this->diareci; //Fecha de descarga
-        
+        $cfdidesc = 0;
+        $cfdierror = 0;
+        $cfdirecibi = 0;
+
+        //Obtendremos los uuids seleccionados
+        $allcfdi = array_merge($this->cfdiselectxml, $this->cfdiselectpdf, $this->cfdiselectpdfacuse);
+        //Eliminamos los uuids repetidos
+        $allcfdi = array_unique($allcfdi);
+
+        //Ejecutamos el metodo de los meses
+        $mesruta = $this->Meses($this->mesreci);
+
+        //Rutas
+        //XML
+        $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
+        //PDF
+        $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
+        //Acuse
+        $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
+
+        //Con un bucle pasamos por los uuids almacenados en el arreglo
+        foreach ($allcfdi as $listuuids) {
+            //Buscamos si exsiten los archivos (si estn descargados)
+            //XML/PDF/Acuse
+            $xmlfile = $rutaxml . strtoupper($listuuids) . '.xml';
+            $pdffile = $rutapdf . strtoupper($listuuids) . '.pdf';
+            $acusefile = $rutapdfacuse . strtoupper($listuuids) . '-acuse' . '.pdf';
+
+            if (file_exists($xmlfile) || file_exists($pdffile) || file_exists($acusefile)) {
+                $totaldesc++;
+            } else {
+                $cfdierror++;
+            }
+        }
+
+        //En una condicional comparamos si el total de descargados es el total de la descarga
+        if ($totaldesc == $totalcfdi) {
+            $cfdidesc = $totalcfdi; //Agregamos el total descargado
+            $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+
+        } else {
+            //De lo contrario sacamos los errores
+            $cfdidesc = $totalcfdi; //Agregamos el total descargado
+            $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+        }
+
+        //Agregar a la base de datos
+        $busca = Calendario::where(['rfc' => $this->rfcEmpresa]);
+        $busca->update(
+            [
+                'rfc' => $this->rfcEmpresa,
+                'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
+                'descargas.' . $fechadesc . '.descargasRecibidos' => $cfdidesc,
+                'descargas.' . $fechadesc . '.erroresRecibidos' => $cfdierror,
+                'descargas.' . $fechadesc . '.totalRecibidos' => $cfdirecibi,
+            ],
+            ['upsert' => true]
+        );
+    }
+
+    //Metodo para agregar los descargados emitidos en la base de datos de calendario
+    public function AddCalEmit()
+    {
+        //Variables
+        $allcfdi = []; //arreglo donde se guardaran todos los uuids
+        $fechainic = $this->anioemitinic . '-' . $this->mesemitinic . '-' . $this->diaemitinic; //Fecha inicial
+        $fechafin = $this->anioemitfin . '-' . $this->mesemitfin . '-' . $this->diaemitfin; //Fecha final
+
+        //Obtendremos los uuids seleccionados
+        $allcfdi = array_merge($this->cfdiselectxml, $this->cfdiselectpdf, $this->cfdiselectpdfacuse);
+        //Eliminamos los uuids repetidos
+        $allcfdi = array_unique($allcfdi);
+
+        //Obtener el rengo de fechas
+        for ($i = $fechainic; $i <= $fechafin; $i = date("Y-n-d", strtotime($i . "+ 1 days"))) {
+            //Variables para el guardados de la base
+            $fechadesc = $i; //Fecha de descarga
+            $cfdidesc = 0;
+            $cfdierror = 0;
+            $cfdirecibi = 0;
+            $totaldesc = 0; //Total de descargados
+
+            //Sacamos el total de los cfdis descargados
+            $totalcfdi = MetadataE::where("fechaEmision", "like", '%' . date("Y-m-d", strtotime($i)) . '%')->count();
+
+            //Obtenemos el mes
+            $mesruta = date("n", strtotime($i));
+            $anioruta = date("Y", strtotime($i));
+
+            //Ejecutamos el metodo de los meses
+            $mesruta = $this->Meses($mesruta);
+
+            //Rutas
+            //XML
+            $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioruta/Descargas/$mesruta/Emitidos/XML/";
+            //PDF
+            $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioruta/Descargas/$mesruta/Emitidos/PDF/";
+            //Acuse
+            $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioruta/Descargas/$mesruta/Emitidos/ACUSE/";
+
+            //Con un bucle pasamos por los uuids almacenados en el arreglo
+            foreach ($allcfdi as $listuuids) {
+                $fechacfdiselect = "";
+
+                //Consultamos los datos del cfdi
+                $listdatacfdi = XmlE::where(['UUID' => strtoupper($listuuids)])->get();
+
+                //Obtenemos la fecha
+                foreach ($listdatacfdi as $listdatacfdi) {
+                    $fechacfdiselect = date("Y-n-d", strtotime($listdatacfdi->Fecha));
+                }
+
+                //Condicional para saber si la fecha es igual
+                if ($fechacfdiselect == $i) {
+                    //Buscamos si exsiten los archivos (si estn descargados)
+                    //XML/PDF/Acuse
+                    $xmlfile = $rutaxml . strtoupper($listuuids) . '.xml';
+                    $pdffile = $rutapdf . strtoupper($listuuids) . '.pdf';
+                    $acusefile = $rutapdfacuse . strtoupper($listuuids) . '-acuse' . '.pdf';
+
+                    if (file_exists($xmlfile) || file_exists($pdffile) || file_exists($acusefile)) {
+                        $totaldesc++;
+                    } else {
+                        $cfdierror++;
+                    }
+                }
+            }
+
+
+            //En una condicional comparamos si el total de descargados es el total de la descarga
+            if ($totaldesc == $totalcfdi) {
+                $cfdidesc = $totalcfdi; //Agregamos el total descargado
+                $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+
+            } else {
+                //De lo contrario sacamos los errores
+                $cfdidesc = $totalcfdi; //Agregamos el total descargado
+                $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+            }
+
+            //Agregar a la base de datos
+            $busca = Calendario::where(['rfc' => $this->rfcEmpresa]);
+            $busca->update(
+                [
+                    'rfc' => $this->rfcEmpresa,
+                    'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
+                    'descargas.' . $fechadesc . '.descargasEmitidos' => $cfdidesc,
+                    'descargas.' . $fechadesc . '.erroresEmitidos' => $cfdierror,
+                    'descargas.' . $fechadesc . '.totalEmitidos' => $cfdirecibi,
+                ],
+                ['upsert' => true]
+            );
+        }
     }
 
     //Metodo para limpiar los campos de busqueda (Esto sucedera al cambiar de empresa (si es contador) y al cambiar de recibido a emitidos)
@@ -922,9 +1084,9 @@ class Descargas extends Component
 
         //Contamos el total de registros arrojados
         if (!is_string($list)) {
-            $totallist = count($list);
+            $this->totallist = count($list);
         } else {
-            $totallist = " - ";
+            $this->totallist = " - ";
         }
 
         //Arreglo de los meses
@@ -979,7 +1141,7 @@ class Descargas extends Component
             $emp = '';
         }
 
-        return view('livewire.descargas', ['empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'meses' => $meses, 'anios' => $anios, 'weeks' => $weeks, 'list' => $list, "totallist" => $totallist])
+        return view('livewire.descargas', ['empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'meses' => $meses, 'anios' => $anios, 'weeks' => $weeks, 'list' => $list, "totallist" => $this->totallist])
             ->extends('layouts.livewire-layout')
             ->section('content');
     }
