@@ -362,69 +362,6 @@ echo "<br>fecha descarga".$data['descargas.0.erroresEmitidos']."<br>";
               $list = $satScraper->listByPeriod($query);
               echo "Emitidos:". count($list);
 
-$busca= Calendario::where(
-    'rfc', $rfc
-)
-    ->where([
-        'descargas' => [
-            '$elemMatch' => [
-                'fechaDescargas' => $diaX
-            ]
-        ]
-    ])
-    ->get()->first();
-
-    if($busca){
-
-        $busca->pull('descargas', [
-            'fechaDescargas' => $diaX,
-
-        ]);
-
-       $busca ->push('descargas', [
-        'fechaDescargas' => $diaX,
-
-        'descargasEmitidos'=> count($list),
-        'erroresEmitidos'=> '0',
-        'totalEmitidos'=>'0',
-        'descargasRecibidos'=>'0',
-        'erroresRecibidos'=>'0',
-        'totalRecibidos'=>'0'
-
-
-
-
-
-       ],true );
-
-
-
-
-    }else{
-
-
-              $inserCalendario =Calendario::where(['rfc' => $rfc]);
-              $inserCalendario->update([
-             'rfc' => $rfc,
-               ], ['upsert' => true]);
-
-    $inserCalendario->push('descargas', [
-        'fechaDescargas' => $diaX,
-
-        'descargasEmitidos'=> count($list),
-        'erroresEmitidos'=> '0',
-        'totalEmitidos'=>'0',
-        'descargasRecibidos'=>'0',
-        'erroresRecibidos'=>'0',
-        'totalRecibidos'=>'0'
-
-
-
-
-
-   ] );
-
-    }
 
 
               }else{
@@ -440,7 +377,18 @@ $busca= Calendario::where(
 
         //    $satScraper->listByPeriod($query);
 
+// //Aqui llamamos a la funcion de meses
+$mesruta = Meses($mes);
 
+//======================[RUTAS DESCARGAS EMITIDOS]================================///
+//XML
+$rutaxml = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mesruta/$r/XML/";
+//PDF
+$rutapdf = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mesruta/$r/PDF/";
+//ACUSE
+$rutaacuse = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mesruta/$r/ACUSES/";
+
+// descarga de cada uno de los CFDI, reporta los descargados en $downloadedUuids
 
 
 // impresión de cada uno de los metadata
@@ -454,7 +402,8 @@ foreach ($list as $cfdi) {
     echo 'Estado: ', $cfdi->get('estadoComprobante'), PHP_EOL.'<br>';
 
     echo "===================================================================================================<br>";
-//++++++++++++++++++++++++++++{{SECCION DE ENCARPETAMIENTO POR MES}}+++++++++++++++++++++++++++++++//
+
+    //++++++++++++++++++++++++++++{{SECCION DE ENCARPETAMIENTO POR MES}}+++++++++++++++++++++++++++++++//
 
 //     $date1= strtotime($cfdi->get('fechaEmision'));//obtener la fecha para sacar el mes
 //     echo "aqui". $mes1 = date('m',$date1)."<br>";// obtener el mes como entero
@@ -505,18 +454,7 @@ foreach ($list as $cfdi) {
 }
 
 
-// //Aqui llamamos a la funcion de meses
-$mesruta = Meses($mes);
 
-//======================[RUTAS DESCARGAS EMITIDOS]================================///
-//XML
-$rutaxml = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mesruta/$r/XML/";
-//PDF
-$rutapdf = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mesruta/$r/PDF/";
-//ACUSE
-$rutaacuse = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mesruta/$r/ACUSES/";
-
-// descarga de cada uno de los CFDI, reporta los descargados en $downloadedUuids
 
 /////=========================[DESCARGA Y ALAMCENA LOS XML ]=======================================////
 
@@ -632,6 +570,73 @@ $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
             $actualizar->update([
                 'UUID' => strtoupper($fileBaseName),
             ]);
+
+
+
+
+   /// guardamos en el calendario
+
+   $busca= Calendario::where(
+    'rfc', $rfc
+)
+    ->where([
+        'descargas' => [
+            '$elemMatch' => [
+                'fechaDescargas' => $diaX
+            ]
+        ]
+    ])
+    ->get()->first();
+
+    if($busca){
+
+        $busca->pull('descargas', [
+            'fechaDescargas' => $diaX,
+
+        ]);
+
+       $busca ->push('descargas', [
+        'fechaDescargas' => $diaX,
+
+        'descargasEmitidos'=> count($list),
+        'erroresEmitidos'=> '0',
+        'totalEmitidos'=>'0',
+        'descargasRecibidos'=>'0',
+        'erroresRecibidos'=>'0',
+        'totalRecibidos'=>'0'
+       ],true );
+
+
+
+
+    }else{
+
+
+              $inserCalendario =Calendario::where(['rfc' => $rfc]);
+              $inserCalendario->update([
+             'rfc' => $rfc,
+               ], ['upsert' => true]);
+
+    $inserCalendario->push('descargas', [
+        'fechaDescargas' => $diaX,
+
+        'descargasEmitidos'=> count($list),
+        'erroresEmitidos'=> '0',
+        'totalEmitidos'=>'0',
+        'descargasRecibidos'=>'0',
+        'erroresRecibidos'=>'0',
+        'totalRecibidos'=>'0'
+
+
+
+
+
+   ] );
+
+    }
+
+
+
         }else{
             XmlR::where(['UUID' => $fileBaseName])
             ->update(
