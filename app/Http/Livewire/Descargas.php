@@ -147,39 +147,39 @@ class Descargas extends Component
     {
         //Mes
         switch ($mes) {
-            case '1':
+            case '01':
                 return '1.Enero';
                 break;
 
-            case '2':
+            case '02':
                 return '2.Febrero';
                 break;
 
-            case '3':
+            case '03':
                 return '3.Marzo';
                 break;
 
-            case '4':
+            case '04':
                 return '4.Abril';
                 break;
 
-            case '5':
+            case '05':
                 return '5.Mayo';
                 break;
 
-            case '6':
+            case '06':
                 return '6.Junio';
                 break;
 
-            case '7':
+            case '07':
                 return '7.Julio';
                 break;
 
-            case '8':
+            case '08':
                 return '8.Agosto';
                 break;
 
-            case '9':
+            case '09':
                 return '9.Septiembre';
                 break;
 
@@ -539,7 +539,7 @@ class Descargas extends Component
                 } else {
                     //XML
                     foreach ($listxmlemit as $listxmlemitdato) {
-                        $mesreciemitxml = date("n", strtotime($listxmlemitdato->fechaEmision)); //Descomponemos la fecha al mes
+                        $mesreciemitxml = date("m", strtotime($listxmlemitdato->fechaEmision)); //Descomponemos la fecha al mes
                         $anioreciemitxml = date("Y", strtotime($listxmlemitdato->fechaEmision)); //Descomponemos la fecha el año
 
                         //Realizamos una consulta del CFDI que vamos a guardar
@@ -578,7 +578,7 @@ class Descargas extends Component
 
                     //PDF
                     foreach ($listpdfemit as $listpdfemitdato) {
-                        $mesreciemitpdf = date("n", strtotime($listpdfemitdato->fechaEmision)); //Descomponemos la fecha al mes
+                        $mesreciemitpdf = date("m", strtotime($listpdfemitdato->fechaEmision)); //Descomponemos la fecha al mes
                         $anioreciemitpdf = date("Y", strtotime($listpdfemitdato->fechaEmision)); //Descomponemos la fecha el año
 
                         //Realizamos una consulta del CFDI que vamos a guardar
@@ -601,7 +601,7 @@ class Descargas extends Component
 
                     //PDF Acuse
                     foreach ($listpdfacuseemit as $listpdfacuseemitdato) {
-                        $mesreciemitpdfacu = date("n", strtotime($listpdfacuseemitdato->fechaEmision)); //Descomponemos la fecha al mes
+                        $mesreciemitpdfacu = date("m", strtotime($listpdfacuseemitdato->fechaEmision)); //Descomponemos la fecha al mes
                         $anioreciemitpdfacu = date("Y", strtotime($listpdfacuseemitdato->fechaEmision)); //Descomponemos la fecha el año
 
                         //Realizamos una consulta del CFDI que vamos a guardar
@@ -733,7 +733,7 @@ class Descargas extends Component
         $allcfdi = array_unique($allcfdi);
 
         //Obtener el rengo de fechas
-        for ($i = $fechainic; $i <= $fechafin; $i = date("Y-n-d", strtotime($i . "+ 1 days"))) {
+        for ($i = $fechainic; $i <= $fechafin; $i = date("Y-m-d", strtotime($i . "+ 1 days"))) {
             //Variables para el guardados de la base
             $fechadesc = $i; //Fecha de descarga
             $cfdidesc = 0;
@@ -742,10 +742,10 @@ class Descargas extends Component
             $totaldesc = 0; //Total de descargados
 
             //Sacamos el total de los cfdis descargados
-            $totalcfdi = MetadataE::where("fechaEmision", "like", '%' . date("Y-m-d", strtotime($i)) . '%')->count();
+            $totalcfdi = $this->totallist; //Total de cfdi
 
             //Obtenemos el mes
-            $mesruta = date("n", strtotime($i));
+            $mesruta = date("m", strtotime($i));
             $anioruta = date("Y", strtotime($i));
 
             //Ejecutamos el metodo de los meses
@@ -768,7 +768,7 @@ class Descargas extends Component
 
                 //Obtenemos la fecha
                 foreach ($listdatacfdi as $listdatacfdi) {
-                    $fechacfdiselect = date("Y-n-d", strtotime($listdatacfdi->Fecha));
+                    $fechacfdiselect = date("Y-m-d", strtotime($listdatacfdi->Fecha));
                 }
 
                 //Condicional para saber si la fecha es igual
@@ -819,17 +819,17 @@ class Descargas extends Component
     {
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Recibidos)
         $this->anioreci = date("Y");
-        $this->mesreci = date("n");
+        $this->mesreci = date("m");
         $this->diareci = date("j");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango inicio)
         $this->anioemitinic = date("Y");
-        $this->mesemitinic = date("n");
+        $this->mesemitinic = date("m");
         $this->diaemitinic = date("j");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango fin)
         $this->anioemitfin = date("Y");
-        $this->mesemitfin = date("n");
+        $this->mesemitfin = date("m");
         $this->diaemitfin = date("j");
 
         //Reinciamos los arreglos
@@ -846,7 +846,7 @@ class Descargas extends Component
     {
         //El mes y año iniciamos con los de hoy (calendario)
         $this->aniocal = date("Y");
-        $this->mescal = date("n");
+        $this->mescal = date("m");
     }
 
     //Metodo para crear el calendario
@@ -862,24 +862,24 @@ class Descargas extends Component
             $ym = $this->aniocal . "-" . $this->mescal;
         } else {
             //De lo contario no vamos al mes y año actual
-            $ym = date('Y-n');
+            $ym = date('Y-m');
         }
 
         //Establecemos el inicio del calendario
         $timestamp = strtotime($ym . '-01');
         if ($timestamp === false) {
-            $ym = date('Y-n');
+            $ym = date('Y-m');
             $timestamp = strtotime($ym . '-01');
         }
 
         //Obtenemos el dia de hoy
-        $today = date('Y-n-d', time());
+        $today = date('Y-m-d', time());
 
         //Obtenemos lo dias que tiene el mes
         $day_count = date('t', $timestamp);
 
         // 0:Sun 1:Mon 2:Tue ...
-        $str = date('w', mktime(0, 0, 0, date('n', $timestamp), 1, date('Y', $timestamp)));
+        $str = date('w', mktime(0, 0, 0, date('m', $timestamp), 1, date('Y', $timestamp)));
 
         //Variables para la creacion del calendario
         $weeks = array();
@@ -888,29 +888,13 @@ class Descargas extends Component
         //Campos vacios
         $week .= str_repeat('<td></td>', $str);
 
-        //Haremos una consulta al calendarios de recibidos
-        $LogRecical = CalendarioR::select('fechaDescarga', 'rfc', 'canceladosRecibidos', 'descargasRecibidos', 'erroresRecibidos', 'totalRecibidos')
-            ->where('rfc', $this->rfcEmpresa)
-            ->groupBy('fechaDescarga')
-            ->orderBy('fechaDescarga', 'asc')
-            ->get();
-
-        //Haremos una consulta al calendarios de emitidos
-        $LogEmitcal = CalendarioE::select('fechaDescarga', 'rfc', 'descargasEmitidos', 'erroresEmitidos', 'totalEmitidos')
-            ->where('rfc', $this->rfcEmpresa)
-            ->groupBy('fechaDescarga')
-            ->orderBy('fechaDescarga', 'asc')
-            ->get();
+        //Haremos una consulta al calendarios de recibidos/emitidos
+        $LogReciEmical = Calendario::where(['rfc' => $this->rfcEmpresa])->get()->first();
 
         //Ciclo for para llenar los campos con los dias que le pertenece
         for ($day = 1; $day <= $day_count; $day++, $str++) {
-
-            //Condicional para formatear el dia de unidades y decenas (ya que en la base de datos tiene un formato diferente)
-            if ($day < 10 && $this->aniocal > 2021) {
-                $date = $ym . '-0' . $day;
-            } else {
-                $date = $ym . '-' . $day;
-            }
+            //Formamos la fecha completa
+            $date = $ym . '-' . $day;
 
             //Iniciamos en cero la variable por cada iteracion que se haga
             $this->reciboemit = 0;
@@ -920,51 +904,44 @@ class Descargas extends Component
                 case $today:
                     $week .= '<td class="hoy">' . $day;
 
-                    //Agregamos los recibidos
-                    foreach ($LogRecical as $DataReci) {
-                        if ($DataReci->fechaDescarga == $date) {
-                            $week .= "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
-                                "Cancelados: " . $DataReci->canceladosRecibidos . '<br>' .
-                                "Descargados: " . $DataReci->descargasRecibidos . '<br>' .
-                                "Errores: " . $DataReci->erroresRecibidos . '<br>' .
-                                "Total: " . $DataReci->totalRecibidos;
-                        }
+                    //Descomonemos la consulta y insertamos los datos requeridos
+                    //Recibidos
+                    if (isset($LogReciEmical['descargas.' . $date . '.descargasRecibidos'])) {
+                        $week .= "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
+                            "Descargados: " . $LogReciEmical['descargas.' . $date . '.descargasRecibidos'] . '<br>' .
+                            "Errores: " . $LogReciEmical['descargas.' . $date . '.erroresRecibidos'] . '<br>' .
+                            "Total: " . $LogReciEmical['descargas.' . $date . '.totalRecibidos'];
                     }
 
-                    //Agregamos los emitidos
-                    foreach ($LogEmitcal as $DataEmit) {
-                        if ($DataEmit->fechaDescarga == $date) {
-                            $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
-                                "Descargados: " . $DataEmit->descargasEmitidos . '<br>' .
-                                "Errores: " . $DataEmit->erroresEmitidos . '<br>' .
-                                "Total: " . $DataEmit->totalEmitidos;
-                        }
+                    //Emitidos
+                    if (isset($LogReciEmical['descargas.' . $date . '.descargasEmitidos'])) {
+                        $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
+                            "Descargados: " . $LogReciEmical['descargas.' . $date . '.descargasEmitidos'] . '<br>' .
+                            "Errores: " . $LogReciEmical['descargas.' . $date . '.erroresEmitidos'] . '<br>' .
+                            "Total: " . $LogReciEmical['descargas.' . $date . '.totalEmitidos'];
                     }
 
                     break;
                 default:
                     $week .= '<td>' . $day;
 
-                    //Agregamos los recibidos
-                    foreach ($LogRecical as $DataReci) {
-                        if ($DataReci->fechaDescarga == $date) {
-                            $week .= "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
-                                "Cancelados: " . $DataReci->canceladosRecibidos . '<br>' .
-                                "Descargados: " . $DataReci->descargasRecibidos . '<br>' .
-                                "Errores: " . $DataReci->erroresRecibidos . '<br>' .
-                                "Total: " . $DataReci->totalRecibidos;
-                        }
+                    //Descomonemos la consulta y insertamos los datos requeridos
+                    //Recibidos
+                    if (isset($LogReciEmical['descargas.' . $date . '.descargasRecibidos'])) {
+                        $week .= "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
+                            "Descargados: " . $LogReciEmical['descargas.' . $date . '.descargasRecibidos'] . '<br>' .
+                            "Errores: " . $LogReciEmical['descargas.' . $date . '.erroresRecibidos'] . '<br>' .
+                            "Total: " . $LogReciEmical['descargas.' . $date . '.totalRecibidos'];
                     }
 
-                    //Agregamos los emitidos
-                    foreach ($LogEmitcal as $DataEmit) {
-                        if ($DataEmit->fechaDescarga == $date) {
-                            $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
-                                "Descargados: " . $DataEmit->descargasEmitidos . '<br>' .
-                                "Errores: " . $DataEmit->erroresEmitidos . '<br>' .
-                                "Total: " . $DataEmit->totalEmitidos;
-                        }
+                    //Emitidos
+                    if (isset($LogReciEmical['descargas.' . $date . '.descargasEmitidos'])) {
+                        $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
+                            "Descargados: " . $LogReciEmical['descargas.' . $date . '.descargasEmitidos'] . '<br>' .
+                            "Errores: " . $LogReciEmical['descargas.' . $date . '.erroresEmitidos'] . '<br>' .
+                            "Total: " . $LogReciEmical['descargas.' . $date . '.totalEmitidos'];
                     }
+
                     break;
             }
 
@@ -1033,22 +1010,22 @@ class Descargas extends Component
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Recibidos)
         $this->anioreci = date("Y");
-        $this->mesreci = date("n");
+        $this->mesreci = date("m");
         $this->diareci = date("j");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango inicio)
         $this->anioemitinic = date("Y");
-        $this->mesemitinic = date("n");
+        $this->mesemitinic = date("m");
         $this->diaemitinic = date("j");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango fin)
         $this->anioemitfin = date("Y");
-        $this->mesemitfin = date("n");
+        $this->mesemitfin = date("m");
         $this->diaemitfin = date("j");
 
         //El mes y año iniciamos con los de hoy (calendario)
         $this->aniocal = date("Y");
-        $this->mescal = date("n");
+        $this->mescal = date("m");
 
         //Vamos a establecer el tipo como recibido al iniciar
         $this->tipo = "Recibidos";
@@ -1091,15 +1068,15 @@ class Descargas extends Component
 
         //Arreglo de los meses
         $meses = array(
-            '1' => 'Enero',
-            '2' => 'Febrero',
-            '3' => 'Marzo',
-            '4' => 'Abril',
-            '5' => 'Mayo',
-            '6' => 'Junio',
-            '7' => 'Julio',
-            '8' => 'Agosto',
-            '9' => 'Septiembre',
+            '01' => 'Enero',
+            '02' => 'Febrero',
+            '03' => 'Marzo',
+            '04' => 'Abril',
+            '05' => 'Mayo',
+            '06' => 'Junio',
+            '07' => 'Julio',
+            '08' => 'Agosto',
+            '09' => 'Septiembre',
             '10' => 'Octubre',
             '11' => 'Noviembre',
             '12' => 'Diciembre'
