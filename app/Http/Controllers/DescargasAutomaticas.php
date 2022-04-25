@@ -32,6 +32,7 @@ use DirectoryIterator;
 use Exception;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use MongoDB\Operation\Update;
 use PhpCfdi\CfdiCleaner\Cleaner;
 use PhpCfdi\CfdiSatScraper\Contracts\ResourceFileNamerInterface;
@@ -154,7 +155,7 @@ public function __construct()
 $rfcIgnore=['SST030407D77J','SST030407D77M','PERE9308105X4C','PERE9308105X4T','ADMINISTRADOR','NOMINAS'];
      $this->empresas=DB::table('clientes')
                 ->select('RFC')
-                ->where('RFC','AFU1809135Y4')
+                ->where('RFC','SGA1410217U4')
                 //  ->whereNull('tipo','TipoSE')
                 //  ->whereNotIn('Id_Cliente', $ignore)
                 //  ->whereNotIn('RFC', $rfcIgnore)
@@ -185,7 +186,7 @@ $rfcIgnore=['SST030407D77J','SST030407D77M','PERE9308105X4C','PERE9308105X4T','A
 
 
     //resto los dias pasados por la ruta
-$diaX= date("d-m-Y",strtotime($fecha."-". $valor ."days"));
+$diaX= date("Y-m-d",strtotime($fecha."-". $valor ."days"));
 $date= strtotime($diaX);//obtener la fecha para sacar el mes
 $mes = date('m',$date);// obtener el mes como entero
 $anio= date('Y',$date);// obtener el año como entero
@@ -263,18 +264,20 @@ $handler = new class () implements MaximumRecordsHandler {
         echo 'Se encontraron más de 500 CFDI en el segundo: ', $date->format('c'), PHP_EOL;
     }
 };
-$Calendario =Calendario::where(['rfc' => 'AFU1809135Y4'])->where('descargas', '20-04-2022')->get();
-echo count($Calendario)."<br>";
-$data = Calendario::where([
-    'rfc' => "AFU1809135Y4",
-],[
-'descargas' => '20-04-2022'
-    ])
-    ->get()->first();
 
-echo "<br>fecha descarga".$data."<br>";
 
-echo "<br>fecha descarga".$data['descargas.20-04-2022.erroresEmitidos']."<br>";
+// $Calendario =Calendario::where(['rfc' => 'AFU1809135Y4'])->where('descargas', '20-04-2022')->get();
+// echo count($Calendario)."<br>";
+// $data = Calendario::where([
+//     'rfc' => "AFU1809135Y4",
+// ],[
+// 'descargas' => '20-04-2022'
+//     ])
+//     ->get()->first();
+
+// echo "<br>fecha descarga".$data."<br>";
+
+// echo "<br>fecha descarga".$data['descargas.20-04-2022.erroresEmitidos']."<br>";
 
 
 
@@ -339,7 +342,9 @@ echo "<br>fecha descarga".$data['descargas.20-04-2022.erroresEmitidos']."<br>";
                   'Recibidos'
               ];
               foreach ($rutas as $r) {
+                $totaldesc=0;
 
+                $cfdierror=0;
 
 
 ###############################-->[ SECCION DE CFDI´S EMITIDOS]<--####################################
@@ -397,7 +402,7 @@ foreach ($list as $cfdi) {
     echo 'Estado: ', $cfdi->get('estadoComprobante'), PHP_EOL.'<br>';
 
     echo "===================================================================================================<br>";
-
+$allcfdi[]=strtoupper($cfdi->uuid());
     //++++++++++++++++++++++++++++{{SECCION DE ENCARPETAMIENTO POR MES}}+++++++++++++++++++++++++++++++//
 
 //     $date1= strtotime($cfdi->get('fechaEmision'));//obtener la fecha para sacar el mes
@@ -455,7 +460,7 @@ foreach ($list as $cfdi) {
 
 
 $downloadedUuids = $satScraper->resourceDownloader(ResourceType::xml(), $list)
-    ->setConcurrency(50)                            // cambiar a 50 descargas simultáneas
+     ->setResourceFileNamer(new FileNameXML())                          // cambiar a 50 descargas simultáneas
     ->saveTo($rutaxml, true, 0777);
 
 // ejecutar la instrucción de descarga
@@ -469,7 +474,7 @@ $satScraper->resourceDownloader(ResourceType::pdf(), $list)
 // /////=========================[DESCARGA Y ALAMCENA LOS ACUSE ]=======================================////
 // //PDF Acuse
 $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
-->setResourceFileNamer(new FileNamePDF())
+->setResourceFileNamer(new FileNamePDFAcuse())
 ->saveTo($rutaacuse, true, 0777);
 
 
@@ -504,6 +509,9 @@ $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
     $fechacancel = $datapdfreci->fechaProcesoCancelacion;
     $urlacuse = null; //Este datos es null ya que no se encuentra en los metadata de cancelacion
 
+
+
+
     //Almacenamos el metadata
     if ($r == 'Emitidos') { $metadatarecipdf =MetadataE::where(['folioFiscal' => $folifiscal]);
     }else{$metadatarecipdf =MetadataR::where(['folioFiscal' => $folifiscal]); }
@@ -528,6 +536,33 @@ $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
         'fechaCancelacion'          => $fechacancel,
         'urlAcuseXml'               => $urlacuse,
     ], ['upsert' => true]);
+}
+
+
+//Con un bucle pasamos por los uuids almacenados en el arreglo
+foreach ($allcfdi as $listuuids) {
+    //Buscamos si exsiten los archivos (si estn descargados)
+    //XML/PDF/Acuse
+    $xmlfile = $rutaxml . strtoupper($listuuids) . '.xml';
+    $pdffile = $rutapdf . strtoupper($listuuids) . '.pdf';
+    $acusefile = $rutaacuse . strtoupper($listuuids) . '-acuse' . '.pdf';
+
+    if (file_exists($xmlfile) || file_exists($pdffile) || file_exists($acusefile)) {
+        $totaldesc++;
+    } else {
+        $cfdierror++;
+    }
+}
+
+  //En una condicional comparamos si el total de descargados es el total de la descarga
+  if ($totaldesc == count($list)) {
+    $cfdidesc = count($list); //Agregamos el total descargado
+    $cfdirecibi = count($list) - $cfdierror; //Agregamos el total recibido
+
+} else {
+    //De lo contrario sacamos los errores
+    $cfdidesc = count($list); //Agregamos el total descargado
+    $cfdirecibi = count($list) - $cfdierror; //Agregamos el total recibido
 }
 
 
@@ -574,8 +609,8 @@ $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
             'rfc' => $rfc,
             'descargas.' . $diaX . '.fechaDescargas' => $diaX,
             'descargas.' . $diaX . '.descargasEmitidos' => count($list),
-            'descargas.' . $diaX . '.erroresEmitidos' => '0',
-            'descargas.' . $diaX . '.totalEmitidos' => '0',
+            'descargas.' . $diaX . '.erroresEmitidos' =>  $cfdierror,
+            'descargas.' . $diaX . '.totalEmitidos' =>  $cfdirecibi,
         ],
         ['upsert' => true]
     );
@@ -602,9 +637,9 @@ $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
             [
                 'rfc' => $rfc,
                 'descargas.' . $diaX . '.fechaDescargas' => $diaX,
-                'descargas.' . $diaX . '.descargasRecibidos' => '0',
-                'descargas.' . $diaX. '.erroresRecibidos' => '0',
-                'descargas.' .$diaX. '.totalRecibidos' => '0',
+                'descargas.' . $diaX . '.descargasRecibidos' => count($list),
+                'descargas.' . $diaX. '.erroresRecibidos' => $cfdierror,
+                'descargas.' .$diaX. '.totalRecibidos' =>$cfdirecibi,
             ],
             ['upsert' => true]
         );
@@ -626,7 +661,7 @@ $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
 
 
 
-
+    $allcfdi=[];
 
 
 
@@ -700,6 +735,8 @@ $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
               }// fin del foreach emitidos y recibidos
 
      }/// fin del foeach clientes
+
+
 
 }
 
