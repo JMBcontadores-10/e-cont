@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 //Clases para acceder al SAT
+
+use App\Models\Calendario;
 use PhpCfdi\CfdiSatScraper\QueryByFilters;
 use PhpCfdi\CfdiSatScraper\ResourceType;
 use PhpCfdi\CfdiSatScraper\SatScraper;
@@ -39,6 +41,35 @@ use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Date;
 
 //Funcion para aumentar la ejecucion de los procesos, lo utilizaremos para las descargas ()
 set_time_limit(7200); //Tiempo limite dado 1 hora
+
+//Clases para cambiar el nombre a lo archivos
+//XML
+class FileNameXML implements \PhpCfdi\CfdiSatScraper\Contracts\ResourceFileNamerInterface
+{
+    public function nameFor(string $uuid): string
+    {
+        return strtoupper($uuid) . '.xml';
+    }
+}
+
+//PDF
+class FileNamePDF implements \PhpCfdi\CfdiSatScraper\Contracts\ResourceFileNamerInterface
+{
+    public function nameFor(string $uuid): string
+    {
+        return strtoupper($uuid) . '.pdf';
+    }
+}
+
+//Acuse
+class FileNamePDFAcuse implements \PhpCfdi\CfdiSatScraper\Contracts\ResourceFileNamerInterface
+{
+    public function nameFor(string $uuid): string
+    {
+        return strtoupper($uuid) . '-acuse' . '.pdf';
+    }
+}
+
 
 
 class DescargasAutomaticas extends Controller
@@ -123,7 +154,7 @@ public function __construct()
 $rfcIgnore=['SST030407D77J','SST030407D77M','PERE9308105X4C','PERE9308105X4T','ADMINISTRADOR','NOMINAS'];
      $this->empresas=DB::table('clientes')
                 ->select('RFC')
-                ->where('RFC','AIJ161001UD1')
+                ->where('RFC','AFU1809135Y4')
                 //  ->whereNull('tipo','TipoSE')
                 //  ->whereNotIn('Id_Cliente', $ignore)
                 //  ->whereNotIn('RFC', $rfcIgnore)
@@ -232,6 +263,31 @@ $handler = new class () implements MaximumRecordsHandler {
         echo 'Se encontraron más de 500 CFDI en el segundo: ', $date->format('c'), PHP_EOL;
     }
 };
+// $Calendario =Calendario::where(['rfc' => 'AFU1809135Y4'])->where('descargas.fechaDescargas', '16-04-2022')->get();
+// echo count($Calendario)."<br>";
+$data = Calendario::where(
+    'rfc', 'AFU1809135Y4'
+)
+    ->project([
+        'descargas' => [
+            '$elemMatch' => [
+                'fechaDescargas' => '20-04-2022'
+            ]
+        ]
+    ])
+    ->get()->first();
+
+echo "<br>fecha descarga".$data."<br>";
+
+echo "<br>fecha descarga".$data['descargas.0.erroresEmitidos']."<br>";
+
+
+
+
+
+
+
+
 
 
     foreach($this->empresas as $rfc){///foreach empresas
@@ -305,6 +361,70 @@ $handler = new class () implements MaximumRecordsHandler {
               if ($r == 'Emitidos') {
               $list = $satScraper->listByPeriod($query);
               echo "Emitidos:". count($list);
+
+$busca= Calendario::where(
+    'rfc', $rfc
+)
+    ->where([
+        'descargas' => [
+            '$elemMatch' => [
+                'fechaDescargas' => $diaX
+            ]
+        ]
+    ])
+    ->get()->first();
+
+    if($busca){
+
+        $busca->pull('descargas', [
+            'fechaDescargas' => $diaX,
+
+        ]);
+
+       $busca ->push('descargas', [
+        'fechaDescargas' => $diaX,
+
+        'descargasEmitidos'=> count($list),
+        'erroresEmitidos'=> '0',
+        'totalEmitidos'=>'0',
+        'descargasRecibidos'=>'0',
+        'erroresRecibidos'=>'0',
+        'totalRecibidos'=>'0'
+
+
+
+
+
+       ],true );
+
+
+
+
+    }else{
+
+
+              $inserCalendario =Calendario::where(['rfc' => $rfc]);
+              $inserCalendario->update([
+             'rfc' => $rfc,
+               ], ['upsert' => true]);
+
+    $inserCalendario->push('descargas', [
+        'fechaDescargas' => $diaX,
+
+        'descargasEmitidos'=> count($list),
+        'erroresEmitidos'=> '0',
+        'totalEmitidos'=>'0',
+        'descargasRecibidos'=>'0',
+        'erroresRecibidos'=>'0',
+        'totalRecibidos'=>'0'
+
+
+
+
+
+   ] );
+
+    }
 
 
               }else{
