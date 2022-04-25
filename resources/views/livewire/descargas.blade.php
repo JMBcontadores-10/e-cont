@@ -35,19 +35,9 @@
                                 echo '<option value="' . $fila[$rfc] . '">' . $fila[$rS] . '</option>';
                             } ?>
                         </select>
-                        
+
                         <br>
                     @endempty
-
-                    {{-- Animacion de cargando --}}
-                    <div wire:loading>
-                        <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
-                            <div></div>
-                            <div></div>
-                        </div>
-                        <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
-                        <br>
-                    </div>
 
                     <br>
 
@@ -90,6 +80,15 @@
                         </div>
                     </div>
 
+                    {{-- Animacion de cargando --}}
+                    <div wire:loading>
+                        <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
+                    </div>
+
                     <br>
 
                     {{-- Mensaje de alerta cuando no se selecciona CFDI --}}
@@ -100,7 +99,7 @@
 
                     {{-- Muestra la cantidad de cfdi cosultados --}}
                     <label>Total de registros obtenidos: {{ $totallist }}</label>
-                    
+
                     <br>
 
                     {{-- Condicional para mostrar los filtros de cada tipo --}}
