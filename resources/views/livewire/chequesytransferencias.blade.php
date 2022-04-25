@@ -476,19 +476,8 @@
                                                     </div>
                                                 @endif
 
-                                                <a  class="{{$class}} fas fa-folder-open"
-                                                data-toggle="modal"  wire:click="$emitTo('relacionados', 'refreshComponent')"
-                                                data-target="#relacionados-{{$id}}" ></a>
-                                            </div>
 
-                                            {{--Vinculadas--}}
-                                            @if ($faltaxml != 0)
-                                            <div>
-                                                <div class="tr">Vinculadas</div>
-                                                <a wire:click="$emitTo('facturas-vinculadas','refrescarModalFacturas')" class="icons fas fa-eye" style="color: #3498DB"
-                                                data-toggle="modal" data-target="#facturasVinculadas{{$id}}"></a>
-                                            </div>
-                                            @endif
+
 
                                             {{--Editar--}}
                                             <div>
