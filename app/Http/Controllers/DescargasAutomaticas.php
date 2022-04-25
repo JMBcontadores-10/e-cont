@@ -263,23 +263,18 @@ $handler = new class () implements MaximumRecordsHandler {
         echo 'Se encontraron más de 500 CFDI en el segundo: ', $date->format('c'), PHP_EOL;
     }
 };
-// $Calendario =Calendario::where(['rfc' => 'AFU1809135Y4'])->where('descargas.fechaDescargas', '16-04-2022')->get();
-// echo count($Calendario)."<br>";
-$data = Calendario::where(
-    'rfc', 'AFU1809135Y4'
-)
-    ->project([
-        'descargas' => [
-            '$elemMatch' => [
-                'fechaDescargas' => '20-04-2022'
-            ]
-        ]
+$Calendario =Calendario::where(['rfc' => 'AFU1809135Y4'])->where('descargas', '20-04-2022')->get();
+echo count($Calendario)."<br>";
+$data = Calendario::where([
+    'rfc' => "AFU1809135Y4",
+],[
+'descargas' => '20-04-2022'
     ])
     ->get()->first();
 
 echo "<br>fecha descarga".$data."<br>";
 
-echo "<br>fecha descarga".$data['descargas.0.erroresEmitidos']."<br>";
+echo "<br>fecha descarga".$data['descargas.20-04-2022.erroresEmitidos']."<br>";
 
 
 
@@ -572,68 +567,19 @@ $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
             ]);
 
 
+    //Agregar a la base de datos
+    $busca = Calendario::where(['rfc' => $rfc]);
+    $busca->update(
+        [
+            'rfc' => $rfc,
+            'descargas.' . $diaX . '.fechaDescargas' => $diaX,
+            'descargas.' . $diaX . '.descargasEmitidos' => count($list),
+            'descargas.' . $diaX . '.erroresEmitidos' => '0',
+            'descargas.' . $diaX . '.totalEmitidos' => '0',
+        ],
+        ['upsert' => true]
+    );
 
-
-   /// guardamos en el calendario
-
-   $busca= Calendario::where(
-    'rfc', $rfc
-)
-    ->where([
-        'descargas' => [
-            '$elemMatch' => [
-                'fechaDescargas' => $diaX
-            ]
-        ]
-    ])
-    ->get()->first();
-
-    if($busca){
-
-        $busca->pull('descargas', [
-            'fechaDescargas' => $diaX,
-
-        ]);
-
-       $busca ->push('descargas', [
-        'fechaDescargas' => $diaX,
-
-        'descargasEmitidos'=> count($list),
-        'erroresEmitidos'=> '0',
-        'totalEmitidos'=>'0',
-        'descargasRecibidos'=>'0',
-        'erroresRecibidos'=>'0',
-        'totalRecibidos'=>'0'
-       ],true );
-
-
-
-
-    }else{
-
-
-              $inserCalendario =Calendario::where(['rfc' => $rfc]);
-              $inserCalendario->update([
-             'rfc' => $rfc,
-               ], ['upsert' => true]);
-
-    $inserCalendario->push('descargas', [
-        'fechaDescargas' => $diaX,
-
-        'descargasEmitidos'=> count($list),
-        'erroresEmitidos'=> '0',
-        'totalEmitidos'=>'0',
-        'descargasRecibidos'=>'0',
-        'erroresRecibidos'=>'0',
-        'totalRecibidos'=>'0'
-
-
-
-
-
-   ] );
-
-    }
 
 
 
@@ -649,7 +595,28 @@ $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
                'UUID' => strtoupper($fileBaseName),
            ]);
 
+
+               //Agregar a la base de datos
+        $busca = Calendario::where(['rfc' => $rfc]);
+        $busca->update(
+            [
+                'rfc' => $rfc,
+                'descargas.' . $diaX . '.fechaDescargas' => $diaX,
+                'descargas.' . $diaX . '.descargasRecibidos' => '0',
+                'descargas.' . $diaX. '.erroresRecibidos' => '0',
+                'descargas.' .$diaX. '.totalRecibidos' => '0',
+            ],
+            ['upsert' => true]
+        );
+
         }
+
+
+
+
+
+
+
 
 
 
