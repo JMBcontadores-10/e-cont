@@ -1002,28 +1002,14 @@
             //Accion de marcar todos los checkboxes
             //XML
             $("#allxml").change(function() {
-                valchkxml = []; //Vaciamos el arreglo
-
                 //Marcamos los checkboxes
                 $(".chkxml").prop("checked", $(this).prop("checked"));
-
-                //Almacenamos el valor de los checkboxes en un arreglo
-                $("input[name=chkxml]:checked").each(function() {
-                    valchkxml.push(this.value);
-                });
             });
 
             //PDF
             $("#allpdf").change(function() {
-                valchkpdf = []; //Vaciamos el arreglo
-
                 //Marcamos los checkboxes
                 $(".chkpdf").prop("checked", $(this).prop("checked"));
-
-                //Almacenamos el valor de los checkboxes en un arreglo
-                $("input[name=chkpdf]:checked").each(function() {
-                    valchkpdf.push(this.value);
-                });
             });
 
             //Acciones al cambiar de tipo
