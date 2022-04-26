@@ -19,6 +19,7 @@ use App\Models\CalendarioR;
 use App\Models\CalendarioE;
 use App\Models\MetadataE;
 use App\Models\MetadataR;
+use App\Models\Calendario;
 use App\Models\User;
 use App\Models\XmlE;
 use App\Models\XmlR;
@@ -27,7 +28,6 @@ use DirectoryIterator;
 use Exception;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
-use MongoDB\Operation\Update;
 use PhpCfdi\CfdiCleaner\Cleaner;
 use PhpCfdi\CfdiSatScraper\Contracts\ResourceFileNamerInterface;
 use PhpCfdi\CfdiSatScraper\Filters\DownloadType;
@@ -54,6 +54,15 @@ class FileNamePDF implements \PhpCfdi\CfdiSatScraper\Contracts\ResourceFileNamer
     }
 }
 
+//Acuse
+class FileNamePDFAcuse implements \PhpCfdi\CfdiSatScraper\Contracts\ResourceFileNamerInterface
+{
+    public function nameFor(string $uuid): string
+    {
+        return strtoupper($uuid) . '-acuse' . '.pdf';
+    }
+}
+
 class Descargas extends Component
 {
     //Variables globales
@@ -71,9 +80,7 @@ class Descargas extends Component
 
     //Varibles para la tabla de CFDI
     public $tipo;
-    public $chkxml; //Banderas para saber si extan activos los checks
-    public $chkpdf; //Banderas para saber si extan activos los checks
-    public $solocfdi = []; //Almacena los UUID de los cfdi seleccionados
+    public $totallist;
 
     //Obtener el valor de los checkbox
     public $cfdiselectxml = []; //Variable que contendra los folios para la descarga de los XML
@@ -102,9 +109,128 @@ class Descargas extends Component
     public $mescal;
     public $aniocal;
 
-    public $info;
 
+    //Recibimos los emitidos de livewire
+    protected $listeners = ['addallcfdi' => 'addallcfdi'];
 
+    public function addallcfdi($datacfdi)
+    {
+        //Obtenemos la cadena con los UUIDs convertidos
+        $dataxmlcheck = $datacfdi['xmlval'];
+        $datapdfcheck = $datacfdi['pdfval'];
+        $dataacusecheck = $datacfdi['acuseval'];
+
+        //Descomponemos la cadena y lo creamos en un arreglo
+        $dataxmlcheck = explode(",", $dataxmlcheck);
+        $datapdfcheck = explode(",", $datapdfcheck);
+        $dataacusecheck = explode(",", $dataacusecheck);
+
+        //Limpiamos los arreglos
+        $this->cfdiselectxml = [];
+        $this->cfdiselectpdf = [];
+        $this->cfdiselectpdfacuse = [];
+
+        //Metemos lo arreglos creados
+        $this->cfdiselectxml = array_filter($dataxmlcheck);
+        $this->cfdiselectpdf = array_filter($datapdfcheck);
+        $this->cfdiselectpdfacuse = array_filter($dataacusecheck);
+
+        //Ejecutamos el metodo de descarga de documentos
+        $this->Descvincucfdi();
+
+        //Emitimos una accion para recibirlo en la vista
+        $this->dispatchBrowserEvent('deschecked', []);
+    }
+
+    //Metodo para convertir los meses en el formato carpetado
+    public function Meses($mes)
+    {
+        //Mes
+        switch ($mes) {
+            case '01':
+                return '1.Enero';
+                break;
+
+            case '02':
+                return '2.Febrero';
+                break;
+
+            case '03':
+                return '3.Marzo';
+                break;
+
+            case '04':
+                return '4.Abril';
+                break;
+
+            case '05':
+                return '5.Mayo';
+                break;
+
+            case '06':
+                return '6.Junio';
+                break;
+
+            case '07':
+                return '7.Julio';
+                break;
+
+            case '08':
+                return '8.Agosto';
+                break;
+
+            case '09':
+                return '9.Septiembre';
+                break;
+
+            case '10':
+                return '10.Octubre';
+                break;
+
+            case '11':
+                return '11.Noviembre';
+                break;
+
+            case '12':
+                return '12.Diciembre';
+                break;
+        }
+    }
+
+    //Metodo de inicio de sesion
+    public function InicioSesion()
+    {
+        //Variables de cookies de sesion para no volver a realizar el inicio de sesion
+        $cookieJarPath = sprintf('%s\build\cookies\%s.json', getcwd(), $this->rfcEmpresa);
+        //Se almacena ña cookie en un gateway para mandarlo al cliente y este realizar las consultas
+        $gateway = new SatHttpGateway(new Client(), new FileCookieJar($cookieJarPath, true));
+
+        //Obtiene las variables para crear el crtificado
+        $certificate = 'storage/' . $this->dircer;
+        $privateKey = 'storage/' . $this->dirkey;
+        $passPhrase = $this->pwd;
+
+        //Creamos al credenciales de acceso
+        $credential = Credential::create(
+            /*En la libreria no utiliza 'file_get_contents', pero si vamos a acceder al certificado
+                por medio de una direccion utiliza la funcion*/
+            file_get_contents($certificate),
+            file_get_contents($privateKey),
+            $passPhrase
+        );
+
+        if (!$credential->isFiel()) {
+            throw new Exception('The certificate and private key is not a FIEL');
+        }
+        if (!$credential->certificate()->validOn()) {
+            throw new Exception('The certificate and private key is not valid at this moment');
+        }
+
+        //Creamos la session utilizando la FIEL
+        $satScraper = new SatScraper(FielSessionManager::create($credential), $gateway);
+
+        return $satScraper;
+    }
 
     //Consultas del SAT (Emitidos o recibidos)
     public function ConsultSAT()
@@ -114,34 +240,8 @@ class Descargas extends Component
             /*Como se va a realizar una peticion a la pagina del SAT vamos a realizar un try catch para verificar que la conexion
         se realizo correctamente*/
             try {
-                //Variables de cookies de sesion para no volver a realizar el inicio de sesion
-                $cookieJarPath = sprintf('%s\build\cookies\%s.json', getcwd(), $this->rfcEmpresa);
-                //Se almacena ña cookie en un gateway para mandarlo al cliente y este realizar las consultas
-                $gateway = new SatHttpGateway(new Client(), new FileCookieJar($cookieJarPath, true));
-
-                //Obtiene las variables para crear el crtificado
-                $certificate = 'storage/' . $this->dircer;
-                $privateKey = 'storage/' . $this->dirkey;
-                $passPhrase = $this->pwd;
-
-                //Creamos al credenciales de acceso
-                $credential = Credential::create(
-                    /*En la libreria no utiliza 'file_get_contents', pero si vamos a acceder al certificado
-                        por medio de una direccion utiliza la funcion*/
-                    file_get_contents($certificate),
-                    file_get_contents($privateKey),
-                    $passPhrase
-                );
-
-                if (!$credential->isFiel()) {
-                    throw new Exception('The certificate and private key is not a FIEL');
-                }
-                if (!$credential->certificate()->validOn()) {
-                    throw new Exception('The certificate and private key is not valid at this moment');
-                }
-
                 //Creamos la session utilizando la FIEL
-                $satScraper = new SatScraper(FielSessionManager::create($credential), $gateway);
+                $satScraper = $this->InicioSesion();
 
                 //Vamos a realizar una consulta
                 if ($this->tipo == 'Emitidos') {
@@ -172,6 +272,9 @@ class Descargas extends Component
                     }
                 }
 
+                //Emitimos una accion para recibirlo en la vista
+                $this->dispatchBrowserEvent('deschecked', []);
+
                 //Retornamos el valor de la consulta
                 return $satScraper->listByPeriod($query);
             } catch (Exception $e) {
@@ -183,93 +286,130 @@ class Descargas extends Component
         }
     }
 
+    //Metodo para almacenar los metadatos
+    public function SaveMetadatos($listcfdi, $tipo)
+    {
+        //En varaibles guardamos los valores necesarios para la inserción y en el mismo ciclo agrgamos los metadatos
+        foreach ($listcfdi as $datapdfreci) {
+            $urldescxml = $datapdfreci->urlXml;
+            $urldescpdf = $datapdfreci->urlPdf;
+            $urldesacuse = $datapdfreci->urlCancelVoucher;
+            $folifiscal = strtoupper($datapdfreci->uuid); //Convertimos en mayusculas para respetar el formato
+            $emisorrfc = $datapdfreci->rfcEmisor;
+            $emisornom = $datapdfreci->nombreEmisor;
+            $receptorrfc = $datapdfreci->rfcReceptor;
+            $receptornom = $datapdfreci->nombreReceptor;
+            $fechaemi = $datapdfreci->fechaEmision;
+            $fechacerti = $datapdfreci->fechaCertificacion;
+            $paccerti = $datapdfreci->pacCertifico;
+
+            $total = $datapdfreci->total;
+            $total = substr($total, 1);
+            $total = str_replace(",", ".", $total);
+            $total = preg_replace('/\.(?=.*\.)/', '', $total);
+
+            $efecto = $datapdfreci->efectoComprobante;
+            $estado = $datapdfreci->estadoComprobante;
+            $edocancel = $datapdfreci->estatusCancelacion;
+            $edoproccancel = $datapdfreci->estatusProcesoCancelacion;
+            $fechacancel = $datapdfreci->fechaProcesoCancelacion;
+            $urlacuse = null; //Este datos es null ya que no se encuentra en los metadata de cancelacion
+
+            //Almacenamos el metadata
+            switch ($tipo) {
+                case "Emitidos":
+                    $metadatarecipdf = MetadataE::where(['folioFiscal' => $folifiscal]);
+                    break;
+                case "Recibidos":
+                    $metadatarecipdf = MetadataR::where(['folioFiscal' => $folifiscal]);
+                    break;
+            }
+
+            $metadatarecipdf->update([
+                'urlDescargaXml'            => $urldescxml,
+                'urlDescargaAcuse'          => $urldesacuse,
+                'urlDescargaRI'             => $urldescpdf,
+                'folioFiscal'               => $folifiscal,
+                'emisorRfc'                 => $emisorrfc,
+                'emisorNombre'              => $emisornom,
+                'receptorRfc'               => $receptorrfc,
+                'receptorNombre'            => $receptornom,
+                'fechaEmision'              => $fechaemi,
+                'fechaCertificacion'        => $fechacerti,
+                'pacCertificado'            => $paccerti,
+                'total'                     => $total,
+                'efecto'                    => $efecto,
+                'estado'                    => $estado,
+                'estadoCancelacion'         => $edocancel,
+                'estadoProcesoCancelacion'  => $edoproccancel,
+                'fechaCancelacion'          => $fechacancel,
+                'urlAcuseXml'               => $urlacuse,
+            ], ['upsert' => true]);
+        }
+    }
+
+    //Metodo para almacenar los XML
+    public function SaveXML($rutaxml, $uuid, $tipo)
+    {
+        //Obtenemos el contenido de la ruta
+        $contentxmlreci = file_get_contents($rutaxml);
+
+        //Try/catch para revisar si existe algun problema con el CFDI
+        try {
+            //Primeramente vamos a leer el archivo sin pasar por limpieza
+
+            //Ahora el cfdi descargado lo convertimos en json
+            $xmlcfdi = JsonConverter::convertToJson($contentxmlreci);
+
+            //Decodificamos el json creado en un arreglo
+            $arraycfdireci = json_decode($xmlcfdi, true);
+        } catch (Exception $e) {
+            //Si existe un problema con el archivo, se pasa por el mismo proceso pero ahora lo limpiamos
+
+            //Limpiamos el XML descargado
+            $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
+
+            //Ahora el cfdi descargado lo convertimos en json
+            $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
+
+            //Decodificamos el json creado en un arreglo
+            $arraycfdireci = json_decode($xmlcfdi, true);
+        }
+
+        //Agregamos los datos del arreglo a la coleccion de XML recibidos
+        switch ($tipo) {
+            case "Emitidos":
+                XmlE::where(['UUID' => $uuid])
+                    ->update(
+                        $arraycfdireci,
+                        ['upsert' => true]
+                    );
+
+                XmlE::where(['UUID' => $uuid])
+                    ->update([
+                        'UUID' => strtoupper($uuid)
+                    ]);
+                break;
+            case "Recibidos":
+                XmlR::where(['UUID' => $uuid])
+                    ->update(
+                        $arraycfdireci,
+                        ['upsert' => true]
+                    );
+
+                XmlR::where(['UUID' => $uuid])
+                    ->update([
+                        'UUID' => strtoupper($uuid)
+                    ]);
+                break;
+        }
+    }
+
     //Metodo para descargar los archivos relacionados
     public function Descvincucfdi()
     {
-        //Convertir los meses en el formato carpetado
-        function Meses($mes)
-        {
-            //Mes
-            switch ($mes) {
-                case '1':
-                    return '1.Enero';
-                    break;
-
-                case '2':
-                    return '2.Febrero';
-                    break;
-
-                case '3':
-                    return '3.Marzo';
-                    break;
-
-                case '4':
-                    return '4.Abril';
-                    break;
-
-                case '5':
-                    return '5.Mayo';
-                    break;
-
-                case '6':
-                    return '6.Junio';
-                    break;
-
-                case '7':
-                    return '7.Julio';
-                    break;
-
-                case '8':
-                    return '8.Agosto';
-                    break;
-
-                case '9':
-                    return '9.Septiembre';
-                    break;
-
-                case '10':
-                    return '10.Octubre';
-                    break;
-
-                case '11':
-                    return '11.Noviembre';
-                    break;
-
-                case '12':
-                    return '12.Diciembre';
-                    break;
-            }
-        }
-
-        //Acceso a la sesion
-        //Variables de cookies de sesion para no volver a realizar el inicio de sesion
-        $cookieJarPath = sprintf('%s\build\cookies\%s.json', getcwd(), $this->rfcEmpresa);
-        //Se almacena ña cookie en un gateway para mandarlo al cliente y este realizar las consultas
-        $gateway = new SatHttpGateway(new Client(), new FileCookieJar($cookieJarPath, true));
-
-        //Obtiene las variables para crear el crtificado
-        $certificate = 'storage/' . $this->dircer;
-        $privateKey = 'storage/' . $this->dirkey;
-        $passPhrase = $this->pwd;
-
-        //Creamos al credenciales de acceso
-        $credential = Credential::create(
-            /*En la libreria no utiliza 'file_get_contents', pero si vamos a acceder al certificado
-                por medio de una direccion utiliza la funcion*/
-            file_get_contents($certificate),
-            file_get_contents($privateKey),
-            $passPhrase
-        );
-
-        if (!$credential->isFiel()) {
-            throw new Exception('The certificate and private key is not a FIEL');
-        }
-        if (!$credential->certificate()->validOn()) {
-            throw new Exception('The certificate and private key is not valid at this moment');
-        }
-
         //Creamos la session utilizando la FIEL
-        $satScraper = new SatScraper(FielSessionManager::create($credential), $gateway);
+        $satScraper = $this->InicioSesion();
 
         //Condicional para saber si pertenece a un emitido o a un recibido
         switch ($this->tipo) {
@@ -287,12 +427,14 @@ class Descargas extends Component
 
                 //Rutas
                 //Aqui llamamos a la funcion de mese
-                $mesruta = Meses($this->mesreci);
+                $mesruta = $this->Meses($this->mesreci);
 
                 //XML
                 $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
-                //PDF/Acuse
+                //PDF
                 $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                //Acuse
+                $rutaacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
 
                 //Realizamos la descarga
                 //XML
@@ -307,228 +449,39 @@ class Descargas extends Component
 
                 //PDF Acuse
                 $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $listpdfacusereci)
-                    ->setResourceFileNamer(new FileNamePDF())
-                    ->saveTo($rutapdf, true, 0777);
+                    ->setResourceFileNamer(new FileNamePDFAcuse())
+                    ->saveTo($rutaacuse, true, 0777);
 
-
-                //Almacenamos los metadatos
-                function AlmacMetaReci($listipo)
-                {
-                    //En varaibles guardamos los valores necesarios para la inserción y en el mismo ciclo agrgamos los metadatos
-                    foreach ($listipo as $datapdfreci) {
-                        $urldescxml = $datapdfreci->urlXml;
-                        $urldescpdf = $datapdfreci->urlPdf;
-                        $urldesacuse = $datapdfreci->urlCancelVoucher;
-                        $folifiscal = strtoupper($datapdfreci->uuid); //Convertimos en mayusculas para respetar el formato
-                        $emisorrfc = $datapdfreci->rfcEmisor;
-                        $emisornom = $datapdfreci->nombreEmisor;
-                        $receptorrfc = $datapdfreci->rfcReceptor;
-                        $receptornom = $datapdfreci->nombreReceptor;
-                        $fechaemi = $datapdfreci->fechaEmision;
-                        $fechacerti = $datapdfreci->fechaCertificacion;
-                        $paccerti = $datapdfreci->pacCertifico;
-
-                        $total = $datapdfreci->total;
-                        $total = substr($total, 1);
-                        $total = str_replace(",", ".", $total);
-                        $total = preg_replace('/\.(?=.*\.)/', '', $total);
-
-                        $efecto = $datapdfreci->efectoComprobante;
-                        $estado = $datapdfreci->estadoComprobante;
-                        $edocancel = $datapdfreci->estatusCancelacion;
-                        $edoproccancel = $datapdfreci->estatusProcesoCancelacion;
-                        $fechacancel = $datapdfreci->fechaProcesoCancelacion;
-                        $urlacuse = null; //Este datos es null ya que no se encuentra en los metadata de cancelacion
-
-                        //Almacenamos el metadata
-                        $metadatarecipdf = MetadataR::where(['folioFiscal' => $folifiscal]);
-                        $metadatarecipdf->update([
-                            'urlDescargaXml'            => $urldescxml,
-                            'urlDescargaAcuse'          => $urldesacuse,
-                            'urlDescargaRI'             => $urldescpdf,
-                            'folioFiscal'               => $folifiscal,
-                            'emisorRfc'                 => $emisorrfc,
-                            'emisorNombre'              => $emisornom,
-                            'receptorRfc'               => $receptorrfc,
-                            'receptorNombre'            => $receptornom,
-                            'fechaEmision'              => $fechaemi,
-                            'fechaCertificacion'        => $fechacerti,
-                            'pacCertificado'            => $paccerti,
-                            'total'                     => $total,
-                            'efecto'                    => $efecto,
-                            'estado'                    => $estado,
-                            'estadoCancelacion'         => $edocancel,
-                            'estadoProcesoCancelacion'  => $edoproccancel,
-                            'fechaCancelacion'          => $fechacancel,
-                            'urlAcuseXml'               => $urlacuse,
-                        ], ['upsert' => true]);
-                    }
-                }
-
-                //Almacenamos los XML recibidos
-                function AlmacXMLReci($rutaxml)
-                {
-                    //Establecemos la ruta donde esta el XML descargado mas el nombre del XML
-                    $rutadescxml = $rutaxml;
-
-                    //Obtenemos el contenido de la ruta obtenido
-                    $contentrutaxml = new DirectoryIterator($rutadescxml);
-
-                    //Con el foreach accedemos al contenido del objeto creado
-                    foreach ($contentrutaxml as $infoxmlfile) {
-                        //En la iteracion obtenemos la informacion de los archivos
-                        $fileExt = $infoxmlfile->getExtension();
-                        $fileBaseName = $infoxmlfile->getBasename(".$fileExt");
-                        $filePathname = $infoxmlfile->getPathname();
-                    }
-
-                    //Condicional si el nombre del documento es el adecuado (ejemplo: archivo.jpg)
-                    if (!$infoxmlfile->isDot()) {
-                        //Obtenemos el contenido de la ruta
-                        $contentxmlreci = file_get_contents($filePathname);
-
-                        //Limpiamos el XML descargado
-                        $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
-
-                        //Ahora el cfdi descargado lo convertimos en json
-                        $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
-
-                        //Decodificamos el json creado en un arreglo
-                        $arraycfdireci = json_decode($xmlcfdi, true);
-
-                        //Agregamos los datos del arreglo a la coleccion de XML recibidos
-                        XmlR::where(['UUID' => $fileBaseName])
-                            ->update(
-                                $arraycfdireci,
-                                ['upsert' => true]
-                            );
-                    }
-                }
 
                 //Llamamos la funcion para almacenar los metadatos en la base de datos
                 //PDF
-                AlmacMetaReci($listpdfreci);
+                $this->SaveMetadatos($listpdfreci, $this->tipo);
 
                 //XML
-                AlmacMetaReci($listxmlreci);
+                $this->SaveMetadatos($listxmlreci, $this->tipo);
 
                 //Acuse
-                AlmacMetaReci($listpdfacusereci);
+                $this->SaveMetadatos($listpdfacusereci, $this->tipo);
+
 
                 //Vamos a comporbar si la carpeta tiene XML descargados
-                $rutafolder = @scandir($rutaxml);
-
-                //Condicional si existe algun documento
-                if (count($rutafolder) > 2) {
-                    AlmacXMLReci($rutaxml); //Llamamos la funcion de almacenar los XML en la base de datos
+                foreach ($this->cfdiselectxml as $listxmlcfdi) {
+                    $rutaxmlfile = $rutaxml . strtoupper($listxmlcfdi) . ".xml";
+                    if (file_exists($rutaxmlfile)) {
+                        $this->SaveXML($rutaxmlfile, strtoupper($listxmlcfdi), $this->tipo);
+                    }
                 }
+
+
+                //Metodo para mostrar el resultado de las descargas
+                $this->AddCalReci();
 
                 //Limpiamos los arreglos
                 $this->cfdiselectxml = [];
                 $this->cfdiselectpdf = [];
                 $this->cfdiselectpdfacuse = [];
-
-                //Ponemos en cero los checks
-                $this->chkxml = 0;
-                $this->chkpdf = 0;
                 break;
             case "Emitidos":
-                //Almacenamos los metadatos
-                function AlmacMetaEmit($listipo)
-                {
-                    //En varaibles guardamos los valores necesarios para la inserción y en el mismo ciclo agrgamos los metadatos
-                    foreach ($listipo as $datapdfreci) {
-                        $urldescxml = $datapdfreci->urlXml;
-                        $urldescpdf = $datapdfreci->urlPdf;
-                        $urldesacuse = $datapdfreci->urlCancelVoucher;
-                        $folifiscal = strtoupper($datapdfreci->uuid); //Convertimos en mayusculas para respetar el formato
-                        $emisorrfc = $datapdfreci->rfcEmisor;
-                        $emisornom = $datapdfreci->nombreEmisor;
-                        $receptorrfc = $datapdfreci->rfcReceptor;
-                        $receptornom = $datapdfreci->nombreReceptor;
-                        $fechaemi = $datapdfreci->fechaEmision;
-                        $fechacerti = $datapdfreci->fechaCertificacion;
-                        $paccerti = $datapdfreci->pacCertifico;
-
-                        $total = $datapdfreci->total;
-                        $total = substr($total, 1);
-                        $total = str_replace(",", ".", $total);
-                        $total = preg_replace('/\.(?=.*\.)/', '', $total);
-
-                        $efecto = $datapdfreci->efectoComprobante;
-                        $estado = $datapdfreci->estadoComprobante;
-                        $edocancel = $datapdfreci->estatusCancelacion;
-                        $edoproccancel = $datapdfreci->estatusProcesoCancelacion;
-                        $fechacancel = $datapdfreci->fechaProcesoCancelacion;
-                        $urlacuse = null; //Este datos es null ya que no se encuentra en los metadata de cancelacion
-
-                        //Almacenamos el metadata
-                        $metadatarecipdf = MetadataE::where(['folioFiscal' => $folifiscal]);
-                        $metadatarecipdf->update([
-                            'urlDescargaXml'            => $urldescxml,
-                            'urlDescargaAcuse'          => $urldesacuse,
-                            'urlDescargaRI'             => $urldescpdf,
-                            'folioFiscal'               => $folifiscal,
-                            'emisorRfc'                 => $emisorrfc,
-                            'emisorNombre'              => $emisornom,
-                            'receptorRfc'               => $receptorrfc,
-                            'receptorNombre'            => $receptornom,
-                            'fechaEmision'              => $fechaemi,
-                            'fechaCertificacion'        => $fechacerti,
-                            'pacCertificado'            => $paccerti,
-                            'total'                     => $total,
-                            'efecto'                    => $efecto,
-                            'estado'                    => $estado,
-                            'estadoCancelacion'         => $edocancel,
-                            'estadoProcesoCancelacion'  => $edoproccancel,
-                            'fechaCancelacion'          => $fechacancel,
-                            'urlAcuseXml'               => $urlacuse,
-                        ], ['upsert' => true]);
-                    }
-                }
-
-                //Almacenamos los XML recibidos
-                function AlmacXMLEmit($rutaxml)
-                {
-                    //Establecemos la ruta donde esta el XML descargado mas el nombre del XML
-                    $rutadescxml = $rutaxml;
-
-                    //Obtenemos el contenido de la ruta obtenido
-                    $contentrutaxml = new DirectoryIterator($rutadescxml);
-
-                    //Con el foreach accedemos al contenido del objeto creado
-                    foreach ($contentrutaxml as $infoxmlfile) {
-                        //En la iteracion obtenemos la informacion de los archivos
-                        $fileExt = $infoxmlfile->getExtension();
-                        $fileBaseName = $infoxmlfile->getBasename(".$fileExt");
-                        $filePathname = $infoxmlfile->getPathname();
-                    }
-
-                    //Condicional si el nombre del documento es el adecuado (ejemplo: archivo.jpg)
-                    if (!$infoxmlfile->isDot()) {
-                        //Obtenemos el contenido de la ruta
-                        $contentxmlreci = file_get_contents($filePathname);
-
-                        //Limpiamos el XML descargado
-                        $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
-
-                        //Ahora el cfdi descargado lo convertimos en json
-                        $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
-
-                        //Decodificamos el json creado en un arreglo
-                        $arraycfdireci = json_decode($xmlcfdi, true);
-
-                        //Agregamos los datos del arreglo a la coleccion de XML recibidos
-                        XmlE::where(['UUID' => $fileBaseName])
-                            ->update(
-                                $arraycfdireci,
-                                ['upsert' => true]
-                            );
-                    }
-                }
-
-
-
                 //Para realizar las descargas tenemos que tener una lista de tipo metadata por lo que realizaremos la consulta
                 //Emitidos
 
@@ -542,108 +495,312 @@ class Descargas extends Component
 
                 //Rutas
                 //En emitidos se basa en rangos de fecha (A diferencia de recibidos), por lo que haremos es obtener el mes
-                //XML
-                foreach ($listxmlemit as $listxmlemitdato) {
-                    $mesreciemitxml = $listxmlemitdato->fechaEmision;
-                    $mesreciemitxml = explode("-", $mesreciemitxml);
-                    $mesreciemitxml = intval($mesreciemitxml[1]);
-
-                    //Realizamos una consulta del CFDI que vamos a guardar
-                    $foliofiscal = [$listxmlemitdato->uuid];
-                    $cfdiemitxml = $satScraper->listByUuids($foliofiscal, DownloadType::emitidos());
-
+                //Para optimizar la descarga de emitidos y ahorrar tiempo se hara una condicional donde se compara si el mes inicial es igual que la final
+                if ($this->mesemitinic . "-" . $this->anioemitinic == $this->mesemitfin . "-" . $this->anioemitfin) {
+                    //Rutas
                     //Aqui llamamos a la funcion de meses
-                    //XML
-                    $mesrutaxml = Meses($mesreciemitxml);
+                    $mesruta = $this->Meses($this->mesemitinic);
 
                     //XML
-                    $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesrutaxml/Emitidos/XML/";
+                    $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioemitinic/Descargas/$mesruta/Emitidos/XML/";
+                    //PDF
+                    $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioemitinic/Descargas/$mesruta/Emitidos/PDF/";
+                    //Acuse
+                    $rutaacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioemitinic/Descargas/$mesruta/Emitidos/ACUSE/";
 
                     //Realizamos la descarga
                     //XML
-                    $satScraper->resourceDownloader(ResourceType::xml(), $cfdiemitxml)
+                    $satScraper->resourceDownloader(ResourceType::xml(), $listxmlemit)
                         ->setResourceFileNamer(new FileNameXML())
                         ->saveTo($rutaxml, true, 0777);
 
-                    //Vamos a comporbar si la carpeta tiene XML descargados
-                    $rutafolder = @scandir($rutaxml);
-
-                    //Condicional si existe algun documento
-                    if (count($rutafolder) > 2) {
-                        AlmacXMLEmit($rutaxml); //Llamamos la funcion de almacenar los XML en la base de datos
-                    }
-                }
-
-                //PDF
-                foreach ($listpdfemit as $listpdfemitdato) {
-                    $mesreciemitpdf = $listpdfemitdato->fechaEmision;
-                    $mesreciemitpdf = explode("-", $mesreciemitpdf);
-                    $mesreciemitpdf = intval($mesreciemitpdf[1]);
-
-                    //Realizamos una consulta del CFDI que vamos a guardar
-                    $foliofiscal = [$listpdfemitdato->uuid];
-                    $cfdiemitxml = $satScraper->listByUuids($foliofiscal, DownloadType::emitidos());
-
-                    //Aqui llamamos a la funcion de meses
                     //PDF
-                    $mesrutapdf = Meses($mesreciemitpdf);
-
-                    //PDF
-                    $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesrutapdf/Emitidos/PDF/";
-
-                    //Realizamos la descarga
-                    //PDF
-                    $satScraper->resourceDownloader(ResourceType::pdf(), $cfdiemitxml)
+                    $satScraper->resourceDownloader(ResourceType::pdf(), $listpdfemit)
                         ->setResourceFileNamer(new FileNamePDF())
                         ->saveTo($rutapdf, true, 0777);
-                }
 
-                //PDF Acuse
-                foreach ($listpdfacuseemit as $listpdfacuseemitdato) {
-                    $mesreciemitpdfacu = $listpdfacuseemitdato->fechaEmision;
-                    $mesreciemitpdfacu = explode("-", $mesreciemitpdfacu);
-                    $mesreciemitpdfacu = intval($mesreciemitpdfacu[1]);
-
-                    //Realizamos una consulta del CFDI que vamos a guardar
-                    $foliofiscal = [$listpdfacuseemitdato->uuid];
-                    $cfdiemitxml = $satScraper->listByUuids($foliofiscal, DownloadType::emitidos());
-
-                    //Aqui llamamos a la funcion de meses
                     //PDF Acuse
-                    $mesrutapdfacuse = Meses($mesreciemitpdfacu);
+                    $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $listpdfacuseemit)
+                        ->setResourceFileNamer(new FileNamePDFAcuse())
+                        ->saveTo($rutaacuse, true, 0777);
 
-                    //Acuse
-                    $rutapdfacu = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesrutapdfacuse/Emitidos/PDF/";
+                    //Vamos a comporbar si la carpeta tiene XML descargados
+                    foreach ($this->cfdiselectxml as $listxmlcfdi) {
+                        $rutaxmlfile = $rutaxml . strtoupper($listxmlcfdi) . ".xml";
+                        if (file_exists($rutaxmlfile)) {
+                            $this->SaveXML($rutaxmlfile, strtoupper($listxmlcfdi), $this->tipo);
+                        }
+                    }
 
-                    //Realizamos la descarga
+                    //Metodo para mostrar el resultado de las descargas
+                    $this->AddCalEmit();
+                } else {
+                    //XML
+                    foreach ($listxmlemit as $listxmlemitdato) {
+                        $mesreciemitxml = date("m", strtotime($listxmlemitdato->fechaEmision)); //Descomponemos la fecha al mes
+                        $anioreciemitxml = date("Y", strtotime($listxmlemitdato->fechaEmision)); //Descomponemos la fecha el año
+
+                        //Realizamos una consulta del CFDI que vamos a guardar
+                        $foliofiscal = [$listxmlemitdato->uuid];
+                        $cfdiemitxml = $satScraper->listByUuids($foliofiscal, DownloadType::emitidos());
+
+                        //Aqui llamamos a la funcion de meses
+                        //XML
+                        $mesrutaxml = $this->Meses($mesreciemitxml);
+
+                        //XML
+                        $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioreciemitxml/Descargas/$mesrutaxml/Emitidos/XML/";
+
+                        //Realizamos la descarga
+                        //XML
+                        $satScraper->resourceDownloader(ResourceType::xml(), $cfdiemitxml)
+                            ->setResourceFileNamer(new FileNameXML())
+                            ->saveTo($rutaxml, true, 0777);
+
+                        //Vamos a comporbar si la carpeta tiene XML descargados
+                        foreach ($this->cfdiselectxml as $listxmlcfdi) {
+                            $rutaxmlfile = $rutaxml . strtoupper($listxmlcfdi) . ".xml";
+                            if (file_exists($rutaxmlfile)) {
+                                $this->SaveXML($rutaxmlfile, strtoupper($listxmlcfdi), $this->tipo);
+                            }
+                        }
+                    }
+
+                    //PDF
+                    foreach ($listpdfemit as $listpdfemitdato) {
+                        $mesreciemitpdf = date("m", strtotime($listpdfemitdato->fechaEmision)); //Descomponemos la fecha al mes
+                        $anioreciemitpdf = date("Y", strtotime($listpdfemitdato->fechaEmision)); //Descomponemos la fecha el año
+
+                        //Realizamos una consulta del CFDI que vamos a guardar
+                        $foliofiscal = [$listpdfemitdato->uuid];
+                        $cfdiemitxml = $satScraper->listByUuids($foliofiscal, DownloadType::emitidos());
+
+                        //Aqui llamamos a la funcion de meses
+                        //PDF
+                        $mesrutapdf = $this->Meses($mesreciemitpdf);
+
+                        //PDF
+                        $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioreciemitpdf/Descargas/$mesrutapdf/Emitidos/PDF/";
+
+                        //Realizamos la descarga
+                        //PDF
+                        $satScraper->resourceDownloader(ResourceType::pdf(), $cfdiemitxml)
+                            ->setResourceFileNamer(new FileNamePDF())
+                            ->saveTo($rutapdf, true, 0777);
+                    }
+
                     //PDF Acuse
-                    $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $cfdiemitxml)
-                        ->setResourceFileNamer(new FileNamePDF())
-                        ->saveTo($rutapdfacu, true, 0777);
+                    foreach ($listpdfacuseemit as $listpdfacuseemitdato) {
+                        $mesreciemitpdfacu = date("m", strtotime($listpdfacuseemitdato->fechaEmision)); //Descomponemos la fecha al mes
+                        $anioreciemitpdfacu = date("Y", strtotime($listpdfacuseemitdato->fechaEmision)); //Descomponemos la fecha el año
+
+                        //Realizamos una consulta del CFDI que vamos a guardar
+                        $foliofiscal = [$listpdfacuseemitdato->uuid];
+                        $cfdiemitxml = $satScraper->listByUuids($foliofiscal, DownloadType::emitidos());
+
+                        //Aqui llamamos a la funcion de meses
+                        //PDF Acuse
+                        $mesrutapdfacuse = $this->Meses($mesreciemitpdfacu);
+
+                        //Acuse
+                        //Acuse
+                        $rutaacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioreciemitpdfacu/Descargas/$mesrutapdfacuse/Emitidos/ACUSE/";
+
+                        //Realizamos la descarga
+                        //PDF Acuse
+                        $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $cfdiemitxml)
+                            ->setResourceFileNamer(new FileNamePDFAcuse())
+                            ->saveTo($rutaacuse, true, 0777);
+                    }
                 }
 
                 //Llamamos la funcion para almacenar los metadatos en la base de datos
                 //PDF
-                AlmacMetaEmit($listpdfemit);
+                $this->SaveMetadatos($listpdfemit, $this->tipo);
 
                 //XML
-                AlmacMetaEmit($listxmlemit);
+                $this->SaveMetadatos($listxmlemit, $this->tipo);
 
                 //Acuse
-                AlmacMetaEmit($listpdfacuseemit);
+                $this->SaveMetadatos($listpdfacuseemit, $this->tipo);
+
+                //Metodo para mostrar el resultado de las descargas
+                $this->AddCalEmit();
 
                 //Limpiamos los arreglos
                 $this->cfdiselectxml = [];
                 $this->cfdiselectpdf = [];
                 $this->cfdiselectpdfacuse = [];
-
-                //Ponemos en cero los checks
-                $this->chkxml = 0;
-                $this->chkpdf = 0;
                 break;
             default:
                 $this->successdescarga = "No hay tipo";
                 break;
+        }
+    }
+
+    //Agregar al calendario de recibidos y emitidos
+    //Metodo para agregar los descargados recibidos en la base de datos de calendario
+    public function AddCalReci()
+    {
+        //Variables
+        $totaldesc = 0; //Total de descargados
+        $totalcfdi = $this->totallist; //Total de cfdi
+        $allcfdi = []; //arreglo donde se guardaran todos los uuids
+
+        //Variables para el guardados de la base
+        $fechadesc = $this->anioreci . '-' . $this->mesreci . '-' . $this->diareci; //Fecha de descarga
+        $cfdidesc = 0;
+        $cfdierror = 0;
+        $cfdirecibi = 0;
+
+        //Obtendremos los uuids seleccionados
+        $allcfdi = array_merge($this->cfdiselectxml, $this->cfdiselectpdf, $this->cfdiselectpdfacuse);
+        //Eliminamos los uuids repetidos
+        $allcfdi = array_unique($allcfdi);
+
+        //Ejecutamos el metodo de los meses
+        $mesruta = $this->Meses($this->mesreci);
+
+        //Rutas
+        //XML
+        $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
+        //PDF
+        $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
+        //Acuse
+        $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
+
+        //Con un bucle pasamos por los uuids almacenados en el arreglo
+        foreach ($allcfdi as $listuuids) {
+            //Buscamos si exsiten los archivos (si estn descargados)
+            //XML/PDF/Acuse
+            $xmlfile = $rutaxml . strtoupper($listuuids) . '.xml';
+            $pdffile = $rutapdf . strtoupper($listuuids) . '.pdf';
+            $acusefile = $rutapdfacuse . strtoupper($listuuids) . '-acuse' . '.pdf';
+
+            if (file_exists($xmlfile) || file_exists($pdffile) || file_exists($acusefile)) {
+                $totaldesc++;
+            } else {
+                $cfdierror++;
+            }
+        }
+
+        //En una condicional comparamos si el total de descargados es el total de la descarga
+        if ($totaldesc == $totalcfdi) {
+            $cfdidesc = $totalcfdi; //Agregamos el total descargado
+            $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+
+        } else {
+            //De lo contrario sacamos los errores
+            $cfdidesc = $totalcfdi; //Agregamos el total descargado
+            $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+        }
+
+        //Agregar a la base de datos
+        Calendario::where(['rfc' => $this->rfcEmpresa])
+        ->update(
+            [
+                'rfc' => $this->rfcEmpresa,
+                'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
+                'descargas.' . $fechadesc . '.descargasRecibidos' => $cfdidesc,
+                'descargas.' . $fechadesc . '.erroresRecibidos' => $cfdierror,
+                'descargas.' . $fechadesc . '.totalRecibidos' => $cfdirecibi,
+            ],
+            ['upsert' => true]
+        );
+    }
+
+    //Metodo para agregar los descargados emitidos en la base de datos de calendario
+    public function AddCalEmit()
+    {
+        //Variables
+        $allcfdi = []; //arreglo donde se guardaran todos los uuids
+        $fechainic = $this->anioemitinic . '-' . $this->mesemitinic . '-' . $this->diaemitinic; //Fecha inicial
+        $fechafin = $this->anioemitfin . '-' . $this->mesemitfin . '-' . $this->diaemitfin; //Fecha final
+
+        //Obtendremos los uuids seleccionados
+        $allcfdi = array_merge($this->cfdiselectxml, $this->cfdiselectpdf, $this->cfdiselectpdfacuse);
+        //Eliminamos los uuids repetidos
+        $allcfdi = array_unique($allcfdi);
+
+        //Obtener el rengo de fechas
+        for ($i = $fechainic; $i <= $fechafin; $i = date("Y-m-d", strtotime($i . "+ 1 days"))) {
+            //Variables para el guardados de la base
+            $fechadesc = $i; //Fecha de descarga
+            $cfdidesc = 0;
+            $cfdierror = 0;
+            $cfdirecibi = 0;
+            $totaldesc = 0; //Total de descargados
+
+            //Sacamos el total de los cfdis descargados
+            $totalcfdi = $this->totallist; //Total de cfdi
+
+            //Obtenemos el mes
+            $mesruta = date("m", strtotime($i));
+            $anioruta = date("Y", strtotime($i));
+
+            //Ejecutamos el metodo de los meses
+            $mesruta = $this->Meses($mesruta);
+
+            //Rutas
+            //XML
+            $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioruta/Descargas/$mesruta/Emitidos/XML/";
+            //PDF
+            $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioruta/Descargas/$mesruta/Emitidos/PDF/";
+            //Acuse
+            $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioruta/Descargas/$mesruta/Emitidos/ACUSE/";
+
+            //Con un bucle pasamos por los uuids almacenados en el arreglo
+            foreach ($allcfdi as $listuuids) {
+                $fechacfdiselect = "";
+
+                //Consultamos los datos del cfdi
+                $listdatacfdi = XmlE::where(['UUID' => strtoupper($listuuids)])->get();
+
+                //Obtenemos la fecha
+                foreach ($listdatacfdi as $listdatacfdi) {
+                    $fechacfdiselect = date("Y-m-d", strtotime($listdatacfdi->Fecha));
+                }
+
+                //Condicional para saber si la fecha es igual
+                if ($fechacfdiselect == $i) {
+                    //Buscamos si exsiten los archivos (si estn descargados)
+                    //XML/PDF/Acuse
+                    $xmlfile = $rutaxml . strtoupper($listuuids) . '.xml';
+                    $pdffile = $rutapdf . strtoupper($listuuids) . '.pdf';
+                    $acusefile = $rutapdfacuse . strtoupper($listuuids) . '-acuse' . '.pdf';
+
+                    if (file_exists($xmlfile) || file_exists($pdffile) || file_exists($acusefile)) {
+                        $totaldesc++;
+                    } else {
+                        $cfdierror++;
+                    }
+                }
+            }
+
+
+            //En una condicional comparamos si el total de descargados es el total de la descarga
+            if ($totaldesc == $totalcfdi) {
+                $cfdidesc = $totalcfdi; //Agregamos el total descargado
+                $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+
+            } else {
+                //De lo contrario sacamos los errores
+                $cfdidesc = $totalcfdi; //Agregamos el total descargado
+                $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+            }
+
+            //Agregar a la base de datos
+            Calendario::where(['rfc' => $this->rfcEmpresa])
+            ->update(
+                [
+                    'rfc' => $this->rfcEmpresa,
+                    'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
+                    'descargas.' . $fechadesc . '.descargasEmitidos' => $cfdidesc,
+                    'descargas.' . $fechadesc . '.erroresEmitidos' => $cfdierror,
+                    'descargas.' . $fechadesc . '.totalEmitidos' => $cfdirecibi,
+                ],
+                ['upsert' => true]
+            );
         }
     }
 
@@ -652,17 +809,17 @@ class Descargas extends Component
     {
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Recibidos)
         $this->anioreci = date("Y");
-        $this->mesreci = date("n");
+        $this->mesreci = date("m");
         $this->diareci = date("j");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango inicio)
         $this->anioemitinic = date("Y");
-        $this->mesemitinic = date("n");
+        $this->mesemitinic = date("m");
         $this->diaemitinic = date("j");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango fin)
         $this->anioemitfin = date("Y");
-        $this->mesemitfin = date("n");
+        $this->mesemitfin = date("m");
         $this->diaemitfin = date("j");
 
         //Reinciamos los arreglos
@@ -670,40 +827,8 @@ class Descargas extends Component
         $this->cfdiselectpdf = [];
         $this->cfdiselectpdfacuse = [];
 
-        //Ponemos en cero los checks
-        $this->chkxml = 0;
-        $this->chkpdf = 0;
-    }
-
-    //Metodo para marcar todos los checkbox (XML Recibidos)
-    public function Allchk($tipo)
-    {
-        if ($this->chkxml || $this->chkpdf) {
-            //Condicional para saber que tipo de datos se van a seleccionar
-            switch ($tipo) {
-                case "xmlall":
-                    //Metemos el arreglo obtenido anteriormente
-                    $this->cfdiselectxml = $this->solocfdi;
-                    break;
-
-                case "pdfall":
-                    //Metemos el arreglo obtenido anteriormente
-                    $this->cfdiselectpdf = $this->solocfdi;
-                    break;
-            }
-        }
-
-        //Condicional para corroborar que si estan desmarcados
-        if (empty($this->chkxml)) {
-            //Si el checkbox de xml esta desactivado
-            $this->cfdiselectxml = [];
-        }
-
-        //Condicional para corroborar que si estan desmarcados
-        if (empty($this->chkpdf)) {
-            //Si el checkbox de pdf esta desactivado
-            $this->cfdiselectpdf = [];
-        }
+        //Emitimos una accion para recibirlo en la vista
+        $this->dispatchBrowserEvent('deschecked', []);
     }
 
     //Metrodo para reiniciar el modal
@@ -711,7 +836,7 @@ class Descargas extends Component
     {
         //El mes y año iniciamos con los de hoy (calendario)
         $this->aniocal = date("Y");
-        $this->mescal = date("n");
+        $this->mescal = date("m");
     }
 
     //Metodo para crear el calendario
@@ -727,24 +852,24 @@ class Descargas extends Component
             $ym = $this->aniocal . "-" . $this->mescal;
         } else {
             //De lo contario no vamos al mes y año actual
-            $ym = date('Y-n');
+            $ym = date('Y-m');
         }
 
         //Establecemos el inicio del calendario
         $timestamp = strtotime($ym . '-01');
         if ($timestamp === false) {
-            $ym = date('Y-n');
+            $ym = date('Y-m');
             $timestamp = strtotime($ym . '-01');
         }
 
         //Obtenemos el dia de hoy
-        $today = date('Y-n-d', time());
+        $today = date('Y-m-d', time());
 
         //Obtenemos lo dias que tiene el mes
         $day_count = date('t', $timestamp);
 
         // 0:Sun 1:Mon 2:Tue ...
-        $str = date('w', mktime(0, 0, 0, date('n', $timestamp), 1, date('Y', $timestamp)));
+        $str = date('w', mktime(0, 0, 0, date('m', $timestamp), 1, date('Y', $timestamp)));
 
         //Variables para la creacion del calendario
         $weeks = array();
@@ -753,29 +878,13 @@ class Descargas extends Component
         //Campos vacios
         $week .= str_repeat('<td></td>', $str);
 
-        //Haremos una consulta al calendarios de recibidos
-        $LogRecical = CalendarioR::select('fechaDescarga', 'rfc', 'canceladosRecibidos', 'descargasRecibidos', 'erroresRecibidos', 'totalRecibidos')
-            ->where('rfc', $this->rfcEmpresa)
-            ->groupBy('fechaDescarga')
-            ->orderBy('fechaDescarga', 'asc')
-            ->get();
-
-        //Haremos una consulta al calendarios de emitidos
-        $LogEmitcal = CalendarioE::select('fechaDescarga', 'rfc', 'descargasEmitidos', 'erroresEmitidos', 'totalEmitidos')
-            ->where('rfc', $this->rfcEmpresa)
-            ->groupBy('fechaDescarga')
-            ->orderBy('fechaDescarga', 'asc')
-            ->get();
+        //Haremos una consulta al calendarios de recibidos/emitidos
+        $LogReciEmical = Calendario::where(['rfc' => $this->rfcEmpresa])->get()->first();
 
         //Ciclo for para llenar los campos con los dias que le pertenece
         for ($day = 1; $day <= $day_count; $day++, $str++) {
-
-            //Condicional para formatear el dia de unidades y decenas (ya que en la base de datos tiene un formato diferente)
-            if ($day < 10 && $this->aniocal > 2021) {
-                $date = $ym . '-0' . $day;
-            } else {
-                $date = $ym . '-' . $day;
-            }
+            //Formamos la fecha completa
+            $date = $ym . '-' . $day;
 
             //Iniciamos en cero la variable por cada iteracion que se haga
             $this->reciboemit = 0;
@@ -785,51 +894,44 @@ class Descargas extends Component
                 case $today:
                     $week .= '<td class="hoy">' . $day;
 
-                    //Agregamos los recibidos
-                    foreach ($LogRecical as $DataReci) {
-                        if ($DataReci->fechaDescarga == $date) {
-                            $week .= "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
-                                "Cancelados: " . $DataReci->canceladosRecibidos . '<br>' .
-                                "Descargados: " . $DataReci->descargasRecibidos . '<br>' .
-                                "Errores: " . $DataReci->erroresRecibidos . '<br>' .
-                                "Total: " . $DataReci->totalRecibidos;
-                        }
+                    //Descomonemos la consulta y insertamos los datos requeridos
+                    //Recibidos
+                    if (isset($LogReciEmical['descargas.' . $date . '.descargasRecibidos'])) {
+                        $week .= "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
+                            "Descargados: " . $LogReciEmical['descargas.' . $date . '.descargasRecibidos'] . '<br>' .
+                            "Errores: " . $LogReciEmical['descargas.' . $date . '.erroresRecibidos'] . '<br>' .
+                            "Total: " . $LogReciEmical['descargas.' . $date . '.totalRecibidos'];
                     }
 
-                    //Agregamos los emitidos
-                    foreach ($LogEmitcal as $DataEmit) {
-                        if ($DataEmit->fechaDescarga == $date) {
-                            $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
-                                "Descargados: " . $DataEmit->descargasEmitidos . '<br>' .
-                                "Errores: " . $DataEmit->erroresEmitidos . '<br>' .
-                                "Total: " . $DataEmit->totalEmitidos;
-                        }
+                    //Emitidos
+                    if (isset($LogReciEmical['descargas.' . $date . '.descargasEmitidos'])) {
+                        $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
+                            "Descargados: " . $LogReciEmical['descargas.' . $date . '.descargasEmitidos'] . '<br>' .
+                            "Errores: " . $LogReciEmical['descargas.' . $date . '.erroresEmitidos'] . '<br>' .
+                            "Total: " . $LogReciEmical['descargas.' . $date . '.totalEmitidos'];
                     }
 
                     break;
                 default:
                     $week .= '<td>' . $day;
 
-                    //Agregamos los recibidos
-                    foreach ($LogRecical as $DataReci) {
-                        if ($DataReci->fechaDescarga == $date) {
-                            $week .= "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
-                                "Cancelados: " . $DataReci->canceladosRecibidos . '<br>' .
-                                "Descargados: " . $DataReci->descargasRecibidos . '<br>' .
-                                "Errores: " . $DataReci->erroresRecibidos . '<br>' .
-                                "Total: " . $DataReci->totalRecibidos;
-                        }
+                    //Descomonemos la consulta y insertamos los datos requeridos
+                    //Recibidos
+                    if (isset($LogReciEmical['descargas.' . $date . '.descargasRecibidos'])) {
+                        $week .= "<br><br>" . '<b>' . "Recibidos" . '</b>' . '<br>' .
+                            "Descargados: " . $LogReciEmical['descargas.' . $date . '.descargasRecibidos'] . '<br>' .
+                            "Errores: " . $LogReciEmical['descargas.' . $date . '.erroresRecibidos'] . '<br>' .
+                            "Total: " . $LogReciEmical['descargas.' . $date . '.totalRecibidos'];
                     }
 
-                    //Agregamos los emitidos
-                    foreach ($LogEmitcal as $DataEmit) {
-                        if ($DataEmit->fechaDescarga == $date) {
-                            $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
-                                "Descargados: " . $DataEmit->descargasEmitidos . '<br>' .
-                                "Errores: " . $DataEmit->erroresEmitidos . '<br>' .
-                                "Total: " . $DataEmit->totalEmitidos;
-                        }
+                    //Emitidos
+                    if (isset($LogReciEmical['descargas.' . $date . '.descargasEmitidos'])) {
+                        $week .= "<br><br>" . '<b>' . "Emitidos" . '</b>' . '<br>' .
+                            "Descargados: " . $LogReciEmical['descargas.' . $date . '.descargasEmitidos'] . '<br>' .
+                            "Errores: " . $LogReciEmical['descargas.' . $date . '.erroresEmitidos'] . '<br>' .
+                            "Total: " . $LogReciEmical['descargas.' . $date . '.totalEmitidos'];
                     }
+
                     break;
             }
 
@@ -881,6 +983,9 @@ class Descargas extends Component
                 $this->rfcemp = $DatAuthEmpre->RFC;
             }
         }
+
+        //Emitimos una accion para recibirlo en la vista
+        $this->dispatchBrowserEvent('deschecked', []);
     }
 
     //Metodo para preparar procesos antes de iniciar
@@ -895,22 +1000,22 @@ class Descargas extends Component
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Recibidos)
         $this->anioreci = date("Y");
-        $this->mesreci = date("n");
+        $this->mesreci = date("m");
         $this->diareci = date("j");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango inicio)
         $this->anioemitinic = date("Y");
-        $this->mesemitinic = date("n");
+        $this->mesemitinic = date("m");
         $this->diaemitinic = date("j");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango fin)
         $this->anioemitfin = date("Y");
-        $this->mesemitfin = date("n");
+        $this->mesemitfin = date("m");
         $this->diaemitfin = date("j");
 
         //El mes y año iniciamos con los de hoy (calendario)
         $this->aniocal = date("Y");
-        $this->mescal = date("n");
+        $this->mescal = date("m");
 
         //Vamos a establecer el tipo como recibido al iniciar
         $this->tipo = "Recibidos";
@@ -944,25 +1049,24 @@ class Descargas extends Component
         //Obtenemos la consulta
         $list = $this->ConsultSAT();
 
-        //Condicional para saber si es un string
+        //Contamos el total de registros arrojados
         if (!is_string($list)) {
-            //Almacenamos los UUID
-            foreach ($list as $UUID) {
-                array_push($this->solocfdi, $UUID->uuid);
-            }
+            $this->totallist = count($list);
+        } else {
+            $this->totallist = " - ";
         }
 
         //Arreglo de los meses
         $meses = array(
-            '1' => 'Enero',
-            '2' => 'Febrero',
-            '3' => 'Marzo',
-            '4' => 'Abril',
-            '5' => 'Mayo',
-            '6' => 'Junio',
-            '7' => 'Julio',
-            '8' => 'Agosto',
-            '9' => 'Septiembre',
+            '01' => 'Enero',
+            '02' => 'Febrero',
+            '03' => 'Marzo',
+            '04' => 'Abril',
+            '05' => 'Mayo',
+            '06' => 'Junio',
+            '07' => 'Julio',
+            '08' => 'Agosto',
+            '09' => 'Septiembre',
             '10' => 'Octubre',
             '11' => 'Noviembre',
             '12' => 'Diciembre'
@@ -997,6 +1101,7 @@ class Descargas extends Component
                     ->where('RFC', $rfc)
                     ->get();
 
+
                 foreach ($e as $em)
                     $emp[] = array($em['RFC'], $em['nombre']);
             }
@@ -1004,7 +1109,7 @@ class Descargas extends Component
             $emp = '';
         }
 
-        return view('livewire.descargas', ['empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'meses' => $meses, 'anios' => $anios, 'weeks' => $weeks, 'list' => $list])
+        return view('livewire.descargas', ['empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'meses' => $meses, 'anios' => $anios, 'weeks' => $weeks, 'list' => $list, "totallist" => $this->totallist])
             ->extends('layouts.livewire-layout')
             ->section('content');
     }
