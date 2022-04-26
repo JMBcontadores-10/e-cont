@@ -692,8 +692,8 @@ class Descargas extends Component
         }
 
         //Agregar a la base de datos
-        $busca = Calendario::where(['rfc' => $this->rfcEmpresa]);
-        $busca->update(
+        Calendario::where(['rfc' => $this->rfcEmpresa])
+        ->update(
             [
                 'rfc' => $this->rfcEmpresa,
                 'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
@@ -786,8 +786,8 @@ class Descargas extends Component
             }
 
             //Agregar a la base de datos
-            $busca = Calendario::where(['rfc' => $this->rfcEmpresa]);
-            $busca->update(
+            Calendario::where(['rfc' => $this->rfcEmpresa])
+            ->update(
                 [
                     'rfc' => $this->rfcEmpresa,
                     'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
