@@ -368,7 +368,7 @@
                                     class="menu-item text-truncate" data-i18n="Analytics">Cuentas
                                     por Pagar</span></a>
                         </li>
-                        <li id="descargasv2"><a class="d-flex align-items-center" href="{{ url('descargas') }}"><i
+                        <li id="descargas"><a class="d-flex align-items-center" href="{{ url('descargas') }}"><i
                                     class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
                                     data-i18n="Analytics">Descargas</span></a>
                         </li>
