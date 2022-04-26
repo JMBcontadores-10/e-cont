@@ -468,6 +468,7 @@ class Descargas extends Component
                         $this->SaveXML($rutaxmlfile, strtoupper($listxmlcfdi), $this->tipo);
                     }
                 }
+                
 
                 //Metodo para mostrar el resultado de las descargas
                 $this->AddCalReci();
