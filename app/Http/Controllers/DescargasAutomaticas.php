@@ -41,7 +41,7 @@ use PhpCfdi\CfdiSatScraper\Sessions\SessionManager;
 use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Date;
 
 //Funcion para aumentar la ejecucion de los procesos, lo utilizaremos para las descargas ()
-set_time_limit(7200); //Tiempo limite dado 1 hora
+set_time_limit(9200); //Tiempo limite dado 1 hora
 
 //Clases para cambiar el nombre a lo archivos
 //XML
@@ -154,13 +154,21 @@ public function __construct()
         $ignore=['06' ,'08', '09', '26', '50'];
         /////IGNORE=(06 08 09 26 50)
 
-$rfcIgnore=['SST030407D77J','SST030407D77M','PERE9308105X4C','PERE9308105X4T','ADMINISTRADOR','NOMINAS'];
+$rfcIgnore=['SST030407D77J','SST030407D77M','PERE9308105X4C','PERE9308105X4T','ADMINISTRADOR','NOMINAS','AIJ161001UD1',
+'AAE160217C36',
+'AFU1809135Y4',
+'AHF060131G59',
+'GME210504KW1',
+'CDI1801116Y9',
+'COB191129AZ2',/////MARCO ERROR FIEL CHECAR
+];
      $this->empresas=DB::table('clientes')
                 ->select('RFC')
-                ->where('RFC','SGA1410217U4')
-                //  ->whereNull('tipo','TipoSE')
-                //  ->whereNotIn('Id_Cliente', $ignore)
-                //  ->whereNotIn('RFC', $rfcIgnore)
+                // ->where('RFC','AAE160217C36')
+                 ->whereNull('tipo','TipoSE')
+                 ->whereNotIn('Id_Cliente', $ignore)
+                 ->whereNotIn('RFC', $rfcIgnore)
+                 ->orderBy('RFC','asc')
                 ->get();
 
 
@@ -354,8 +362,8 @@ $handler = new class () implements MaximumRecordsHandler {
 
                   /// -->[EMITIDOS]<---/////
                   $query = new QueryByFilters(
-                    new DateTimeImmutable($diaX),
-                      new DateTimeImmutable($diaX),
+                    new DateTimeImmutable('2022-01-01'),
+                      new DateTimeImmutable('2022-01-31'),
 
                   );
 
@@ -380,7 +388,7 @@ $handler = new class () implements MaximumRecordsHandler {
         //    $satScraper->listByPeriod($query);
 
 // //Aqui llamamos a la funcion de meses
-$mesruta = Meses($mes);
+$mesruta = Meses(01);
 
 //======================[RUTAS DESCARGAS EMITIDOS]================================///
 //XML
@@ -542,6 +550,8 @@ $satScraper->resourceDownloader(ResourceType::cancelVoucher(), $list)
 
 
 //Con un bucle pasamos por los uuids almacenados en el arreglo
+
+if(isset($allcfdi)){
 foreach ($allcfdi as $listuuids) {
     //Buscamos si exsiten los archivos (si estn descargados)
     //XML/PDF/Acuse
@@ -555,6 +565,8 @@ foreach ($allcfdi as $listuuids) {
         $cfdierror++;
     }
 }
+
+}//fin de isset
 
   //En una condicional comparamos si el total de descargados es el total de la descarga
   if ($totaldesc == count($list)) {
@@ -739,34 +751,34 @@ foreach ($allcfdi as $listuuids) {
      }/// fin del foeach clientes
 
 
-     $files = glob('build/cookies/*'); //obtenemos todos los nombres de los ficheros
-     foreach($files as $file){
-    if(is_file($file)){
+//      $files = glob('build/cookies/*'); //obtenemos todos los nombres de los ficheros
+//      foreach($files as $file){
+//     if(is_file($file)){
 
 
 
-            if(file_exists($file)){
-                  unlink($file);
-               }
-                  try{
+//             if(file_exists($file)){
+//                   unlink($file);
+//                }
+//                   try{
 
 
-                      $bug = 0;
-                  }
-                  catch(\Exception $e){
-                      $bug = $e->errorInfo[1];
-                  }
-                  if($bug==0){
-                    //   echo "success";
-                  }else{
-                    //   echo 'error';
-                  }
+//                       $bug = 0;
+//                   }
+//                   catch(\Exception $e){
+//                       $bug = $e->errorInfo[1];
+//                   }
+//                   if($bug==0){
+//                     //   echo "success";
+//                   }else{
+//                     //   echo 'error';
+//                   }
 
 
 
 
-    }
-}
+//     }
+// }
 
 
 
