@@ -15,8 +15,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
 use PhpCfdi\CfdiSatScraper\SatHttpGateway;
 
-use App\Models\CalendarioR;
-use App\Models\CalendarioE;
 use App\Models\MetadataE;
 use App\Models\MetadataR;
 use App\Models\Calendario;
@@ -24,7 +22,6 @@ use App\Models\User;
 use App\Models\XmlE;
 use App\Models\XmlR;
 use DateTimeImmutable;
-use DirectoryIterator;
 use Exception;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -354,14 +351,27 @@ class Descargas extends Component
         //Obtenemos el contenido de la ruta
         $contentxmlreci = file_get_contents($rutaxml);
 
-        //Limpiamos el XML descargado
-        $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
+        //Try/catch para revisar si existe algun problema con el CFDI
+        try {
+            //Primeramente vamos a leer el archivo sin pasar por limpieza
 
-        //Ahora el cfdi descargado lo convertimos en json
-        $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
+            //Ahora el cfdi descargado lo convertimos en json
+            $xmlcfdi = JsonConverter::convertToJson($contentxmlreci);
 
-        //Decodificamos el json creado en un arreglo
-        $arraycfdireci = json_decode($xmlcfdi, true);
+            //Decodificamos el json creado en un arreglo
+            $arraycfdireci = json_decode($xmlcfdi, true);
+        } catch (Exception $e) {
+            //Si existe un problema con el archivo, se pasa por el mismo proceso pero ahora lo limpiamos
+
+            //Limpiamos el XML descargado
+            $cleanxmlreci = Cleaner::staticClean($contentxmlreci);
+
+            //Ahora el cfdi descargado lo convertimos en json
+            $xmlcfdi = JsonConverter::convertToJson($cleanxmlreci);
+
+            //Decodificamos el json creado en un arreglo
+            $arraycfdireci = json_decode($xmlcfdi, true);
+        }
 
         //Agregamos los datos del arreglo a la coleccion de XML recibidos
         switch ($tipo) {
@@ -452,18 +462,10 @@ class Descargas extends Component
 
 
                 //Vamos a comporbar si la carpeta tiene XML descargados
-                $directorio = new DirectoryIterator($rutaxml);
-
-                //Condicional si existe algun documento
-                foreach ($directorio as $fileinfo) {
-                    $fileName = $fileinfo->getFilename();
-                    $filePathname = $fileinfo->getPathname();
-                    $fileExt = $fileinfo->getExtension();
-                    $fileBaseName = $fileinfo->getBasename(".$fileExt");
-                    $rutaGuardar = dirname(dirname($filePathname)) . "/";
-
-                    if (!$fileinfo->isDot()) {
-                        $this->SaveXML($rutaGuardar . "XML/" . $fileName, $fileBaseName, $this->tipo);
+                foreach ($this->cfdiselectxml as $listxmlcfdi) {
+                    $rutaxmlfile = $rutaxml . strtoupper($listxmlcfdi) . ".xml";
+                    if (file_exists($rutaxmlfile)) {
+                        $this->SaveXML($rutaxmlfile, strtoupper($listxmlcfdi), $this->tipo);
                     }
                 }
 
@@ -519,18 +521,10 @@ class Descargas extends Component
                         ->saveTo($rutaacuse, true, 0777);
 
                     //Vamos a comporbar si la carpeta tiene XML descargados
-                    $directorio = new DirectoryIterator($rutaxml);
-
-                    //Condicional si existe algun documento
-                    foreach ($directorio as $fileinfo) {
-                        $fileName = $fileinfo->getFilename();
-                        $filePathname = $fileinfo->getPathname();
-                        $fileExt = $fileinfo->getExtension();
-                        $fileBaseName = $fileinfo->getBasename(".$fileExt");
-                        $rutaGuardar = dirname(dirname($filePathname)) . "/";
-
-                        if (!$fileinfo->isDot()) {
-                            $this->SaveXML($rutaGuardar . "XML/" . $fileName, $fileBaseName, $this->tipo);
+                    foreach ($this->cfdiselectxml as $listxmlcfdi) {
+                        $rutaxmlfile = $rutaxml . strtoupper($listxmlcfdi) . ".xml";
+                        if (file_exists($rutaxmlfile)) {
+                            $this->SaveXML($rutaxmlfile, strtoupper($listxmlcfdi), $this->tipo);
                         }
                     }
 
@@ -560,18 +554,10 @@ class Descargas extends Component
                             ->saveTo($rutaxml, true, 0777);
 
                         //Vamos a comporbar si la carpeta tiene XML descargados
-                        $directorio = new DirectoryIterator($rutaxml);
-
-                        //Condicional si existe algun documento
-                        foreach ($directorio as $fileinfo) {
-                            $fileName = $fileinfo->getFilename();
-                            $filePathname = $fileinfo->getPathname();
-                            $fileExt = $fileinfo->getExtension();
-                            $fileBaseName = $fileinfo->getBasename(".$fileExt");
-                            $rutaGuardar = dirname(dirname($filePathname)) . "/";
-
-                            if (!$fileinfo->isDot()) {
-                                $this->SaveXML($rutaGuardar . "XML/" . $fileName, $fileBaseName, $this->tipo);
+                        foreach ($this->cfdiselectxml as $listxmlcfdi) {
+                            $rutaxmlfile = $rutaxml . strtoupper($listxmlcfdi) . ".xml";
+                            if (file_exists($rutaxmlfile)) {
+                                $this->SaveXML($rutaxmlfile, strtoupper($listxmlcfdi), $this->tipo);
                             }
                         }
                     }
