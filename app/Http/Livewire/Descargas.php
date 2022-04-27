@@ -15,8 +15,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Cookie\FileCookieJar;
 use PhpCfdi\CfdiSatScraper\SatHttpGateway;
 
-use App\Models\CalendarioR;
-use App\Models\CalendarioE;
 use App\Models\MetadataE;
 use App\Models\MetadataR;
 use App\Models\Calendario;
@@ -642,97 +640,169 @@ class Descargas extends Component
     //Metodo para agregar los descargados recibidos en la base de datos de calendario
     public function AddCalReci()
     {
-        //Variables
-        $totaldesc = 0; //Total de descargados
-        $totalcfdi = $this->totallist; //Total de cfdi
-        $allcfdi = []; //arreglo donde se guardaran todos los uuids
+        $cfdidesc = 0; //CFDI descargados
+        $cfdierror = 0; //CFDI no descargados
+        $cfdirecibi = 0; //CFDI recibidos
+        $totaldesc = 0; //Contador de descargados 
 
-        //Variables para el guardados de la base
-        $fechadesc = $this->anioreci . '-' . $this->mesreci . '-' . $this->diareci; //Fecha de descarga
-        $cfdidesc = 0;
-        $cfdierror = 0;
-        $cfdirecibi = 0;
+        //Condicional para conocer si seleccionamos la opcion "todos"
+        switch ($this->diareci) {
+            case "all":
+                //Obtenemos el valor del ultimo dia
+                $timestamp = strtotime($this->anioreci . "-" . $this->mesreci . '-01');
+                $day_count = date('t', $timestamp);
 
-        //Obtendremos los uuids seleccionados
-        $allcfdi = array_merge($this->cfdiselectxml, $this->cfdiselectpdf, $this->cfdiselectpdfacuse);
-        //Eliminamos los uuids repetidos
-        $allcfdi = array_unique($allcfdi);
+                //Obtenemos el rango de fechas
+                $fechainic = $this->anioreci . '-' . $this->mesreci . '-01';
+                $fechafin = $this->anioreci . '-' . $this->mesreci . '-' . $day_count;
 
-        //Ejecutamos el metodo de los meses
-        $mesruta = $this->Meses($this->mesreci);
+                //Ciclo para obtener el rango de rechas
+                for ($i = $fechainic; $i <= $fechafin; $i = date("Y-m-d", strtotime($i . "+ 1 days"))) {
+                    //En esto se conforma el total de CFDI
+                    $totaldatacfdi = MetadataR::where('receptorRfc', $this->rfcEmpresa)
+                        ->where('fechaEmision', 'like', '%' . $i . '%')
+                        ->get();
 
-        //Rutas
-        //XML
-        $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
-        //PDF
-        $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
-        //Acuse
-        $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
+                    $totalcfdi = count($totaldatacfdi);
 
-        //Con un bucle pasamos por los uuids almacenados en el arreglo
-        foreach ($allcfdi as $listuuids) {
-            //Buscamos si exsiten los archivos (si estn descargados)
-            //XML/PDF/Acuse
-            $xmlfile = $rutaxml . strtoupper($listuuids) . '.xml';
-            $pdffile = $rutapdf . strtoupper($listuuids) . '.pdf';
-            $acusefile = $rutapdfacuse . strtoupper($listuuids) . '-acuse' . '.pdf';
+                    //Ejecutamos el metodo de los meses
+                    $mesruta = $this->Meses($this->mesreci);
 
-            if (file_exists($xmlfile) || file_exists($pdffile) || file_exists($acusefile)) {
-                $totaldesc++;
-            } else {
-                $cfdierror++;
-            }
+                    //Rutas
+                    //XML
+                    $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
+                    //PDF
+                    $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                    //Acuse
+                    $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
+
+                    //Con un bucle pasamos por los uuids almacenados en el arreglo
+                    foreach ($totaldatacfdi as $listuuids) {
+                        //Buscamos si exsiten los archivos (si estn descargados)
+                        //XML/PDF/Acuse
+                        $xmlfile = $rutaxml . strtoupper($listuuids->folioFiscal) . '.xml';
+                        $pdffile = $rutapdf . strtoupper($listuuids->folioFiscal) . '.pdf';
+                        $acusefile = $rutapdfacuse . strtoupper($listuuids->folioFiscal) . '-acuse' . '.pdf';
+
+                        if (file_exists($xmlfile) || file_exists($pdffile) || file_exists($acusefile)) {
+                            $totaldesc++;
+                        } else {
+                            $cfdierror++;
+                        }
+                    }
+
+                    //En una condicional comparamos si el total de descargados es el total de la descarga
+                    if ($totaldesc == $totalcfdi) {
+                        $cfdidesc = $totalcfdi; //Agregamos el total descargado
+                        $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+
+                    } else {
+                        //De lo contrario sacamos los errores
+                        $cfdidesc = $totalcfdi; //Agregamos el total descargado
+                        $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+                    }
+
+                    $fechadesc = $i; //Fecha de descarga
+
+                    //Agregar a la base de datos
+                    Calendario::where(['rfc' => $this->rfcEmpresa])
+                        ->update(
+                            [
+                                'rfc' => $this->rfcEmpresa,
+                                'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
+                                'descargas.' . $fechadesc . '.descargasRecibidos' => $cfdidesc,
+                                'descargas.' . $fechadesc . '.erroresRecibidos' => $cfdierror,
+                                'descargas.' . $fechadesc . '.totalRecibidos' => $cfdirecibi,
+                            ],
+                            ['upsert' => true]
+                        );
+                }
+                break;
+            default:
+                $allcfdi = []; //arreglo donde se guardaran todos los uuids
+                $totalcfdi = $this->totallist; //Total de cfdi
+
+                //Obtendremos los uuids seleccionados
+                $allcfdi = array_merge($this->cfdiselectxml, $this->cfdiselectpdf, $this->cfdiselectpdfacuse);
+                //Eliminamos los uuids repetidos
+                $allcfdi = array_unique($allcfdi);
+
+                //Ejecutamos el metodo de los meses
+                $mesruta = $this->Meses($this->mesreci);
+
+                //Rutas
+                //XML
+                $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
+                //PDF
+                $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                //Acuse
+                $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
+
+                //Con un bucle pasamos por los uuids almacenados en el arreglo
+                foreach ($allcfdi as $listuuids) {
+                    //Buscamos si exsiten los archivos (si estn descargados)
+                    //XML/PDF/Acuse
+                    $xmlfile = $rutaxml . strtoupper($listuuids) . '.xml';
+                    $pdffile = $rutapdf . strtoupper($listuuids) . '.pdf';
+                    $acusefile = $rutapdfacuse . strtoupper($listuuids) . '-acuse.pdf';
+
+                    if (file_exists($xmlfile) || file_exists($pdffile) || file_exists($acusefile)) {
+                        $totaldesc++;
+                    } else {
+                        $cfdierror++;
+                    }
+                }
+
+                //En una condicional comparamos si el total de descargados es el total de la descarga
+                if ($totaldesc == $totalcfdi) {
+                    $cfdidesc = $totalcfdi; //Agregamos el total descargado
+                    $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+
+                } else {
+                    //De lo contrario sacamos los errores
+                    $cfdidesc = $totalcfdi; //Agregamos el total descargado
+                    $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
+                }
+
+                $fechadesc = $this->anioreci . '-' . $this->mesreci . '-' . $this->diareci; //Fecha de descarga
+
+                //Agregar a la base de datos
+                Calendario::where(['rfc' => $this->rfcEmpresa])
+                    ->update(
+                        [
+                            'rfc' => $this->rfcEmpresa,
+                            'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
+                            'descargas.' . $fechadesc . '.descargasRecibidos' => $cfdidesc,
+                            'descargas.' . $fechadesc . '.erroresRecibidos' => $cfdierror,
+                            'descargas.' . $fechadesc . '.totalRecibidos' => $cfdirecibi,
+                        ],
+                        ['upsert' => true]
+                    );
+                break;
         }
-
-        //En una condicional comparamos si el total de descargados es el total de la descarga
-        if ($totaldesc == $totalcfdi) {
-            $cfdidesc = $totalcfdi; //Agregamos el total descargado
-            $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
-
-        } else {
-            //De lo contrario sacamos los errores
-            $cfdidesc = $totalcfdi; //Agregamos el total descargado
-            $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
-        }
-
-        //Agregar a la base de datos
-        Calendario::where(['rfc' => $this->rfcEmpresa])
-        ->update(
-            [
-                'rfc' => $this->rfcEmpresa,
-                'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
-                'descargas.' . $fechadesc . '.descargasRecibidos' => $cfdidesc,
-                'descargas.' . $fechadesc . '.erroresRecibidos' => $cfdierror,
-                'descargas.' . $fechadesc . '.totalRecibidos' => $cfdirecibi,
-            ],
-            ['upsert' => true]
-        );
     }
 
     //Metodo para agregar los descargados emitidos en la base de datos de calendario
     public function AddCalEmit()
     {
         //Variables
-        $allcfdi = []; //arreglo donde se guardaran todos los uuids
         $fechainic = $this->anioemitinic . '-' . $this->mesemitinic . '-' . $this->diaemitinic; //Fecha inicial
         $fechafin = $this->anioemitfin . '-' . $this->mesemitfin . '-' . $this->diaemitfin; //Fecha final
-
-        //Obtendremos los uuids seleccionados
-        $allcfdi = array_merge($this->cfdiselectxml, $this->cfdiselectpdf, $this->cfdiselectpdfacuse);
-        //Eliminamos los uuids repetidos
-        $allcfdi = array_unique($allcfdi);
 
         //Obtener el rengo de fechas
         for ($i = $fechainic; $i <= $fechafin; $i = date("Y-m-d", strtotime($i . "+ 1 days"))) {
             //Variables para el guardados de la base
-            $fechadesc = $i; //Fecha de descarga
-            $cfdidesc = 0;
-            $cfdierror = 0;
-            $cfdirecibi = 0;
+            $cfdidesc = 0; //CFDI descargados
+            $cfdierror = 0; //CFDI no descargados
+            $cfdirecibi = 0; //CFDI recibidos
             $totaldesc = 0; //Total de descargados
 
-            //Sacamos el total de los cfdis descargados
-            $totalcfdi = $this->totallist; //Total de cfdi
+            //En esto se conforma el total de CFDI
+            $totaldatacfdi = MetadataE::where('emisorRfc', $this->rfcEmpresa)
+                ->where('fechaEmision', 'like', '%' . date("Y-m-d", strtotime($i)) . '%')
+                ->get();
+
+            $totalcfdi = count($totaldatacfdi);
 
             //Obtenemos el mes
             $mesruta = date("m", strtotime($i));
@@ -750,24 +820,17 @@ class Descargas extends Component
             $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioruta/Descargas/$mesruta/Emitidos/ACUSE/";
 
             //Con un bucle pasamos por los uuids almacenados en el arreglo
-            foreach ($allcfdi as $listuuids) {
-                $fechacfdiselect = "";
-
-                //Consultamos los datos del cfdi
-                $listdatacfdi = XmlE::where(['UUID' => strtoupper($listuuids)])->get();
-
-                //Obtenemos la fecha
-                foreach ($listdatacfdi as $listdatacfdi) {
-                    $fechacfdiselect = date("Y-m-d", strtotime($listdatacfdi->Fecha));
-                }
+            foreach ($totaldatacfdi as $listuuids) {
+                //Obtenemos la fecha del CFDI
+                $fechacfdiselect = date("Y-m-d", strtotime($listuuids->fechaEmision));
 
                 //Condicional para saber si la fecha es igual
                 if ($fechacfdiselect == $i) {
                     //Buscamos si exsiten los archivos (si estn descargados)
                     //XML/PDF/Acuse
-                    $xmlfile = $rutaxml . strtoupper($listuuids) . '.xml';
-                    $pdffile = $rutapdf . strtoupper($listuuids) . '.pdf';
-                    $acusefile = $rutapdfacuse . strtoupper($listuuids) . '-acuse' . '.pdf';
+                    $xmlfile = $rutaxml . strtoupper($listuuids->folioFiscal) . '.xml';
+                    $pdffile = $rutapdf . strtoupper($listuuids->folioFiscal) . '.pdf';
+                    $acusefile = $rutapdfacuse . strtoupper($listuuids->folioFiscal) . '-acuse.pdf';
 
                     if (file_exists($xmlfile) || file_exists($pdffile) || file_exists($acusefile)) {
                         $totaldesc++;
@@ -789,18 +852,20 @@ class Descargas extends Component
                 $cfdirecibi = $totalcfdi - $cfdierror; //Agregamos el total recibido
             }
 
+            $fechadesc = date("Y-m-d", strtotime($i)); //Fecha de descarga 
+
             //Agregar a la base de datos
             Calendario::where(['rfc' => $this->rfcEmpresa])
-            ->update(
-                [
-                    'rfc' => $this->rfcEmpresa,
-                    'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
-                    'descargas.' . $fechadesc . '.descargasEmitidos' => $cfdidesc,
-                    'descargas.' . $fechadesc . '.erroresEmitidos' => $cfdierror,
-                    'descargas.' . $fechadesc . '.totalEmitidos' => $cfdirecibi,
-                ],
-                ['upsert' => true]
-            );
+                ->update(
+                    [
+                        'rfc' => $this->rfcEmpresa,
+                        'descargas.' . $fechadesc . '.fechaDescargas' => $fechadesc,
+                        'descargas.' . $fechadesc . '.descargasEmitidos' => $cfdidesc,
+                        'descargas.' . $fechadesc . '.erroresEmitidos' => $cfdierror,
+                        'descargas.' . $fechadesc . '.totalEmitidos' => $cfdirecibi,
+                    ],
+                    ['upsert' => true]
+                );
         }
     }
 
@@ -810,17 +875,17 @@ class Descargas extends Component
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Recibidos)
         $this->anioreci = date("Y");
         $this->mesreci = date("m");
-        $this->diareci = date("j");
+        $this->diareci = date("d");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango inicio)
         $this->anioemitinic = date("Y");
         $this->mesemitinic = date("m");
-        $this->diaemitinic = date("j");
+        $this->diaemitinic = date("d");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango fin)
         $this->anioemitfin = date("Y");
         $this->mesemitfin = date("m");
-        $this->diaemitfin = date("j");
+        $this->diaemitfin = date("d");
 
         //Reinciamos los arreglos
         $this->cfdiselectxml = [];
@@ -829,14 +894,6 @@ class Descargas extends Component
 
         //Emitimos una accion para recibirlo en la vista
         $this->dispatchBrowserEvent('deschecked', []);
-    }
-
-    //Metrodo para reiniciar el modal
-    public function RefreshCal()
-    {
-        //El mes y año iniciamos con los de hoy (calendario)
-        $this->aniocal = date("Y");
-        $this->mescal = date("m");
     }
 
     //Metodo para crear el calendario
@@ -882,9 +939,14 @@ class Descargas extends Component
         $LogReciEmical = Calendario::where(['rfc' => $this->rfcEmpresa])->get()->first();
 
         //Ciclo for para llenar los campos con los dias que le pertenece
-        for ($day = 1; $day <= $day_count; $day++, $str++) {
+        for ($day = 01; $day <= $day_count; $day++, $str++) {
             //Formamos la fecha completa
-            $date = $ym . '-' . $day;
+            if ($day < 10) {
+                $date = $ym . '-0' . $day;
+            } else {
+                $date = $ym . '-' . $day;
+            }
+
 
             //Iniciamos en cero la variable por cada iteracion que se haga
             $this->reciboemit = 0;
@@ -1001,17 +1063,17 @@ class Descargas extends Component
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Recibidos)
         $this->anioreci = date("Y");
         $this->mesreci = date("m");
-        $this->diareci = date("j");
+        $this->diareci = date("d");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango inicio)
         $this->anioemitinic = date("Y");
         $this->mesemitinic = date("m");
-        $this->diaemitinic = date("j");
+        $this->diaemitinic = date("d");
 
         //Configuramos la fecha del filtro para que muestre la fecha de hoy (Emitidos rango fin)
         $this->anioemitfin = date("Y");
         $this->mesemitfin = date("m");
-        $this->diaemitfin = date("j");
+        $this->diaemitfin = date("d");
 
         //El mes y año iniciamos con los de hoy (calendario)
         $this->aniocal = date("Y");
