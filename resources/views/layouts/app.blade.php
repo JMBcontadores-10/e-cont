@@ -382,7 +382,7 @@
                         </li>
 
                         {{-- Modulo solo para gasolinerias --}}
-                        @if (auth()->user()->gas == 1)
+                        @if (auth()->user()->gas == 1 || auth()->user()->tipo)
                             <li id="volumetrico"><a class="d-flex align-items-center" href="{{ 'volumetrico' }}"><i
                                         class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
                                         data-i18n="Analytics">Control
