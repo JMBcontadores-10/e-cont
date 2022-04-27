@@ -658,6 +658,11 @@ class Descargas extends Component
 
                 //Ciclo para obtener el rango de rechas
                 for ($i = $fechainic; $i <= $fechafin; $i = date("Y-m-d", strtotime($i . "+ 1 days"))) {
+                    $cfdidesc = 0; //CFDI descargados
+                    $cfdierror = 0; //CFDI no descargados
+                    $cfdirecibi = 0; //CFDI recibidos
+                    $totaldesc = 0; //Contador de descargados 
+
                     //En esto se conforma el total de CFDI
                     $totaldatacfdi = MetadataR::where('receptorRfc', $this->rfcEmpresa)
                         ->where('fechaEmision', 'like', '%' . $i . '%')
