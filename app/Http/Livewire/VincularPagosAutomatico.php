@@ -2,38 +2,110 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Cheques;
 use Livewire\Component;
 
 use App\Models\MetadataR;
 use App\Models\ppdPendientesVincular;
 use App\Models\XmlR;
-
+use Illuminate\Support\Facades\DB;
 
 class VincularPagosAutomatico extends Component
 {
 
-    public $numero=0;
+    public $numero;
+    public $vinculos;
+    public $vinculo1;
+
+    protected $listeners = [
+
+        'refreshPagoAutomatico' => '$refresh',
+
+         ];
 
 
+         public function mount(){
 
+            $this->vinculos=[];
+            $this->vinculo1=[];
+            $this->numero=0;
+
+
+            }
 
     public function render()
     {
 
 
+        if(!empty(auth()->user()->tipo)){
+
+            $e=array();
+                  $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
 
 
+                  for($i=0; $i <$largo; $i++) {
+
+                  $rfc=auth()->user()->empresas[$i];
+                   $e=DB::Table('clientes')
+                   ->select('RFC','nombre')
+
+                   ->where('RFC', $rfc)
+
+                   ->get();
+
+                   foreach($e as $em){
 
 
+                   $emp[]= array( $em['RFC'],$em['nombre']);
+                   }
+                  }
 
-        return view('livewire.vincular-pagos-automatico',['numero'=>$this->numero])
+                }elseif(!empty(auth()->user()->TipoSE)){
+
+                    $e=array();
+                          $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
+
+
+                          for($i=0; $i <$largo; $i++) {
+
+                          $rfc=auth()->user()->empresas[$i];
+                           $e=DB::Table('clientes')
+                           ->select('RFC','nombre')
+
+                           ->where('RFC', $rfc)
+
+                           ->get();
+
+                           foreach($e as $em)
+
+
+                           $emp[]= array( $em['RFC'],$em['nombre']);
+                          }
+                          }else{
+
+            $emp='';
+                          }
+////====================================================================////////////////
+
+if(count($this->vinculos)!==0){
+foreach ($this->vinculos as $v):
+    $vinculo=Cheques::where(['_id' => $v])->get()->first();
+
+    $this->vinculo1[]= $vinculo['rfc']."&nbsp;->".$vinculo['numcheque']."&nbsp;->".$vinculo['_id'];
+endforeach;
+}
+
+
+        return view('livewire.vincular-pagos-automatico',['numero'=>$this->numero,'empresas'=>$emp,'vinculos'=>$this->vinculos,'vinculo1'=>$this->vinculo1] )
         ->extends('layouts.livewire-layout')
         ->section('content');
 
     }
 
 
-public function vincularAutomatico(){
+public function vincularAutomatico($rfc){
+           $this->vinculos=[];
+            $this->vinculo1=[];
 
 
     set_time_limit(36000);
@@ -42,8 +114,20 @@ public function vincularAutomatico(){
 #========================================================================================#
           /* OBTENCION DE PAGOS PARA VINCULAR */
 
+      if ($rfc =="contador") {
+
+
+
+
 /// se obtienen todos los metadatos que no tengan vinculo y que sean pagos
-    $metadataPago =MetadataR::whereNull('cheques_id')->where('efecto','Pago')->where('estado','Vigente')->get();
+$metadataPago =MetadataR::whereNull('cheques_id')->where('efecto','Pago')->where('estado','Vigente')->whereIn('receptorRfc',auth()->user()->empresas)->get();
+
+      }else{
+
+/// se obtienen todos los metadatos que no tengan vinculo y que sean pagos
+    $metadataPago =MetadataR::whereNull('cheques_id')->where('efecto','Pago')->where('estado','Vigente')->where('receptorRfc',$rfc)->get();
+
+      }
 ////// se pasan los folios fiscales obtenidos aun arreglo
 foreach($metadataPago as $meta){ $foliosmetaSinVinculo[]=$meta->folioFiscal; }
         unset($meta); // rompe la referencia con el último elemento
@@ -57,7 +141,7 @@ foreach($metadataPago as $meta){ $foliosmetaSinVinculo[]=$meta->folioFiscal; }
    $color="white";
    foreach($xmlPago as $Pago):////se recorre el objeto con los CDFID pago
 
-     echo $Pago->UUID."<br>" ;
+    //  echo $Pago->UUID."<br>" ;
 
      $te= ppdPendientesVincular::where('folioFiscalPago',$Pago->UUID)->unset('ppdRealcionados');
      $complemento=$Pago['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
@@ -73,11 +157,11 @@ foreach($metadataPago as $meta){ $foliosmetaSinVinculo[]=$meta->folioFiscal; }
          $color="yellow";
     }
 /////// se imprime los datos cfdi relacionados
-     echo "<div style='background-color:$color'>  tiene&nbsp;&nbsp;".count($complemento)."&nbsp;Id relacionados</div><br>";
+    //  echo "<div style='background-color:$color'>  tiene&nbsp;&nbsp;".count($complemento)."&nbsp;Id relacionados</div><br>";
 
      if($color =="white" && count($complemento)>1){
 
-     foreach($complemento as $c): echo "UUIDrelacionado".strtoupper($c['IdDocumento'])."<br><br>";
+     foreach($complemento as $c):
 $mayus=strtoupper($c['IdDocumento']);
 
     $ppdsinvinculo=MetadataR::where('folioFiscal',$mayus )->whereNull('cheques_id')->get();
@@ -100,7 +184,7 @@ $mayus=strtoupper($c['IdDocumento']);
 
 
          if(isset($vinculopago)){
-         foreach($vinculopago as $v): echo "PPD con vinculo&nbsp;&nbsp;".$v->folioFiscal."<br>chequeid:".$v->cheques_id."<br>";
+         foreach($vinculopago as $v):
 
 
 
@@ -111,6 +195,9 @@ $mayus=strtoupper($c['IdDocumento']);
         $vincularPago->unset('cheques_id');
         }
         $vincularPago->push('cheques_id', $v->cheques_id);
+
+        /// se agregan Id´s al arreglo para mostrarlos cheques en la vista
+        $this->vinculos[]= $v->cheques_id;
 
         /////temporales no vinculados
 
@@ -125,11 +212,11 @@ $mayus=strtoupper($c['IdDocumento']);
 
      }else{
         $uuid2=strtoupper($Pago['Complemento.0.Pagos.Pago.0.DoctoRelacionado.0.IdDocumento']);
-        echo "simple&nbsp; UUIDrelacionado".strtoupper($Pago['Complemento.0.Pagos.Pago.0.DoctoRelacionado.0.IdDocumento'])."<br><br>";
+        // echo "simple&nbsp; UUIDrelacionado".strtoupper($Pago['Complemento.0.Pagos.Pago.0.DoctoRelacionado.0.IdDocumento'])."<br><br>";
 
         $vinculopago=MetadataR::where('folioFiscal',$uuid2 )->whereNotNull('cheques_id')->first();
         if($vinculopago){
-        echo "idsimple:".$vinculopago->cheques_id."<br>";
+        // echo "idsimple:".$vinculopago->cheques_id."<br>";
 
 
 
@@ -143,16 +230,19 @@ $mayus=strtoupper($c['IdDocumento']);
         }
         $vincularPago->push('cheques_id', $vinculopago->cheques_id);
 
+        /// se agregan Id´s al arreglo para mostrarlos cheques en la vista
+        $this->vinculos[]= $vinculopago->cheques_id;
+
         }
 
      }
 
      if($color =="red"){
 
-    echo $id2= strtoupper($Pago['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'])."<br><br>";
+ $id2= strtoupper($Pago['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'])."<br><br>";
     $vinculopago=MetadataR::where('folioFiscal',$id2)->whereNotNull('cheques_id')->first();
     if($vinculopago){
-        echo "default:".$vinculopago->cheques_id."<br>";
+        // echo "default:".$vinculopago->cheques_id."<br>";
 
          ///vinculacion de Pago con cheques Id
          $vincularPago= MetadataR::where('folioFiscal',$Pago->UUID)->first();
@@ -169,14 +259,14 @@ $mayus=strtoupper($c['IdDocumento']);
 
      if($color=="yellow"){
 
-        echo "Factura sin UUID Relacionado<br><br>";
+        // echo "Factura sin UUID Relacionado<br><br>";
      }
 
 
 
 
 
-     echo "===========================================================<br>";
+    //  echo "===========================================================<br>";
      $color="white";
      unset($complemento);
     endforeach;
@@ -184,7 +274,7 @@ $mayus=strtoupper($c['IdDocumento']);
 ///===================REVISAR LOS TEMPORALES (ppdpendientesvincular)======================///
 
 $UUIDtemporales=ppdPendientesVincular::get();
-echo "####################--- [TEMPORALES] ---##################################<br>";
+// echo "####################--- [TEMPORALES] ---##################################<br>";
 foreach($UUIDtemporales as $temp):
 
 if($temp->ppdRealcionados==NULL){
@@ -198,7 +288,7 @@ $metas=MetadataR::whereIn('folioFiscal',$temp['ppdRealcionados'] )->whereNotNull
 
 
 if($metas){
-echo "tiene ahora id: ".$metas->folioFiscal."<br>";
+// echo "tiene ahora id: ".$metas->folioFiscal."<br>";
 $vincularPago= MetadataR::where('folioFiscal',$temp->folioFiscalPago)->first();
 if($vincularPago->cheques_id==''){
 $vincularPago->unset('cheques_id');
@@ -213,12 +303,12 @@ $temp->pull('ppdRealcionados', $metas->folioFiscal);
 endforeach;
 
 
-
+$this->numero=1;
 
 // echo  count($metadataPago)."<br>". count($xmlPago);
 
-//  dd("do some thing");
-exit;
+
+//exit;
 }
 
 

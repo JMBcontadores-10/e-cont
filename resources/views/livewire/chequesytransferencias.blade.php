@@ -29,7 +29,19 @@
                             class="btn btn-primary glow invoice-create">
                             Nuevo Cheque/Transferencia
                         </a>
+                        {{--------------Boton para vinculacion atomatica de pagos a PPD------------}}
+
+             <button wire:click="$emitTo('vincular-pagos-automatico','refreshPagoAutomatico')"  class=" btn btn-secondary " style="vertical-align:middle">
+                <a    data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static"
+                data-keyboard="false" data-target="#vinculacionAutomtica">
+                <span>Vincular pagos </span>
+            </a>
+            </button>
+
                     </div>
+
+
+
 
                     {{-- <button id="btn">Eviar Correo </button>
                     <div class="conten">
@@ -470,7 +482,7 @@
                                                 @if ($faltaxml != 0)
                                                     <div>
                                                         <div class="tr">Vinculadas</div>
-                                                        <a class="icons fas fa-eye" style="color: #3498DB"
+                                                        <a  wire:click="$emitTo('facturas-vinculadas','refrescarModalFacturas')" class="icons fas fa-eye" style="color: #3498DB"
                                                             data-toggle="modal"
                                                             data-target="#facturasVinculadas{{ $id }}"></a>
                                                     </div>
@@ -635,6 +647,7 @@
 
     {{-- Llamamos a las vistas de otros componentes --}}
     <livewire:agregarcheque>
+        <livewire:vincular-pagos-automatico>
         <livewire:uploadrelacionados>
             @include('livewire.demo')
 
