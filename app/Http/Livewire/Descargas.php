@@ -102,8 +102,6 @@ class Descargas extends Component
     public $anioemitfin;
 
     //Variables para la seccion del calendario
-    public $reciboemit = 0; //Variable bandera para saber si es un fecha de recibido/emitido o no
-    public $recibido = 0; //Variable bandera para saber si existe o no datos recibidos
     public $mescal;
     public $aniocal;
 
@@ -951,10 +949,6 @@ class Descargas extends Component
             } else {
                 $date = $ym . '-' . $day;
             }
-
-
-            //Iniciamos en cero la variable por cada iteracion que se haga
-            $this->reciboemit = 0;
 
             //Switch para marcar el dia de hoy
             switch ($date) {
