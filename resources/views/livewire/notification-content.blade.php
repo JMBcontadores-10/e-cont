@@ -59,7 +59,7 @@ window.addEventListener('PushNotifaction', event => {
 
                              @elseif($noti->tipo=="CA")
                              <a  wire:click="verchequeLink('{{$noti->rfc}}','{{$noti->cheques_id}}','{{$noti->_id}}')">
-                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Agrego un nuevo cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
+                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Agregó un nuevo cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
                              </a>
                              @elseif($noti->tipo=="CE")
 
@@ -69,7 +69,7 @@ window.addEventListener('PushNotifaction', event => {
                              @elseif($noti->tipo=="M")
                            <a wire:click="notificacionLink('{{$noti->cheques_id}}','{{$noti->emisorMensaje}}' ,'{{$noti->_id}}')">
 
-                           <h6 class="media-heading"><span class="text-bold-500">  {{$noti->emisorMensaje}}</span> ¡Te dejo un mensaje en un cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>Fecha:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
+                           <h6 class="media-heading"><span class="text-bold-500">  {{$noti->emisorMensaje}}</span> ¡Te dejó un mensaje en un cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>Fecha:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->diffForHumans()}}</small>
                            </a>
 
 
@@ -125,7 +125,7 @@ window.addEventListener('PushNotifaction', event => {
                              @elseif($noti->tipo=="M")
                                   <a wire:click="notificacionLink('{{$noti->cheques_id}}','{{$noti->receptorMensaje}}','{{$noti->_id}}')">
 
-                             <h6 class="media-heading"><span class="text-bold-500">Tu contador</span> ¡te dejo un mensaje!<br>En :&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>{{$noti->created_at->diffForHumans()}}</small>
+                             <h6 class="media-heading"><span class="text-bold-500">Tu contador</span> ¡te dejó un mensaje!<br>En :&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Cheque Id: {{$noti->cheques_id}} <br>{{$noti->created_at->diffForHumans()}}</small>
                              </a>
 
                              @endif
