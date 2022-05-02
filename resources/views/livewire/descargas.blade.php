@@ -111,12 +111,16 @@
                         <div class="form-inline mr-auto">
                             {{-- Busqueda por dia --}}
                             <label for="diareci">Dia</label>
-                            <select wire:model.defer="diareci" id="diareci" class="select form-control filtbusc"
-                                wire:loading.attr="disabled">
+                            <select wire:model.defer="diareci" id="diareci"
+                                class="select form-control filtbusc busqreci" wire:loading.attr="disabled">
                                 <option value="all">Todos</option>
                                 @php
                                     for ($i = 1; $i <= 31; $i++) {
-                                        echo '<option value="' . $i . '">' . $i . '</option>';
+                                        if ($i < 10) {
+                                            echo '<option value="0' . $i . '">' . $i . '</option>';
+                                        } else {
+                                            echo '<option value="' . $i . '">' . $i . '</option>';
+                                        }
                                     }
                                 @endphp
                             </select>
@@ -124,8 +128,8 @@
 
                             {{-- Busqueda por mes --}}
                             <label for="mesreci">Mes</label>
-                            <select wire:model.defer="mesreci" id="mesreci" class=" select form-control filtbusc"
-                                wire:loading.attr="disabled">
+                            <select wire:model.defer="mesreci" id="mesreci"
+                                class="select form-control filtbusc busqreci" wire:loading.attr="disabled">
                                 <?php foreach ($meses as $key => $value) {
                                     echo '<option value="' . $key . '">' . $value . '</option>';
                                 } ?>
@@ -135,8 +139,8 @@
 
                             {{-- Busqueda por año --}}
                             <label for="anioreci">Año</label>
-                            <select wire:model.defer="anioreci" id="anioreci" class="select form-control filtbusc"
-                                wire:loading.attr="disabled">
+                            <select wire:model.defer="anioreci" id="anioreci"
+                                class="select form-control filtbusc busqreci" wire:loading.attr="disabled">
                                 <?php foreach (array_reverse($anios) as $value) {
                                     echo '<option value="' . $value . '">' . $value . '</option>';
                                 } ?>
@@ -413,17 +417,22 @@
                                     {{-- Busqueda por dia --}}
                                     <label for="diaemitinic">Dia</label>
                                     <select wire:model.defer="diaemitinic" id="diaemitinic"
-                                        class="select form-control selectfilemit filtbusc" wire:loading.attr="disabled">
+                                        class="select form-control selectfilemit filtbusc busqemit"
+                                        wire:loading.attr="disabled">
                                         @php
                                             for ($i = 1; $i <= 31; $i++) {
-                                                echo '<option value="' . $i . '">' . $i . '</option>';
+                                                if ($i < 10) {
+                                                    echo '<option value="0' . $i . '">' . $i . '</option>';
+                                                } else {
+                                                    echo '<option value="' . $i . '">' . $i . '</option>';
+                                                }
                                         } @endphp </select>
                                     &nbsp;&nbsp;
 
                                     {{-- Busqueda por mes --}}
                                     <label for="mesemitinic">Mes</label>
                                     <select wire:model.defer="mesemitinic" id="mesemitinic"
-                                        class=" select form-control selectfilemit filtbusc"
+                                        class=" select form-control selectfilemit filtbusc busqemit"
                                         wire:loading.attr="disabled">
                                         <?php foreach ($meses as $key => $value) {
                                             echo '<option value="' . $key . '">' . $value . '</option>';
@@ -435,7 +444,8 @@
                                     {{-- Busqueda por año --}}
                                     <label for="anioemitinic">Año</label>
                                     <select wire:model.defer="anioemitinic" id="anioemitinic"
-                                        class="select form-control selectfilemit filtbusc" wire:loading.attr="disabled">
+                                        class="select form-control selectfilemit filtbusc busqemit"
+                                        wire:loading.attr="disabled">
                                         <?php foreach (array_reverse($anios) as $value) {
                                             echo '<option value="' . $value . '">' . $value . '</option>';
                                         } ?>
@@ -452,17 +462,22 @@
                                     {{-- Busqueda por dia --}}
                                     <label for="diaemitfin">Dia</label>
                                     <select wire:model.defer="diaemitfin" id="diaemitfin"
-                                        class="select form-control selectfilemit filtbusc" wire:loading.attr="disabled">
+                                        class="select form-control selectfilemit filtbusc busqemit"
+                                        wire:loading.attr="disabled">
                                         @php
                                             for ($i = 1; $i <= 31; $i++) {
-                                                echo '<option value="' . $i . '">' . $i . '</option>';
+                                                if ($i < 10) {
+                                                    echo '<option value="0' . $i . '">' . $i . '</option>';
+                                                } else {
+                                                    echo '<option value="' . $i . '">' . $i . '</option>';
+                                                }
                                         } @endphp </select>
                                     &nbsp;&nbsp;
 
                                     {{-- Busqueda por mes --}}
                                     <label for="mesemitfin">Mes</label>
                                     <select wire:model.defer="mesemitfin" id="mesemitfin"
-                                        class=" select form-control selectfilemit filtbusc"
+                                        class=" select form-control selectfilemit filtbusc busqemit"
                                         wire:loading.attr="disabled">
                                         <?php foreach ($meses as $key => $value) {
                                             echo '<option value="' . $key . '">' . $value . '</option>';
@@ -473,7 +488,8 @@
                                     {{-- Busqueda por año --}}
                                     <label for="anioemitfin">Año</label>
                                     <select wire:model.defer="anioemitfin" id="anioemitfin"
-                                        class="select form-control selectfilemit filtbusc" wire:loading.attr="disabled">
+                                        class="select form-control selectfilemit filtbusc busqemit"
+                                        wire:loading.attr="disabled">
                                         <?php foreach (array_reverse($anios) as $key => $value) {
                                             echo '<option value="' . $value . '">' . $value . '</option>';
                                         } ?>
@@ -552,6 +568,44 @@
                                         //Ahora realizaremos lo mismo pero cuando se haga un cambio en el select
                                         $(".selectfilemit").change(function() {
                                             LimitDiasMes();
+                                        });
+
+                                        //Limitar la busqueda de la fecha (Emitidos)
+                                        $(".busqemit").change(function() {
+                                            //Obtenemos la fecha seleccionada
+                                            //Inicial
+                                            var MesSelectInc = $("#mesemitinic").val();
+                                            var AnioSelectInc = $("#anioemitinic").val();
+                                            var DiaSelectInc = $("#diaemitinic").val();
+
+                                            //Fin
+                                            var MesSelectFin = $("#mesemitfin").val();
+                                            var AnioSelectFin = $("#anioemitfin").val();
+                                            var DiaSelectFin = $("#diaemitfin").val();
+
+                                            //En base a la fecha seleccionada vamos a obtener el total de dias
+                                            var FechaSelectInic = new Date(AnioSelectInc, MesSelectInc, 0).getDate();
+
+                                            //En base a la fecha seleccionada vamos a obtener el total de dias
+                                            var FechaSelectFin = new Date(AnioSelectFin, MesSelectFin, 0).getDate();
+
+                                            //Condicional donde comprobaremos si el dia seleccionado esta en el rango
+                                            if (DiaSelectInc <= FechaSelectInic && DiaSelectFin <= FechaSelectFin) {
+                                                //Desbloqueamos el boton de buscar
+                                                $(".BtnConsulSAT").prop("disabled", false);
+
+                                                $("#mnsexcep").text("");
+                                                $("#Mnssincfdi").prop("hidden", true);
+                                                $("#Btndescarcfdi").prop("disabled", false);
+                                            } else {
+                                                //Bloqueamos el boton de buscar
+                                                $(".BtnConsulSAT").prop("disabled", true);
+
+                                                $("#mnsexcep").text(
+                                                    "Favor de seleccionar una fecha existente");
+                                                $("#Mnssincfdi").prop("hidden", false);
+                                                $("#Btndescarcfdi").prop("disabled", true);
+                                            }
                                         });
                                     });
                                 </script>
@@ -1085,6 +1139,35 @@
                         $("#Mnssincfdi").prop("hidden", true);
                         $("#Btndescarcfdi").prop("disabled", false);
                     }, 2500);
+                }
+            });
+
+            //Limitar la busqueda de la fecha (Recibidos)
+            $(".busqreci").change(function() {
+                //Obtenemos la fecha seleccionada
+                var MesSelect = $("#mesreci").val();
+                var AnioSelect = $("#anioreci").val();
+                var DiaSelect = $("#diareci").val();
+
+                //En base a la fecha seleccionada vamos a obtener el total de dias
+                var FechaSelect = new Date(AnioSelect, MesSelect, 0).getDate();
+
+                //Condicional donde comprobaremos si el dia seleccionado esta en el rango
+                if (DiaSelect <= FechaSelect || DiaSelect == "all") {
+                    //Desbloqueamos el boton de buscar
+                    $(".BtnConsulSAT").prop("disabled", false);
+
+                    $("#mnsexcep").text("");
+                    $("#Mnssincfdi").prop("hidden", true);
+                    $("#Btndescarcfdi").prop("disabled", false);
+                } else {
+                    //Bloqueamos el boton de buscar
+                    $(".BtnConsulSAT").prop("disabled", true);
+
+                    $("#mnsexcep").text(
+                        "Favor de seleccionar una fecha existente");
+                    $("#Mnssincfdi").prop("hidden", false);
+                    $("#Btndescarcfdi").prop("disabled", true);
                 }
             });
 

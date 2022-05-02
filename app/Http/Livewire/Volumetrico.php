@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Volumetrico as VolumetricoModel;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -13,6 +14,9 @@ class Volumetrico extends Component
     //Variables para la seccion del calendario
     public $mescal;
     public $aniocal;
+
+    //Escuchar los emitidos de otros componentes
+    public $listeners = ['volumrefresh' => '$refresh'];
 
     //Metodo para crear el calendario
     public function Calendario()
@@ -53,6 +57,11 @@ class Volumetrico extends Component
         //Campos vacios
         $week .= str_repeat('<td></td>', $str);
 
+        //Vamos a hacer una consulta a los volumetricos para obtener
+        $voludata = VolumetricoModel::where('rfc', $this->rfcEmpresa)
+            ->get()
+            ->first();
+
         //Ciclo for para llenar los campos con los dias que le pertenece
         for ($day = 01; $day <= $day_count; $day++, $str++) {
             //Formamos la fecha completa
@@ -65,38 +74,98 @@ class Volumetrico extends Component
             //Switch para marcar el dia de hoy
             switch ($date) {
                 case $today:
-                    $week .= '<td class="hoy">' . $day;
+                    $week .= '<td class="hoy" style="color:white">' . $day;
 
-                    //Informacion de la fecha en volumetricos
-                    $week .= '<br>' . '<label style="color:white">*Sin informacion*</label>' . '<br>';
+                    if ($this->rfcEmpresa) {
+                        //Condicional para limitar la captura
+                        if (auth()->user()->tipo) {
+                            //Informacion PDF
+                            if (!empty($voludata['volumetrico.' . $date . '.PDFVolu'])) {
+                                $week .= '<br>' . 'PDF cargado';
+                            } else {
+                                $week .= '<br>' . 'Falta PDF';
+                            }
 
-                    //Condicional para limitar la captura
-                    if (auth()->user()->tipo) {
-                        //Boton para insertar o editar datos
-                        $week .= '<a class="icons fas fa-edit" data-toggle="modal" 
-                        data-target="#volucaptumodal' . $date . '" data-backdrop="static"
-                        data-keyboard="false"></a> &nbsp;&nbsp;';
+                            //Informacion de captura
+                            if (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
+                                $week .= '<br>' . 'Captura completa' . '<br>';
+                            } else {
+                                $week .= '<br>' . 'Falta capturar' . '<br>';
+                            }
+
+                            //Condicional para marcar que se agrego un volumetrico
+                            if (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
+                                //Boton para insertar o editar datos
+                                $week .= '<a class="icons fas fa-edit content_true" data-toggle="modal" 
+                            data-target="#volucaptumodal' . $date . '" data-backdrop="static"
+                            data-keyboard="false"></a> &nbsp;&nbsp;';
+                            } else {
+                                //Boton para insertar o editar datos
+                                $week .= '<a class="icons fas fa-edit" data-toggle="modal" 
+                            data-target="#volucaptumodal' . $date . '" data-backdrop="static"
+                            data-keyboard="false"></a> &nbsp;&nbsp;';
+                            }
+                        } else {
+                            //Informacion PDF
+                            if (!empty($voludata['volumetrico.' . $date . '.PDFVolu'])) {
+                                $week .= '<br>' . 'PDF cargado' . '<br>';
+                            } else {
+                                $week .= '<br>' . 'Falta PDF' . '<br>';
+                            }
+                        }
+
+                        //Boton para mostrar el PDF
+                        $week .= '<a class="icons fas fa-file-pdf" data-toggle="modal" 
+                        data-target="#volupdfmodal' . $date . '" data-backdrop="static"
+                        data-keyboard="false"></a>';
                     }
-
-                    //Boton para mostrar el PDF
-                    $week .= '<a class="icons fas fa-file-pdf"></a>';
                     break;
                 default:
                     $week .= '<td>' . $day;
 
-                    //Informacion de la fecha en volumetricos
-                    $week .= '<br>' . '<label>*Sin informacion*</label>' . '<br>';
+                    if ($this->rfcEmpresa) {
+                        //Condicional para limitar la captura
+                        if (auth()->user()->tipo) {
+                            //Informacion PDF
+                            if (!empty($voludata['volumetrico.' . $date . '.PDFVolu'])) {
+                                $week .= '<br>' . 'PDF cargado';
+                            } else {
+                                $week .= '<br>' . 'Falta PDF';
+                            }
 
-                    //Condicional para limitar la captura
-                    if (auth()->user()->tipo) {
-                        //Boton para insertar o editar datos
-                        $week .= '<a class="icons fas fa-edit" data-toggle="modal" 
-                        data-target="#volucaptumodal' . $date . '" data-backdrop="static"
-                        data-keyboard="false"></a> &nbsp;&nbsp;';
+                            //Informacion de captura
+                            if (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
+                                $week .= '<br>' . 'Captura completa' . '<br>';
+                            } else {
+                                $week .= '<br>' . 'Falta capturar' . '<br>';
+                            }
+
+                            //Condicional para marcar que se agrego un volumetrico
+                            if (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
+                                //Boton para insertar o editar datos
+                                $week .= '<a class="icons fas fa-edit content_true" data-toggle="modal" 
+                            data-target="#volucaptumodal' . $date . '" data-backdrop="static"
+                            data-keyboard="false"></a> &nbsp;&nbsp;';
+                            } else {
+                                //Boton para insertar o editar datos
+                                $week .= '<a class="icons fas fa-edit" data-toggle="modal" 
+                            data-target="#volucaptumodal$volupdf =" data-backdrop="static"
+                            data-keyboard="false"></a> &nbsp;&nbsp;';
+                            }
+                        } else {
+                            //Informacion PDF
+                            if (!empty($voludata['volumetrico.' . $date . '.PDFVolu'])) {
+                                $week .= '<br>' . 'PDF cargado' . '<br>';
+                            } else {
+                                $week .= '<br>' . 'Falta PDF' . '<br>';
+                            }
+                        }
+
+                        //Boton para mostrar el PDF
+                        $week .= '<a class="icons fas fa-file-pdf" data-toggle="modal" 
+                        data-target="#volupdfmodal' . $date . '" data-backdrop="static"
+                        data-keyboard="false"></a>';
                     }
-
-                    //Boton para mostrar el PDF
-                    $week .= '<a class="icons fas fa-file-pdf"></a>';
                     break;
             }
 
@@ -143,6 +212,9 @@ class Volumetrico extends Component
     {
         //Obtenemos el valor del metodo del calendario
         $weeks = $this->Calendario();
+
+        //Emitimos el metodo de refrescar la pagina
+        $this->emit('Volumdata');
 
         //Arreglo de los meses
         $meses = array(

@@ -123,7 +123,7 @@
                     <br>
 
                     {{-- Formato calendario --}}
-                    <div class="table-responsive">
+                    <div class="table-responsive" wire:loading.class="disabledattr">
                         <table id="Tablavolu" class="table table-bordered calemitreci">
                             <thead>
                                 <tr>
@@ -154,13 +154,14 @@
         $totaldias = date('t', strtotime($totaldias)); //Obtenemos el total de dias de la fecha seleccionada
     @endphp
 
-    {{--Ciclo para crear las fechas--}}
+    {{-- Ciclo para crear las fechas --}}
     @for ($dias = 1; $dias <= $totaldias; $dias++)
         @php
             $fecha = date('Y-m-d', strtotime($aniocal . '-' . $mescal . '-' . $dias)); //Creacion de la fecha con el formato
         @endphp
 
-        {{--Llamamos al componente del modal junto con los datos necesarios--}}
+        {{-- Llamamos al componente del modal junto con los datos necesarios --}}
         <livewire:volumedata :empresa=$empresa :dia=$fecha :wire:key="'user-profile-one-'.$empresa.$fecha">
+            <livewire:volumepdf :empresa=$empresa :dia=$fecha :wire:key="'user-profile-two-'.$empresa.$fecha">
     @endfor
 </div>
