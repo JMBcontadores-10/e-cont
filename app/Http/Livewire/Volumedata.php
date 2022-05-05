@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\User;
 use App\Models\Volumetrico;
 use Livewire\Component;
 
@@ -10,6 +11,15 @@ class Volumedata extends Component
     //Variables globales
     public $dia;
     public $empresa;
+    public $formdatavolu;
+
+    //Variables del combustible que manejan
+    public $Magna;
+    public $Premium;
+    public $Diesel;
+    public $inventantefinm;
+    public $inventantefinp;
+    public $inventantefind;
 
     //Variales para almacenar en la base de datos
     //Volumetrico **************************************************************************************************************************************
@@ -42,6 +52,11 @@ class Volumedata extends Component
     public $invdetermagna;
     public $invdeterpremium;
     public $invdeterdiesel;
+
+    //Merma
+    public $mermamagna;
+    public $mermapremium;
+    public $mermadiesel;
     //****************************************************************************************************************************************************
 
     //Cambio de precio ***********************************************************************************************************************************
@@ -74,73 +89,120 @@ class Volumedata extends Component
     public $invdetercambmagna;
     public $invdetercambpremium;
     public $invdetercambdiesel;
+
+    //Merma
+    public $mermacambmagna;
+    public $mermacambpremium;
+    public $mermacambdiesel;
     //****************************************************************************************************************************************************
 
+    protected $listeners = ['NuevoVolu' => 'NuevoVolu'];
 
-    public $listeners = ['Volumdata' => 'Volumdata'];
-
-    public function Volumdata()
+    //Metodo para saber que combustibles maneja
+    public function InfoGas()
     {
+        //Hacemos una consulta de la empresa para saber que datos vamos a mostrar
+        $infogas = User::where('RFC', $this->empresa)->get();
+
+        //Obtenemos los datos requeridos
+        if (count($infogas) > 0) {
+            //Recorremos la consulta para obtener los datos
+            foreach ($infogas as $datagas) {
+                //Obtenemos los tipo de combustible que maneja las gasolineras
+                $this->Magna = $datagas->TipoM;
+                $this->Premium = $datagas->TipoP;
+                $this->Diesel = $datagas->TipoD;
+            }
+        } else {
+            //De lo contrario los declaramos vacios
+            $this->Magna = '';
+            $this->Premium = '';
+            $this->Diesel = '';
+        }
+
+        //Consultamos lo datos de los volumetricos
+        $datavolum = Volumetrico::where(['rfc' => $this->empresa])
+            ->get()
+            ->first();
+
+        //Obtenemos el dia anterior
+        $diaanterior = date('Y-m-d', strtotime($this->dia . '- 1 days'));
+
+        if ($datavolum) {
+            //Obtenemos el inventario final volumetrico anterior
+            $this->inventantefinm = $datavolum['volumetrico.' . $diaanterior . '.AutoStickM'];
+            $this->inventantefinp = $datavolum['volumetrico.' . $diaanterior . '.AutoStickP'];
+            $this->inventantefind = $datavolum['volumetrico.' . $diaanterior . '.AutoStickD'];
+        }
+
         //Hacemos una consulta
         $infovolu = Volumetrico::where(['rfc' => $this->empresa])->get()->first();
 
         if ($infovolu) {
             //Insertamos los datos en los campos necesarios
-            //Vomumetricos *********************************************************************************************************
 
             //Magna
-            $this->inventinicmagna = $infovolu['volumetrico.' . $this->dia . '.IventInicM'];
-            $this->litvendmagna = $infovolu['volumetrico.' . $this->dia . '.LitVendM'];
-            $this->compramagna = $infovolu['volumetrico.' . $this->dia . '.CompraM'];
-            $this->precventmagna = $infovolu['volumetrico.' . $this->dia . '.PrecVentM'];
-            $this->autostickmagna = $infovolu['volumetrico.' . $this->dia . '.AutoStickM'];
-            $this->invdetermagna = $infovolu['volumetrico.' . $this->dia . '.InvDeterM'];
+            if ($this->Magna == 1) {
+                //Magna Vomumetricos
+                $this->inventinicmagna = $infovolu['volumetrico.' . $this->dia . '.IventInicM'];
+                $this->litvendmagna = $infovolu['volumetrico.' . $this->dia . '.LitVendM'];
+                $this->compramagna = $infovolu['volumetrico.' . $this->dia . '.CompraM'];
+                $this->precventmagna = $infovolu['volumetrico.' . $this->dia . '.PrecVentM'];
+                $this->autostickmagna = $infovolu['volumetrico.' . $this->dia . '.AutoStickM'];
+                $this->invdetermagna = $infovolu['volumetrico.' . $this->dia . '.InvDeterM'];
+                $this->mermamagna = $infovolu['volumetrico.' . $this->dia . '.MermaM'];
+
+                //Magna Cambio de precio
+                $this->inventiniccambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicM'];
+                $this->litvendcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendM'];
+                $this->compracambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraM'];
+                $this->precventcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentM'];
+                $this->autostickcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickM'];
+                $this->invdetercambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterM'];
+                $this->mermacambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.MermaM'];
+            }
 
             //Premium
-            $this->inventinicpremium = $infovolu['volumetrico.' . $this->dia . '.IventInicP'];
-            $this->litvendpremium = $infovolu['volumetrico.' . $this->dia . '.LitVendP'];
-            $this->comprapremium = $infovolu['volumetrico.' . $this->dia . '.CompraP'];
-            $this->precventpremium = $infovolu['volumetrico.' . $this->dia . '.PrecVentP'];
-            $this->autostickpremium = $infovolu['volumetrico.' . $this->dia . '.AutoStickP'];
-            $this->invdeterpremium = $infovolu['volumetrico.' . $this->dia . '.InvDeterP'];
+            if ($this->Premium == 1) {
+                //Premium Vomumetricos
+                $this->inventinicpremium = $infovolu['volumetrico.' . $this->dia . '.IventInicP'];
+                $this->litvendpremium = $infovolu['volumetrico.' . $this->dia . '.LitVendP'];
+                $this->comprapremium = $infovolu['volumetrico.' . $this->dia . '.CompraP'];
+                $this->precventpremium = $infovolu['volumetrico.' . $this->dia . '.PrecVentP'];
+                $this->autostickpremium = $infovolu['volumetrico.' . $this->dia . '.AutoStickP'];
+                $this->invdeterpremium = $infovolu['volumetrico.' . $this->dia . '.InvDeterP'];
+                $this->mermapremium = $infovolu['volumetrico.' . $this->dia . '.MermaP'];
+
+                //Premium Cambio de precio
+                $this->inventiniccambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicP'];
+                $this->litvendcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendP'];
+                $this->compracambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraP'];
+                $this->precventcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentP'];
+                $this->autostickcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickP'];
+                $this->invdetercambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterP'];
+                $this->mermacambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.MermaP'];
+            }
 
             //Diesel
-            $this->inventinicdiesel = $infovolu['volumetrico.' . $this->dia . '.IventInicD'];
-            $this->litvenddiesel = $infovolu['volumetrico.' . $this->dia . '.LitVendD'];
-            $this->compradiesel = $infovolu['volumetrico.' . $this->dia . '.CompraD'];
-            $this->precventdiesel = $infovolu['volumetrico.' . $this->dia . '.PrecVentD'];
-            $this->autostickdiesel = $infovolu['volumetrico.' . $this->dia . '.AutoStickD'];
-            $this->invdeterdiesel = $infovolu['volumetrico.' . $this->dia . '.InvDeterD'];
+            if ($this->Diesel == 1) {
+                //Diesel Vomumetricos
+                $this->inventinicdiesel = $infovolu['volumetrico.' . $this->dia . '.IventInicD'];
+                $this->litvenddiesel = $infovolu['volumetrico.' . $this->dia . '.LitVendD'];
+                $this->compradiesel = $infovolu['volumetrico.' . $this->dia . '.CompraD'];
+                $this->precventdiesel = $infovolu['volumetrico.' . $this->dia . '.PrecVentD'];
+                $this->autostickdiesel = $infovolu['volumetrico.' . $this->dia . '.AutoStickD'];
+                $this->invdeterdiesel = $infovolu['volumetrico.' . $this->dia . '.InvDeterD'];
+                $this->mermadiesel = $infovolu['volumetrico.' . $this->dia . '.MermaD'];
 
-            //**********************************************************************************************************************
-
-            //Cambio de precio *****************************************************************************************************
-
-            //Magna
-            $this->inventiniccambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicM'];
-            $this->litvendcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendM'];
-            $this->compracambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraM'];
-            $this->precventcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentM'];
-            $this->autostickcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickM'];
-            $this->invdetercambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterM'];
-
-            //Premium
-            $this->inventiniccambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicP'];
-            $this->litvendcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendP'];
-            $this->compracambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraP'];
-            $this->precventcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentP'];
-            $this->autostickcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickP'];
-            $this->invdetercambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterP'];
-
-            //Diesel
-            $this->inventiniccambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicD'];
-            $this->litvendcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendD'];
-            $this->compracambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraD'];
-            $this->precventcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentD'];
-            $this->autostickcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickD'];
-            $this->invdetercambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterD'];
-
-            //**********************************************************************************************************************
+                //Diesel Cambio de precio
+                $this->inventiniccambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicD'];
+                $this->litvendcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendD'];
+                $this->compracambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraD'];
+                $this->precventcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentD'];
+                $this->autostickcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickD'];
+                $this->invdetercambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterD'];
+                $this->mermacambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.MermaD'];
+            }
         }
     }
 
@@ -206,112 +268,79 @@ class Volumedata extends Component
     //Metodo para almacenar/editar un volumetrico
     public function NuevoVolu()
     {
-        //Sacamos el dia siguiente
+        // Sacamos el dia siguiente
         $diasiguiente = date("Y-m-d", strtotime($this->dia . "+ 1 days"));
 
-        //Buscamos el RFC de la empresa
+        //Vamos a almacenar los datos en la base
+        $infovolu = Volumetrico::where(['rfc' => $this->empresa])->get()->first();
+
         Volumetrico::where(['rfc' => $this->empresa])
             ->update([
-
                 'rfc' => $this->empresa,
-                //Inventario inicial
-                'volumetrico.' . $this->dia . '.IventInicM' => $this->inventinicmagna,
-                'volumetrico.' . $this->dia . '.IventInicP' => $this->inventinicpremium,
-                'volumetrico.' . $this->dia . '.IventInicD' => $this->inventinicdiesel,
-
-                //Compras
-                'volumetrico.' . $this->dia . '.CompraM' => $this->compramagna,
-                'volumetrico.' . $this->dia . '.CompraP' => $this->comprapremium,
-                'volumetrico.' . $this->dia . '.CompraD' => $this->compradiesel,
-
-                //Litros vendidos
-                'volumetrico.' . $this->dia . '.LitVendM' => $this->litvendmagna,
-                'volumetrico.' . $this->dia . '.LitVendP' => $this->litvendpremium,
-                'volumetrico.' . $this->dia . '.LitVendD' => $this->litvenddiesel,
-
-                //Precio venta
-                'volumetrico.' . $this->dia . '.PrecVentM' => $this->precventmagna,
-                'volumetrico.' . $this->dia . '.PrecVentP' => $this->precventpremium,
-                'volumetrico.' . $this->dia . '.PrecVentD' => $this->precventdiesel,
-
-                //Inventario real
-                'volumetrico.' . $this->dia . '.AutoStickM' => $this->autostickmagna,
-                'volumetrico.' . $this->dia . '.AutoStickP' => $this->autostickpremium,
-                'volumetrico.' . $this->dia . '.AutoStickD' => $this->autostickdiesel,
-
-                //Inventario determinado
-                'volumetrico.' . $this->dia . '.InvDeterM' => $this->invdetermagna,
-                'volumetrico.' . $this->dia . '.InvDeterP' => $this->invdeterpremium,
-                'volumetrico.' . $this->dia . '.InvDeterD' => $this->invdeterdiesel,
+                'volumetrico.' . $this->dia => $this->formdatavolu,
 
                 //Obtenemos el inicial del siguiente dia
                 'volumetrico.' . $diasiguiente . '.IventInicM' => $this->autostickmagna,
                 'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickpremium,
                 'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickdiesel,
-
             ], ['upsert' => true]);
 
-        //Modificamos el dia siguiente
+        //Agregamos el PDF si este existe
+        if ($infovolu['volumetrico.' . $this->dia . '.PDFVolu']) {
+            Volumetrico::where(['rfc' => $this->empresa])
+                ->update([
+                    'rfc' => $this->empresa,
+                    'volumetrico.' . $this->dia . '.PDFVolu' => $infovolu['volumetrico.' . $this->dia . '.PDFVolu'],
+                ], ['upsert' => true]);
+        }
+
+        // Modificamos el dia siguiente
         $this->ActuInvenDeter($diasiguiente);
 
-        //Emitimos el cierre de la modal
-        $this->dispatchBrowserEvent('SuccessVolum', []);
+        //Cerramos el modal al terminar
+        $this->dispatchBrowserEvent('CerrarVoluData', ["dia" => $this->dia]);
+
+        //Hacemos un refresh a la pagina
+        $this->emit('volumrefresh');
     }
 
     //Metodo para el cambio de precio
     public function CambioPrec()
     {
-        //Sacamos el dia siguiente
+        // Sacamos el dia siguiente
         $diasiguiente = date("Y-m-d", strtotime($this->dia . "+ 1 days"));
 
-        //Buscamos el RFC de la empresa
+        //Vamos a almacenar los datos en la base
+        $infovolu = Volumetrico::where(['rfc' => $this->empresa])->get()->first();
+
         Volumetrico::where(['rfc' => $this->empresa])
             ->update([
-
                 'rfc' => $this->empresa,
-                //Inventario inicial
-                'volumetrico.' . $this->dia . "-C" . '.IventInicM' => $this->inventiniccambmagna,
-                'volumetrico.' . $this->dia . "-C" . '.IventInicP' => $this->inventiniccambpremium,
-                'volumetrico.' . $this->dia . "-C" . '.IventInicD' => $this->inventiniccambdiesel,
-
-                //Compras
-                'volumetrico.' . $this->dia . "-C" . '.CompraM' => $this->compracambmagna,
-                'volumetrico.' . $this->dia . "-C" . '.CompraP' => $this->compracambpremium,
-                'volumetrico.' . $this->dia . "-C" . '.CompraD' => $this->compracambdiesel,
-
-                //Litros vendidos
-                'volumetrico.' . $this->dia . "-C" . '.LitVendM' => $this->litvendcambmagna,
-                'volumetrico.' . $this->dia . "-C" . '.LitVendP' => $this->litvendcambpremium,
-                'volumetrico.' . $this->dia . "-C" . '.LitVendD' => $this->litvendcambdiesel,
-
-                //Precio venta
-                'volumetrico.' . $this->dia . "-C" . '.PrecVentM' => $this->precventcambmagna,
-                'volumetrico.' . $this->dia . "-C" . '.PrecVentP' => $this->precventcambpremium,
-                'volumetrico.' . $this->dia . "-C" . '.PrecVentD' => $this->precventcambdiesel,
-
-                //Inventario real
-                'volumetrico.' . $this->dia . "-C" . '.AutoStickM' => $this->autostickcambmagna,
-                'volumetrico.' . $this->dia . "-C" . '.AutoStickP' => $this->autostickcambpremium,
-                'volumetrico.' . $this->dia . "-C" . '.AutoStickD' => $this->autostickcambdiesel,
-
-                //Inventario determinado
-                'volumetrico.' . $this->dia . "-C" . '.InvDeterM' => $this->invdetercambmagna,
-                'volumetrico.' . $this->dia . "-C" . '.InvDeterP' => $this->invdetercambpremium,
-                'volumetrico.' . $this->dia . "-C" . '.InvDeterD' => $this->invdetercambdiesel,
+                'volumetrico.' . $this->dia . "-C" => $this->formdatavolu,
 
                 //Obtenemos el inicial del siguiente dia
-                'volumetrico.' . $diasiguiente . '.IventInicM' => $this->autostickcambmagna,
-                'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickcambpremium,
-                'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickcambdiesel,
-
+                'volumetrico.' . $diasiguiente . '.IventInicM' => $this->autostickmagna,
+                'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickpremium,
+                'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickdiesel,
             ], ['upsert' => true]);
 
+        //Agregamos el PDF si este existe
+        if ($infovolu['volumetrico.' . $this->dia . '.PDFVolu']) {
+            Volumetrico::where(['rfc' => $this->empresa])
+                ->update([
+                    'rfc' => $this->empresa,
+                    'volumetrico.' . $this->dia . '.PDFVolu' => $infovolu['volumetrico.' . $this->dia . '.PDFVolu'],
+                ], ['upsert' => true]);
+        }
 
-        //Modificamos el dia siguiente
+        // Modificamos el dia siguiente
         $this->ActuInvenDeter($diasiguiente);
 
-        //Emitimos el cierre de la modal
-        $this->dispatchBrowserEvent('SuccessVolum', []);
+        //Cerramos el modal al terminar
+        $this->dispatchBrowserEvent('CerrarVoluData', ["dia" => $this->dia]);
+
+        //Hacemos un refresh a la pagina
+        $this->emit('volumrefresh');
     }
 
     //Metodo para vaciar las variables del modal
@@ -348,6 +377,11 @@ class Volumedata extends Component
         $this->invdetermagna = "";
         $this->invdeterpremium = "";
         $this->invdeterdiesel = "";
+
+        //Merma
+        $this->mermamagna = "";
+        $this->mermapremium = "";
+        $this->mermadiesel = "";
         // *************************************************************************************************************************
 
         //Cambio de precio *********************************************************************************************************
@@ -380,13 +414,22 @@ class Volumedata extends Component
         $this->invdetercambmagna = "";
         $this->invdetercambpremium = "";
         $this->invdetercambdiesel = "";
+
+        //Merma
+        $this->mermacambmagna = "";
+        $this->mermacambpremium = "";
+        $this->mermacambdiesel = "";
         // *************************************************************************************************************************
 
-        $this->emit('volumrefresh'); //Emitimos el metodo de refrescar la pagina
+        //Emitimos el metodo de refrescar la pagina
+        $this->emit('volumrefresh');
     }
 
     public function render()
     {
+        //Ejecutamos el metodo para obtener la informacion del cliente
+        $this->InfoGas();
+
         return view('livewire.volumedata');
     }
 }

@@ -15,100 +15,100 @@ function showLogin1() {
     $("#entrar").hide();
 }
 
-function inventario(){
-     var invM = document.getElementById("invIniM").value;
-     var coM = document.getElementById("comprasM").value;
-     var veM = document.getElementById("ventasM").value;
+function inventario() {
+    var invM = document.getElementById("invIniM").value;
+    var coM = document.getElementById("comprasM").value;
+    var veM = document.getElementById("ventasM").value;
 
-     var result =  parseFloat(invM) + parseFloat(coM) - parseFloat(veM);
-     document.getElementById("invDeterM").value = result;
+    var result = parseFloat(invM) + parseFloat(coM) - parseFloat(veM);
+    document.getElementById("invDeterM").value = result;
 
-     var invP = document.getElementById("invIniP").value;
-     var coP = document.getElementById("comprasP").value;
-     var veP = document.getElementById("ventasP").value;
+    var invP = document.getElementById("invIniP").value;
+    var coP = document.getElementById("comprasP").value;
+    var veP = document.getElementById("ventasP").value;
 
-     var result =  parseFloat(invP) + parseFloat(coP) - parseFloat(veP);
-     document.getElementById("invDeterP").value = result;
+    var result = parseFloat(invP) + parseFloat(coP) - parseFloat(veP);
+    document.getElementById("invDeterP").value = result;
 
-     var invD = document.getElementById("invIniD").value;
-     var coD = document.getElementById("comprasD").value;
-     var veD = document.getElementById("ventasD").value;
+    var invD = document.getElementById("invIniD").value;
+    var coD = document.getElementById("comprasD").value;
+    var veD = document.getElementById("ventasD").value;
 
-     var result =  parseFloat(invD) + parseFloat(coD) - parseFloat(veD);
-     document.getElementById("invDeterD").value = result;
+    var result = parseFloat(invD) + parseFloat(coD) - parseFloat(veD);
+    document.getElementById("invDeterD").value = result;
 
-    }
+}
 
-function merma(){
+function merma() {
     var autoM = document.getElementById("autoM").value;
     var invDeterM = document.getElementById("invDeterM").value;
 
-    var result =  parseFloat(invDeterM) - parseFloat(autoM);
+    var result = parseFloat(invDeterM) - parseFloat(autoM);
     document.getElementById("mermaM").value = result;
 
     var autoP = document.getElementById("autoP").value;
     var invDeterP = document.getElementById("invDeterP").value;
 
-    var result =  parseFloat(invDeterP) - parseFloat(autoP);
+    var result = parseFloat(invDeterP) - parseFloat(autoP);
     document.getElementById("mermaP").value = result;
 
     var autoD = document.getElementById("autoD").value;
     var invDeterP = document.getElementById("invDeterD").value;
 
-    var result =  parseFloat(invDeterD) - parseFloat(autoD);
+    var result = parseFloat(invDeterD) - parseFloat(autoD);
     document.getElementById("mermaD").value = result;
 
 }
 
-function fun1(){
-    if($('#user').val() == '3'){
-        $('#function1').prop('disabled',true);
+function fun1() {
+    if ($('#user').val() == '3') {
+        $('#function1').prop('disabled', true);
         $('#noDis1').html('No disponible');
-        $('#function2').prop('disabled',true);
+        $('#function2').prop('disabled', true);
         $('#noDis2').html('No disponible');
-        $('#function3').prop('disabled',true);
+        $('#function3').prop('disabled', true);
         $('#noDis3').html('No disponible');
-        $('#function4').prop('disabled',true);
+        $('#function4').prop('disabled', true);
         $('#noDis4').html('No disponible');
 
     }
 }
 
-$(document).ready(function() {
-    $('#chequesTabla tfoot th').each( function () {
+$(document).ready(function () {
+    $('#chequesTabla tfoot th').each(function () {
         var title = $(this).text();
-        $(this).html( '<input type="text" placeholder="Buscar palabra clave...'+title+'" />' );
-    } );
+        $(this).html('<input type="text" placeholder="Buscar palabra clave...' + title + '" />');
+    });
 
 
     var table = $('#chequesTabla').DataTable({
-"language": {
-        search: 'Buscar:',
-        "lengthMenu": "Mostrando _MENU_ registros por pagina",
-        "zeroRecords": "Sin datos",
-        "info": "Mostrando _PAGE_ de _PAGES_",
-        "infoEmpty": "Sin registros",
-        "infoFiltered": "(filtrados de _MAX_)",
-paginate: {
-    first: 'Primero',
-    previous: 'Anterior',
-    next: 'Siguiente',
-    last: 'Último',
-  }
-    }
-});
-    table.columns().every( function () {
+        "language": {
+            search: 'Buscar:',
+            "lengthMenu": "Mostrando _MENU_ registros por pagina",
+            "zeroRecords": "Sin datos",
+            "info": "Mostrando _PAGE_ de _PAGES_",
+            "infoEmpty": "Sin registros",
+            "infoFiltered": "(filtrados de _MAX_)",
+            paginate: {
+                first: 'Primero',
+                previous: 'Anterior',
+                next: 'Siguiente',
+                last: 'Último',
+            }
+        }
+    });
+    table.columns().every(function () {
         var that = this;
 
-        $( 'input', this.footer() ).on( 'keyup change', function () {
-            if ( that.search() !== this.value ) {
+        $('input', this.footer()).on('keyup change', function () {
+            if (that.search() !== this.value) {
                 that
-                    .search( this.value )
+                    .search(this.value)
                     .draw();
             }
-        } );
-    } );
-} );
+        });
+    });
+});
 
 
 // Desahibilita los botones en descargas
@@ -127,21 +127,21 @@ function enableInputs() {
     // $('a[class="btn btn-primary ml-2 disabled"]').removeClass('disabled');
 }
 
-var tableToExcel = (function() {
+var tableToExcel = (function () {
     var uri = 'data:application/vnd.ms-excel;base64,',
         template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
-        '<head><meta http-equiv="Content-type" content="text/html;charset=UTF-8" /><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/>' +
-        '</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
-        base64 = function(s) {
+            '<head><meta http-equiv="Content-type" content="text/html;charset=UTF-8" /><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/>' +
+            '</x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+        base64 = function (s) {
             return window.btoa(unescape(encodeURIComponent(s)))
         },
-        format = function(s, c) {
-            return s.replace(/{(\w+)}/g, function(m, p) {
+        format = function (s, c) {
+            return s.replace(/{(\w+)}/g, function (m, p) {
                 return c[p];
             })
         };
 
-    return function(table, name) {
+    return function (table, name) {
         var ctx = {
             worksheet: name || 'Worksheet',
             table: table.innerHTML
@@ -151,7 +151,7 @@ var tableToExcel = (function() {
 })();
 
 // Exporta la tabla de descargas emitidas a excel
-$('.excelR-export').on('click', function() {
+$('.excelR-export').on('click', function () {
     var $this = $(this);
     var table = $this.closest('.descargaR-form').find('.table').get(0);
     var fn = $this.attr('download');
@@ -160,7 +160,7 @@ $('.excelR-export').on('click', function() {
 });
 
 // Exporta la tabla de descargas recibidas a excel
-$('.excelE-export').on('click', function() {
+$('.excelE-export').on('click', function () {
     var $this = $(this);
     var table = $this.closest('.descargaE-form').find('.table').get(0);
     var fn = $this.attr('download');
@@ -169,7 +169,7 @@ $('.excelE-export').on('click', function() {
 });
 
 // Genera el inicio de sesión al SAT desde Async en descargas
-$('.login-form').on('submit', function() {
+$('.login-form').on('submit', function () {
     var form = $(this);
     var formData = new FormData(form.get(0));
 
@@ -185,7 +185,7 @@ $('.login-form').on('submit', function() {
         data: formData,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function (response) {
             console.debug(response);
             if (response.success && response.data) {
                 if (response.data.sesion) {
@@ -197,7 +197,7 @@ $('.login-form').on('submit', function() {
                 alert(response.data.mensaje);
             }
         }
-    }).always(function() {
+    }).always(function () {
         enableInputs();
     });
 
@@ -205,7 +205,7 @@ $('.login-form').on('submit', function() {
 });
 
 // Obtiene y genera la tabla de recibidos en descargas
-$('#recibidos-form').on('submit', function() {
+$('#recibidos-form').on('submit', function () {
     var form = $(this);
     var formData = new FormData(form.get(0));
     formData.append('sesion', window.sesionDM);
@@ -221,7 +221,7 @@ $('#recibidos-form').on('submit', function() {
         data: formData,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function (response) {
             console.debug(response);
 
             if (response.success && response.data) {
@@ -295,7 +295,7 @@ $('#recibidos-form').on('submit', function() {
                 alert(response.data.mensaje);
             }
         }
-    }).always(function() {
+    }).always(function () {
         enableInputs();
     });
 
@@ -303,7 +303,7 @@ $('#recibidos-form').on('submit', function() {
 });
 
 // Obtiene y genera la tabla de emitidos en descargas
-$('#emitidos-form').on('submit', function() {
+$('#emitidos-form').on('submit', function () {
     var form = $(this);
     var formData = new FormData(form.get(0));
     formData.append('sesion', window.sesionDM);
@@ -318,7 +318,7 @@ $('#emitidos-form').on('submit', function() {
         data: formData,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function (response) {
             console.debug(response);
 
             if (response.success && response.data) {
@@ -392,7 +392,7 @@ $('#emitidos-form').on('submit', function() {
                 alert(response.data.mensaje);
             }
         }
-    }).always(function() {
+    }).always(function () {
         enableInputs();
     });
 
@@ -400,7 +400,7 @@ $('#emitidos-form').on('submit', function() {
 });
 
 // Genera la descarga de recibidos a través de Async
-$('.descargaR-form').on('submit', function() {
+$('.descargaR-form').on('submit', function () {
     var form = $(this);
     var formData = new FormData(form.get(0));
     formData.append('sesion', window.sesionDM);
@@ -423,7 +423,7 @@ $('.descargaR-form').on('submit', function() {
         data: formData,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function (response) {
             console.debug(response);
 
             if (response.success && response.data) {
@@ -436,7 +436,7 @@ $('.descargaR-form').on('submit', function() {
                 alert(response.data.mensaje);
             }
         }
-    }).always(function() {
+    }).always(function () {
         enableInputs();
         $('#loading').hide();
         var tablaBody = $('#tabla-recibidos tbody');
@@ -447,7 +447,7 @@ $('.descargaR-form').on('submit', function() {
 });
 
 // Genera la descarga de emitidos a través de Async
-$('.descargaE-form').on('submit', function() {
+$('.descargaE-form').on('submit', function () {
     var form = $(this);
     var formData = new FormData(form.get(0));
     formData.append('sesion', window.sesionDM);
@@ -479,7 +479,7 @@ $('.descargaE-form').on('submit', function() {
         data: formData,
         contentType: false,
         processData: false,
-        success: function(response) {
+        success: function (response) {
             console.debug(response);
 
             if (response.success && response.data) {
@@ -492,7 +492,7 @@ $('.descargaE-form').on('submit', function() {
                 alert(response.data.mensaje);
             }
         }
-    }).always(function() {
+    }).always(function () {
         enableInputs();
         $('#loadingE').hide();
         var tablaBody = $('#tabla-emitidos tbody');
@@ -503,36 +503,36 @@ $('.descargaE-form').on('submit', function() {
 });
 
 // Modifican los checkboxes cada vez que se seleccionan los encabezados de columna
-$('#allxml').change(function() {
+$('#allxml').change(function () {
     $('tbody tr td[class="text-center align-middle txml"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
 // Modifican los checkboxes cada vez que se seleccionan los encabezados de columna
-$('#allpdf').change(function() {
+$('#allpdf').change(function () {
     $('tbody tr td[class="text-center align-middle tpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
 // Modifican los checkboxes cada vez que se seleccionan los encabezados de columna
-$('#eallxml').change(function() {
+$('#eallxml').change(function () {
     $('tbody tr td[class="text-center align-middle etxml"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
 // Modifican los checkboxes cada vez que se seleccionan los encabezados de columna
-$('#eallpdf').change(function() {
+$('#eallpdf').change(function () {
     $('tbody tr td[class="text-center align-middle etpdf"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
 });
 
 // Modifican los checkboxes cada vez que se seleccionan los encabezados de columna y suma el monto de su respectivo valor
-$('#allcheck').change(function() {
+$('#allcheck').change(function () {
     $('tbody tr td[class="text-center align-middle allcheck"] input[type="checkbox"]').prop('checked', $(this).prop('checked'));
     calcular();
 });
 
 // Filtra las tablas dependiendo su contenido
 
-$("#filtrar").on("keyup", function() {
+$("#filtrar").on("keyup", function () {
     var value = $(this).val().toLowerCase();
-    $(".buscar tr").filter(function() {
+    $(".buscar tr").filter(function () {
         $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
 });
@@ -541,7 +541,7 @@ $("#filtrar").on("keyup", function() {
 
 
 // Suma los valores de los checkboxes cada vez que son seleccionados
-$(document).on('click keyup', '.mis-checkboxes,.mis-adicionales', function() {
+$(document).on('click keyup', '.mis-checkboxes,.mis-adicionales', function () {
     calcular();
 });
 
@@ -549,7 +549,7 @@ $(document).on('click keyup', '.mis-checkboxes,.mis-adicionales', function() {
 function calcular() {
     var tot = $('#total');
     tot.val(0);
-    $('.mis-checkboxes,.mis-adicionales').each(function() {
+    $('.mis-checkboxes,.mis-adicionales').each(function () {
         if ($(this).hasClass('mis-checkboxes')) {
             tot.val(($(this).is(':checked') ? parseFloat($(this).attr('tu-attr-precio')) : 0) + parseFloat(tot.val()));
         } else {
@@ -561,7 +561,7 @@ function calcular() {
 }
 
 // Muestra los input file en vincular cheque
-$('#alerta-archivo-si').on('click', function() {
+$('#alerta-archivo-si').on('click', function () {
     $("#alerta-archivo").hide();
     $('#form-editar').show();
     $("#doc-relacionados").show();
@@ -569,7 +569,7 @@ $('#alerta-archivo-si').on('click', function() {
 });
 
 // Esconde los input file en vincular cheque
-$('#alerta-archivo-no').on('click', function() {
+$('#alerta-archivo-no').on('click', function () {
     $("#alerta-archivo").hide();
     $('#form-editar').show();
     $("#subir-archivo").hide();
@@ -577,7 +577,7 @@ $('#alerta-archivo-no').on('click', function() {
 });
 
 // Evita vincular CFDIs si ninguno ha sido seleccionado o si existe error en la suma y el valor es 0
-$('#vinct').on('click', function() {
+$('#vinct').on('click', function () {
     var total = document.getElementById("total").value
     var lenght = $('div.checkbox-group :checkbox:checked').length
     if (!lenght > 0) {
@@ -591,20 +591,20 @@ $('#vinct').on('click', function() {
 });
 
 // Muestra el form de crear cheque en vincluar cheque
-$('#alerta-crear-si').on('click', function() {
+$('#alerta-crear-si').on('click', function () {
     $("#alerta-crear").hide();
     $('#form-crear').show();
     return false;
 });
 
 // Mantiene escondido el form de crear cheque en vincular cheque
-$('#alerta-crear-no').on('click', function() {
+$('#alerta-crear-no').on('click', function () {
     $("#alerta-crear").hide();
     return false;
 });
 
 // Muestra la columna de vinculación a varios proveedores en cuentas por pagar
-$('#vinpbtn').on('click', function() {
+$('#vinpbtn').on('click', function () {
     $("#vinp").show();
     $('input[id="vinpsub"]').show();
     $('th[id="vinp"]').show();
@@ -613,19 +613,19 @@ $('#vinpbtn').on('click', function() {
 });
 
 // Muestra la columna de vinculación a varios proveedores en cuentas por pagar (NUEVO MODULO)
-$("#BtnMoreProv").click(function(){
+$("#BtnMoreProv").click(function () {
     var ColumMasProv = $(".VincVarProv");
-    if(ColumMasProv.is(":visible")){
+    if (ColumMasProv.is(":visible")) {
         $(".DesatallesProv").attr("disabled", true);
         ColumMasProv.hide();
-    }else{
+    } else {
         $(".DesatallesProv").attr("disabled", false);
         ColumMasProv.show();
     }
 });
 
 // Evita vincular proveedores si ninguno ha sido seleccionado
-$('#vinpsub').on('click', function() {
+$('#vinpsub').on('click', function () {
     var lenght = $('div.checkbox-group :checkbox:checked').length
     if (!lenght > 0) {
         alert('Favor de seleccionar al menos un proveedor.')
@@ -666,7 +666,7 @@ function verAdicionales(id_button) {
 
     var ru = document.getElementById("rutaAdicional").value;
     var iden = document.getElementById("iden" + id_button).value;
-    var ruta= ru + iden;
+    var ruta = ru + iden;
 
 
 
@@ -682,7 +682,7 @@ function submitBlock() {
 
 //FilePond para los input de cuentas por pagar
 //Para agregar PDF
-function AddPDFChequeCFDI(id, rutaid){
+function AddPDFChequeCFDI(id, rutaid) {
     // registrar plugin validacion filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateType);
     // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
@@ -691,12 +691,12 @@ function AddPDFChequeCFDI(id, rutaid){
     const token = document.querySelector('input[name="_token"]');
     const ruta = document.getElementById(rutaid);
 
-    var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
+    var filePondObj = FilePond.create(ruta, {        /// creacion con validacion de archivos
         maxFileSize: '1000KB',
         labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
-        labelIdle:'Sube un archivo <span class="filepond--label-action"> Explorar </span>',
-        labelFileLoading:'Cargando',
-        labelFileProcessing:'Subiendo a E-cont..',
+        labelIdle: 'Sube un archivo <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading: 'Cargando',
+        labelFileProcessing: 'Subiendo a E-cont..',
         labelFileProcessingComplete: 'Carga completa',
         labelFileProcessingAborted: 'Carga cancelada',
         labelTapToCancel: 'Presiona para cancelar',
@@ -712,18 +712,18 @@ function AddPDFChequeCFDI(id, rutaid){
     });
 
     FilePond.setOptions({
-        name:'nuevoCheque',
-     server: {
-           url:'uploadEdit2/'+id,
-           headers:{
-               'X-CSRF-TOKEN': token.value
+        name: 'nuevoCheque',
+        server: {
+            url: 'uploadEdit2/' + id,
+            headers: {
+                'X-CSRF-TOKEN': token.value
             }
         }
     });
 }
 
 //Para agregar los relacionados
-function AddRelChequeCFDI(id, rutaid){
+function AddRelChequeCFDI(id, rutaid) {
     // registrar plugin validacion filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateType);
     // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
@@ -732,12 +732,12 @@ function AddRelChequeCFDI(id, rutaid){
     const token = document.querySelector('input[name="_token"]');
     const ruta = document.getElementById(rutaid);
 
-    var filePondObj=FilePond.create(ruta, {        /// creacion con validacion de archivos
+    var filePondObj = FilePond.create(ruta, {        /// creacion con validacion de archivos
         maxFileSize: '1000KB',
         labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
-        labelIdle:'Carga de archivos adicionales <span class="filepond--label-action"> Explorar </span>',
-        labelFileLoading:'Cargando',
-        labelFileProcessing:'Subiendo a E-cont..',
+        labelIdle: 'Carga de archivos adicionales <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading: 'Cargando',
+        labelFileProcessing: 'Subiendo a E-cont..',
         labelFileProcessingComplete: 'Carga completa',
         labelFileProcessingAborted: 'Carga cancelada',
         labelTapToCancel: 'Presiona para cancelar',
@@ -753,22 +753,66 @@ function AddRelChequeCFDI(id, rutaid){
     });
 
     FilePond.setOptions({
-        name:'adicionalesNuevoCheque',
-     server: {
-           url:'upload2/'+id,
-           headers:{
-               'X-CSRF-TOKEN': token.value
+        name: 'adicionalesNuevoCheque',
+        server: {
+            url: 'upload2/' + id,
+            headers: {
+                'X-CSRF-TOKEN': token.value
             }
         }
     });
 }
 
-function guardarmovi(id, empresa){
+function guardarmovi(id, empresa) {
     sessionStorage.setItem('idmovicheq', id);
     sessionStorage.setItem('empresacheq', empresa);
 }
 
-function guardarfactu(id, empresa){
+function guardarfactu(id, empresa) {
     sessionStorage.setItem('idmovi', id);
     sessionStorage.setItem('empresa', empresa);
+}
+
+//Funcion de creacion de FilePond
+function FilePondPDFVolu(rutaid, id) {
+    // registrar plugin validacion filepond  se deben agregar los cdn despues del body
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+
+    // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
+    FilePond.registerPlugin(FilePondPluginFileValidateSize);
+
+    //Obtenemos el ID de cada 
+    var inputfile = document.getElementById(rutaid);
+
+    //Parametros de validacion de archivos
+    FilePond.create(inputfile, {
+        maxFileSize: '1000KB',
+        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+        labelIdle: 'Sube un archivo <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading: 'Cargando',
+        labelFileProcessing: 'Subiendo a E-cont..',
+        labelFileProcessingComplete: 'Carga completa',
+        labelFileProcessingAborted: 'Carga cancelada',
+        labelTapToCancel: 'Presiona para cancelar',
+        allowMultiple: false,
+        acceptedFileTypes: ["application/pdf"],
+        fileValidateTypeDetectType: (source, type) =>
+            new Promise((resolve, reject) => {
+                resolve(type);
+            }),
+    });
+
+    //Obtenemos el valor del token
+    var token = document.querySelector('input[name="_token"]');
+
+    //Ya obtenida la enviamos al servidor junto con la empresa seleccionada
+    FilePond.setOptions({
+        name: 'volupdf',
+        server: {
+            url: 'pdfvolu/' + id,
+            headers: {
+                'X-CSRF-TOKEN': token.value
+            }
+        }
+    });
 }

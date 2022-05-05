@@ -1,4 +1,103 @@
 <div>
+
+    @php
+        //Obtenemos la clase al cargar la tabla
+        $class = '';
+        if (empty($class)) {
+            $class = 'table nowrap dataTable no-footer';
+        }
+    @endphp
+
+    {{-- Modal de hisatorico --}}
+    {{-- Creacion del modal (BASE) --}}
+    <div wire:ignore.self class="modal fade" id="voluhistorymodal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true" class="volucaptumodal">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+            <div class="modal-content">
+                {{-- Encabezado --}}
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
+                            class="icons fas fa-history">Historico {{ $empresa }}</span></h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true close-btn">×</span>
+                    </button>
+                </div>
+                {{-- Cuerpo del modal --}}
+                <div class="modal-body">
+                    {{-- Tablas por cada tipo combustible que maneja el usuario --}}
+                    {{-- MAGNA --}}
+                    @if ($Magna == '1')
+                        {{-- Tabla --}}
+                        <div class="table-responsive">
+                            <table id="example" class="{{ $class }}" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">MAGNA</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        {{-- Contenido de la columna para vincular varios --}}
+                                        <td class="text-center align-middle">
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
+
+                    {{-- PREMIUM --}}
+                    @if ($Premium == '1')
+                    {{-- Tabla --}}
+                    <div class="table-responsive">
+                        <table id="example" class="{{ $class }}" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">PREMIUM</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {{-- Contenido de la columna para vincular varios --}}
+                                    <td class="text-center align-middle">
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    @endif
+
+                    {{-- DIESEL --}}
+                    @if ($Diesel == '1')
+                    {{-- Tabla --}}
+                    <div class="table-responsive">
+                        <table id="example" class="{{ $class }}" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">DIESEL</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {{-- Contenido de la columna para vincular varios --}}
+                                    <td class="text-center align-middle">
+
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     {{-- Contenedor para mantener responsivo el contenido del modulo --}}
     <div class="app-content content">
         <div class="content-wrapper">
@@ -117,7 +216,8 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
                         {{-- Historico --}}
-                        <button class="btn btn-secondary">Historico</button>
+                        <button class="btn btn-secondary" data-toggle="modal" data-target="#voluhistorymodal"
+                            data-backdrop="static" data-keyboard="false">Historico</button>
                     </div>
 
                     <br>
@@ -144,6 +244,8 @@
                             </tbody>
                         </table>
                     </div>
+                    {{-- Input invicible que captura el valor de la fecha --}}
+                    <input id="FechaSelect" type="hidden">
                 </section>
             </div>
         </div>
@@ -164,4 +266,25 @@
         <livewire:volumedata :empresa=$empresa :dia=$fecha :wire:key="'user-profile-one-'.$empresa.$fecha">
             <livewire:volumepdf :empresa=$empresa :dia=$fecha :wire:key="'user-profile-two-'.$empresa.$fecha">
     @endfor
+
+    {{-- Js --}}
+    <script>
+        $(document).ready(function() {
+            //Funcion para obtener la fecha seleccionada
+            $(".selectfecha").click(function() {
+                //Guardamos en una variable el atributo que contiene la fecha
+                var fechaselect = $(this).attr("fecha");
+
+                //Almacenamos la fecha seleccionada en un input
+                $("#FechaSelect").val(fechaselect);
+
+                //Creamos el ID y la ruta ID
+                var rutaid = "volupdf" + fechaselect + "&{{ $empresa }}"
+                var id = fechaselect + "&{{ $empresa }}"
+
+                //Llamamos a la funcion de FilePond
+                FilePondPDFVolu(rutaid, id);
+            });
+        });
+    </script>
 </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\User;
 use App\Models\Volumetrico as VolumetricoModel;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -14,6 +15,11 @@ class Volumetrico extends Component
     //Variables para la seccion del calendario
     public $mescal;
     public $aniocal;
+
+    //Variables para la informacion del cliente
+    public $Magna;
+    public $Premium;
+    public $Diesel;
 
     //Escuchar los emitidos de otros componentes
     public $listeners = ['volumrefresh' => '$refresh'];
@@ -96,14 +102,14 @@ class Volumetrico extends Component
                             //Condicional para marcar que se agrego un volumetrico
                             if (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
                                 //Boton para insertar o editar datos
-                                $week .= '<a class="icons fas fa-edit content_true" data-toggle="modal" 
+                                $week .= '<a class="selectfecha icons fas fa-edit content_true" data-toggle="modal" 
                             data-target="#volucaptumodal' . $date . '" data-backdrop="static"
-                            data-keyboard="false"></a> &nbsp;&nbsp;';
+                            data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
                             } else {
                                 //Boton para insertar o editar datos
-                                $week .= '<a class="icons fas fa-edit" data-toggle="modal" 
+                                $week .= '<a class="selectfecha icons fas fa-edit" data-toggle="modal" 
                             data-target="#volucaptumodal' . $date . '" data-backdrop="static"
-                            data-keyboard="false"></a> &nbsp;&nbsp;';
+                            data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
                             }
                         } else {
                             //Informacion PDF
@@ -115,9 +121,15 @@ class Volumetrico extends Component
                         }
 
                         //Boton para mostrar el PDF
-                        $week .= '<a class="icons fas fa-file-pdf" data-toggle="modal" 
-                        data-target="#volupdfmodal' . $date . '" data-backdrop="static"
-                        data-keyboard="false"></a>';
+                        if (!empty($voludata['volumetrico.' . $date . '.PDFVolu'])) {
+                            $week .= '<a class="selectfecha icons fas fa-file-pdf content_true_pdf" data-toggle="modal" 
+                            data-target="#volupdfmodal' . $date . '" data-backdrop="static"
+                            data-keyboard="false" fecha="' . $date . '"></a>';
+                        } else {
+                            $week .= '<a class="selectfecha icons fas fa-file-pdf" data-toggle="modal" 
+                            data-target="#volupdfmodal' . $date . '" data-backdrop="static"
+                            data-keyboard="false" fecha="' . $date . '"></a>';
+                        }
                     }
                     break;
                 default:
@@ -143,14 +155,14 @@ class Volumetrico extends Component
                             //Condicional para marcar que se agrego un volumetrico
                             if (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
                                 //Boton para insertar o editar datos
-                                $week .= '<a class="icons fas fa-edit content_true" data-toggle="modal" 
+                                $week .= '<a class="selectfecha icons fas fa-edit content_true" data-toggle="modal" 
                             data-target="#volucaptumodal' . $date . '" data-backdrop="static"
-                            data-keyboard="false"></a> &nbsp;&nbsp;';
+                            data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
                             } else {
                                 //Boton para insertar o editar datos
-                                $week .= '<a class="icons fas fa-edit" data-toggle="modal" 
-                            data-target="#volucaptumodal$volupdf =" data-backdrop="static"
-                            data-keyboard="false"></a> &nbsp;&nbsp;';
+                                $week .= '<a class="selectfecha icons fas fa-edit" data-toggle="modal" 
+                            data-target="#volucaptumodal' . $date . '" data-backdrop="static"
+                            data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
                             }
                         } else {
                             //Informacion PDF
@@ -162,9 +174,15 @@ class Volumetrico extends Component
                         }
 
                         //Boton para mostrar el PDF
-                        $week .= '<a class="icons fas fa-file-pdf" data-toggle="modal" 
-                        data-target="#volupdfmodal' . $date . '" data-backdrop="static"
-                        data-keyboard="false"></a>';
+                        if (!empty($voludata['volumetrico.' . $date . '.PDFVolu'])) {
+                            $week .= '<a class="selectfecha icons fas fa-file-pdf content_true_pdf" data-toggle="modal" 
+                            data-target="#volupdfmodal' . $date . '" data-backdrop="static"
+                            data-keyboard="false" fecha="' . $date . '"></a>';
+                        } else {
+                            $week .= '<a class="selectfecha icons fas fa-file-pdf" data-toggle="modal" 
+                            data-target="#volupdfmodal' . $date . '" data-backdrop="static"
+                            data-keyboard="false" fecha="' . $date . '"></a>';
+                        }
                     }
                     break;
             }
@@ -212,9 +230,6 @@ class Volumetrico extends Component
     {
         //Obtenemos el valor del metodo del calendario
         $weeks = $this->Calendario();
-
-        //Emitimos el metodo de refrescar la pagina
-        $this->emit('Volumdata');
 
         //Arreglo de los meses
         $meses = array(
@@ -269,6 +284,25 @@ class Volumetrico extends Component
             }
         } else {
             $emp = '';
+        }
+
+        //Hacemos una consulta de la empresa para saber que datos vamos a mostrar
+        $infogas = User::where('RFC', $this->rfcEmpresa)->get();
+
+        //Obtenemos los datos requeridos
+        if (count($infogas) > 0) {
+            //Recorremos la consulta para obtener los datos
+            foreach ($infogas as $datagas) {
+                //Obtenemos los tipo de combustible que maneja las gasolineras
+                $this->Magna = $datagas->TipoM;
+                $this->Premium = $datagas->TipoP;
+                $this->Diesel = $datagas->TipoD;
+            }
+        } else {
+            //De lo contrario los declaramos vacios
+            $this->Magna = '';
+            $this->Premium = '';
+            $this->Diesel = '';
         }
 
         return view('livewire.volumetrico', ['empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'weeks' => $weeks, 'meses' => $meses, 'anios' => $anios])

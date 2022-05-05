@@ -6,7 +6,7 @@
         use App\Models\MetadataR;
         use App\Http\Controllers\ChequesYTransferenciasController;
         use Illuminate\Support\Facades\DB;
-
+        
         $rfc = Auth::user()->RFC;
         $class = '';
         if (empty($class)) {
@@ -29,14 +29,15 @@
                             class="btn btn-primary glow invoice-create">
                             Nuevo Cheque/Transferencia
                         </a>
-                        {{--------------Boton para vinculacion atomatica de pagos a PPD------------}}
+                        {{-- ------------Boton para vinculacion atomatica de pagos a PPD---------- --}}
 
-             <button wire:click="$emitTo('vincular-pagos-automatico','refreshPagoAutomatico')"  class=" btn btn-secondary " style="vertical-align:middle">
-                <a    data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static"
-                data-keyboard="false" data-target="#vinculacionAutomtica">
-                <span>Vincular pagos </span>
-            </a>
-            </button>
+                        <button wire:click="$emitTo('vincular-pagos-automatico','refreshPagoAutomatico')"
+                            class=" btn btn-secondary " style="vertical-align:middle">
+                            <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static"
+                                data-keyboard="false" data-target="#vinculacionAutomtica">
+                                <span>Vincular pagos </span>
+                            </a>
+                        </button>
 
                     </div>
 
@@ -65,7 +66,7 @@
                         {{-- <div class="alert alert-success">
 </div> --}}
                         @php
-
+                            
                             $name = Session::get('idns');
                             //    echo $name;
                         @endphp
@@ -252,7 +253,7 @@
                                     $contabilizado = $i->conta;
                                     $pendiente = $i->pendi;
                                     $tipoO = $i->tipoopera;
-
+                                    
                                     if ($tipoO == 'Impuestos' or $tipoO == 'Parcialidad') {
                                         $diferencia = 0;
                                     } else {
@@ -264,10 +265,10 @@
                                     } else {
                                         $diferenciaP = 1;
                                     }
-
+                                    
                                     $diferencia = number_format($diferencia, 2);
                                     $nombreCheque = $i->nombrec;
-
+                                    
                                     if ($nombreCheque == '0') {
                                         $subirArchivo = true;
                                         $nombreChequeP = 0;
@@ -275,19 +276,19 @@
                                         $subirArchivo = false;
                                         $nombreChequeP = 1;
                                     }
-
+                                    
                                     $rutaArchivo = $rutaDescarga . $nombreCheque;
-
+                                    
                                     if (!empty($i->doc_relacionados)) {
                                         $docAdi = $i->doc_relacionados;
                                     }
-
+                                    
                                     $revisado_fecha = $i->revisado_fecha;
                                     $contabilizado_fecha = $i->contabilizado_fecha;
                                     $poliza = $i->poliza;
                                     $comentario = $i->comentario;
                                     $impresion = $i['impresion'];
-
+                                    
                                     if (strpos($nombreCheque, '/') !== false) {
                                         $p = explode('/', $nombreCheque);
                                         $i->update([
@@ -295,7 +296,7 @@
                                             'nombrec' => $p[1],
                                         ]);
                                     }
-
+                                    
                                     if (strpos($docAdi[0], '/') !== false) {
                                         foreach ($i->doc_relacionados as $doc) {
                                             $pp = explode('/', $doc);
@@ -482,7 +483,8 @@
                                                 @if ($faltaxml != 0)
                                                     <div>
                                                         <div class="tr">Vinculadas</div>
-                                                        <a  wire:click="$emitTo('facturas-vinculadas','refrescarModalFacturas')" class="icons fas fa-eye" style="color: #3498DB"
+                                                        <a wire:click="$emitTo('facturas-vinculadas','refrescarModalFacturas')"
+                                                            class="icons fas fa-eye" style="color: #3498DB"
                                                             data-toggle="modal"
                                                             data-target="#facturasVinculadas{{ $id }}"></a>
                                                     </div>
@@ -491,16 +493,18 @@
 
 
 
-                                            {{--Editar--}}
-                                            <div>
-                                                <div class="tr">Editar</div>
-                                                {{--Condicional para acciones con movimientos revisados--}}
-                                                @if ($verificado == 1)
-                                                    <a class="icons fas fa-edit" data-toggle="modal" data-target="#Revisado" ></a>
-                                                @else
-                                                    <a class="icons fas fa-edit" data-toggle="modal" data-target="#editar-{{$id}}" ></a>
-                                                @endif
-                                            </div>
+                                                {{-- Editar --}}
+                                                <div>
+                                                    <div class="tr">Editar</div>
+                                                    {{-- Condicional para acciones con movimientos revisados --}}
+                                                    @if ($verificado == 1)
+                                                        <a class="icons fas fa-edit" data-toggle="modal"
+                                                            data-target="#Revisado"></a>
+                                                    @else
+                                                        <a class="icons fas fa-edit" data-toggle="modal"
+                                                            data-target="#editar-{{ $id }}"></a>
+                                                    @endif
+                                                </div>
 
                                                 {{-- Eliminar cheque --}}
                                                 <div>
@@ -648,53 +652,53 @@
     {{-- Llamamos a las vistas de otros componentes --}}
     <livewire:agregarcheque>
         <livewire:vincular-pagos-automatico>
-        <livewire:uploadrelacionados>
-            @include('livewire.demo')
+            <livewire:uploadrelacionados>
+                @include('livewire.demo')
 
-            {{-- Modal para las acciones bloqueadas por movimientos revisadps --}}
-            {{-- Modal de detalles de cuentas por pagar --}}
-            {{-- Creacion del modal --}}
-            <div wire:ignore.self class="modal fade" id="Revisado" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-scrollable" role="document">
-                    <div class="modal-content">
-                        {{-- Encabezado --}}
-                        <div class="modal-header">
-                            <h6 class="modal-title" id="TitleRevisado"><span style="text-decoration: none;"
-                                    class="icons far fa-check-circle"> Movimiento revisado</span></h6>
-                            <button id="BtnCloseRevi" type="button" class="close" data-dismiss="modal"
-                                aria-label="Close">
-                                <span aria-hidden="true close-btn">×</span>
-                            </button>
-                        </div>
-                        {{-- Cuerpo del modal --}}
-                        <div class="modal-body">
+                {{-- Modal para las acciones bloqueadas por movimientos revisadps --}}
+                {{-- Modal de detalles de cuentas por pagar --}}
+                {{-- Creacion del modal --}}
+                <div wire:ignore.self class="modal fade" id="Revisado" tabindex="-1" role="dialog"
+                    aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            {{-- Encabezado --}}
+                            <div class="modal-header">
+                                <h6 class="modal-title" id="TitleRevisado"><span style="text-decoration: none;"
+                                        class="icons far fa-check-circle"> Movimiento revisado</span></h6>
+                                <button id="BtnCloseRevi" type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                    <span aria-hidden="true close-btn">×</span>
+                                </button>
+                            </div>
+                            {{-- Cuerpo del modal --}}
+                            <div class="modal-body">
 
 
 
-                            <p id="ModalRevi">No puedes realizar esta acción en un movimiento revisado</p>
+                                <p id="ModalRevi">No puedes realizar esta acción en un movimiento revisado</p>
 
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <script>
-                //Emitir los datos de la empresa al componente
-                $(document).ready(function() {
-                    //Guardamos en variables locales el contenido de sessionstorage
-                    var IdMovi = sessionStorage.getItem('idmovi');
-                    var Empresa = sessionStorage.getItem('empresa');
+                <script>
+                    //Emitir los datos de la empresa al componente
+                    $(document).ready(function() {
+                        //Guardamos en variables locales el contenido de sessionstorage
+                        var IdMovi = sessionStorage.getItem('idmovi');
+                        var Empresa = sessionStorage.getItem('empresa');
 
-                    //Condicion para saber si las variables no estan vacias
-                    if (IdMovi !== null && Empresa !== null) {
-                        //Emitimos los datos al controlador
-                        window.livewire.emit('mostvincu', {
-                            idmovi: IdMovi,
-                            empresa: Empresa
-                        });
-                        sessionStorage.clear();
-                    }
-                });
-            </script>
+                        //Condicion para saber si las variables no estan vacias
+                        if (IdMovi !== null && Empresa !== null) {
+                            //Emitimos los datos al controlador
+                            window.livewire.emit('mostvincu', {
+                                idmovi: IdMovi,
+                                empresa: Empresa
+                            });
+                            sessionStorage.clear();
+                        }
+                    });
+                </script>
 </div>
