@@ -12,35 +12,5 @@ class Volumetrico extends Model
 
     protected $primaryKey = '_id';
 
-    protected $fillable = [
-
-        'num',
-        'idV',
-        'RFC',
-        'fech1',
-        'iiM',
-        'iiP',
-        'iiD',
-        'cM',
-        'cP',
-        'cD',
-        'vM',
-        'vP',
-        'vD',
-        'aM',
-        'aP',
-        'aD',
-        'pM',
-        'pP',
-        'pD',
-        'idM',
-        'idP',
-        'idD',
-        'mermaM',
-        'mermaP',
-        'mermaD',
-        'archivoVol',
-    ];
-
     protected $collection = 'volumetrico';
 }

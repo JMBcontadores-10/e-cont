@@ -13,6 +13,8 @@ use App\Http\Livewire\Home;
 use App\Http\Livewire\FacturasVinculadas;
 use App\Http\Livewire\Modals\Editar;
 use App\Http\Livewire\Pdfcheque;
+use App\Http\Livewire\Volumepdf;
+use App\Http\Livewire\Volumetrico;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -106,7 +108,7 @@ Route::get('/descargasAutomaticas/{valor}', [App\Http\Controllers\DescargasAutom
 Route::get('/auditoria',Auditoria::class)->name('auditoria');
 
 
-// Rutas Angel
+// Rutas Angel :D
 
 //Ruta de la vista de cuentas por pagar en livewire
 Route::get('/cuentasporpagar', Cuentasporpagar::class)->name('cuentasporpagar');
@@ -114,3 +116,7 @@ Route::get('/cuentasporpagar', Cuentasporpagar::class)->name('cuentasporpagar');
 Route::get('/descargas', Descargas::class)->name('descargas');
 //Ruta de la vista de home (pagina de inicio)
 Route::get('/modules', Home::class)->name('modules');
+//Ruta de la vista volumetrico
+Route::get('/volu', Volumetrico::class)->name('volu');
+//Ruta de almacenamiento de PDF (Volumetricos)
+Route::post('/pdfvolu/{id}', [Volumepdf::class, 'PDFVolu']);

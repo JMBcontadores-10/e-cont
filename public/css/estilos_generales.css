@@ -1120,3 +1120,36 @@ tr:hover {
         bottom: 100%;
     }
 }
+
+/*MODULO VOLUMETRICO*/
+/*Bloqueo de objetos*/
+.disabledattr{
+    pointer-events: none;
+}
+
+/*Botones captura de volumetricos*/
+.btnoricircle, .btncambipreccircle {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border: 3px solid;
+    border-radius: 100%;
+    color: #397ac4;
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+/*Marcamos el boton de volumetrico*/
+.btnoricircle{
+    background: #397ac4;
+    color: #ffffff;
+}
+
+.btniconvolu{
+    padding: 22px 0px 0px 3px;
+}
+
+/*Escondemos la tabla de cambio de precio*/
+.Tablacambipreci{
+    display: none;
+}
