@@ -52,6 +52,8 @@
                         </thead>
                         <tbody>
                             @foreach ($metadata as $me)
+
+
                                 @php
                                     if ($me->estatus == '1') {
                                         $me->estatus = 'Vigente';

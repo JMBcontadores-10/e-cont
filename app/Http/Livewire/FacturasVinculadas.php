@@ -83,8 +83,6 @@ public function desvincular(){
 // Revisa todos los UUID de los CFDI seleccionados y elimina la vinculación con cheques
 foreach ($this->checkedDesvincular as $i) {
 
-
-
 $xml_r=MetadataR::where('folioFiscal', $i)->first(); ///consulta a metadata_r
 $xmlppd=XmlR::where('UUID',$i)->get();/// enlasar l xml del ppd
 
@@ -112,7 +110,7 @@ $xmlPago =XmlR::whereIn('UUID' ,$foliosmetaSinVinculo)->get();
     foreach($xmlPago as $Pago):////se recorre el objeto con los CDFID pago
 
     $complemento=$Pago['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
-
+################ aqui se desviculuan los cheques id con los pagos ( con pull)
 
     if(count($complemento)>1){
 
@@ -120,14 +118,13 @@ $xmlPago =XmlR::whereIn('UUID' ,$foliosmetaSinVinculo)->get();
             $mayus=strtoupper($c['IdDocumento']);
 
             if($mayus == $i){
-                $xp =MetadataR::where('folioFiscal',$Pago['UUID'])->pull('cheques_id', $this->facturaVinculada->_id);
-
-
+                $xp =MetadataR::where(['folioFiscal'=>$Pago['UUID']])->get()->first();
+                $xp->pull('cheques_id', $this->facturaVinculada->_id);
+          ////quitar chues_id si el array se quedar vacio /////////////////////
+                if (count($xp['cheques_id'])==0){ $xp->unset('cheques_id'); }
 /// actualiza el contador faltaxml descontando cada factura
 $cheques->update(['faltaxml'=> $cheques->faltaxml-1]);
             }
-
-
 
                endforeach;
 
@@ -138,8 +135,11 @@ $cheques->update(['faltaxml'=> $cheques->faltaxml-1]);
                     // echo "aqui esta el folio fiscal ppd".$i."<br>";
                     // echo "aqui esta el uuid".$uuid2."<br>";
                     // echo "aqui esta el uui pago".$Pago['UUID'];
+                    $xp =MetadataR::where(['folioFiscal'=>$Pago['UUID']]) ->get()->first();
+                    $xp->pull('cheques_id', $this->facturaVinculada->_id);
+              ////quitar chues_id si el array se quedar vacio /////////////////////
+                    if (count($xp['cheques_id'])==0){ $xp->unset('cheques_id'); }
 
-                     $xp =MetadataR::where('folioFiscal',$Pago['UUID'])->pull('cheques_id', $this->facturaVinculada->_id);
 
 
 /// actualiza el contador faltaxml descontando cada factura

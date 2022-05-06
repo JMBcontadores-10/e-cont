@@ -250,6 +250,8 @@ $mayus=strtoupper($c['IdDocumento']);
          $vincularPago->unset('cheques_id');
          }
          $vincularPago->push('cheques_id', $vinculopago->cheques_id);
+          /// se agregan Id´s al arreglo para mostrarlos cheques en la vista
+ $this->vinculos[]= $vinculopago->cheques_id;
 
         }
 
@@ -273,7 +275,8 @@ $mayus=strtoupper($c['IdDocumento']);
 
 ///===================REVISAR LOS TEMPORALES (ppdpendientesvincular)======================///
 
-$UUIDtemporales=ppdPendientesVincular::get();
+// $UUIDtemporales=ppdPendientesVincular::get();
+$UUIDtemporales=DB::table('ppdPendientesVincular')->get();
 // echo "####################--- [TEMPORALES] ---##################################<br>";
 foreach($UUIDtemporales as $temp):
 

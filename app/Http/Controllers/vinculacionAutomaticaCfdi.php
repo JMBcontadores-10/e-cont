@@ -248,7 +248,7 @@ $mayus=strtoupper($c['IdDocumento']);
 
 ///===================REVISAR LOS TEMPORALES (ppdpendientesvincular)======================///
 
-   $UUIDtemporales=ppdPendientesVincular::get();
+$UUIDtemporales=DB::table('ppdPendientesVincular')->get();
    echo "####################--- [TEMPORALES] ---##################################<br>";
    foreach($UUIDtemporales as $temp):
 

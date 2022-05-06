@@ -26,6 +26,11 @@
     <script src="{{ asset('js/fullcalendar.js') }}" defer></script>
     <script src="{{ asset('js/moment.min.js') }}" defer></script>
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+
+
+
+
+
     <!-- Datatable-->
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" defer></script>
     <link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet" />
@@ -56,7 +61,9 @@
     <link rel="stylesheet" href="{{ asset('css/app-assets/vendors/css/charts/apexcharts.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app-assets/vendors/css/extensions/swiper.min.css') }}">
     <!-- END: Vendor CSS-->
+    <link href="https://cdn.jsdelivr.net/npm/mc-datepicker/dist/mc-calendar.min.css" rel="stylesheet" />
 
+    <script src="https://cdn.jsdelivr.net/npm/mc-datepicker/dist/mc-calendar.min.js"></script>
 
     <!-- BEGIN: Vendor CSS-->
     <link rel="stylesheet" href="{{ asset('css/app-assets/vendors/css/vendors.min.css') }}">
@@ -114,6 +121,7 @@
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>-->
 
     <script src="{{ asset('js/moment.min.js') }}" defer></script>
+
     {{-- <script src="{{ asset('js/fullcalendar.js') }}" defer></script> --}}
     <script src="{{ asset('js/excel.js') }}" defer></script>
     <script src="{{ asset('js/es.js') }}" defer></script>
@@ -306,11 +314,11 @@
                                             width="40"></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item"
-                                        href="page-user-profile.html"><i class="bx bx-user mr-50"></i> Editar
-                                        Perfil</a><a class="dropdown-item" href="app-email.html"><i
+                                    onclick="alerta()"><i class="bx bx-user mr-50"></i> Editar
+                                        Perfil</a><a class="dropdown-item" onclick="alerta()"><i
                                             class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item"
-                                        href="app-todo.html"><i class="bx bx-check-square mr-50"></i>Tareas</a><a
-                                        class="dropdown-item" href="app-chat.html"><i
+                                            onclick="alerta()"><i class="bx bx-check-square mr-50"></i>Tareas</a><a
+                                        class="dropdown-item" onclick="alerta()"><i
                                             class="bx bx-message mr-50"></i>Chats</a>
                                     <div class="dropdown-divider mb-0"></div>
                                     <form action="{{ route('logout') }}" method="POST">

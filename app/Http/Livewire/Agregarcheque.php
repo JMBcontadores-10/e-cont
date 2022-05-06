@@ -166,7 +166,7 @@ class Agregarcheque extends Component
 
 /// crea la notificacion
 $tipo[]='CA';
-$chequeC = Notificaciones::create([
+$chequeC1 = Notificaciones::create([
 
         'numcheque' => $this->Nuevo_numcheque,
         'fecha' => $this->Nuevo_fecha,
@@ -180,6 +180,9 @@ $chequeC = Notificaciones::create([
 
 
 ]);
+
+session()->put('idns', $chequeC->_id);
+session()->put('rfcn', $rfc);
 
 $this->Nuevo_numcheque="";
 $this->Nuevo_fecha="";
@@ -198,6 +201,14 @@ $this->dispatchBrowserEvent('step2', []);
 
 
 $this->emitTo( 'notification-secction','avisoPush');
+
+
+
+
+
+
+
+
     }
 
 

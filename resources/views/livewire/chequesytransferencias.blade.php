@@ -312,7 +312,7 @@
 
                                         {{-- Fecha --}}
                                         <td>
-                                            @if ($tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+                                            @if (  $tipoO != 'Parcialidad' && $tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                                 @php
                                                     Cheques::find($id)->update(['pendi' => 1]);
                                                 @endphp
@@ -523,7 +523,7 @@
                                                 @if (Auth::user()->tipo)
                                                     <div>
                                                         <div class="tr">Revisado</div>
-                                                        @if ($tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+                                                        @if ($tipoO != 'Parcialidad' && $tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                                             @php Cheques::find($id)->update(['pendi' => 1]); @endphp
                                                         @elseif($verificado == 0)
                                                             <div class="form-check">
@@ -683,6 +683,27 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
+                 <script>
+                //Emitir los datos de la empresa al componente
+                $(document).ready(function() {
+                    //Guardamos en variables locales el contenido de sessionstorage
+                    var IdMovi = sessionStorage.getItem('idmovi');
+                    var Empresa = sessionStorage.getItem('empresa');
+
+                    //Condicion para saber si las variables no estan vacias
+                    if (IdMovi !== null && Empresa !== null) {
+                        //Emitimos los datos al controlador
+                        window.livewire.emit('mostvincu', {
+                            idmovi: IdMovi,
+                            empresa: Empresa
+                        });
+                        sessionStorage.clear();
+                    }
+                });
+                  </script>
+           </div>
+=======
                 <script>
                     //Emitir los datos de la empresa al componente
                     $(document).ready(function() {
@@ -702,3 +723,4 @@
                     });
                 </script>
 </div>
+>>>>>>> 844feee45215c856009c8d0a69d57596cc116646
