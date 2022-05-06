@@ -73,6 +73,10 @@
                         {{-- Volumetricos --}}
                         <div class="Tablacaptu">
                             <form class="FormCaptu{{ $dia }}" wire:submit.prevent="NuevoVolu">
+
+                                {{-- Input que contiene la fecha --}}
+                                <input name="Fecha" type="hidden" value="{{ $dia }}">
+
                                 <div id="resp-table">
                                     <div id="resp-table-body">
                                         {{-- Encabezado de la tabla --}}
@@ -340,6 +344,10 @@
                             <br>
 
                             <form class="CambiPreci{{ $dia }}" wire:submit.prevent="CambioPrec">
+
+                                {{-- Input que contiene la fecha --}}
+                                <input name="Fecha" type="hidden" value="{{ $dia }}">
+
                                 <div id="resp-table">
                                     <div id="resp-table-body">
                                         {{-- Encabezado de la tabla --}}

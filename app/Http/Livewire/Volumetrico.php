@@ -21,8 +21,280 @@ class Volumetrico extends Component
     public $Premium;
     public $Diesel;
 
+    //Variables para el modal de volumetricos
+    public $fechainic;
+    public $fechafin;
+
+    //Variables historico
+    public $historicomagna = [];
+    public $historicopremium = [];
+    public $historicodiesel = [];
+
     //Escuchar los emitidos de otros componentes
     public $listeners = ['volumrefresh' => '$refresh'];
+
+
+    //Metodo para consultar historico
+    public function ConsulHistoric()
+    {
+        //Condicional para verificar que las fechas estan puestas
+        if (!empty($this->fechainic) && !empty($this->fechafin)) {
+            //Almacenamos la consulta de todos los volumetricos para realizar el filtro
+            $historico = VolumetricoModel::where('rfc', $this->rfcEmpresa)
+                ->get()->first();
+
+            //Separamos los datos por combustibles
+
+            //Magna
+            if ($this->Magna == 1) {
+                //Variables de contenedor
+                $volumetricomagna = "";
+                $rowvolumetricomagna = array();
+
+                //Ciclo para pasar por las fechas
+                for ($i = $this->fechainic; $i <= $this->fechafin; $i = date("Y-m-d", strtotime($i . "+ 1 days"))) {
+                    //Volumetrico
+
+                    //Condicional para saber si exite la fecha (el identificador)
+                    if (!empty($historico['volumetrico.' . $i . '.Fecha'])) {
+                        //Almacenamos los datos en la primer variable
+                        //Fecha
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.Fecha'] . '</td>';
+
+                        //Inv. Inicial
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.IventInicM'] . '</td>';
+
+                        //Compra
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.CompraM'] . '</td>';
+
+                        //Lit. Vendidos
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.LitVendM'] . '</td>';
+
+                        //Prec. Venta
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.PrecVentM'] . '</td>';
+
+                        //Autostick
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.AutoStickM'] . '</td>';
+
+                        //Inv. Determinado
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.InvDeterM'] . '</td>';
+
+                        //Merma
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.MermaM'] . '</td>';
+
+                        //Alamcenamos los datos en el arreglo
+                        $rowvolumetricomagna[] =  '<tr>' . $volumetricomagna . '</tr>';
+
+                        //Vaciamos la variable para almacenar las otras
+                        $volumetricomagna = "";
+                    }
+
+                    //Cambio de precio
+                    //Condicional para saber si exite la fecha (el identificador)
+                    if (!empty($historico['volumetrico.' . $i . '-C.Fecha'])) {
+                        //Almacenamos los datos en la primer variable
+                        //Fecha
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.Fecha'] . ".1" . '</td>';
+
+                        //Inv. Inicial
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.IventInicM'] . '</td>';
+
+                        //Compra
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.CompraM'] . '</td>';
+
+                        //Lit. Vendidos
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.LitVendM'] . '</td>';
+
+                        //Prec. Venta
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecVentM'] . '</td>';
+
+                        //Autostick
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.AutoStickM'] . '</td>';
+
+                        //Inv. Determinado
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.InvDeterM'] . '</td>';
+
+                        //Merma
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.MermaM'] . '</td>';
+
+                        //Alamcenamos los datos en el arreglo
+                        $rowvolumetricomagna[] =  '<tr>' . $volumetricomagna . '</tr>';
+
+                        //Vaciamos la variable para almacenar las otras
+                        $volumetricomagna = "";
+                    }
+                }
+
+                $this->historicomagna = $rowvolumetricomagna;
+            }
+
+            //Premium
+            if ($this->Premium == 1) {
+                //Variables de contenedor
+                $volumetricopremium = "";
+                $rowvolumetricopremium = array();
+
+                //Ciclo para pasar por las fechas
+                for ($i = $this->fechainic; $i <= $this->fechafin; $i = date("Y-m-d", strtotime($i . "+ 1 days"))) {
+                    //Volumetrico
+
+                    //Condicional para saber si exite la fecha (el identificador)
+                    if (!empty($historico['volumetrico.' . $i . '.Fecha'])) {
+                        //Almacenamos los datos en la primer variable
+                        //Fecha
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.Fecha'] . '</td>';
+
+                        //Inv. Inicial
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.IventInicP'] . '</td>';
+
+                        //Compra
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.CompraP'] . '</td>';
+
+                        //Lit. Vendidos
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.LitVendP'] . '</td>';
+
+                        //Prec. Venta
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.PrecVentP'] . '</td>';
+
+                        //Autostick
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.AutoStickP'] . '</td>';
+
+                        //Inv. Determinado
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.InvDeterP'] . '</td>';
+
+                        //Merma
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.MermaP'] . '</td>';
+
+                        //Alamcenamos los datos en el arreglo
+                        $rowvolumetricopremium[] =  '<tr>' . $volumetricopremium . '</tr>';
+
+                        //Vaciamos la variable para almacenar las otras
+                        $volumetricopremium = "";
+                    }
+
+                    //Cambio de precio
+                    //Condicional para saber si exite la fecha (el identificador)
+                    if (!empty($historico['volumetrico.' . $i . '-C.Fecha'])) {
+                        //Almacenamos los datos en la primer variable
+                        //Fecha
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.Fecha'] . '.1' . '</td>';
+
+                        //Inv. Inicial
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.IventInicP'] . '</td>';
+
+                        //Compra
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.CompraP'] . '</td>';
+
+                        //Lit. Vendidos
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.LitVendP'] . '</td>';
+
+                        //Prec. Venta
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecVentP'] . '</td>';
+
+                        //Autostick
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.AutoStickP'] . '</td>';
+
+                        //Inv. Determinado
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.InvDeterP'] . '</td>';
+
+                        //Merma
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.MermaP'] . '</td>';
+
+                        //Alamcenamos los datos en el arreglo
+                        $rowvolumetricopremium[] =  '<tr>' . $volumetricopremium . '</tr>';
+
+                        //Vaciamos la variable para almacenar las otras
+                        $volumetricopremium = "";
+                    }
+                }
+
+                $this->historicopremium = $rowvolumetricopremium;
+            }
+
+            //Diesel
+            if ($this->Diesel == 1) {
+                //Variables de contenedor
+                $volumetricodiesel = "";
+                $rowvolumetricodiesel = array();
+
+                //Ciclo para pasar por las fechas
+                for ($i = $this->fechainic; $i <= $this->fechafin; $i = date("Y-m-d", strtotime($i . "+ 1 days"))) {
+                    //Volumetrico
+
+                    //Condicional para saber si exite la fecha (el identificador)
+                    if (!empty($historico['volumetrico.' . $i . '.Fecha'])) {
+                        //Almacenamos los datos en la primer variable
+                        //Fecha
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.Fecha'] . '</td>';
+
+                        //Inv. Inicial
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.IventInicD'] . '</td>';
+
+                        //Compra
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.CompraD'] . '</td>';
+
+                        //Lit. Vendidos
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.LitVendD'] . '</td>';
+
+                        //Prec. Venta
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.PrecVentD'] . '</td>';
+
+                        //Autostick
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.AutoStickD'] . '</td>';
+
+                        //Inv. Determinado
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.InvDeterD'] . '</td>';
+
+                        //Merma
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.MermaD'] . '</td>';
+
+                        //Alamcenamos los datos en el arreglo
+                        $rowvolumetricodiesel[] =  '<tr>' . $volumetricodiesel . '</tr>';
+
+                        //Vaciamos la variable para almacenar las otras
+                        $volumetricodiesel = "";
+                    }
+
+                    //Cambio de precio
+                    //Condicional para saber si exite la fecha (el identificador)
+                    if (!empty($historico['volumetrico.' . $i . '-C.Fecha'])) {
+                        //Almacenamos los datos en la primer variable
+                        //Fecha
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.Fecha'] . ".1" . '</td>';
+
+                        //Inv. Inicial
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.IventInicD'] . '</td>';
+
+                        //Compra
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.CompraD'] . '</td>';
+
+                        //Lit. Vendidos
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.LitVendD'] . '</td>';
+
+                        //Prec. Venta
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecVentD'] . '</td>';
+
+                        //Autostick
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.AutoStickD'] . '</td>';
+
+                        //Inv. Determinado
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.InvDeterD'] . '</td>';
+
+                        //Merma
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.MermaD'] . '</td>';
+
+                        //Alamcenamos los datos en el arreglo
+                        $rowvolumetricodiesel[] =  '<tr>' . $volumetricodiesel . '</tr>';
+
+                        //Vaciamos la variable para almacenar las otras
+                        $volumetricodiesel = "";
+                    }
+                }
+
+                $this->historicodiesel = $rowvolumetricodiesel;
+            }
+        };
+    }
 
     //Metodo para crear el calendario
     public function Calendario()
@@ -93,7 +365,9 @@ class Volumetrico extends Component
                             }
 
                             //Informacion de captura
-                            if (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
+                            if (!empty($voludata['volumetrico.' . $date . '-C.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterD'])) {
+                                $week .= '<br>' . 'Cambio de precio' . '<br>';
+                            } elseif (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
                                 $week .= '<br>' . 'Captura completa' . '<br>';
                             } else {
                                 $week .= '<br>' . 'Falta capturar' . '<br>';
@@ -146,7 +420,9 @@ class Volumetrico extends Component
                             }
 
                             //Informacion de captura
-                            if (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
+                            if (!empty($voludata['volumetrico.' . $date . '-C.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterD'])) {
+                                $week .= '<br>' . 'Cambio de precio' . '<br>';
+                            } elseif (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
                                 $week .= '<br>' . 'Captura completa' . '<br>';
                             } else {
                                 $week .= '<br>' . 'Falta capturar' . '<br>';
@@ -211,6 +487,22 @@ class Volumetrico extends Component
         return $weeks;
     }
 
+    //Metodo para refrescar la pagina
+    public function Refresh()
+    {
+        //Limpiamos las fechas
+        $this->fechainic = "";
+        $this->fechafin = "";
+
+        //Limpiamos las tablas
+        $this->historicomagna = [];
+        $this->historicopremium = [];
+        $this->historicodiesel = [];
+
+        //Refrescamos la pagina
+        $this->emit("volumrefresh");
+    }
+
     //Metodo para preparar procesos antes de iniciar
     public function mount()
     {
@@ -224,6 +516,10 @@ class Volumetrico extends Component
         //El mes y año iniciamos con los de hoy (calendario)
         $this->aniocal = date("Y");
         $this->mescal = date("m");
+
+
+        //Agregamos un valor inicial
+        $this->HistoryResul = "";
     }
 
     public function render()

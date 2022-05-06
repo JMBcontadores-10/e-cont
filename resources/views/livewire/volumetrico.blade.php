@@ -12,18 +12,37 @@
     {{-- Creacion del modal (BASE) --}}
     <div wire:ignore.self class="modal fade" id="voluhistorymodal" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true" class="volucaptumodal">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg" role="document">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
             <div class="modal-content">
                 {{-- Encabezado --}}
                 <div class="modal-header">
                     <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
                             class="icons fas fa-history">Historico {{ $empresa }}</span></h6>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" wire:click="Refresh()" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true close-btn">×</span>
                     </button>
                 </div>
                 {{-- Cuerpo del modal --}}
                 <div class="modal-body">
+                    <form wire:submit.prevent="ConsulHistoric">
+                        {{-- Filtros de busqueda --}}
+                        <div class="form-inline mr-auto">
+                            <input class="form-control" id="fecha" wire:model.defer="fechainic" type="date"
+                                min="2014-01-01" max={{ date('Y-m-d') }} required> &nbsp;&nbsp;
+
+                            A &nbsp;&nbsp;
+
+                            <input class="form-control" id="fecha" wire:model.defer="fechafin" type="date"
+                                min="2014-01-01" max={{ date('Y-m-d') }} required> &nbsp;&nbsp;
+
+                            <button class="btn btn-secondary BtnVinculadas" type="submit"
+                                wire:loading.attr="disabled">Buscar</button>
+                            &nbsp;&nbsp;
+                        </div>
+                    </form>
+
+                    <br>
+
                     {{-- Tablas por cada tipo combustible que maneja el usuario --}}
                     {{-- MAGNA --}}
                     @if ($Magna == '1')
@@ -31,66 +50,104 @@
                         <div class="table-responsive">
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
-                                    <tr>
-                                        <th class="text-center align-middle">MAGNA</th>
+                                    <tr style="background-color:#C8F5DE">
+                                        <th colspan="8" class="text-center align-middle">MAGNA</th>
+                                        {{-- Columnas --}}
+                                    <tr style="background-color:#C8F5DE">
+                                        <th class="text-center align-middle">Fecha</th>
+                                        <th class="text-center align-middle">Inventario inicial</th>
+                                        <th class="text-center align-middle">Compras</th>
+                                        <th class="text-center align-middle">Litros vendidos</th>
+                                        <th class="text-center align-middle">Precio venta</th>
+                                        <th class="text-center align-middle">AutoStick</th>
+                                        <th class="text-center align-middle">Inventario determinado</th>
+                                        <th class="text-center align-middle">Merma</th>
+                                    </tr>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        {{-- Contenido de la columna para vincular varios --}}
-                                        <td class="text-center align-middle">
-
-                                        </td>
-                                    </tr>
+                                    @if (!empty($historicomagna))
+                                        {{-- Datos del historico --}}
+                                        @foreach ($historicomagna as $historicomagna)
+                                            {!! $historicomagna !!}
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
+
+                        <br>
                     @endif
 
                     {{-- PREMIUM --}}
                     @if ($Premium == '1')
-                    {{-- Tabla --}}
-                    <div class="table-responsive">
-                        <table id="example" class="{{ $class }}" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th class="text-center align-middle">PREMIUM</th>
+                        {{-- Tabla --}}
+                        <div class="table-responsive">
+                            <table id="example" class="{{ $class }}" style="width:100%">
+                                <thead>
+                                    {{-- Encabezado/Titulo --}}
+                                    <tr style="background-color:#FFD1D1">
+                                        <th colspan="8" class="text-center align-middle">PREMIUM</th>
+                                    </tr>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    {{-- Contenido de la columna para vincular varios --}}
-                                    <td class="text-center align-middle">
+                                    {{-- Columnas --}}
+                                    <tr style="background-color:#FFD1D1">
+                                        <th class="text-center align-middle">Fecha</th>
+                                        <th class="text-center align-middle">Inventario inicial</th>
+                                        <th class="text-center align-middle">Compras</th>
+                                        <th class="text-center align-middle">Litros vendidos</th>
+                                        <th class="text-center align-middle">Precio venta</th>
+                                        <th class="text-center align-middle">AutoStick</th>
+                                        <th class="text-center align-middle">Inventario determinado</th>
+                                        <th class="text-center align-middle">Merma</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (!empty($historicopremium))
+                                        {{-- Datos del historico --}}
+                                        @foreach ($historicopremium as $historicopremium)
+                                            {!! $historicopremium !!}
+                                        @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
 
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                        <br>
                     @endif
 
                     {{-- DIESEL --}}
                     @if ($Diesel == '1')
-                    {{-- Tabla --}}
-                    <div class="table-responsive">
-                        <table id="example" class="{{ $class }}" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th class="text-center align-middle">DIESEL</th>
+                        {{-- Tabla --}}
+                        <div class="table-responsive">
+                            <table id="example" class="{{ $class }}" style="width:100%">
+                                <thead>
+                                    <tr style="background-color:#cdcdcd">
+                                        <th colspan="8" class="text-center align-middle">DIESEL</th>
+                                    </tr>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    {{-- Contenido de la columna para vincular varios --}}
-                                    <td class="text-center align-middle">
-
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                    {{-- Columnas --}}
+                                    <tr style="background-color:#cdcdcd">
+                                        <th class="text-center align-middle">Fecha</th>
+                                        <th class="text-center align-middle">Inventario inicial</th>
+                                        <th class="text-center align-middle">Compras</th>
+                                        <th class="text-center align-middle">Litros vendidos</th>
+                                        <th class="text-center align-middle">Precio venta</th>
+                                        <th class="text-center align-middle">AutoStick</th>
+                                        <th class="text-center align-middle">Inventario determinado</th>
+                                        <th class="text-center align-middle">Merma</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (!empty($historicodiesel))
+                                        {{-- Datos del historico --}}
+                                        @foreach ($historicodiesel as $historicodiesel)
+                                            {!! $historicodiesel !!}
+                                        @endforeach
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
                     @endif
                 </div>
             </div>
@@ -116,7 +173,8 @@
                     @empty(!$empresas)
                         {{-- Mostramos el RFC de la empresa que se selecciona --}}
                         <label for="inputState">Empresa: {{ $empresa }}</label>
-                        <select wire:model="rfcEmpresa" id="inputState1" class="select form-control">
+                        <select wire:model="rfcEmpresa" wire:change="Refresh()" id="inputState1"
+                            class="select form-control">
                             <option value="">--Selecciona Empresa--</option>
 
                             {{-- Llenamos el select con las empresa vinculadas --}}

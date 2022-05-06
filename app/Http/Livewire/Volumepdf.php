@@ -81,7 +81,7 @@ class Volumepdf extends Component
             ->get()
             ->first();
 
-        $path = "contarappv1_descargas/" . $this->empresa . "/" . $anio . "/Volumetricos/" . $espa->fecha_es($mes) . "/" . $datavolum['volumetrico.' . $this->dia . '.VoluPDF'];
+        $path = "contarappv1_descargas/" . $this->empresa . "/" . $anio . "/Volumetricos/" . $espa->fecha_es($mes) . "/" . $datavolum['volumetrico.' . $this->dia . '.PDFVolu'];
 
         Volumetrico::where('rfc', $this->empresa)
             ->update([

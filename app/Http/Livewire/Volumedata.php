@@ -206,65 +206,6 @@ class Volumedata extends Component
         }
     }
 
-    //Metodo para actualizar el inventario determinado del dia siguiente
-    public function ActuInvenDeter($diasiguiente)
-    {
-        //Hacemos una consulta
-        $infovolu = Volumetrico::where(['rfc' => $this->empresa])->get()->first();
-
-        //Si existe datos del dia siguiente se actualiza con los capturados en el anterior (Inventario desterminado)
-        if ($infovolu) {
-            //Magna
-            $inventinicmagna = $infovolu['volumetrico.' . $diasiguiente . '.IventInicM'];
-            $litvendmagna = $infovolu['volumetrico.' . $diasiguiente . '.LitVendM'];
-            $compramagna = $infovolu['volumetrico.' . $diasiguiente . '.CompraM'];
-
-            //Premium
-            $inventinicpremium = $infovolu['volumetrico.' . $diasiguiente . '.IventInicP'];
-            $litvendpremium = $infovolu['volumetrico.' . $diasiguiente . '.LitVendP'];
-            $comprapremium = $infovolu['volumetrico.' . $diasiguiente . '.CompraP'];
-
-            //Diesel
-            $inventinicdiesel = $infovolu['volumetrico.' . $diasiguiente . '.IventInicD'];
-            $litvenddiesel = $infovolu['volumetrico.' . $diasiguiente . '.LitVendD'];
-            $compradiesel = $infovolu['volumetrico.' . $diasiguiente . '.CompraD'];
-
-            //Magna
-            //Condicional para saber si existe datos
-            if (!empty($inventinicmagna) && !empty($litvendmagna) && !empty($compramagna)) {
-                //Sacamos el inventario determinado
-                $inventdertermarga = (floatval($inventinicmagna) + floatval($compramagna)) - floatval($litvendmagna);
-            }
-
-            //Premium
-            //Condicional para saber si existe datos
-            if (!empty($inventinicpremium) && !empty($litvendpremium) && !empty($comprapremium)) {
-                //Sacamos el inventario determinado
-                $inventderterpremium = (floatval($inventinicpremium) + floatval($comprapremium)) - floatval($litvendpremium);
-            }
-
-            //Diesel
-            //Condicional para saber si existe datos
-            if (!empty($inventinicdiesel) && !empty($litvenddiesel) && !empty($compradiesel)) {
-                //Sacamos el inventario determinado
-                $inventderterdiesel = (floatval($inventinicdiesel) + floatval($compradiesel)) - floatval($litvenddiesel);
-            }
-
-            //Condicional si existen datos en las variables
-            if (!empty($inventdertermarga) || !empty($inventderterpremium) || !empty($inventderterdiesel)) {
-                //Buscamos el RFC de la empresa
-                Volumetrico::where(['rfc' => $this->empresa])
-                    ->update([
-                        //Actualizamos el inventario determinado
-                        'volumetrico.' . $diasiguiente . '.InvDeterM' => strval(round($inventdertermarga, 2)),
-                        'volumetrico.' . $diasiguiente . '.InvDeterP' => strval(round($inventderterpremium, 2)),
-                        'volumetrico.' . $diasiguiente . '.InvDeterD' => strval(round($inventderterdiesel, 2)),
-
-                    ], ['upsert' => true]);
-            }
-        }
-    }
-
     //Metodo para almacenar/editar un volumetrico
     public function NuevoVolu()
     {
@@ -286,16 +227,13 @@ class Volumedata extends Component
             ], ['upsert' => true]);
 
         //Agregamos el PDF si este existe
-        if ($infovolu['volumetrico.' . $this->dia . '.PDFVolu']) {
+        if (!empty($infovolu['volumetrico.' . $this->dia . '.PDFVolu'])) {
             Volumetrico::where(['rfc' => $this->empresa])
                 ->update([
                     'rfc' => $this->empresa,
                     'volumetrico.' . $this->dia . '.PDFVolu' => $infovolu['volumetrico.' . $this->dia . '.PDFVolu'],
                 ], ['upsert' => true]);
         }
-
-        // Modificamos el dia siguiente
-        $this->ActuInvenDeter($diasiguiente);
 
         //Cerramos el modal al terminar
         $this->dispatchBrowserEvent('CerrarVoluData', ["dia" => $this->dia]);
@@ -319,22 +257,19 @@ class Volumedata extends Component
                 'volumetrico.' . $this->dia . "-C" => $this->formdatavolu,
 
                 //Obtenemos el inicial del siguiente dia
-                'volumetrico.' . $diasiguiente . '.IventInicM' => $this->autostickmagna,
-                'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickpremium,
-                'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickdiesel,
+                'volumetrico.' . $diasiguiente . '.IventInicM' => $this->autostickcambmagna,
+                'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickcambpremium,
+                'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickcambdiesel,
             ], ['upsert' => true]);
 
         //Agregamos el PDF si este existe
-        if ($infovolu['volumetrico.' . $this->dia . '.PDFVolu']) {
+        if (!empty($infovolu['volumetrico.' . $this->dia . '.PDFVolu'])) {
             Volumetrico::where(['rfc' => $this->empresa])
                 ->update([
                     'rfc' => $this->empresa,
                     'volumetrico.' . $this->dia . '.PDFVolu' => $infovolu['volumetrico.' . $this->dia . '.PDFVolu'],
                 ], ['upsert' => true]);
         }
-
-        // Modificamos el dia siguiente
-        $this->ActuInvenDeter($diasiguiente);
 
         //Cerramos el modal al terminar
         $this->dispatchBrowserEvent('CerrarVoluData', ["dia" => $this->dia]);
