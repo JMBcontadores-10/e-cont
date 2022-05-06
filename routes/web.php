@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\UploadController;
+use App\Http\Livewire\Auditoria;
 use App\Http\Livewire\Chequesytransferencias;
 
 use App\Http\Livewire\vinculacionAutomatica;
@@ -68,7 +69,7 @@ Route::post('/volumetrico3', [App\Http\Controllers\VolumetricoController::class,
 Route::match(['get', 'post'], '/volumetrico4', [App\Http\Controllers\VolumetricoController::class, 'updatePrecio'])->name('updatePrecio');
 Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
 Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
-Route::get('/auditoria', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('auditoria');
+Route::get('/auditoria2', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('auditoria');
 Route::post('/auditoria1', [App\Http\Controllers\AuditoriaController::class, 'store'])->name('auditoria1');
 
 Route::get('/', [App\Http\Controllers\Login1Controller::class, 'index'])->name('log');
@@ -102,7 +103,7 @@ Route::get('zip-download/{id}', [Eliminar::class, 'descargarZip']);
 Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
 Route::get('/descargasAutomaticas/{valor}', [App\Http\Controllers\DescargasAutomaticas::class, 'ConsultSAT'])->name('descargasAutomaticas');
 // Route::get('/descargasAutomaticas1', [App\Http\Livewire\DescargasAutomaticas::class, 'index'])->name('descargasAutomaticas1');
-
+Route::get('/auditoria',Auditoria::class)->name('auditoria');
 
 
 // Rutas Angel

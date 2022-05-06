@@ -86,17 +86,17 @@ class DescargasAutomaticas extends Controller
   public $rfcs = [/// array que contiene las empresas
     // '1',
    // 'AHF060131G59',
-//'AHF060131G59',
-     'AFU1809135Y4',
+// 'AHF060131G59',
+//     'AFU1809135Y4',
 //   'AIJ161001UD1',
 //    'AAE160217C36',
-//'CDI1801116Y9',
+//    'CDI1801116Y9',
 //    'COB191129AZ2',
 //    'DOT1911294F3',
 //     'DRO191104EZ0',
 //    'DRO191129DK5',
 //    'ERO1911044L4',
-//   'PERE9308105X4',
+  'PERE9308105X4',
 //    'FGA980316918',
 //    'GPA161202UG8',
 //    'GEM190507UW8',
@@ -107,7 +107,8 @@ class DescargasAutomaticas extends Controller
 //    'JCO171102SI9',
 //    'MEN171108IG6',
 //    'MAR191104R53',
-//    'MCA130429FM8',
+
+//   'MCA130429FM8',
 //    'MCA130827V4A',
 //    'MOP18022474A',
 //    'MOBJ8502058A4',
@@ -121,12 +122,12 @@ class DescargasAutomaticas extends Controller
 //    'SGA1905229H3',
 // 'SGA1410217U4',
 //    'SGT190523QX8',
-//  'SGX190523KA4',
+// 'SGX190523KA4',
 //    'SGX160127MC4',
 //    'STR9303188X3',
 //    'SVI831123632',
-//    'SCT150918RC9',
-//    'SAJ161001KC6',
+//   'SCT150918RC9',
+//   'SAJ161001KC6',
 //    'SPE171102P94',
 //    'SCO1905221P2',
 //    'GMH1602172L8',
@@ -155,27 +156,31 @@ public function __construct()
         /////IGNORE=(06 08 09 26 50)
 
 $rfcIgnore=['SST030407D77J','SST030407D77M','PERE9308105X4C','PERE9308105X4T','ADMINISTRADOR','NOMINAS','AIJ161001UD1',
-'AAE160217C36',
-'AFU1809135Y4',
-'AHF060131G59',
-'GEM190507UW8',
-'FGA980316918',
-'ERO1911044L4',
-'DRO191129DK5',
-'DRO191104EZ0',
-'DOT1911294F3',
-'CDI1801116Y9',
-'GEM190507UW8',
-'GPA161202UG8',
-'GMH1602172L8',
-'GMG2101076W2',
-'SCT150918RC9',
-'JCO171102SI9',
-'IAR010220GK5',
-'IAB0210236I7',
-'HRU121221SC2',
-'GRU210504TH9',
-'GPR020411182',
+'SST030407D77M',
+'SGP210107CE8',
+'SGX190523KA4',
+
+// 'AAE160217C36',
+// 'AFU1809135Y4',
+// 'AHF060131G59',
+// 'GEM190507UW8',
+// 'FGA980316918',
+// 'ERO1911044L4',
+// 'DRO191129DK5',
+// 'DRO191104EZ0',
+// 'DOT1911294F3',
+// 'CDI1801116Y9',
+// 'GEM190507UW8',
+// 'GPA161202UG8',
+// 'GMH1602172L8',
+// 'GMG2101076W2',
+// 'SCT150918RC9',
+// 'JCO171102SI9',
+// 'IAR010220GK5',
+// 'IAB0210236I7',
+// 'HRU121221SC2',
+// 'GRU210504TH9',
+// 'GPR020411182',
 
 
  'GME210504KW1',/// sin certificado clave ->64 GPR020411182
@@ -184,11 +189,11 @@ $rfcIgnore=['SST030407D77J','SST030407D77M','PERE9308105X4C','PERE9308105X4T','A
 ];
      $this->empresas=DB::table('clientes')
                 ->select('RFC')
-                ->where('RFC','SGA1410217U4')
-                //  ->whereNull('tipo','TipoSE')
+                ->where('RFC','PERE9308105X4')
+                //   ->whereNull('tipo','TipoSE')
                 //  ->whereNotIn('Id_Cliente', $ignore)
                 //  ->whereNotIn('RFC', $rfcIgnore)
-                //  ->orderBy('RFC','asc')
+                 ->orderBy('RFC','asc')
                 ->get();
 
 
@@ -209,13 +214,9 @@ $rfcIgnore=['SST030407D77J','SST030407D77M','PERE9308105X4C','PERE9308105X4T','A
 
 ////=================[ FECHA ]============================/////
 
-    $fecha=date('Y-m-d');//obtiene fecha actual
+$fecha=date('Y-m-d');//obtiene fecha actual
 
-
-
-
-
-    //resto los dias pasados por la ruta
+//resto los dias pasados por la ruta
 $diaX= date("Y-m-d",strtotime($fecha."-". $valor ."days"));
 $date= strtotime($diaX);//obtener la fecha para sacar el mes
 $mes = date('m',$date);// obtener el mes como entero
@@ -296,6 +297,8 @@ $handler = new class () implements MaximumRecordsHandler {
 };
 
 
+
+
 // $Calendario =Calendario::where(['rfc' => 'AFU1809135Y4'])->where('descargas', '20-04-2022')->get();
 // echo count($Calendario)."<br>";
 // $data = Calendario::where([
@@ -311,21 +314,21 @@ $handler = new class () implements MaximumRecordsHandler {
 
 
 
+try{
 
 
 
 
 
 
-
-    foreach($this->empresas as $rfc){///foreach empresas
+    foreach($this->rfcs as $rfc){///foreach empresas
 
 
 
 
         $cliente = DB::table('clientes')
         //  ->select('tipo', 'password', 'Id_Conta','nombre')
-          ->where('RFC', $rfc['RFC'])
+          ->where('RFC', $rfc)
           ->first();
     //    echo $cliente['RFC']."<br>".$diaX;
      $rfc=$cliente['RFC'];
@@ -382,8 +385,8 @@ $handler = new class () implements MaximumRecordsHandler {
 
                   /// -->[EMITIDOS]<---/////
                   $query = new QueryByFilters(
-                    new DateTimeImmutable('2022-02-28'),
-                      new DateTimeImmutable('2022-02-28'),
+                    new DateTimeImmutable('2022-05-01'),
+                      new DateTimeImmutable('2022-05-03'),
 
                   );
 
@@ -408,7 +411,7 @@ $handler = new class () implements MaximumRecordsHandler {
         //    $satScraper->listByPeriod($query);
 
 // //Aqui llamamos a la funcion de meses
-$mesruta = Meses(02);
+$mesruta = Meses(05);
 
 //======================[RUTAS DESCARGAS EMITIDOS]================================///
 //XML
@@ -424,6 +427,7 @@ $rutaacuse = "storage/contarappv1_descargas/$rfc/$anio/Descargas/$mesruta/$r/ACU
 // impresión de cada uno de los metadata
 echo "#####################[ ". $diaX ."&nbsp;&nbsp;CFDI´S $r POR LA EMPRESA ".$cliente['nombre'] ."&nbsp;{".$rfc."}]#######################<br>";
 foreach ($list as $cfdi) {
+
     echo 'UUID: ',strtoupper($cfdi->uuid()), PHP_EOL.'<br>';
     echo 'Emisor: ', $cfdi->get('rfcEmisor'), ' - ', $cfdi->get('nombreEmisor'), PHP_EOL.'<br>';
     echo 'Receptor: ', $cfdi->get('rfcReceptor'), ' - ', $cfdi->get('nombreReceptor'), PHP_EOL.'<br>';
@@ -769,6 +773,12 @@ foreach ($allcfdi as $listuuids) {
               }// fin del foreach emitidos y recibidos
 
      }/// fin del foeach clientes
+
+
+    } catch (Exception $e) {
+        //Retornamos un mensaje de error
+        return "error: " . $e;
+    }
 
 
 //      $files = glob('build/cookies/*'); //obtenemos todos los nombres de los ficheros
