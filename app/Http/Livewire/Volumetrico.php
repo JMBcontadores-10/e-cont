@@ -6,11 +6,13 @@ use App\Models\User;
 use App\Models\Volumetrico as VolumetricoModel;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use PhpOffice\PhpSpreadsheet\Calculation\DateTimeExcel\Week;
 
 class Volumetrico extends Component
 {
     //Variables globales
     public $rfcEmpresa;
+    public $active = "hidden";
 
     //Variables para la seccion del calendario
     public $mescal;
@@ -70,6 +72,9 @@ class Volumetrico extends Component
                         //Lit. Vendidos
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.LitVendM'] . '</td>';
 
+                        //Prec. Compra
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.PrecCompM'] . '</td>';
+
                         //Prec. Venta
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.PrecVentM'] . '</td>';
 
@@ -104,6 +109,9 @@ class Volumetrico extends Component
 
                         //Lit. Vendidos
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.LitVendM'] . '</td>';
+
+                        //Prec. Compra 
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecCompM'] . '</td>';
 
                         //Prec. Venta
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecVentM'] . '</td>';
@@ -153,6 +161,9 @@ class Volumetrico extends Component
                         //Lit. Vendidos
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.LitVendP'] . '</td>';
 
+                        //Prec. Compra
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.PrecCompP'] . '</td>';
+
                         //Prec. Venta
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.PrecVentP'] . '</td>';
 
@@ -187,6 +198,9 @@ class Volumetrico extends Component
 
                         //Lit. Vendidos
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.LitVendP'] . '</td>';
+
+                        //Prec. Venta
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecCompP'] . '</td>';
 
                         //Prec. Venta
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecVentP'] . '</td>';
@@ -237,6 +251,9 @@ class Volumetrico extends Component
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.LitVendD'] . '</td>';
 
                         //Prec. Venta
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.PrecCompD'] . '</td>';
+
+                        //Prec. Venta
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.PrecVentD'] . '</td>';
 
                         //Autostick
@@ -272,6 +289,9 @@ class Volumetrico extends Component
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.LitVendD'] . '</td>';
 
                         //Prec. Venta
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecCompD'] . '</td>';
+
+                        //Prec. Venta
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecVentD'] . '</td>';
 
                         //Autostick
@@ -293,6 +313,9 @@ class Volumetrico extends Component
 
                 $this->historicodiesel = $rowvolumetricodiesel;
             }
+
+            //Activamos los botones de exportacion
+            $this->active = null;
         };
     }
 
@@ -355,42 +378,38 @@ class Volumetrico extends Component
                     $week .= '<td class="hoy" style="color:white">' . $day;
 
                     if ($this->rfcEmpresa) {
+                        //Mensaje de cambio de precio
+                        if (!empty($voludata['volumetrico.' . $date . '-C.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterD'])) {
+                            $week .= '<br> Cambio de precio <br>';
+                        } else {
+                            $week .=  "<br><br>";
+                        }
+
                         //Condicional para limitar la captura
                         if (auth()->user()->tipo) {
-                            //Informacion PDF
-                            if (!empty($voludata['volumetrico.' . $date . '.PDFVolu'])) {
-                                $week .= '<br>' . 'PDF cargado';
-                            } else {
-                                $week .= '<br>' . 'Falta PDF';
-                            }
-
-                            //Informacion de captura
-                            if (!empty($voludata['volumetrico.' . $date . '-C.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterD'])) {
-                                $week .= '<br>' . 'Cambio de precio' . '<br>';
-                            } elseif (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
-                                $week .= '<br>' . 'Captura completa' . '<br>';
-                            } else {
-                                $week .= '<br>' . 'Falta capturar' . '<br>';
-                            }
-
                             //Condicional para marcar que se agrego un volumetrico
                             if (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
                                 //Boton para insertar o editar datos
                                 $week .= '<a class="selectfecha icons fas fa-edit content_true" data-toggle="modal" 
-                            data-target="#volucaptumodal' . $date . '" data-backdrop="static"
-                            data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
+                                data-target="#volucaptumodal' . $date . '" data-backdrop="static"
+                                data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
                             } else {
                                 //Boton para insertar o editar datos
                                 $week .= '<a class="selectfecha icons fas fa-edit" data-toggle="modal" 
-                            data-target="#volucaptumodal' . $date . '" data-backdrop="static"
-                            data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
+                                data-target="#volucaptumodal' . $date . '" data-backdrop="static"
+                                data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
                             }
-                        } else {
-                            //Informacion PDF
-                            if (!empty($voludata['volumetrico.' . $date . '.PDFVolu'])) {
-                                $week .= '<br>' . 'PDF cargado' . '<br>';
+
+                            if (!empty($voludata['volumetrico.' . $date . '.PDFCRE'])) {
+                                //Boton para subir archivos de CRE
+                                $week .= '<a class="selectfechacre iconscre demo-icon icon-cre content_true_cre" data-toggle="modal" 
+                                data-target="#volupdfcremodal' . $date . '" data-backdrop="static" data-keyboard="false" 
+                                fecha="' . $date . '">&#xe801;</a> &nbsp;&nbsp;';
                             } else {
-                                $week .= '<br>' . 'Falta PDF' . '<br>';
+                                //Boton para subir archivos de CRE
+                                $week .= '<a class="selectfechacre iconscre demo-icon icon-cre" data-toggle="modal" 
+                                data-target="#volupdfcremodal' . $date . '" data-backdrop="static" data-keyboard="false" 
+                                fecha="' . $date . '">&#xe801;</a> &nbsp;&nbsp;';
                             }
                         }
 
@@ -410,42 +429,38 @@ class Volumetrico extends Component
                     $week .= '<td>' . $day;
 
                     if ($this->rfcEmpresa) {
+                        //Mensaje de cambio de precio
+                        if (!empty($voludata['volumetrico.' . $date . '-C.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterD'])) {
+                            $week .= '<br> Cambio de precio <br>';
+                        } else {
+                            $week .=  "<br><br>";
+                        }
+
                         //Condicional para limitar la captura
                         if (auth()->user()->tipo) {
-                            //Informacion PDF
-                            if (!empty($voludata['volumetrico.' . $date . '.PDFVolu'])) {
-                                $week .= '<br>' . 'PDF cargado';
-                            } else {
-                                $week .= '<br>' . 'Falta PDF';
-                            }
-
-                            //Informacion de captura
-                            if (!empty($voludata['volumetrico.' . $date . '-C.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterD'])) {
-                                $week .= '<br>' . 'Cambio de precio' . '<br>';
-                            } elseif (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
-                                $week .= '<br>' . 'Captura completa' . '<br>';
-                            } else {
-                                $week .= '<br>' . 'Falta capturar' . '<br>';
-                            }
-
                             //Condicional para marcar que se agrego un volumetrico
                             if (!empty($voludata['volumetrico.' . $date . '.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '.InvDeterD'])) {
                                 //Boton para insertar o editar datos
                                 $week .= '<a class="selectfecha icons fas fa-edit content_true" data-toggle="modal" 
-                            data-target="#volucaptumodal' . $date . '" data-backdrop="static"
-                            data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
+                                data-target="#volucaptumodal' . $date . '" data-backdrop="static"
+                                data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
                             } else {
                                 //Boton para insertar o editar datos
                                 $week .= '<a class="selectfecha icons fas fa-edit" data-toggle="modal" 
-                            data-target="#volucaptumodal' . $date . '" data-backdrop="static"
-                            data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
+                                data-target="#volucaptumodal' . $date . '" data-backdrop="static"
+                                data-keyboard="false" fecha="' . $date . '"></a> &nbsp;&nbsp;';
                             }
-                        } else {
-                            //Informacion PDF
-                            if (!empty($voludata['volumetrico.' . $date . '.PDFVolu'])) {
-                                $week .= '<br>' . 'PDF cargado' . '<br>';
+
+                            if (!empty($voludata['volumetrico.' . $date . '.PDFCRE'])) {
+                                //Boton para subir archivos de CRE
+                                $week .= '<a class="selectfechacre iconscre demo-icon icon-cre content_true_cre" data-toggle="modal" 
+                                data-target="#volupdfcremodal' . $date . '" data-backdrop="static" data-keyboard="false" 
+                                fecha="' . $date . '">&#xe801;</a> &nbsp;&nbsp;';
                             } else {
-                                $week .= '<br>' . 'Falta PDF' . '<br>';
+                                //Boton para subir archivos de CRE
+                                $week .= '<a class="selectfechacre iconscre demo-icon icon-cre" data-toggle="modal" 
+                                data-target="#volupdfcremodal' . $date . '" data-backdrop="static" data-keyboard="false" 
+                                fecha="' . $date . '">&#xe801;</a> &nbsp;&nbsp;';
                             }
                         }
 
@@ -498,6 +513,9 @@ class Volumetrico extends Component
         $this->historicomagna = [];
         $this->historicopremium = [];
         $this->historicodiesel = [];
+
+        //Ocultamos los botonos de exportacion
+        $this->active = "hidden";
 
         //Refrescamos la pagina
         $this->emit("volumrefresh");

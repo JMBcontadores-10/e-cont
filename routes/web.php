@@ -71,7 +71,7 @@ Route::post('/volumetrico3', [App\Http\Controllers\VolumetricoController::class,
 Route::match(['get', 'post'], '/volumetrico4', [App\Http\Controllers\VolumetricoController::class, 'updatePrecio'])->name('updatePrecio');
 Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
 Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
-Route::get('/auditoria2', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('auditoria');
+Route::get('/auditoria2', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('auditoria2');
 Route::post('/auditoria1', [App\Http\Controllers\AuditoriaController::class, 'store'])->name('auditoria1');
 
 Route::get('/', [App\Http\Controllers\Login1Controller::class, 'index'])->name('log');
@@ -119,4 +119,6 @@ Route::get('/modules', Home::class)->name('modules');
 //Ruta de la vista volumetrico
 Route::get('/volu', Volumetrico::class)->name('volu');
 //Ruta de almacenamiento de PDF (Volumetricos)
-Route::post('/pdfvolu/{id}', [Volumepdf::class, 'PDFVolu']);
+Route::post('/pdfvolu/{id}', [App\Http\Controllers\UploadController::class, 'PDFVolu']);
+//Ruta de almacenamiento de PDF (CRE)
+Route::post('/pdfcrevolu/{id}', [App\Http\Controllers\UploadController::class, 'PDFCRE']);

@@ -1,4 +1,18 @@
 <div>
+    {{-- Libreria de exportacion --}}
+    <script src="{{ asset('js/tableExport/libs/FileSaver/FileSaver.min.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/tableExport.min.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/libs/jsPDF/jspdf.umd.min.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/libs/pdfmake/pdfmake.min.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/libs/pdfmake/vfs_fonts.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/libs/js-xlsx/xlsx.core.min.js') }}" defer></script>
+
+    {{-- Implementacion del icono CRE --}}
+    <link href="{{ asset('css/cre.css') }}" rel="stylesheet">
+
+    {{-- JS --}}
+    <script src="{{ asset('js/volumetrico.js') }}" defer></script>
+
 
     @php
         //Obtenemos la clase al cargar la tabla
@@ -18,7 +32,8 @@
                 <div class="modal-header">
                     <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
                             class="icons fas fa-history">Historico {{ $empresa }}</span></h6>
-                    <button type="button" class="close" wire:click="Refresh()" data-dismiss="modal" aria-label="Close">
+                    <button type="button" class="close" wire:click="Refresh()" data-dismiss="modal"
+                        aria-label="Close">
                         <span aria-hidden="true close-btn">×</span>
                     </button>
                 </div>
@@ -38,6 +53,13 @@
                             <button class="btn btn-secondary BtnVinculadas" type="submit"
                                 wire:loading.attr="disabled">Buscar</button>
                             &nbsp;&nbsp;
+
+                            <button {{ $active }} type="button" class="btn btn-success BtnVinculadas"
+                                onclick="exportReportToExcel('{{ $empresa }}')">Excel</button>
+                            &nbsp;&nbsp;
+                            <button {{ $active }} type="button" class="btn btn-danger BtnVinculadas"
+                                onclick="exportReportToPdf('{{ $empresa }}')">Pdf</button>
+                            &nbsp;&nbsp;
                         </div>
                     </form>
 
@@ -48,16 +70,17 @@
                     @if ($Magna == '1')
                         {{-- Tabla --}}
                         <div class="table-responsive">
-                            <table id="example" class="{{ $class }}" style="width:100%">
+                            <table id="voluhistorimagna" class="voluhistori {{ $class }}" style="width:100%">
                                 <thead>
                                     <tr style="background-color:#C8F5DE">
-                                        <th colspan="8" class="text-center align-middle">MAGNA</th>
+                                        <th colspan="9" class="text-center align-middle">MAGNA</th>
                                         {{-- Columnas --}}
                                     <tr style="background-color:#C8F5DE">
                                         <th class="text-center align-middle">Fecha</th>
                                         <th class="text-center align-middle">Inventario inicial</th>
                                         <th class="text-center align-middle">Compras</th>
                                         <th class="text-center align-middle">Litros vendidos</th>
+                                        <th class="text-center align-middle">Precio de compra</th>
                                         <th class="text-center align-middle">Precio venta</th>
                                         <th class="text-center align-middle">AutoStick</th>
                                         <th class="text-center align-middle">Inventario determinado</th>
@@ -83,11 +106,11 @@
                     @if ($Premium == '1')
                         {{-- Tabla --}}
                         <div class="table-responsive">
-                            <table id="example" class="{{ $class }}" style="width:100%">
+                            <table id="voluhistoripremium" class="voluhistori {{ $class }}" style="width:100%">
                                 <thead>
                                     {{-- Encabezado/Titulo --}}
                                     <tr style="background-color:#FFD1D1">
-                                        <th colspan="8" class="text-center align-middle">PREMIUM</th>
+                                        <th colspan="9" class="text-center align-middle">PREMIUM</th>
                                     </tr>
 
                                     {{-- Columnas --}}
@@ -96,6 +119,7 @@
                                         <th class="text-center align-middle">Inventario inicial</th>
                                         <th class="text-center align-middle">Compras</th>
                                         <th class="text-center align-middle">Litros vendidos</th>
+                                        <th class="text-center align-middle">Precio de compra</th>
                                         <th class="text-center align-middle">Precio venta</th>
                                         <th class="text-center align-middle">AutoStick</th>
                                         <th class="text-center align-middle">Inventario determinado</th>
@@ -120,10 +144,10 @@
                     @if ($Diesel == '1')
                         {{-- Tabla --}}
                         <div class="table-responsive">
-                            <table id="example" class="{{ $class }}" style="width:100%">
+                            <table id="voluhistoridiesel" class="voluhistori {{ $class }}" style="width:100%">
                                 <thead>
                                     <tr style="background-color:#cdcdcd">
-                                        <th colspan="8" class="text-center align-middle">DIESEL</th>
+                                        <th colspan="9" class="text-center align-middle">DIESEL</th>
                                     </tr>
 
                                     {{-- Columnas --}}
@@ -132,6 +156,7 @@
                                         <th class="text-center align-middle">Inventario inicial</th>
                                         <th class="text-center align-middle">Compras</th>
                                         <th class="text-center align-middle">Litros vendidos</th>
+                                        <th class="text-center align-middle">Precio de compra</th>
                                         <th class="text-center align-middle">Precio venta</th>
                                         <th class="text-center align-middle">AutoStick</th>
                                         <th class="text-center align-middle">Inventario determinado</th>
@@ -160,15 +185,6 @@
         <div class="content-wrapper">
             <div class="content-body">
                 <section class="invoice-list-wrapper">
-                    {{-- Aqui va el contenido del modulo --}}
-                    {{-- Encabezado del modulo --}}
-                    <div class="justify-content-start">
-                        <h1 style="font-weight: bold">{{ ucfirst(Auth::user()->nombre) }}</h1>
-                        <h5 style="font-weight: bold">{{ Auth::user()->RFC }}</h5>
-                    </div>
-
-                    <br>
-
                     {{-- Select para selccionar la empresa (Contadores) --}}
                     @empty(!$empresas)
                         {{-- Mostramos el RFC de la empresa que se selecciona --}}
@@ -323,6 +339,7 @@
         {{-- Llamamos al componente del modal junto con los datos necesarios --}}
         <livewire:volumedata :empresa=$empresa :dia=$fecha :wire:key="'user-profile-one-'.$empresa.$fecha">
             <livewire:volumepdf :empresa=$empresa :dia=$fecha :wire:key="'user-profile-two-'.$empresa.$fecha">
+                <livewire:volumecre :empresa=$empresa :dia=$fecha :wire:key="'user-profile-three-'.$empresa.$fecha">
     @endfor
 
     {{-- Js --}}
@@ -337,11 +354,26 @@
                 $("#FechaSelect").val(fechaselect);
 
                 //Creamos el ID y la ruta ID
-                var rutaid = "volupdf" + fechaselect + "&{{ $empresa }}"
-                var id = fechaselect + "&{{ $empresa }}"
+                var rutaid = "volupdf" + fechaselect + "&{{ $empresa }}";
+                var id = fechaselect + "&{{ $empresa }}";
 
                 //Llamamos a la funcion de FilePond
                 FilePondPDFVolu(rutaid, id);
+            });
+
+            $(".selectfechacre").click(function() {
+                //Guardamos en una variable el atributo que contiene la fecha
+                var fechaselect = $(this).attr("fecha");
+
+                //Almacenamos la fecha seleccionada en un input
+                $("#FechaSelect").val(fechaselect);
+
+                //Creamos el ID y la ruta ID
+                var rutaidcre = "volupdfcre" + fechaselect + "&{{ $empresa }}";
+                var idcre = fechaselect + "&{{ $empresa }}";
+
+                //Llamamos a la funcion de FilePond
+                FilePondPDFCRE(rutaidcre, idcre);
             });
         });
     </script>

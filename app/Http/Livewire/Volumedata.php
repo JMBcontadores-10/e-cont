@@ -38,6 +38,11 @@ class Volumedata extends Component
     public $litvendpremium;
     public $litvenddiesel;
 
+    //Precio de compra
+    public $preccompmagna;
+    public $preccomppremium;
+    public $preccompdiesel;
+
     //Precio venta
     public $precventmagna;
     public $precventpremium;
@@ -74,6 +79,11 @@ class Volumedata extends Component
     public $litvendcambmagna;
     public $litvendcambpremium;
     public $litvendcambdiesel;
+
+    //Precio de compra
+    public $preccompcambmagna;
+    public $preccompcambpremium;
+    public $preccompcambdiesel;
 
     //Precio venta
     public $precventcambmagna;
@@ -145,8 +155,9 @@ class Volumedata extends Component
             if ($this->Magna == 1) {
                 //Magna Vomumetricos
                 $this->inventinicmagna = $infovolu['volumetrico.' . $this->dia . '.IventInicM'];
-                $this->litvendmagna = $infovolu['volumetrico.' . $this->dia . '.LitVendM'];
                 $this->compramagna = $infovolu['volumetrico.' . $this->dia . '.CompraM'];
+                $this->litvendmagna = $infovolu['volumetrico.' . $this->dia . '.LitVendM'];
+                $this->preccompmagna = $infovolu['volumetrico.' . $this->dia . '.PrecCompM'];
                 $this->precventmagna = $infovolu['volumetrico.' . $this->dia . '.PrecVentM'];
                 $this->autostickmagna = $infovolu['volumetrico.' . $this->dia . '.AutoStickM'];
                 $this->invdetermagna = $infovolu['volumetrico.' . $this->dia . '.InvDeterM'];
@@ -154,8 +165,9 @@ class Volumedata extends Component
 
                 //Magna Cambio de precio
                 $this->inventiniccambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicM'];
-                $this->litvendcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendM'];
                 $this->compracambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraM'];
+                $this->litvendcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendM'];
+                $this->preccompcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecCompM'];
                 $this->precventcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentM'];
                 $this->autostickcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickM'];
                 $this->invdetercambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterM'];
@@ -166,8 +178,9 @@ class Volumedata extends Component
             if ($this->Premium == 1) {
                 //Premium Vomumetricos
                 $this->inventinicpremium = $infovolu['volumetrico.' . $this->dia . '.IventInicP'];
-                $this->litvendpremium = $infovolu['volumetrico.' . $this->dia . '.LitVendP'];
                 $this->comprapremium = $infovolu['volumetrico.' . $this->dia . '.CompraP'];
+                $this->litvendpremium = $infovolu['volumetrico.' . $this->dia . '.LitVendP'];
+                $this->preccomppremium = $infovolu['volumetrico.' . $this->dia . '.PrecCompP'];
                 $this->precventpremium = $infovolu['volumetrico.' . $this->dia . '.PrecVentP'];
                 $this->autostickpremium = $infovolu['volumetrico.' . $this->dia . '.AutoStickP'];
                 $this->invdeterpremium = $infovolu['volumetrico.' . $this->dia . '.InvDeterP'];
@@ -175,8 +188,9 @@ class Volumedata extends Component
 
                 //Premium Cambio de precio
                 $this->inventiniccambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicP'];
-                $this->litvendcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendP'];
                 $this->compracambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraP'];
+                $this->litvendcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendP'];
+                $this->preccompcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecCompP'];
                 $this->precventcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentP'];
                 $this->autostickcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickP'];
                 $this->invdetercambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterP'];
@@ -187,8 +201,9 @@ class Volumedata extends Component
             if ($this->Diesel == 1) {
                 //Diesel Vomumetricos
                 $this->inventinicdiesel = $infovolu['volumetrico.' . $this->dia . '.IventInicD'];
-                $this->litvenddiesel = $infovolu['volumetrico.' . $this->dia . '.LitVendD'];
                 $this->compradiesel = $infovolu['volumetrico.' . $this->dia . '.CompraD'];
+                $this->litvenddiesel = $infovolu['volumetrico.' . $this->dia . '.LitVendD'];
+                $this->preccompdiesel = $infovolu['volumetrico.' . $this->dia . '.PrecCompD'];
                 $this->precventdiesel = $infovolu['volumetrico.' . $this->dia . '.PrecVentD'];
                 $this->autostickdiesel = $infovolu['volumetrico.' . $this->dia . '.AutoStickD'];
                 $this->invdeterdiesel = $infovolu['volumetrico.' . $this->dia . '.InvDeterD'];
@@ -196,12 +211,222 @@ class Volumedata extends Component
 
                 //Diesel Cambio de precio
                 $this->inventiniccambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicD'];
-                $this->litvendcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendD'];
                 $this->compracambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraD'];
+                $this->litvendcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendD'];
+                $this->preccompcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecCompD'];
                 $this->precventcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentD'];
                 $this->autostickcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickD'];
                 $this->invdetercambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterD'];
                 $this->mermacambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.MermaD'];
+            }
+        }
+    }
+
+    //Metodo para actualizar Invet. Determinado y Merma del dia siguiente (cuando se actualice los precios)
+    public function ActuDiaSig()
+    {
+        // Sacamos el dia siguiente
+        $diasiguiente = date("Y-m-d", strtotime($this->dia . "+ 1 days"));
+
+        //Realizamos una consulta a los volumetricos
+        $consulvolumetric = Volumetrico::where(['rfc' => $this->empresa]);
+        $infovolumetric = $consulvolumetric->get()->first();
+
+        //Condicional para comporbar si existe informacion en el dia anterior (Para esto utilizaremos el campo fecha)
+        if (!empty($infovolumetric['volumetrico.' . $diasiguiente . '.Fecha'])) {
+            //Magna
+            if ($this->Magna == 1) {
+                //Obtenemos los datos necesarios
+                //Condicional para verificar si hay datos en la Cambio de precio
+                if (!empty($infovolumetric['volumetrico.' . $diasiguiente . '-C.Fecha'])) {
+                    //Inventarios inicial
+                    $InventInicM = $infovolumetric['volumetrico.' . $diasiguiente . '-C.IventInicM'];
+
+                    //Compra
+                    $CompraM = $infovolumetric['volumetrico.' . $diasiguiente . '-C.CompraM'];
+
+                    //Lit. Vendidos
+                    $LitVentM = $infovolumetric['volumetrico.' . $diasiguiente . '-C.LitVendM'];
+
+                    //Autostick
+                    $AutoStickM = $infovolumetric['volumetrico.' . $diasiguiente . '-C.AutoStickM'];
+
+
+
+                    //Inventario determinado
+                    //Realzamos el calculo del Invent. Determinado
+                    $InventDeterM = (floatval($InventInicM) + floatval($CompraM)) - floatval($LitVentM);
+
+                    //Merma
+                    //Realizamos el calculo para sacar Merma
+                    $MermaM =  floatval($InventDeterM) - floatval($AutoStickM);
+
+                    //Actualizamos la base de datos
+                    $consulvolumetric->update([
+                        'volumetrico.' . $diasiguiente . '.InvDeterM' => $InventDeterM,
+                        'volumetrico.' . $diasiguiente . '.MermaM' => $MermaM,
+                        'volumetrico.' . $diasiguiente . '-C.InvDeterM' => $InventDeterM,
+                        'volumetrico.' . $diasiguiente . '-C.MermaM' => $MermaM
+                    ], ['upsert' => true]);
+                } else {
+                    //Inventarios inicial
+                    $InventInicM = $infovolumetric['volumetrico.' . $diasiguiente . '.IventInicM'];
+
+                    //Compra
+                    $CompraM = $infovolumetric['volumetrico.' . $diasiguiente . '.CompraM'];
+
+                    //Lit. Vendidos
+                    $LitVentM = $infovolumetric['volumetrico.' . $diasiguiente . '.LitVendM'];
+
+                    //Autostick
+                    $AutoStickM = $infovolumetric['volumetrico.' . $diasiguiente . '.AutoStickM'];
+
+
+
+                    //Inventario determinado
+                    //Realzamos el calculo del Invent. Determinado
+                    $InventDeterM = (floatval($InventInicM) + floatval($CompraM)) - floatval($LitVentM);
+
+                    //Merma
+                    //Realizamos el calculo para sacar Merma
+                    $MermaM =  floatval($InventDeterM) - floatval($AutoStickM);
+
+                    //Actualizamos la base de datos
+                    $consulvolumetric->update([
+                        'volumetrico.' . $diasiguiente . '.InvDeterM' => $InventDeterM,
+                        'volumetrico.' . $diasiguiente . '.MermaM' => $MermaM
+                    ], ['upsert' => true]);
+                }
+            }
+
+            //Premium
+            if ($this->Premium == 1) {
+                //Obtenemos los datos necesarios
+                //Condicional para verificar si hay datos en la Cambio de precio
+                if (!empty($infovolumetric['volumetrico.' . $diasiguiente . '-C.Fecha'])) {
+                    //Inventarios inicial
+                    $InventInicP = $infovolumetric['volumetrico.' . $diasiguiente . '-C.IventInicP'];
+
+                    //Compra
+                    $CompraP = $infovolumetric['volumetrico.' . $diasiguiente . '-C.CompraP'];
+
+                    //Lit. Vendidos
+                    $LitVentP = $infovolumetric['volumetrico.' . $diasiguiente . '-C.LitVendP'];
+
+                    //Autostick
+                    $AutoStickP = $infovolumetric['volumetrico.' . $diasiguiente . '-C.AutoStickP'];
+
+
+
+                    //Inventario determinado
+                    //Realzamos el calculo del Invent. Determinado
+                    $InventDeterP = (floatval($InventInicP) + floatval($CompraP)) - floatval($LitVentP);
+
+                    //Merma
+                    //Realizamos el calculo para sacar Merma
+                    $MermaP =  floatval($InventDeterP) - floatval($AutoStickP);
+
+                    //Actualizamos la base de datos
+                    $consulvolumetric->update([
+                        'volumetrico.' . $diasiguiente . '.InvDeterP' => $InventDeterP,
+                        'volumetrico.' . $diasiguiente . '.MermaP' => $MermaP,
+                        'volumetrico.' . $diasiguiente . '-C.InvDeterP' => $InventDeterP,
+                        'volumetrico.' . $diasiguiente . '-C.MermaP' => $MermaP,
+                    ], ['upsert' => true]);
+                } else {
+                    //Inventarios inicial
+                    $InventInicP = $infovolumetric['volumetrico.' . $diasiguiente . '.IventInicP'];
+
+                    //Compra
+                    $CompraP = $infovolumetric['volumetrico.' . $diasiguiente . '.CompraP'];
+
+                    //Lit. Vendidos
+                    $LitVentP = $infovolumetric['volumetrico.' . $diasiguiente . '.LitVendP'];
+
+                    //Autostick
+                    $AutoStickP = $infovolumetric['volumetrico.' . $diasiguiente . '.AutoStickP'];
+
+
+
+                    //Inventario determinado
+                    //Realzamos el calculo del Invent. Determinado
+                    $InventDeterP = (floatval($InventInicP) + floatval($CompraP)) - floatval($LitVentP);
+
+                    //Merma
+                    //Realizamos el calculo para sacar Merma
+                    $MermaP =  floatval($InventDeterP) - floatval($AutoStickP);
+
+                    //Actualizamos la base de datos
+                    $consulvolumetric->update([
+                        'volumetrico.' . $diasiguiente . '.InvDeterP' => $InventDeterP,
+                        'volumetrico.' . $diasiguiente . '.MermaP' => $MermaP,
+                    ], ['upsert' => true]);
+                }
+            }
+
+            //Diesel
+            if ($this->Diesel == 1) {
+                //Obtenemos los datos necesarios
+                //Condicional para verificar si hay datos en la Cambio de precio
+                if (!empty($infovolumetric['volumetrico.' . $diasiguiente . '-C.Fecha'])) {
+                    //Inventarios inicial
+                    $InventInicD = $infovolumetric['volumetrico.' . $diasiguiente . '-C.IventInicD'];
+
+                    //Compra
+                    $CompraD = $infovolumetric['volumetrico.' . $diasiguiente . '-C.CompraD'];
+
+                    //Lit. Vendidos
+                    $LitVentD = $infovolumetric['volumetrico.' . $diasiguiente . '-C.LitVendD'];
+
+                    //Autostick
+                    $AutoStickD = $infovolumetric['volumetrico.' . $diasiguiente . '-C.AutoStickD'];
+
+
+
+                    //Inventario determinado
+                    //Realzamos el calculo del Invent. Determinado
+                    $InventDeterD = (floatval($InventInicD) + floatval($CompraD)) - floatval($LitVentD);
+
+                    //Merma
+                    //Realizamos el calculo para sacar Merma
+                    $MermaD =  floatval($InventDeterD) - floatval($AutoStickD);
+
+                    //Actualizamos la base de datos
+                    $consulvolumetric->update([
+                        'volumetrico.' . $diasiguiente . '.InvDeterD' => $InventDeterD,
+                        'volumetrico.' . $diasiguiente . '.MermaD' => $MermaD,
+                        'volumetrico.' . $diasiguiente . '-C.InvDeterD' => $InventDeterD,
+                        'volumetrico.' . $diasiguiente . '-C.MermaD' => $MermaD
+                    ], ['upsert' => true]);
+                } else {
+                    //Inventarios inicial
+                    $InventInicD = $infovolumetric['volumetrico.' . $diasiguiente . '.IventInicD'];
+
+                    //Compra
+                    $CompraD = $infovolumetric['volumetrico.' . $diasiguiente . '.CompraD'];
+
+                    //Lit. Vendidos
+                    $LitVentD = $infovolumetric['volumetrico.' . $diasiguiente . '.LitVendD'];
+
+                    //Autostick
+                    $AutoStickD = $infovolumetric['volumetrico.' . $diasiguiente . '.AutoStickD'];
+
+
+
+                    //Inventario determinado
+                    //Realzamos el calculo del Invent. Determinado
+                    $InventDeterD = (floatval($InventInicD) + floatval($CompraD)) - floatval($LitVentD);
+
+                    //Merma
+                    //Realizamos el calculo para sacar Merma
+                    $MermaD =  floatval($InventDeterD) - floatval($AutoStickD);
+
+                    //Actualizamos la base de datos
+                    $consulvolumetric->update([
+                        'volumetrico.' . $diasiguiente . '.InvDeterD' => $InventDeterD,
+                        'volumetrico.' . $diasiguiente . '.MermaD' => $MermaD,
+                    ], ['upsert' => true]);
+                }
             }
         }
     }
@@ -235,11 +460,25 @@ class Volumedata extends Component
                 ], ['upsert' => true]);
         }
 
+        //Agregamos el PDF CRE si este existe
+        if (!empty($infovolu['volumetrico.' . $this->dia . '.PDFCRE'])) {
+            Volumetrico::where(['rfc' => $this->empresa])
+                ->update([
+                    'rfc' => $this->empresa,
+                    'volumetrico.' . $this->dia . '.PDFCRE' => $infovolu['volumetrico.' . $this->dia . '.PDFCRE'],
+                ], ['upsert' => true]);
+        }
+
+        //Metodo para la actualizacion del siguiente precio
+        $this->ActuDiaSig();
+
         //Cerramos el modal al terminar
         $this->dispatchBrowserEvent('CerrarVoluData', ["dia" => $this->dia]);
 
         //Hacemos un refresh a la pagina
         $this->emit('volumrefresh');
+        //Emitimos el metodo de refrescar la pagina
+        $this->emit('refrashpdfvolu');
     }
 
     //Metodo para el cambio de precio
@@ -271,11 +510,25 @@ class Volumedata extends Component
                 ], ['upsert' => true]);
         }
 
+        //Agregamos el PDF CRE si este existe
+        if (!empty($infovolu['volumetrico.' . $this->dia . '.PDFCRE'])) {
+            Volumetrico::where(['rfc' => $this->empresa])
+                ->update([
+                    'rfc' => $this->empresa,
+                    'volumetrico.' . $this->dia . '.PDFCRE' => $infovolu['volumetrico.' . $this->dia . '.PDFCRE'],
+                ], ['upsert' => true]);
+        }
+
+        //Metodo para la actualizacion del siguiente precio
+        $this->ActuDiaSig();
+
         //Cerramos el modal al terminar
         $this->dispatchBrowserEvent('CerrarVoluData', ["dia" => $this->dia]);
 
         //Hacemos un refresh a la pagina
         $this->emit('volumrefresh');
+        //Emitimos el metodo de refrescar la pagina
+        $this->emit('refrashpdfvolu');
     }
 
     //Metodo para vaciar las variables del modal
@@ -297,6 +550,11 @@ class Volumedata extends Component
         $this->litvendmagna = "";
         $this->litvendpremium = "";
         $this->litvenddiesel = "";
+
+        //Precio de compra
+        $this->preccompmagna = "";
+        $this->preccomppremium = "";
+        $this->preccompdiesel = "";
 
         //Precio venta
         $this->precventmagna = "";
@@ -334,6 +592,11 @@ class Volumedata extends Component
         $this->litvendcambmagna = "";
         $this->litvendcambpremium = "";
         $this->litvendcambdiesel = "";
+
+        //Precio de compra
+        $this->preccompcambmagna = "";
+        $this->preccompcambpremium = "";
+        $this->preccompcambdiesel = "";
 
         //Precio venta
         $this->precventcambmagna = "";
