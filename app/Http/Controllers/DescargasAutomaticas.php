@@ -371,7 +371,7 @@ try{
               $satScraper = new SatScraper(FielSessionManager::create($credential), $gateway, $handler);
               $rutas =
               [
-                  'Emitidos',
+                  //'Emitidos',
                   'Recibidos'
               ];
               foreach ($rutas as $r) {
@@ -385,8 +385,8 @@ try{
 
                   /// -->[EMITIDOS]<---/////
                   $query = new QueryByFilters(
-                    new DateTimeImmutable('2022-04-16'),
-                      new DateTimeImmutable('2022-05-09'),
+                    new DateTimeImmutable('2022-04-01'),
+                      new DateTimeImmutable('2022-04-05'),
 
                   );
 
@@ -434,6 +434,8 @@ foreach ($list as $cfdi) {
     echo 'Fecha: ', $cfdi->get('fechaEmision'), PHP_EOL.'<br>';
     echo 'Tipo: ', $cfdi->get('efectoComprobante'), PHP_EOL.'<br>';
     echo 'Estado: ', $cfdi->get('estadoComprobante'), PHP_EOL.'<br>';
+    echo 'Fecha Cancelacion: ', $cfdi->get('fechaProcesoCancelacion'), PHP_EOL.'<br>';
+
 
     echo "===================================================================================================<br>";
 $allcfdi[]=strtoupper($cfdi->uuid());

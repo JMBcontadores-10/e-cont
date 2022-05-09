@@ -296,11 +296,11 @@ data-keyboard="false" data-target="#listacdfi"    class="btn btn-info notificati
                               <td class="text-center align-middle">{{strtoupper($cfdi->uuid()) }}</td>
                               <td class="text-center align-middle">{{ date('d-m-Y',strtotime($cfdi->get('fechaEmision')))  }}</td>
 
-                              <td class="text-center align-middle">{{ $cfdi->get('fechaCancelacion') }}</td>
+                              <td class="text-center align-middle">{{ $cfdi->get('fechaProcesoCancelacion') }}</td>
                               <td class="text-center align-middle">{{ $estadoM }}</td>
                               <td class="text-center align-middle">{{ $cfdi->get('estadoComprobante') }}</td>
                               <td class="text-center align-middle">
-                                  @if ($cfdi->get('estadoComprobante')  )
+                                  @if ($cfdi->get('estadoComprobante') == $estadoM)
                                       <i class="far fa-check-circle fa-2x" style="color: green"></i>
                                   @else
                                       <i class="far fa-times-circle fa-2x" style="color: red"></i>
