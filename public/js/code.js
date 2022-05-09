@@ -816,3 +816,47 @@ function FilePondPDFVolu(rutaid, id) {
         }
     });
 }
+
+//Funcion de creacion de FilePond
+function FilePondPDFCRE(rutaid, id) {
+    // registrar plugin validacion filepond  se deben agregar los cdn despues del body
+    FilePond.registerPlugin(FilePondPluginFileValidateType);
+
+    // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
+    FilePond.registerPlugin(FilePondPluginFileValidateSize);
+
+    //Obtenemos el ID de cada 
+    var inputfile = document.getElementById(rutaid);
+
+    //Parametros de validacion de archivos
+    FilePond.create(inputfile, {
+        maxFileSize: '1000KB',
+        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+        labelIdle: 'Sube un archivo <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading: 'Cargando',
+        labelFileProcessing: 'Subiendo a E-cont..',
+        labelFileProcessingComplete: 'Carga completa',
+        labelFileProcessingAborted: 'Carga cancelada',
+        labelTapToCancel: 'Presiona para cancelar',
+        allowMultiple: false,
+        acceptedFileTypes: ["application/pdf"],
+        fileValidateTypeDetectType: (source, type) =>
+            new Promise((resolve, reject) => {
+                resolve(type);
+            }),
+    });
+
+    //Obtenemos el valor del token
+    var token = document.querySelector('input[name="_token"]');
+
+    //Ya obtenida la enviamos al servidor junto con la empresa seleccionada
+    FilePond.setOptions({
+        name: 'volupdfcre',
+        server: {
+            url: 'pdfcrevolu/' + id,
+            headers: {
+                'X-CSRF-TOKEN': token.value
+            }
+        }
+    });
+}

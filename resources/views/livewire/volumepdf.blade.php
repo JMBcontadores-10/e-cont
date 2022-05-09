@@ -139,14 +139,16 @@
                                                 <span class="SpanNamePDF"> {{ Str::limit($NomPDF, 10) }} <span>
                                             </div>
 
-                                            {{-- Condicional para la accion eliminar, cuando el movimiento esta revisado --}}
-                                            <div class="BotonesPDFContainer">
-                                                <!--Eliminar PDF-->
-                                                <div class="BtnDelPDF" wire:loading.attr="disabled"
-                                                    wire:click="EmlimPDFVolu()">
-                                                    <i class="icons fas fa-trash-alt"></i>
+
+                                            @if (empty($datavolu['volumetrico.' . $dia . '.PDFVolu']) || empty($datavolu['volumetrico.' . $dia . '.Fecha']))
+                                                <div class="BotonesPDFContainer">
+                                                    <!--Eliminar PDF-->
+                                                    <div class="BtnDelPDF" wire:loading.attr="disabled"
+                                                        wire:click="EmlimPDFVolu()">
+                                                        <i class="icons fas fa-trash-alt"></i>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @endif
                                         </div>
                                     @endif
                                 </div>
