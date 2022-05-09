@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Http\Livewire;
 
@@ -135,7 +135,7 @@ class Auditoria extends Component
         }
 
 
-                  $this->active=NUll;
+            $this->active=NUll;
             //Retornamos el valor de la consulta
             return $satScraper->listByPeriod($query);
         } catch (Exception $e) {

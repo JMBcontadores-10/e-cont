@@ -380,7 +380,7 @@
                                     class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
                                     data-i18n="Analytics">Descargas</span></a>
                         </li>
-                        <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i
+                        <li id="Contruccion"><a class="d-flex align-items-center" href="{{'nominas'}}"><i
                                     class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
                                     data-i18n="Analytics">Nóminas</span></a>
                         </li>

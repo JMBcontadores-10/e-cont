@@ -1,7 +1,9 @@
 <div>
 
 
+<script>
 
+    </script>
 
 
 
@@ -58,7 +60,7 @@
                 <h4>No hay archivo</h4>
             </div>
       {{---------Input filepond------------}}
-        <input   name="editCheque" type="file" id="editCheque{{$datos->id}}"  />
+        <input  name="editCheque" type="file" id="editCheque{{$datos->id}}"  />
         <input type="hidden"  name="editcheque" wire:model="pdfcheque._id"  />
      @else
      <div class="b" id="c">

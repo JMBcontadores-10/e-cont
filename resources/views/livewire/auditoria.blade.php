@@ -1,5 +1,8 @@
 <div>{{----------------------DIV PRINCIPAL-------------}}
      <script src="{{ asset('js/auditoria.js') }}" defer></script>
+     @php
+         use App\Models\XmlR;
+     @endphp
 
          <!-- TableExport js --->
     {{------Referencias: https://github.com/hhurz/tableExport.jquery.plugin
@@ -70,7 +73,6 @@
                                 ->first();
                         } else {
                             $colM = DB::table('metadata_r')
-                                ->select('estado')
                                 ->where('folioFiscal',  strtoupper($me2->uuid()))
                                 ->first();
                         }
@@ -81,7 +83,7 @@
                         }
                     @endphp
                      <tbody>
-                    @if ($estadoM == 'X')
+                    @if ($estadoM == 'X' )
                     @php $contador++; @endphp
                         <tr>
 
@@ -172,6 +174,12 @@ data-keyboard="false" data-target="#listacdfi"    class="btn btn-info notificati
     <span class="badge">{{$contador}}</span>
   </a>
 
+
+
+
+  </div>
+  <br>
+
   <div {{ $active }}  class="btn-group btn-group-sm" role="group" aria-label="Basic example">
     <button type="button" class="btn btn-success" onclick="exportReportToExcel('{{$empresa}}')">Excel</button>
     <button type="button" class="btn btn-danger"  onclick="exportReportToPdf('{{$empresa}}')">Pdf</button>
@@ -225,6 +233,7 @@ data-keyboard="false" data-target="#listacdfi"    class="btn btn-info notificati
                         </div>
                     </div>
 
+                    {{-- {{var_dump($list)}} --}}
                     {{-- Tabla de contenido --}}
                     <div class="table-responsive">
                         <table id="datos" class="{{ $class }}" style="width:100%">
@@ -251,30 +260,25 @@ data-keyboard="false" data-target="#listacdfi"    class="btn btn-info notificati
                             <tbody>
 
 
+
+
                         @foreach ($list as $cfdi)
                         @php
-
+                                  $UUID=strtoupper($cfdi->uuid());
 
                                     if ($tipoer == 'Emitidas') {
                                         $colM = DB::table('metadata_e')
                                             ->select('estado')
-                                            ->where('folioFiscal', strtoupper($cfdi->uuid()))
-
-
+                                            ->where('folioFiscal',$UUID)
                                             ->first();
                                     } else {
                                         $colM = DB::table('metadata_r')
-                                            ->select('estado', 'cheques_id')
-                                            ->where('folioFiscal', strtoupper($cfdi->uuid()))
+                                            ->where('folioFiscal', $UUID)
                                             ->first();
                                     }
                                     if (isset($colM)) {
                                         $estadoM = $colM['estado'];
-                                        if (isset($colM['cheques_id'])) {
-                                            $cheques_id = $colM['cheques_id'];
-                                        }else {
-                                            $cheques_id = '-';
-                                        }
+
                                     } else {
                                         $estadoM = 'X';
                                     }
@@ -283,9 +287,10 @@ data-keyboard="false" data-target="#listacdfi"    class="btn btn-info notificati
 
 
 
-                          @if ($rc ? $estadoM != 'X' : $estadoM != 'X' )
-                          <tr>
 
+
+                          @if ( $estadoM != 'X'  )
+                          <tr>
 
 
                               <td class="text-center align-middle">{{strtoupper($cfdi->uuid()) }}</td>
@@ -295,26 +300,42 @@ data-keyboard="false" data-target="#listacdfi"    class="btn btn-info notificati
                               <td class="text-center align-middle">{{ $estadoM }}</td>
                               <td class="text-center align-middle">{{ $cfdi->get('estadoComprobante') }}</td>
                               <td class="text-center align-middle">
-                                  @if ($cfdi->get('estadoComprobante') == $estadoM)
+                                  @if ($cfdi->get('estadoComprobante')  )
                                       <i class="far fa-check-circle fa-2x" style="color: green"></i>
                                   @else
                                       <i class="far fa-times-circle fa-2x" style="color: red"></i>
                                   @endif
                               </td>
-                              <td class="text-center align-middle">{{ $cheques_id }}</td>
+                              <td class="text-center align-middle">
+                                  @if (!empty($colM['cheques_id']))
+                                        @if (is_array($colM['cheques_id']))
+                                      @foreach ($colM['cheques_id'] as $ids )
+
+                                      {{$ids}}<br>
+
+                                      @endforeach
+
+                                      @else
+                                     {{$colM['cheques_id']}}
+
+                                     @endif
+                                 @else
+
+                                     -
+                                  @endif
+
+                              </td>
+
+
                           </tr>
 
 
-                    @else
-                        @php
 
-
-
-                    @endphp
                         @endif
 
                              @endforeach
                             </tbody>
+
                              @endempty
                        {{---------  FIN  DEL FOR   -----}}
                         </table>

@@ -96,8 +96,8 @@ class DescargasAutomaticas extends Controller
 //     'DRO191104EZ0',
 //    'DRO191129DK5',
 //    'ERO1911044L4',
-  'PERE9308105X4',
-//    'FGA980316918',
+ // 'PERE9308105X4',
+   'FGA980316918',
 //    'GPA161202UG8',
 //    'GEM190507UW8',
 //    'GPR020411182',
@@ -385,8 +385,8 @@ try{
 
                   /// -->[EMITIDOS]<---/////
                   $query = new QueryByFilters(
-                    new DateTimeImmutable('2022-05-01'),
-                      new DateTimeImmutable('2022-05-03'),
+                    new DateTimeImmutable('2022-04-16'),
+                      new DateTimeImmutable('2022-05-09'),
 
                   );
 

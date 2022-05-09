@@ -31,6 +31,7 @@ class UploadController extends Controller
         if($r->hasFile('avatar')){/// se consulta hasFile 'avatar'
        $file=$r->file('avatar');
        $filename=$file->getClientOriginalName();// se obtine el nombre original de archivo
+       $fileExtencion=$file->getClientOriginalExtension();// se obtine lña extension
        $cheque = Cheques::where('_id', $ID)->first(); // enlase al documento cheques por _id cheque
        $rfc = Auth::user()->RFC;// obtencion del rfc del usuario logeado
        $dateValue = strtotime($cheque->fecha);// metodo strtotime() para fecha
@@ -54,7 +55,7 @@ $fn=preg_replace('/[^A-z0-9.-]+/', '', $filename);
        $ruta ='contarappv1_descargas/'.$cheque->rfc."/".$aniocheque."/Cheques_Transferencias/Documentos_Relacionados/".$Mes."/";
 
 
-
+if ($fileExtencion == "pdf"){
 
 /// se guarda el documento en la ruta especifica con store / storeAs
 // se guradan los documentos relacionados en la carpeta correspondiente al mes
@@ -66,8 +67,12 @@ $fn=preg_replace('/[^A-z0-9.-]+/', '', $filename);
 // $cheque->push('doc_relacionados', $renameFile);
 
 
-      return "entro en zona de carga".$ID;
+      return "entro en zona de carga".$ID . "Extencion". $fileExtencion;
+}else{
 
+    return "no es un Pdf es un ".  dd($fileExtencion);
+
+}
 
         }// fin if
 
@@ -86,13 +91,14 @@ return "no entro";
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
         // id del cheuqe
-       
+
                $ID=$id;
-       
-       
+
+
                if($r->hasFile('adicionalesNuevoCheque')){/// se consulta hasFile 'avatar'
               $file=$r->file('adicionalesNuevoCheque');
               $filename=$file->getClientOriginalName();// se obtine el nombre original de archivo
+              $fileExtencion=$file->getClientOriginalExtension();// se obtine lña extension
               $cheque = Cheques::where('_id', $ID)->first(); // enlase al documento cheques por _id cheque
               $rfc = Auth::user()->RFC;// obtencion del rfc del usuario logeado
               $dateValue = strtotime($cheque->fecha);// metodo strtotime() para fecha
@@ -110,32 +116,38 @@ return "no entro";
        $Id = $dt->format('Y\Hh\Mi\SsA');// obtener año y hora con segundos para evitar repetidos
        $Id2= $dt->format('d');
        $fn=preg_replace('/[^A-z0-9.-]+/', '', $filename);
-       
+
                $renameFile=$Id2.$Mes.$Id."&".$fn;// renombra los archivos
                //ruta donde se almacenan los archivos
               $ruta ='contarappv1_descargas/'.$cheque->rfc."/".$aniocheque."/Cheques_Transferencias/Documentos_Relacionados/".$Mes."/";
-       
-       
-       
-       
+
+
+              if ($fileExtencion == "pdf"){
+
        /// se guarda el documento en la ruta especifica con store / storeAs
        // se guradan los documentos relacionados en la carpeta correspondiente al mes
               $file->storeAs($ruta, $renameFile,'public2');
-       
+
            /// se guardan los enlases en la bd
            $cheque->pull('doc_relacionados', "");
         $cheque->push('doc_relacionados', $renameFile);
        // $cheque->push('doc_relacionados', $renameFile);
-       
-       
+
+
              return "entro en zona de carga".$ID;
-       
-       
+
+            }else{
+
+                return "no es un Pdf es un ".  dd($fileExtencion);
+
+            }
+
+
                }// fin if
-       
+
        return "no entro";
-       
-       
+
+
            }// fin funcion store
 
 
@@ -177,7 +189,7 @@ public function  storeEditPdf(Request $r, $id){
 
     $ruta="contarappv1_descargas/".$cheque->rfc."/".$anio."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
 
-
+    if($cheque->nombrec=="0"){
 
 
         // se guradan los documentos relacionados en la carpeta correspondiente al mes
@@ -190,7 +202,10 @@ public function  storeEditPdf(Request $r, $id){
 
 
        return "entro en zona de carga".$ID."<br>".$ruta;
+    }else{
+        return "ya existe un archivo en la base";
 
+    }
 
     }
 
@@ -229,7 +244,7 @@ public function  storeEditPdf2(Request $r, $id){
     $ruta="contarappv1_descargas/".$cheque->rfc."/".$anio."/Cheques_Transferencias/".$espa->fecha_es($mesfPago)."/";
 
 
-
+    if($cheque->nombrec=="0"){
 
         // se guradan los documentos relacionados en la carpeta correspondiente al mes
        $file->storeAs($ruta, $renameFile,'public2');
@@ -241,6 +256,11 @@ public function  storeEditPdf2(Request $r, $id){
 
 
        return "entro en zona de carga".$ID."<br>".$ruta;
+
+    }else{
+
+        return "ya existe un archivo en la base";
+    }
 
 
     }

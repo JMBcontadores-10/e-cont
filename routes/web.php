@@ -12,6 +12,7 @@ use App\Http\Livewire\Eliminar;
 use App\Http\Livewire\Home;
 use App\Http\Livewire\FacturasVinculadas;
 use App\Http\Livewire\Modals\Editar;
+use App\Http\Livewire\Nominas;
 use App\Http\Livewire\Pdfcheque;
 use App\Http\Livewire\Volumepdf;
 use App\Http\Livewire\Volumetrico;
@@ -106,6 +107,7 @@ Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
 Route::get('/descargasAutomaticas/{valor}', [App\Http\Controllers\DescargasAutomaticas::class, 'ConsultSAT'])->name('descargasAutomaticas');
 // Route::get('/descargasAutomaticas1', [App\Http\Livewire\DescargasAutomaticas::class, 'index'])->name('descargasAutomaticas1');
 Route::get('/auditoria',Auditoria::class)->name('auditoria');
+Route::get('/nominas',Nominas::class)->name('nominas');
 
 
 // Rutas Angel :D
