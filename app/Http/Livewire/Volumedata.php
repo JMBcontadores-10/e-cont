@@ -17,9 +17,8 @@ class Volumedata extends Component
     public $Magna;
     public $Premium;
     public $Diesel;
-    public $inventantefinm;
-    public $inventantefinp;
-    public $inventantefind;
+    public $fecha;
+    public $fechaayer;
 
     //Variales para almacenar en la base de datos
     //Volumetrico **************************************************************************************************************************************
@@ -139,10 +138,7 @@ class Volumedata extends Component
         $diaanterior = date('Y-m-d', strtotime($this->dia . '- 1 days'));
 
         if ($datavolum) {
-            //Obtenemos el inventario final volumetrico anterior
-            $this->inventantefinm = $datavolum['volumetrico.' . $diaanterior . '.AutoStickM'];
-            $this->inventantefinp = $datavolum['volumetrico.' . $diaanterior . '.AutoStickP'];
-            $this->inventantefind = $datavolum['volumetrico.' . $diaanterior . '.AutoStickD'];
+            $this->fechaayer = $datavolum['volumetrico.' . $diaanterior . '.Fecha'];
         }
 
         //Hacemos una consulta
@@ -150,6 +146,9 @@ class Volumedata extends Component
 
         if ($infovolu) {
             //Insertamos los datos en los campos necesarios
+
+            //Fecha
+            $this->fecha = $infovolu['volumetrico.' . $this->dia . '.Fecha'];
 
             //Magna
             if ($this->Magna == 1) {
@@ -437,36 +436,42 @@ class Volumedata extends Component
         // Sacamos el dia siguiente
         $diasiguiente = date("Y-m-d", strtotime($this->dia . "+ 1 days"));
 
+        //Creamos una consulta
+        $volumetric = Volumetrico::where(['rfc' => $this->empresa]);
+
         //Vamos a almacenar los datos en la base
-        $infovolu = Volumetrico::where(['rfc' => $this->empresa])->get()->first();
+        $infovolu = $volumetric->get()->first();
 
-        Volumetrico::where(['rfc' => $this->empresa])
-            ->update([
-                'rfc' => $this->empresa,
-                'volumetrico.' . $this->dia => $this->formdatavolu,
+        //Agregamos un nuevo volumetrico
+        $volumetric->update([
+            'rfc' => $this->empresa,
+            'volumetrico.' . $this->dia => $this->formdatavolu,
 
-                //Obtenemos el inicial del siguiente dia
-                'volumetrico.' . $diasiguiente . '.IventInicM' => $this->autostickmagna,
-                'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickpremium,
-                'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickdiesel,
-            ], ['upsert' => true]);
+            //Obtenemos el inicial del siguiente dia
+            'volumetrico.' . $diasiguiente . '.IventInicM' => $this->autostickmagna,
+            'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickpremium,
+            'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickdiesel,
+
+            //Obtenemos el inicial del cambio de precio
+            'volumetrico.' . $this->dia . '-C.IventInicM' => $this->invdetermagna,
+            'volumetrico.' . $this->dia . '-C.IventInicP' => $this->invdeterpremium,
+            'volumetrico.' . $this->dia . '-C.IventInicD' => $this->invdeterdiesel,
+        ], ['upsert' => true]);
 
         //Agregamos el PDF si este existe
         if (!empty($infovolu['volumetrico.' . $this->dia . '.PDFVolu'])) {
-            Volumetrico::where(['rfc' => $this->empresa])
-                ->update([
-                    'rfc' => $this->empresa,
-                    'volumetrico.' . $this->dia . '.PDFVolu' => $infovolu['volumetrico.' . $this->dia . '.PDFVolu'],
-                ], ['upsert' => true]);
+            $volumetric->update([
+                'rfc' => $this->empresa,
+                'volumetrico.' . $this->dia . '.PDFVolu' => $infovolu['volumetrico.' . $this->dia . '.PDFVolu'],
+            ], ['upsert' => true]);
         }
 
         //Agregamos el PDF CRE si este existe
         if (!empty($infovolu['volumetrico.' . $this->dia . '.PDFCRE'])) {
-            Volumetrico::where(['rfc' => $this->empresa])
-                ->update([
-                    'rfc' => $this->empresa,
-                    'volumetrico.' . $this->dia . '.PDFCRE' => $infovolu['volumetrico.' . $this->dia . '.PDFCRE'],
-                ], ['upsert' => true]);
+            $volumetric->update([
+                'rfc' => $this->empresa,
+                'volumetrico.' . $this->dia . '.PDFCRE' => $infovolu['volumetrico.' . $this->dia . '.PDFCRE'],
+            ], ['upsert' => true]);
         }
 
         //Metodo para la actualizacion del siguiente precio
@@ -487,36 +492,36 @@ class Volumedata extends Component
         // Sacamos el dia siguiente
         $diasiguiente = date("Y-m-d", strtotime($this->dia . "+ 1 days"));
 
+        //Creamos una consulta
+        $volumetric = Volumetrico::where(['rfc' => $this->empresa]);
+
         //Vamos a almacenar los datos en la base
-        $infovolu = Volumetrico::where(['rfc' => $this->empresa])->get()->first();
+        $infovolu = $volumetric->get()->first();
 
-        Volumetrico::where(['rfc' => $this->empresa])
-            ->update([
-                'rfc' => $this->empresa,
-                'volumetrico.' . $this->dia . "-C" => $this->formdatavolu,
+        $volumetric->update([
+            'rfc' => $this->empresa,
+            'volumetrico.' . $this->dia . "-C" => $this->formdatavolu,
 
-                //Obtenemos el inicial del siguiente dia
-                'volumetrico.' . $diasiguiente . '.IventInicM' => $this->autostickcambmagna,
-                'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickcambpremium,
-                'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickcambdiesel,
-            ], ['upsert' => true]);
+            //Obtenemos el inicial del siguiente dia
+            'volumetrico.' . $diasiguiente . '.IventInicM' => $this->autostickcambmagna,
+            'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickcambpremium,
+            'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickcambdiesel,
+        ], ['upsert' => true]);
 
         //Agregamos el PDF si este existe
         if (!empty($infovolu['volumetrico.' . $this->dia . '.PDFVolu'])) {
-            Volumetrico::where(['rfc' => $this->empresa])
-                ->update([
-                    'rfc' => $this->empresa,
-                    'volumetrico.' . $this->dia . '.PDFVolu' => $infovolu['volumetrico.' . $this->dia . '.PDFVolu'],
-                ], ['upsert' => true]);
+            $volumetric->update([
+                'rfc' => $this->empresa,
+                'volumetrico.' . $this->dia . '.PDFVolu' => $infovolu['volumetrico.' . $this->dia . '.PDFVolu'],
+            ], ['upsert' => true]);
         }
 
         //Agregamos el PDF CRE si este existe
         if (!empty($infovolu['volumetrico.' . $this->dia . '.PDFCRE'])) {
-            Volumetrico::where(['rfc' => $this->empresa])
-                ->update([
-                    'rfc' => $this->empresa,
-                    'volumetrico.' . $this->dia . '.PDFCRE' => $infovolu['volumetrico.' . $this->dia . '.PDFCRE'],
-                ], ['upsert' => true]);
+            $volumetric->update([
+                'rfc' => $this->empresa,
+                'volumetrico.' . $this->dia . '.PDFCRE' => $infovolu['volumetrico.' . $this->dia . '.PDFCRE'],
+            ], ['upsert' => true]);
         }
 
         //Metodo para la actualizacion del siguiente precio

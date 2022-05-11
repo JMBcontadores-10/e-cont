@@ -17,7 +17,7 @@
                 {{-- Cuerpo del modal --}}
                 <div class="modal-body">
                     {{-- Mensaje de que no hay un inventiario final --}}
-                    @if (empty($inventantefinm) || empty($inventantefinp) || empty($inventantefind))
+                    @if (empty($fechaayer))
                         <div class="alert alert-warning">
                             No existe un "Inventario Real" del día anterior, puede capturar los datos volumétricos de
                             este día, pero de favor llene el día anterior si se tiene los datos
@@ -75,7 +75,7 @@
                             <form class="FormCaptu{{ $dia }}" wire:submit.prevent="NuevoVolu">
 
                                 {{-- Input que contiene la fecha --}}
-                                <input name="Fecha" type="hidden" value="{{ $dia }}">
+                                <input wire:model.defer="fecha" name="Fecha" type="hidden" value="{{ $dia }}">
 
                                 <div id="resp-table">
                                     <div id="resp-table-body">
@@ -171,6 +171,37 @@
                                             @endif
                                         </div>
 
+                                        {{-- PRECIO DE COMPRA --}}
+                                        <div class="resp-table-row">
+                                            <div class="table-body-cell">
+                                                <label>Precio de compra</label>
+                                            </div>
+
+                                            @if ($Magna == '1')
+                                                <div class="table-body-cell">
+                                                    <input type="number" step="0.01" name="PrecCompM"
+                                                        wire:model.defer="preccompmagna" class="form-control"
+                                                        required>
+                                                </div>
+                                            @endif
+
+                                            @if ($Premium == '1')
+                                                <div class="table-body-cell">
+                                                    <input type="number" step="0.01" name="PrecCompP"
+                                                        wire:model.defer="preccomppremium" class="form-control"
+                                                        required>
+                                                </div>
+                                            @endif
+
+                                            @if ($Diesel == '1')
+                                                <div class="table-body-cell">
+                                                    <input type="number" step="0.01" name="PrecCompD"
+                                                        wire:model.defer="preccompdiesel" class="form-control"
+                                                        required>
+                                                </div>
+                                            @endif
+                                        </div>
+
                                         {{-- LITROS VENDIDOS --}}
                                         <div class="resp-table-row">
                                             <div class="table-body-cell">
@@ -200,37 +231,6 @@
                                                     <input type="number" step="0.01" name="LitVendD"
                                                         id="litvenddiesel{{ $dia }}"
                                                         wire:model.defer="litvenddiesel" class="form-control Diesel"
-                                                        required>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        {{-- PRECIO DE COMPRA --}}
-                                        <div class="resp-table-row">
-                                            <div class="table-body-cell">
-                                                <label>Precio de compra</label>
-                                            </div>
-
-                                            @if ($Magna == '1')
-                                                <div class="table-body-cell">
-                                                    <input type="number" step="0.01" name="PrecCompM"
-                                                        wire:model.defer="preccompmagna" class="form-control"
-                                                        required>
-                                                </div>
-                                            @endif
-
-                                            @if ($Premium == '1')
-                                                <div class="table-body-cell">
-                                                    <input type="number" step="0.01" name="PrecCompP"
-                                                        wire:model.defer="preccomppremium" class="form-control"
-                                                        required>
-                                                </div>
-                                            @endif
-
-                                            @if ($Diesel == '1')
-                                                <div class="table-body-cell">
-                                                    <input type="number" step="0.01" name="PrecCompD"
-                                                        wire:model.defer="preccompdiesel" class="form-control"
                                                         required>
                                                 </div>
                                             @endif
@@ -377,7 +377,7 @@
                             <form class="CambiPreci{{ $dia }}" wire:submit.prevent="CambioPrec">
 
                                 {{-- Input que contiene la fecha --}}
-                                <input name="Fecha" type="hidden" value="{{ $dia }}">
+                                <input wire:model.defer="fecha" name="Fecha" type="hidden" value="{{ $dia }}">
 
                                 <div id="resp-table">
                                     <div id="resp-table-body">
@@ -474,6 +474,37 @@
                                             @endif
                                         </div>
 
+                                        {{-- PRECIO DE COMPRA --}}
+                                        <div class="resp-table-row">
+                                            <div class="table-body-cell">
+                                                <label>Precio de compra</label>
+                                            </div>
+
+                                            @if ($Magna == '1')
+                                                <div class="table-body-cell">
+                                                    <input type="number" step="0.01" name="PrecCompM"
+                                                        wire:model.defer="preccompcambmagna" class="form-control"
+                                                        required>
+                                                </div>
+                                            @endif
+
+                                            @if ($Premium == '1')
+                                                <div class="table-body-cell">
+                                                    <input type="number" step="0.01" name="PrecCompP"
+                                                        wire:model.defer="preccompcambpremium" class="form-control"
+                                                        required>
+                                                </div>
+                                            @endif
+
+                                            @if ($Diesel == '1')
+                                                <div class="table-body-cell">
+                                                    <input type="number" step="0.01" name="PrecCompD"
+                                                        wire:model.defer="preccompcambdiesel" class="form-control"
+                                                        required>
+                                                </div>
+                                            @endif
+                                        </div>
+
                                         {{-- LITROS VENDIDOS --}}
                                         <div class="resp-table-row">
                                             <div class="table-body-cell">
@@ -504,37 +535,6 @@
                                                         id="litvendcambdiesel{{ $dia }}" name="LitVendD"
                                                         wire:model.defer="litvendcambdiesel"
                                                         class="form-control DieselCamb" required>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        {{-- PRECIO DE COMPRA --}}
-                                        <div class="resp-table-row">
-                                            <div class="table-body-cell">
-                                                <label>Precio de compra</label>
-                                            </div>
-
-                                            @if ($Magna == '1')
-                                                <div class="table-body-cell">
-                                                    <input type="number" step="0.01" name="PrecCompM"
-                                                        wire:model.defer="preccompcambmagna" class="form-control"
-                                                        required>
-                                                </div>
-                                            @endif
-
-                                            @if ($Premium == '1')
-                                                <div class="table-body-cell">
-                                                    <input type="number" step="0.01" name="PrecCompP"
-                                                        wire:model.defer="preccompcambpremium" class="form-control"
-                                                        required>
-                                                </div>
-                                            @endif
-
-                                            @if ($Diesel == '1')
-                                                <div class="table-body-cell">
-                                                    <input type="number" step="0.01" name="PrecCompD"
-                                                        wire:model.defer="preccompcambdiesel" class="form-control"
-                                                        required>
                                                 </div>
                                             @endif
                                         </div>
@@ -847,6 +847,17 @@
                     $.map(FormSeriArray, function(n, i) {
                         IndexJsonVolu[n['name']] = n['value'];
                     });
+
+                    //Obtenemos los determinados
+                    //Datos de los input
+                    var indeterM = $("#invdetermagna" + Fecha).val();
+                    var indeterP = $("#invdeterpremium" + Fecha).val();
+                    var indeterD = $("#invdeterdiesel" + Fecha).val();
+
+                    //Los insertamos en las variables
+                    @this.set('invdetermagna', indeterM);
+                    @this.set('invdeterpremium', indeterP);
+                    @this.set('invdeterdiesel', indeterD);
 
                     //Mandamos el JSON al servidor
                     @this.set('formdatavolu', IndexJsonVolu);

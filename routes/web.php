@@ -12,6 +12,7 @@ use App\Http\Livewire\Eliminar;
 use App\Http\Livewire\Home;
 use App\Http\Livewire\FacturasVinculadas;
 use App\Http\Livewire\Modals\Editar;
+use App\Http\Livewire\Monitoreo;
 use App\Http\Livewire\Pdfcheque;
 use App\Http\Livewire\Volumepdf;
 use App\Http\Livewire\Volumetrico;
@@ -63,7 +64,7 @@ Route::post('/borrarArchivo', [App\Http\Controllers\ChequesYTransferenciasContro
 Route::get('/consultas', [App\Http\Controllers\ConsultasController::class, 'index'])->name('consultas');
 Route::get('/consulta', [App\Http\Controllers\ConsultasController::class, 'consultas'])->name('consulta');
 Route::get('/historial', [App\Http\Controllers\ConsultasController::class, 'historial'])->name('historial');
-Route::get('/volumetrico', [App\Http\Controllers\VolumetricoController::class, 'index'])->name('volumetrico');
+Route::get('/volu', [App\Http\Controllers\VolumetricoController::class, 'index'])->name('volu');
 Route::post('/volumetrico1', [App\Http\Controllers\VolumetricoController::class, 'volumetrico1'])->name('volumetrico1');
 Route::post('/convolumetrico', [App\Http\Controllers\VolumetricoController::class, 'convolu'])->name('convolu');
 Route::post('/volumetrico2', [App\Http\Controllers\VolumetricoController::class, 'insertaDatos'])->name('insertaDatos');
@@ -117,8 +118,10 @@ Route::get('/descargas', Descargas::class)->name('descargas');
 //Ruta de la vista de home (pagina de inicio)
 Route::get('/modules', Home::class)->name('modules');
 //Ruta de la vista volumetrico
-Route::get('/volu', Volumetrico::class)->name('volu');
+Route::get('/volumetrico', Volumetrico::class)->name('volumetrico');
 //Ruta de almacenamiento de PDF (Volumetricos)
 Route::post('/pdfvolu/{id}', [App\Http\Controllers\UploadController::class, 'PDFVolu']);
 //Ruta de almacenamiento de PDF (CRE)
 Route::post('/pdfcrevolu/{id}', [App\Http\Controllers\UploadController::class, 'PDFCRE']);
+//Ruta de la vista de monitoreo de facturacion
+Route::get('/moni', Monitoreo::class)->name('moni');

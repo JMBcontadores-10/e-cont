@@ -1153,3 +1153,9 @@ tr:hover {
 .Tablacambipreci{
     display: none;
 }
+
+/*MONITOREO*/
+/*Escondemos el scroll de la tabla*/
+#conttablemoni{
+    overflow: hidden;
+}
