@@ -371,8 +371,8 @@ try{
               $satScraper = new SatScraper(FielSessionManager::create($credential), $gateway, $handler);
               $rutas =
               [
-                  //'Emitidos',
-                  'Recibidos'
+                  'Emitidos',
+                  //'Recibidos'
               ];
               foreach ($rutas as $r) {
                 $totaldesc=0;
@@ -386,7 +386,7 @@ try{
                   /// -->[EMITIDOS]<---/////
                   $query = new QueryByFilters(
                     new DateTimeImmutable('2022-04-01'),
-                      new DateTimeImmutable('2022-04-05'),
+                      new DateTimeImmutable('2022-05-01'),
 
                   );
 

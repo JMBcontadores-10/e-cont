@@ -12,6 +12,7 @@ use App\Models\Notificaciones;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+
 use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\DB;
@@ -20,6 +21,7 @@ class Agregarcheque extends Component
 {
 
  use WithFileUploads;
+
     // public Cheques $ajusteCheque; // coneccion al model cheques
     public Cheques $Crear;// enlaza al modelo cheques
     public $Nuevo_numcheque,
@@ -31,12 +33,23 @@ class Agregarcheque extends Component
     $Nuevo_nombrec,
     $rfcEmpresa,
     $pushArchivos=[],
-    $step3;
+    $step3,
+    $arr;
 
 
     public $idNuevoCheque;
 
-    protected $listeners = ['actualizar' => '$refresh' ]; // listeners para refrescar el modal
+    protected $listeners = ['actualizar' => '$refresh',
+   'arreg'
+
+]; // listeners para refrescar el modal
+
+
+public function arreg($a){
+
+$this->arr=$a;
+
+}
 
     public function mount()
     {
@@ -50,6 +63,8 @@ class Agregarcheque extends Component
        $this->idNuevoCheque=null;
 
        $this->step3=true;
+
+       $this->arr="vacio";
 
     }
 
@@ -218,6 +233,7 @@ $this->emitTo( 'notification-secction','avisoPush');
     public function render()
     {
 
+
         if(!empty(auth()->user()->tipo) ||!empty(auth()->user()->TipoSE) ){
 
             $e=array();
@@ -246,7 +262,7 @@ $this->emitTo( 'notification-secction','avisoPush');
 
 
                 }//end if
-        return view('livewire.agregarcheque',['empresas'=>$emp, 'idNuevoCheque'=>$this->idNuevoCheque,'step3'=>$this->step3]);
+        return view('livewire.agregarcheque',['empresas'=>$emp, 'idNuevoCheque'=>$this->idNuevoCheque,'step3'=>$this->step3,'arr'=>$this->arr]);
     }
 
 

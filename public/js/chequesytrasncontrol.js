@@ -441,19 +441,6 @@ function filepondAdicionalesNuevoCheque(id) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 // registrar plugin validacion filepond  se deben agregar los cdn despues del body
 FilePond.registerPlugin(FilePondPluginFileValidateType);
 // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
@@ -556,6 +543,122 @@ FilePond.setOptions({
 function uploadFiles() {
     console.log(this.myPond.getFiles());
 }
+
+
+
+
+
+/*######################## [filepond Lista de Raya] ##########################*/
+function filepondRaya(rfc, anio, periodo) {
+
+
+    // registrar plugin validacion filepond  se deben agregar los cdn despues del body
+
+
+    const iden = document.getElementById("listaRaya" + periodo);
+    const ruta = iden;
+
+    // Create a FilePond instance
+    //const pond = FilePond.create(ruta);// creacion simple de filepond
+    var filePondObj = FilePond.create(iden, { /// creacion con validacion de archivos
+        maxFileSize: '1000KB',
+        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+        labelIdle: 'Lista de Raya (solo PDF) <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading: 'Cargando',
+        labelFileProcessing: 'Subiendo a E-cont..',
+        labelFileProcessingComplete: 'Carga completa',
+        labelFileProcessingAborted: 'Carga cancelada',
+        labelTapToCancel: 'Presiona para cancelar',
+
+        allowMultiple: false,
+
+        acceptedFileTypes: ["application/pdf"],
+        fileValidateTypeDetectType: (source, type) =>
+            new Promise((resolve, reject) => {
+                // Do custom type detection here and return with promise
+                resolve(type);
+            }),
+
+    });
+
+    FilePond.setOptions({
+        name: 'listaRaya',
+        server: {
+
+            url: 'listaRaya/' + rfc + '/' + anio + '/' + periodo,
+            headers: {
+                'X-CSRF-TOKEN': token.value
+
+            }
+
+        }
+
+
+
+    });
+    //
+
+} // fin funcion
+
+
+
+/*###########################[  filePond filepondRecibosNomina  ]################################################*/
+
+function filepondRecibosNomina(rfc, anio, periodo) {
+
+
+    // registrar plugin validacion filepond  se deben agregar los cdn despues del body
+
+
+    const iden = document.getElementById("recibosNomina" + periodo);
+    const ruta = iden;
+
+    // Create a FilePond instance
+    //const pond = FilePond.create(ruta);// creacion simple de filepond
+    var filePondObj = FilePond.create(iden, { /// creacion con validacion de archivos
+        maxFileSize: '1000KB',
+        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
+        labelIdle: 'Recibos de Nomina (solo PDF) <span class="filepond--label-action"> Explorar </span>',
+        labelFileLoading: 'Cargando',
+        labelFileProcessing: 'Subiendo a E-cont..',
+        labelFileProcessingComplete: 'Carga completa',
+        labelFileProcessingAborted: 'Carga cancelada',
+        labelTapToCancel: 'Presiona para cancelar',
+
+        allowMultiple: false,
+
+        acceptedFileTypes: ["application/pdf"],
+        fileValidateTypeDetectType: (source, type) =>
+            new Promise((resolve, reject) => {
+                // Do custom type detection here and return with promise
+                resolve(type);
+            }),
+
+    });
+
+    FilePond.setOptions({
+        name: 'recibosNomina',
+        server: {
+
+            url: 'recibosNomina/' + rfc + '/' + anio + '/' + periodo,
+            headers: {
+                'X-CSRF-TOKEN': token.value
+
+            }
+
+        }
+
+
+
+    });
+    //
+
+} // fin funcion
+
+
+
+
+
 
 
 

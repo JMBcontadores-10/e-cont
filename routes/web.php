@@ -94,7 +94,10 @@ Route::get('/dir1', [App\Http\Controllers\Prueba::class, 'createDir2'])->name('c
 Route::get('/vinculacionAutomatica', [App\Http\Controllers\vinculacionAutomaticaCfdi::class, 'vincular'])->name('vincular');
 Route::get('/script2', [App\Http\Controllers\RecarpetarCheques::class, 'archivar'])->name('archivar');
 Route::view('editar','livewire.editar');
+/// rutas Filepond
 Route::post('/upload/{id}', [App\Http\Controllers\UploadController::class, 'store']);
+Route::post('/listaRaya/{rfc}/{anio}/{periodo}', [App\Http\Controllers\UploadController::class, 'listaRaya']);
+Route::post('/recibosNomina/{rfc}/{anio}/{periodo}', [App\Http\Controllers\UploadController::class, 'recibosNomina']);
 Route::post('/upload2/{id}', [App\Http\Controllers\UploadController::class, 'store2']);
 Route::post('/uploadEdit/{id}', [App\Http\Controllers\UploadController::class, 'storeEditPdf']);
 Route::post('/uploadEdit2/{id}', [App\Http\Controllers\UploadController::class, 'storeEditPdf2']);
@@ -108,6 +111,7 @@ Route::get('/descargasAutomaticas/{valor}', [App\Http\Controllers\DescargasAutom
 // Route::get('/descargasAutomaticas1', [App\Http\Livewire\DescargasAutomaticas::class, 'index'])->name('descargasAutomaticas1');
 Route::get('/auditoria',Auditoria::class)->name('auditoria');
 Route::get('/nominas',Nominas::class)->name('nominas');
+
 
 
 // Rutas Angel :D

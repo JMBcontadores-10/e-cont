@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="es">
 <link href="https://unpkg.com/filepond@^4/dist/filepond.css" rel="stylesheet" />
 
 <head>
@@ -88,6 +88,7 @@
 
 
     <link rel="stylesheet" href="{{ asset('css/app-assets/css/pages/app-invoice.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/app-assets/css/pages/app-email.min.css') }}">
     <!-- END: Page CSS-->
 
     <!-- BEGIN: Page CSS-->
@@ -137,6 +138,8 @@
     <script src="{{ asset('js/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.min.js') }}" defer></script>
     <script src="{{ asset('js/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js') }}" defer></script>
     <!-- BEGIN Vendor JS-->
+<!-- BEGIN: Page Vendor JS-->
+<script src="{{ asset('js/app-assets/vendors/js/editors/quill/quill.min.js') }}" defer></script>
 
     <!-- BEGIN: Page Vendor JS-->
     <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js') }}" defer></script>
@@ -159,8 +162,8 @@
 
     <!-- BEGIN: Page JS-->
     <script src="{{ asset('js/app-assets/js/scripts/pages/app-invoice.min.js') }}" defer></script>
+    <script src="{{ asset('js/app-assets/js/scripts/pages/app-email.min.js') }}" defer></script>
     <!-- END: Page JS-->
-
 
 
 

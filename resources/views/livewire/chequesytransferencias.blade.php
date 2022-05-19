@@ -123,6 +123,8 @@
                         <br>
                     @endempty
 
+
+
                     {{-- Filtros de busqueda --}}
                     <div class="form-inline mr-auto">
 

@@ -60,7 +60,7 @@ $("#step3").fadeIn("slow");
 
 
 
-<div wire:ignore.self class="modal fade" id="nuevo-cheque" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div  wire:ignore.self class="modal fade" id="nuevo-cheque" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog " role="document">
       <div class="modal-content">
           <div class="modal-header">
@@ -78,6 +78,9 @@ $("#step3").fadeIn("slow");
 
           </div>
 <div class="modal-body"><!--modal body -->
+@if (isset($chequesAsignados))
+{{var_dump($chequesAsignados)}}
+@endif
 
   {{-- <div class="steps">
   <div class="active_step step_desing"> <li  style="color:white;"class="icons fas fa-plus"></li><br>Información Basica</div>
@@ -90,6 +93,12 @@ $("#step3").fadeIn("slow");
 <div id="step1">
 
 {{--<h2><strong>C</strong></h2>--}}
+@if ($arr!="vacio")
+{{$arr}}
+
+@else
+<p>  esta vacio</p>
+@endif
 <p>Llena los campos correspondientes</p>
 <div class="row">
    <div class="col-md-12 mx-0">
@@ -99,7 +108,13 @@ $("#step3").fadeIn("slow");
 <!----------------------------------- ---->
 <div  ALIGN="center">
 
-<form  wire:submit.prevent="guardar_nuevo_cheque">
+
+    @if (isset($chequesAsignados))
+    <form  wire:submit.prevent="AsignarChequeNuevo">
+     @else
+    <form  wire:submit.prevent="guardar_nuevo_cheque">
+    @endif
+
    @csrf
    <div class="form-row">
 
@@ -122,7 +137,7 @@ $("#step3").fadeIn("slow");
 
 
        {{-- <script>
-         
+
     $('#empresas').on('change', function() {
 
 //alert('hola');
