@@ -29,6 +29,7 @@ class Monitoreo extends Component
             //Consultamos los metadatos
             $infometaemit = MetadataE::where('emisorRfc', $this->rfcEmpresa)
                 ->whereBetween('fechaEmision',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
+                ->where('efecto', '!=', 'Nómina')
                 ->get();
 
             //Activamos los botones de exportacion
@@ -47,6 +48,7 @@ class Monitoreo extends Component
             //Consultamos los metadatos
             $infoxmlemit = XmlE::where('Emisor.Rfc', $this->rfcEmpresa)
                 ->whereBetween('Fecha',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
+                ->where('TipoDeComprobante', '!=', 'N')
                 ->get();
 
             return $infoxmlemit;
@@ -61,6 +63,7 @@ class Monitoreo extends Component
             $infometaemitclient = MetadataE::select('receptorRfc', 'receptorNombre')
                 ->where('emisorRfc', $this->rfcEmpresa)
                 ->whereBetween('fechaEmision',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
+                ->where('efecto', '!=', 'Nómina')
                 ->groupBy('receptorRfc')
                 ->get();
 
