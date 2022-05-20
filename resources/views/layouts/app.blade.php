@@ -16,8 +16,8 @@
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="{{ asset('js/code.js') }}" defer></script>
     <script src="{{ asset('js/numeros.js') }}" defer></script>
-    <script src="{{ asset('js/chequesytrasncontrol.js') }}" defer> </script>
-    <script src="{{ asset('js/General.js') }}" defer> </script>
+    <script src="{{ asset('js/chequesytrasncontrol.js') }}" defer></script>
+    <script src="{{ asset('js/General.js') }}" defer></script>
 
     <script src="{{ asset('js/calendar.js') }}" defer></script>
     <script src="{{ asset('js/calendari.js') }}" defer></script>
@@ -195,13 +195,11 @@
 <body class="vertical-layout vertical-menu-modern 2-columns navbar-sticky footer-static" data-open="click"
     data-menu="vertical-menu-modern" data-col="2-columns">
     <!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
-    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js">
-    </script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <!-- add before </body> cdn´s para filepond() validacion de archivos pdf/jpg etc.. -->
     <!-- CDN´S para validacion de tamaño filepond</body> -->
-    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js">
-    </script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
     <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
     <!-- CDN´S para validacion de tamaño filepond</body> -->
 
@@ -314,10 +312,10 @@
                                             width="40"></span>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item"
-                                    onclick="alerta()"><i class="bx bx-user mr-50"></i> Editar
+                                        onclick="alerta()"><i class="bx bx-user mr-50"></i> Editar
                                         Perfil</a><a class="dropdown-item" onclick="alerta()"><i
                                             class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item"
-                                            onclick="alerta()"><i class="bx bx-check-square mr-50"></i>Tareas</a><a
+                                        onclick="alerta()"><i class="bx bx-check-square mr-50"></i>Tareas</a><a
                                         class="dropdown-item" onclick="alerta()"><i
                                             class="bx bx-message mr-50"></i>Chats</a>
                                     <div class="dropdown-divider mb-0"></div>
@@ -366,54 +364,62 @@
                             class="menu-title text-truncate" data-i18n="Dashboard">Módulos</span></a>
                     <ul class="menu-content">
 
-                        <li id="chequesytransferencias"><a class="d-flex align-items-center"
-                                href="{{ url('chequesytransferencias') }}"><i class="bx bx-right-arrow-alt"></i><span
-                                    class="menu-item text-truncate" data-i18n="eCommerce">Cheques y
-                                    Transferencias</span></a>
-                        </li>
-                        <li id="cuentasporpagar"><a class="d-flex align-items-center"
-                                href="{{ url('cuentasporpagar') }}"><i class="bx bx-right-arrow-alt"></i><span
-                                    class="menu-item text-truncate" data-i18n="Analytics">Cuentas
-                                    por Pagar</span></a>
-                        </li>
-                        <li id="descargas"><a class="d-flex align-items-center" href="{{ url('descargas') }}"><i
-                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                    data-i18n="Analytics">Descargas</span></a>
-                        </li>
-                        <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i
-                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                    data-i18n="Analytics">Nóminas</span></a>
-                        </li>
-                        <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()" href=""><i
-                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                    data-i18n="Analytics">Expediente Digital</span></a>
-                        </li>
+                        @if (auth()->user()->tipo != 'VOLU')
+                            <li id="chequesytransferencias"><a class="d-flex align-items-center"
+                                    href="{{ url('chequesytransferencias') }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="eCommerce">Cheques y
+                                        Transferencias</span></a>
+                            </li>
+                            <li id="cuentasporpagar"><a class="d-flex align-items-center"
+                                    href="{{ url('cuentasporpagar') }}"><i class="bx bx-right-arrow-alt"></i><span
+                                        class="menu-item text-truncate" data-i18n="Analytics">Cuentas
+                                        por Pagar</span></a>
+                            </li>
+                            <li id="descargas"><a class="d-flex align-items-center" href="{{ url('descargas') }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Descargas</span></a>
+                            </li>
+                            <li id="Contruccion"><a class="d-flex align-items-center" href="{{ 'nominas' }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Nóminas</span></a>
+                            </li>
+                            <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()" href=""><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Expediente Digital</span></a>
+                            </li>
+                        @endif
+
 
                         {{-- Modulo solo para gasolinerias --}}
                         @if (auth()->user()->gas == 1 || auth()->user()->tipo)
                             <li id="volumetrico"><a class="d-flex align-items-center" href="{{ 'volumetrico' }}"><i
                                         class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
                                         data-i18n="Analytics">Control
-                                        Volumetrico</span></a>
+                                        Volumétrico</span></a>
                             </li>
                         @endif
 
-                        <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i
-                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                    data-i18n="Analytics">Expediente Fiscal</span></a>
-                        </li>
-                        <li id="auditoria"><a class="d-flex align-items-center" href="{{ 'auditoria' }}"><i
-                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                    data-i18n="Analytics">Auditoria</span></a>
-                        </li>
-                        <li id="consultas"><a class="d-flex align-items-center" href="{{ 'consultas' }}"><i
-                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                    data-i18n="Analytics">Consultas</span></a>
-                        </li>
-                        <li id="monitoreo"><a class="d-flex align-items-center" href="{{ 'monitoreo' }}"><i
-                                    class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                    data-i18n="Analytics">Monitoreo de facturación</span></a>
-                        </li>
+                        @if (auth()->user()->tipo != 'VOLU')
+                            <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Expediente Fiscal</span></a>
+                            </li>
+                            <li id="auditoria"><a class="d-flex align-items-center" href="{{ 'auditoria' }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Auditoria</span></a>
+                            </li>
+                            <li id="consultas"><a class="d-flex align-items-center" href="{{ 'consultas' }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Consultas</span></a>
+                            </li>
+                            @if (auth()->user()->tipo)
+                                <li id="monitoreo"><a class="d-flex align-items-center" href="{{ 'monitoreo' }}"><i
+                                            class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                            data-i18n="Analytics">Monitoreo de facturación</span></a>
+                                </li>
+                            @endif
+                        @endif
                     </ul>
 
                 </li>

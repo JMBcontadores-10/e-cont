@@ -24,310 +24,6 @@
         }
     @endphp
 
-
-
-    @if ($empresa)
-        {{-- FACTURACION POR MES --}}
-        {{-- Creacion del modal (BASE) --}}
-        <div wire:ignore.self class="modal fade" id="factuporclient" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true" class="volucaptumodal">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
-                <div class="modal-content">
-                    {{-- Encabezado --}}
-                    <div class="modal-header">
-                        <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
-                                class="icons fas fa-comments">Facturación por mes </span></h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true close-btn">×</span>
-                        </button>
-                    </div>
-                    {{-- Cuerpo del modal --}}
-                    <div class="modal-body">
-                        
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-        {{-- FACTURACION POR CLIENTE MODAL --}}
-        {{-- Creacion del modal (BASE) --}}
-        <div wire:ignore.self class="modal fade" id="factuporclient" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true" class="volucaptumodal">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
-                <div class="modal-content">
-                    {{-- Encabezado --}}
-                    <div class="modal-header">
-                        <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
-                                class="icons fas fa-comments">Facturación por clientes </span></h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true close-btn">×</span>
-                        </button>
-                    </div>
-                    {{-- Cuerpo del modal --}}
-                    <div class="modal-body">
-                        <div class="table-responsive">
-                            <table class="{{ $class }}" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center align-middle">RFC</th>
-                                        <th class="text-center align-middle">Razón social</th>
-                                        <th class="text-center align-middle"># Fact. Emitidas</th>
-                                        <th class="text-center align-middle">Monto</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php
-                                        //Variables para obtener el total
-                                        $totalfactu = 0;
-                                        $totalmonto = 0;
-                                    @endphp
-
-                                    @foreach ($consulmetaclient as $datametaclient)
-                                        @php
-                                            //Realizaremos una consulta para saber el # de facturas y los montos
-                                            $infometaemitclient = MetadataE::select('total')
-                                                ->where('receptorRfc', $datametaclient->receptorRfc)
-                                                ->whereBetween('fechaEmision', [$fechainic . 'T00:00:00', $fechafin . 'T23:59:59'])
-                                                ->get();
-                                            
-                                            //Obtenemos el total
-                                            $infometaclient = $infometaemitclient->count();
-                                            
-                                            //Sumamos el conteo de facturas
-                                            $totalfactu += $infometaclient;
-                                            
-                                            //Variable para obtener el total
-                                            $totalclient = 0;
-                                            
-                                            //Obtenemos el total
-                                            foreach ($infometaemitclient as $datoemitclient) {
-                                                $totalclient += $datoemitclient->total;
-                                            }
-                                            
-                                            //Sumamos el monto de facturas
-                                            $totalmonto += $totalclient;
-                                        @endphp
-
-                                        <tr>
-                                            {{-- RFC --}}
-                                            <td>
-                                                {{ $datametaclient->receptorRfc }}
-                                            </td>
-
-                                            {{-- Razon social --}}
-                                            <td>
-                                                {{ $datametaclient->receptorNombre }}
-                                            </td>
-
-                                            {{-- # De factura --}}
-                                            <td>
-                                                {{ $infometaclient }}
-                                            </td>
-
-                                            {{-- Monto --}}
-                                            <td>
-                                                $ {{ number_format($totalclient, 2) }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        {{-- Total factu --}}
-                                        <td>
-                                            {{ $totalfactu }}
-                                        </td>
-                                        {{-- Total monto --}}
-                                        <td>
-                                            $ {{ number_format($totalmonto, 2) }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        {{-- Modal que muestre las facturas --}}
-        @for ($i = 0; $i <= 23; $i++)
-            {{-- Modal de hisatorico --}}
-            {{-- Creacion del modal (BASE) --}}
-            <div wire:ignore.self class="modal fade" id="factuporhora{{ $i }}" tabindex="-1"
-                role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="volucaptumodal">
-                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
-                    <div class="modal-content">
-                        {{-- Encabezado --}}
-                        <div class="modal-header">
-                            <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
-                                    class="icons fas fa-comments">Facturas </span></h6>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true close-btn">×</span>
-                            </button>
-                        </div>
-                        {{-- Cuerpo del modal --}}
-                        <div class="modal-body">
-                            <div class="table-responsive">
-                                <table class="{{ $class }}" style="width:100%">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center align-middle">Estado SAT</th>
-                                            <th class="text-center align-middle">Tipo</th>
-                                            <th class="text-center align-middle">Fecha Emit.</th>
-                                            <th class="text-center align-middle">Fecha Timb.</th>
-                                            <th class="text-center align-middle">Serie</th>
-                                            <th class="text-center align-middle">Folio</th>
-                                            <th class="text-center align-middle">UUID</th>
-                                            <th class="text-center align-middle">Lugar Exped.</th>
-                                            <th class="text-center align-middle">RFC Recept.</th>
-                                            <th class="text-center align-middle">Nombre Recept.</th>
-                                            <th class="text-center align-middle">Total</th>
-                                            <th class="text-center align-middle">Forma Pago</th>
-                                            <th class="text-center align-middle">Concepto</th>
-                                            <th class="text-center align-middle">Detalles</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {{-- Tabla --}}
-                                        @foreach ($consulmetaporhora as $datametahora)
-                                            @php
-                                                //Contador de conceptos
-                                                $ConceptCount = 0;
-                                                
-                                                $espa = new MetadataR();
-                                                $fechaE = $datametahora->fechaEmision;
-                                                $folioF = $datametahora->folioFiscal;
-                                                $numero = (string) (int) substr($fechaE, 5, 2);
-                                                $mesNombre = (string) (int) substr($fechaE, 5, 2);
-                                                $anio = (string) (int) substr($fechaE, 0, 4);
-                                                $mees = $espa->fecha_es($mesNombre);
-                                                
-                                                $rutaXml = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Emitidos/XML/$folioF.xml";
-                                                $rutaPdf = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Emitidos/PDF/$folioF.pdf";
-                                                
-                                                //Obtenemos la fecha
-                                                $horameta = date('G', strtotime($datametahora->fechaEmision));
-                                            @endphp
-
-                                            @php
-                                                foreach ($consulxmlporhora as $dataxmlhora) {
-                                                    //Obtenemos la fecha
-                                                    $horaxml = date('G', strtotime($dataxmlhora->Fecha));
-                                                
-                                                    if ($horaxml == $i) {
-                                                        //Vamos a obtener los datos necesarios del XML
-                                                        $serie = $dataxmlhora->Serie;
-                                                        $folio = $dataxmlhora->Folio;
-                                                        $expedicion = $dataxmlhora->LugarExpedicion;
-                                                        $forma = $dataxmlhora->FormaPago;
-                                                        $concepto = $dataxmlhora['Conceptos.Concepto'];
-                                                    }
-                                                }
-                                            @endphp
-
-                                            @if ($horameta == $i)
-                                                <tr>
-                                                    {{-- Estado SAT --}}
-                                                    <td>
-                                                        {{ $datametahora->estado }}
-                                                    </td>
-
-                                                    {{-- Tipo --}}
-                                                    <td>
-                                                        {{ $datametahora->efecto }}
-                                                    </td>
-
-                                                    {{-- Fecha emision --}}
-                                                    <td>
-                                                        {{ $datametahora->fechaEmision }}
-                                                    </td>
-
-                                                    {{-- Fecha timbrado --}}
-                                                    <td>
-                                                        {{ $datametahora->fechaCertificacion }}
-                                                    </td>
-
-                                                    {{-- Serie --}}
-                                                    <td>
-                                                        {{ $serie }}
-                                                    </td>
-
-                                                    {{-- Folio --}}
-                                                    <td>
-                                                        {{ $folio }}
-                                                    </td>
-
-                                                    {{-- UUID --}}
-                                                    <td>
-                                                        {{ $datametahora->folioFiscal }}
-                                                    </td>
-
-                                                    {{-- Lugar de expedicion --}}
-                                                    <td>
-                                                        {{ $expedicion }}
-                                                    </td>
-
-                                                    {{-- RFC receptor --}}
-                                                    <td>
-                                                        {{ $datametahora->receptorRfc }}
-                                                    </td>
-
-                                                    {{-- Nombre receptor --}}
-                                                    <td>
-                                                        {{ $datametahora->receptorNombre }}
-                                                    </td>
-
-                                                    {{-- Total --}}
-                                                    <td>
-                                                        {{ $datametahora->total }}
-                                                    </td>
-
-                                                    {{-- Forma de pago --}}
-                                                    <td>
-                                                        {{ $forma }}
-                                                    </td>
-
-                                                    {{-- Concepto --}}
-                                                    <td>
-                                                        @if (isset($concepto[0]['Descripcion']))
-                                                            {{ ++$ConceptCount }}.-
-                                                            {{ Str::limit($concepto[0]['Descripcion'], 20) }}
-                                                            <br>
-                                                        @endif
-                                                    </td>
-
-                                                    {{-- Detalles --}}
-                                                    <td>
-                                                        @if ($datametahora->estado != 'Cancelado')
-                                                            <a href="{{ $rutaXml }}"
-                                                                download="{{ $folioF }}.xml">
-                                                                <i class="fas fa-file-download fa-2x"></i>
-                                                            </a>
-                                                            <a href="{{ $rutaPdf }}" target="_blank">
-                                                                <i class="fas fa-file-pdf fa-2x"
-                                                                    style="color: rgb(202, 19, 19)"></i>
-                                                            </a>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endfor
-    @endif
-
     {{-- Contenedor para mantener responsivo el contenido del modulo --}}
     <div class="app-content content">
         <div class="content-wrapper">
@@ -388,23 +84,24 @@
                             &nbsp;&nbsp;
 
                             <button {{ $active }} type="button" class="btn btn-success BtnVinculadas"
-                                onclick="exportReportToExcel('{{ $empresa }}')">Excel</button>
+                                onclick="exportReportToExcel('{{ $fechaayer }}')">Excel</button>
                             &nbsp;&nbsp;
 
                             <button {{ $active }} type="button" class="btn btn-danger BtnVinculadas"
-                                onclick="exportReportToPdf('{{ $empresa }}')">Pdf</button>
+                                onclick="exportReportToPdf('{{ $fechaayer }}')">Pdf</button>
 
 
                             {{-- Espaciado --}}
                             <div id="espmonifilt" style="width: 8.2em;"></div>
 
-                            <button {{ $active }} type="button" data-backdrop="static" data-keyboard="false"
+                            <button {{ $active }} id="btnfactuclient" type="button" data-backdrop="static" data-keyboard="false"
                                 data-toggle="modal" data-target="#factuporclient"
                                 class="btn btn-secondary BtnVinculadas">
                                 Factu. por cliente</button>
                             &nbsp;&nbsp;
 
-                            <button {{ $active }} type="button" class="btn btn-secondary BtnVinculadas">
+                            <button {{ $active }} type="button" data-backdrop="static" data-keyboard="false"
+                                data-toggle="modal" data-target="#factupormes" class="btn btn-secondary BtnVinculadas">
                                 Factu. del mes</button>
                             &nbsp;&nbsp;
                         </div>
@@ -415,7 +112,7 @@
                     <div class="row">
                         {{-- Tabla de informacion de las facturas por hora --}}
                         <div class="col">
-                            <div id="conttablemoni" class="table-responsive">
+                            <div class="table-responsive conttablemoni">
                                 <table id="factuhisto" class="monihora {{ $class }}" style="width:100%">
                                     <thead>
                                         <tr>
@@ -460,7 +157,7 @@
                                                         @foreach ($consulmetaporhora as $factura)
                                                             @php
                                                                 //Obtenemos la fecha
-                                                                $hora = date('G', strtotime($factura->fechaEmision));
+                                                                $hora = date('G', strtotime($factura['fechaEmision']));
                                                                 
                                                                 //Condicional para verificar si la hora concuerda
                                                                 if ($hora == $i) {
@@ -492,12 +189,12 @@
                                                         @foreach ($consulmetaporhora as $factura)
                                                             @php
                                                                 //Obtenemos la fecha
-                                                                $hora = date('G', strtotime($factura->fechaEmision));
+                                                                $hora = date('G', strtotime($factura['fechaEmision']));
                                                                 
                                                                 //Variable acumuladora de facturas
                                                                 if ($hora == $i) {
                                                                     //Si concuerda vamos sumando los totales
-                                                                    $monto += floatval($factura->total);
+                                                                    $monto += floatval($factura['total']);
                                                                 }
                                                             @endphp
                                                         @endforeach
@@ -525,15 +222,9 @@
                                                 </td>
                                             </tr>
                                         @endfor
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="monihora {{ $class }}" style="width:100%">
-                                    <tbody>
                                         <tr>
                                             {{-- Total --}}
-                                            <td>Total:</td>
+                                            <td><b>Total:</b></td>
                                             <td>{{ $totalfact }}</td>
                                             <td>$ {{ number_format($totalmonto, 2) }}</td>
                                             <td></td>
@@ -551,20 +242,20 @@
                                         <h5 class="card-title mb-0"><b>Facturas por hora</b></h5>
                                     </div>
                                     <div class="card-body">
-                                        <canvas id="myChart" width="1000" height="1000"></canvas>
+                                        <canvas id="cantifactuhora" width="1000" height="1000"></canvas>
                                     </div>
                                 </div>
                             </div>
 
-                            <div id="conttablemoni" class="table-responsive">
+                            <div class="table-responsive conttablemoni">
                                 <table id="factuhisto" class="monihora {{ $class }}" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th colspan="2">Facturas en cantidad</th>
+                                        </tr>
                                         <tr>
                                             <th class="text-center align-middle">Concepto</th>
                                             <th class="text-center align-middle">Cantidad</th>
-                                        </tr>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -617,15 +308,15 @@
 
                             <br>
 
-                            <div id="conttablemoni" class="table-responsive">
+                            <div class="table-responsive conttablemoni">
                                 <table id="factuhisto" class="monihora {{ $class }}" style="width:100%">
                                     <thead>
                                         <tr>
                                             <th colspan="2">Facturas en $</th>
+                                        </tr>
                                         <tr>
                                             <th class="text-center align-middle">Concepto</th>
                                             <th class="text-center align-middle">Cantidad</th>
-                                        </tr>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -681,4 +372,22 @@
             </div>
         </div>
     </div>
+
+    {{-- Llamado de modale --}}
+    @if ($empresa)
+        {{-- Facturas por hora --}}
+        <livewire:monithora :empresa=$empresa :fechainic=$fechainic :fechafin=$fechafin
+            :infofactumetaemit=$consulmetaporhora :infofactuxmlemit=$consulxmlporhora
+            :wire:key="'user-profile-one-'.$empresa.$fechainic.$fechafin">
+
+            <livewire:monitclient :empresa=$empresa :consulmetaclient=$consulmetaclient
+                :consulmetaporhora=$consulmetaporhora
+                :wire:key="'user-profile-two-'.$empresa.$consulmetaclient.$consulmetaporhora">
+
+                <livewire:monitdetaclient :empresa=$empresa :consulxmlporhora=$consulxmlporhora
+                    :consulmetaclient=$consulmetaclient :consulmetaporhora=$consulmetaporhora
+                    :wire:key="'user-profile-three-'.$empresa.$consulmetaclient.$consulmetaporhora.$consulxmlporhora">
+
+                    <livewire:monitmes :empresa=$empresa :wire:key="'user-profile-three-'.$empresa">
+    @endif
 </div>

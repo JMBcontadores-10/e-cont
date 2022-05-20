@@ -26,6 +26,8 @@
         "rappasoft/laravel-livewire-tables": "^1.21",
         "spatie/laravel-mix-preload": "^1.2",
         "stechstudio/laravel-zipstream": "^4.7",
+        "symfony/http-client": "^5.4",
+        "symfony/mailgun-mailer": "^5.4",
         "wire-elements/modal": "^1.0"
     },
     "require-dev": {

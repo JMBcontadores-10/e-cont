@@ -13,6 +13,7 @@ use App\Http\Livewire\Home;
 use App\Http\Livewire\FacturasVinculadas;
 use App\Http\Livewire\Modals\Editar;
 use App\Http\Livewire\Monitoreo;
+use App\Http\Livewire\Nominas;
 use App\Http\Livewire\Pdfcheque;
 use App\Http\Livewire\Volumepdf;
 use App\Http\Livewire\Volumetrico;
@@ -70,7 +71,7 @@ Route::post('/convolumetrico', [App\Http\Controllers\VolumetricoController::clas
 Route::post('/volumetrico2', [App\Http\Controllers\VolumetricoController::class, 'insertaDatos'])->name('insertaDatos');
 Route::post('/volumetrico3', [App\Http\Controllers\VolumetricoController::class, 'updateDatos'])->name('updateDatos');
 Route::match(['get', 'post'], '/volumetrico4', [App\Http\Controllers\VolumetricoController::class, 'updatePrecio'])->name('updatePrecio');
-Route::get('/monitoreo', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('monitoreo');
+Route::get('/moni', [App\Http\Controllers\MonitoreoController::class, 'index'])->name('moni');
 Route::post('/detallesfactura', [App\Http\Controllers\MonitoreoController::class, 'detallesfactura'])->name('detallesfactura');
 Route::get('/auditoria2', [App\Http\Controllers\AuditoriaController::class, 'index'])->name('auditoria2');
 Route::post('/auditoria1', [App\Http\Controllers\AuditoriaController::class, 'store'])->name('auditoria1');
@@ -107,6 +108,7 @@ Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
 Route::get('/descargasAutomaticas/{valor}', [App\Http\Controllers\DescargasAutomaticas::class, 'ConsultSAT'])->name('descargasAutomaticas');
 // Route::get('/descargasAutomaticas1', [App\Http\Livewire\DescargasAutomaticas::class, 'index'])->name('descargasAutomaticas1');
 Route::get('/auditoria',Auditoria::class)->name('auditoria');
+Route::get('/nominas',Nominas::class)->name('nominas');
 
 
 // Rutas Angel :D
@@ -124,4 +126,4 @@ Route::post('/pdfvolu/{id}', [App\Http\Controllers\UploadController::class, 'PDF
 //Ruta de almacenamiento de PDF (CRE)
 Route::post('/pdfcrevolu/{id}', [App\Http\Controllers\UploadController::class, 'PDFCRE']);
 //Ruta de la vista de monitoreo de facturacion
-Route::get('/moni', Monitoreo::class)->name('moni');
+Route::get('/monitoreo', Monitoreo::class)->name('monitoreo');

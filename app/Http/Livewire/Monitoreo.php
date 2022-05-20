@@ -7,7 +7,7 @@ use App\Models\XmlE;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-//Funcion para aumentar la ejecucion de los procesos, lo utilizaremos para las descargas ()
+//Funcion para aumentar la ejecucion de los procesos
 set_time_limit(3600); //Tiempo limite dado 1 hora
 
 class Monitoreo extends Component
@@ -40,22 +40,7 @@ class Monitoreo extends Component
         }
     }
 
-    //Metodo para realizar la consulta del monitoreo por cliente
-    public function ConsulMetaClient()
-    {
-        if ($this->rfcEmpresa) {
-            //Consultamos los metadatos
-            $infometaemitclient = MetadataE::select('receptorRfc', 'receptorNombre')
-                ->where('emisorRfc', $this->rfcEmpresa)
-                ->whereBetween('fechaEmision',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
-                ->groupBy('receptorRfc')
-                ->orderBy('receptorRfc', 'asc')
-                ->get();
-
-            return $infometaemitclient;
-        }
-    }
-
+    //Metodo para comsultar los XML
     public function ConsulXML()
     {
         if ($this->rfcEmpresa) {
@@ -64,10 +49,22 @@ class Monitoreo extends Component
                 ->whereBetween('Fecha',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
                 ->get();
 
-            //Activamos los botones de exportacion
-            $this->active = null;
-
             return $infoxmlemit;
+        }
+    }
+
+    //Metodo para realizar la consulta del monitoreo
+    public function ConsulMetaClient()
+    {
+        if ($this->rfcEmpresa) {
+            //Consultamos los metadatos
+            $infometaemitclient = MetadataE::select('receptorRfc', 'receptorNombre')
+                ->where('emisorRfc', $this->rfcEmpresa)
+                ->whereBetween('fechaEmision',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
+                ->groupBy('receptorRfc')
+                ->get();
+
+            return $infometaemitclient;
         }
     }
 
@@ -79,6 +76,10 @@ class Monitoreo extends Component
         //Establecemos la fechas de inicio y fin
         $this->fechainic = date('Y-m-d', strtotime('-1 day'));
         $this->fechafin = date('Y-m-d', strtotime('-1 day'));
+
+        //Establecemos el mes y año en las facturas por mes
+        $this->factumesselect = date('m');
+        $this->factuanioselect = date('Y');
 
         if (auth()->user()->tipo) {
             $this->rfcEmpresa = '';
@@ -172,7 +173,26 @@ class Monitoreo extends Component
             $emp = '';
         }
 
-        return view('livewire.monitoreo', ['fechaayer' => $fechaayerstr, 'empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'consulmetaporhora' => $this->ConsulMeta(), 'consulxmlporhora' => $this->ConsulXML(), 'consulmetaclient' => $this->ConsulMetaClient()])
+        //Arreglo de los meses
+        $meses = array(
+            '01' => 'Enero',
+            '02' => 'Febrero',
+            '03' => 'Marzo',
+            '04' => 'Abril',
+            '05' => 'Mayo',
+            '06' => 'Junio',
+            '07' => 'Julio',
+            '08' => 'Agosto',
+            '09' => 'Septiembre',
+            '10' => 'Octubre',
+            '11' => 'Noviembre',
+            '12' => 'Diciembre'
+        );
+
+        //Arreglo (rango) del año actual al 2014
+        $anios = range(2014, date('Y'));
+
+        return view('livewire.monitoreo', ['meses' => $meses, 'anios' => $anios, 'fechaayer' => $fechaayerstr, 'empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'consulmetaporhora' => $this->ConsulMeta(), 'consulxmlporhora' => $this->ConsulXML(), 'consulmetaclient' => $this->ConsulMetaClient()])
             ->extends('layouts.livewire-layout')
             ->section('content');
     }

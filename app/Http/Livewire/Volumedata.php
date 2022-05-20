@@ -20,6 +20,12 @@ class Volumedata extends Component
     public $fecha;
     public $fechaayer;
 
+    //Variable para activar el input
+    //Volumetrico
+    public $activem = "readonly";
+    public $activep = "readonly";
+    public $actived = "readonly";
+
     //Variales para almacenar en la base de datos
     //Volumetrico **************************************************************************************************************************************
     //Inventario inicial
@@ -31,6 +37,11 @@ class Volumedata extends Component
     public $compramagna;
     public $comprapremium;
     public $compradiesel;
+
+    //Compras (Descuento)
+    public $compradescmagna;
+    public $compradescpremium;
+    public $compradescdiesel;
 
     //Litros vendidos
     public $litvendmagna;
@@ -74,6 +85,11 @@ class Volumedata extends Component
     public $compracambpremium;
     public $compracambdiesel;
 
+    //Compras (Descuento)
+    public $compracambdescmagna;
+    public $compracambdescpremium;
+    public $compracambdescdiesel;
+
     //Litros vendidos
     public $litvendcambmagna;
     public $litvendcambpremium;
@@ -111,17 +127,13 @@ class Volumedata extends Component
     public function InfoGas()
     {
         //Hacemos una consulta de la empresa para saber que datos vamos a mostrar
-        $infogas = User::where('RFC', $this->empresa)->get();
+        $infogas = User::where('RFC', $this->empresa)->get()->first();
 
         //Obtenemos los datos requeridos
-        if (count($infogas) > 0) {
-            //Recorremos la consulta para obtener los datos
-            foreach ($infogas as $datagas) {
-                //Obtenemos los tipo de combustible que maneja las gasolineras
-                $this->Magna = $datagas->TipoM;
-                $this->Premium = $datagas->TipoP;
-                $this->Diesel = $datagas->TipoD;
-            }
+        if (!empty($infogas)) {
+            $this->Magna = $infogas['TipoM'];
+            $this->Premium = $infogas['TipoP'];
+            $this->Diesel = $infogas['TipoD'];
         } else {
             //De lo contrario los declaramos vacios
             $this->Magna = '';
@@ -155,18 +167,34 @@ class Volumedata extends Component
                 //Magna Vomumetricos
                 $this->inventinicmagna = $infovolu['volumetrico.' . $this->dia . '.IventInicM'];
                 $this->compramagna = $infovolu['volumetrico.' . $this->dia . '.CompraM'];
+
+                //Condicional para establecer el valor al precio  de compra y con descuento
+                if (floatval($this->compramagna) > 0) {
+                    //Si hay datos
+                    $this->preccompmagna = $infovolu['volumetrico.' . $this->dia . '.PrecCompM'];
+                    $this->compradescmagna = $infovolu['volumetrico.' . $this->dia . '.CompraDescM'];
+                    $this->activem = null;
+                } else {
+                    //Si no hay datos
+                    $this->preccompmagna = "0";
+                    $this->compradescmagna = "0";
+                    $this->activem = "readonly";
+                }
+
                 $this->litvendmagna = $infovolu['volumetrico.' . $this->dia . '.LitVendM'];
-                $this->preccompmagna = $infovolu['volumetrico.' . $this->dia . '.PrecCompM'];
                 $this->precventmagna = $infovolu['volumetrico.' . $this->dia . '.PrecVentM'];
                 $this->autostickmagna = $infovolu['volumetrico.' . $this->dia . '.AutoStickM'];
                 $this->invdetermagna = $infovolu['volumetrico.' . $this->dia . '.InvDeterM'];
                 $this->mermamagna = $infovolu['volumetrico.' . $this->dia . '.MermaM'];
 
+
+
                 //Magna Cambio de precio
                 $this->inventiniccambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicM'];
-                $this->compracambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraM'];
+                $this->compracambmagna = "0";
+                $this->preccompcambmagna = "0";
+                $this->compracambdescmagna = "0";
                 $this->litvendcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendM'];
-                $this->preccompcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecCompM'];
                 $this->precventcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentM'];
                 $this->autostickcambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickM'];
                 $this->invdetercambmagna = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterM'];
@@ -178,18 +206,35 @@ class Volumedata extends Component
                 //Premium Vomumetricos
                 $this->inventinicpremium = $infovolu['volumetrico.' . $this->dia . '.IventInicP'];
                 $this->comprapremium = $infovolu['volumetrico.' . $this->dia . '.CompraP'];
+
+                //Condicional para establecer el valor al precio  de compra y con descuento
+                if (floatval($this->comprapremium) > 0) {
+                    //Si hay datos
+                    $this->preccomppremium = $infovolu['volumetrico.' . $this->dia . '.PrecCompP'];
+                    $this->compradescpremium = $infovolu['volumetrico.' . $this->dia . '.CompraDescP'];
+                    $this->activep = null;
+                } else {
+                    //Si no hay datos
+                    $this->preccomppremium = "0";
+                    $this->compradescpremium = "0";
+                    $this->activep = "readonly";
+                }
+
                 $this->litvendpremium = $infovolu['volumetrico.' . $this->dia . '.LitVendP'];
-                $this->preccomppremium = $infovolu['volumetrico.' . $this->dia . '.PrecCompP'];
                 $this->precventpremium = $infovolu['volumetrico.' . $this->dia . '.PrecVentP'];
                 $this->autostickpremium = $infovolu['volumetrico.' . $this->dia . '.AutoStickP'];
                 $this->invdeterpremium = $infovolu['volumetrico.' . $this->dia . '.InvDeterP'];
                 $this->mermapremium = $infovolu['volumetrico.' . $this->dia . '.MermaP'];
 
+
+
+
                 //Premium Cambio de precio
                 $this->inventiniccambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicP'];
-                $this->compracambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraP'];
+                $this->compracambpremium = "0";
+                $this->preccompcambpremium = "0";
+                $this->compracambdescpremium = "0";
                 $this->litvendcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendP'];
-                $this->preccompcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecCompP'];
                 $this->precventcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentP'];
                 $this->autostickcambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickP'];
                 $this->invdetercambpremium = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterP'];
@@ -201,8 +246,21 @@ class Volumedata extends Component
                 //Diesel Vomumetricos
                 $this->inventinicdiesel = $infovolu['volumetrico.' . $this->dia . '.IventInicD'];
                 $this->compradiesel = $infovolu['volumetrico.' . $this->dia . '.CompraD'];
+
+                //Condicional para establecer el valor al precio  de compra y con descuento
+                if (floatval($this->compradiesel) > 0) {
+                    //Si hay datos
+                    $this->preccompdiesel = $infovolu['volumetrico.' . $this->dia . '.PrecCompD'];
+                    $this->compradescdiesel = $infovolu['volumetrico.' . $this->dia . '.CompraDescD'];
+                    $this->actived = null;
+                } else {
+                    //Si no hay datos
+                    $this->preccompdiesel = "0";
+                    $this->compradescdiesel = "0";
+                    $this->actived = "readonly";
+                }
+
                 $this->litvenddiesel = $infovolu['volumetrico.' . $this->dia . '.LitVendD'];
-                $this->preccompdiesel = $infovolu['volumetrico.' . $this->dia . '.PrecCompD'];
                 $this->precventdiesel = $infovolu['volumetrico.' . $this->dia . '.PrecVentD'];
                 $this->autostickdiesel = $infovolu['volumetrico.' . $this->dia . '.AutoStickD'];
                 $this->invdeterdiesel = $infovolu['volumetrico.' . $this->dia . '.InvDeterD'];
@@ -210,9 +268,10 @@ class Volumedata extends Component
 
                 //Diesel Cambio de precio
                 $this->inventiniccambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.IventInicD'];
-                $this->compracambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.CompraD'];
+                $this->compracambdiesel = "0";
+                $this->preccompcambdiesel = "0";
+                $this->compracambdescdiesel = "0";
                 $this->litvendcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.LitVendD'];
-                $this->preccompcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecCompD'];
                 $this->precventcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.PrecVentD'];
                 $this->autostickcambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.AutoStickD'];
                 $this->invdetercambdiesel = $infovolu['volumetrico.' . $this->dia . "-C" . '.InvDeterD'];
@@ -456,6 +515,12 @@ class Volumedata extends Component
             'volumetrico.' . $this->dia . '-C.IventInicM' => $this->invdetermagna,
             'volumetrico.' . $this->dia . '-C.IventInicP' => $this->invdeterpremium,
             'volumetrico.' . $this->dia . '-C.IventInicD' => $this->invdeterdiesel,
+
+            //Obtenemos el autostick del cambio de precio
+            'volumetrico.' . $this->dia . '-C.AutoStickM' => $this->autostickmagna,
+            'volumetrico.' . $this->dia . '-C.AutoStickP' => $this->autostickpremium,
+            'volumetrico.' . $this->dia . '-C.AutoStickD' => $this->autostickdiesel,
+
         ], ['upsert' => true]);
 
         //Agregamos el PDF si este existe
@@ -551,6 +616,11 @@ class Volumedata extends Component
         $this->comprapremium = "";
         $this->compradiesel = "";
 
+        //Compras (Descuento)
+        $this->compradescmagna = "";
+        $this->compradescpremium = "";
+        $this->compradescdiesel = "";
+
         //Litros vendidos
         $this->litvendmagna = "";
         $this->litvendpremium = "";
@@ -592,6 +662,11 @@ class Volumedata extends Component
         $this->compracambmagna = "";
         $this->compracambpremium = "";
         $this->compracambdiesel = "";
+
+        //Compras (Descuento)
+        $this->compracambdescmagna = "";
+        $this->compracambdescpremium = "";
+        $this->compracambdescdiesel = "";
 
         //Litros vendidos
         $this->litvendcambmagna = "";

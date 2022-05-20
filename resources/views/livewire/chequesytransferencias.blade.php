@@ -6,7 +6,7 @@
         use App\Models\MetadataR;
         use App\Http\Controllers\ChequesYTransferenciasController;
         use Illuminate\Support\Facades\DB;
-        
+
         $rfc = Auth::user()->RFC;
         $class = '';
         if (empty($class)) {
@@ -44,6 +44,7 @@
 
 
 
+
                     {{-- <button id="btn">Eviar Correo </button>
                     <div class="conten">
 
@@ -66,7 +67,7 @@
                         {{-- <div class="alert alert-success">
 </div> --}}
                         @php
-                            
+
                             $name = Session::get('idns');
                             //    echo $name;
                         @endphp
@@ -253,7 +254,7 @@
                                     $contabilizado = $i->conta;
                                     $pendiente = $i->pendi;
                                     $tipoO = $i->tipoopera;
-                                    
+
                                     if ($tipoO == 'Impuestos' or $tipoO == 'Parcialidad') {
                                         $diferencia = 0;
                                     } else {
@@ -265,10 +266,10 @@
                                     } else {
                                         $diferenciaP = 1;
                                     }
-                                    
+
                                     $diferencia = number_format($diferencia, 2);
                                     $nombreCheque = $i->nombrec;
-                                    
+
                                     if ($nombreCheque == '0') {
                                         $subirArchivo = true;
                                         $nombreChequeP = 0;
@@ -276,19 +277,19 @@
                                         $subirArchivo = false;
                                         $nombreChequeP = 1;
                                     }
-                                    
+
                                     $rutaArchivo = $rutaDescarga . $nombreCheque;
-                                    
+
                                     if (!empty($i->doc_relacionados)) {
                                         $docAdi = $i->doc_relacionados;
                                     }
-                                    
+
                                     $revisado_fecha = $i->revisado_fecha;
                                     $contabilizado_fecha = $i->contabilizado_fecha;
                                     $poliza = $i->poliza;
                                     $comentario = $i->comentario;
                                     $impresion = $i['impresion'];
-                                    
+
                                     if (strpos($nombreCheque, '/') !== false) {
                                         $p = explode('/', $nombreCheque);
                                         $i->update([
@@ -296,7 +297,9 @@
                                             'nombrec' => $p[1],
                                         ]);
                                     }
-                                    
+
+                                    if (!empty($docAdi[0])){
+
                                     if (strpos($docAdi[0], '/') !== false) {
                                         foreach ($i->doc_relacionados as $doc) {
                                             $pp = explode('/', $doc);
@@ -304,6 +307,8 @@
                                             $i->push('doc_relacionados', $pp[1]);
                                         }
                                     }
+
+                                }
                                 @endphp
 
                                 <tbody>
@@ -467,11 +472,16 @@
 
                                                     &nbsp; | &nbsp;
 
+
+
+
+
                                                     @if (!$docAdi['0'] == '')
                                                         @php $class="content_true" @endphp
                                                     @else
                                                         @php $class="icons" @endphp
                                                     @endif
+
 
                                                     <a class="{{ $class }} fas fa-folder-open"
                                                         data-toggle="modal"
@@ -683,7 +693,6 @@
                     </div>
                 </div>
 
-<<<<<<< HEAD
                  <script>
                 //Emitir los datos de la empresa al componente
                 $(document).ready(function() {
@@ -703,7 +712,6 @@
                 });
                   </script>
            </div>
-=======
                 <script>
                     //Emitir los datos de la empresa al componente
                     $(document).ready(function() {
@@ -723,4 +731,3 @@
                     });
                 </script>
 </div>
->>>>>>> 844feee45215c856009c8d0a69d57596cc116646
