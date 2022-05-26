@@ -62,7 +62,7 @@ class AsignarCheque extends Component
 
 
         $insert=MetadataE::where('folioFiscal',$a['UUID'])->first();
-        //$insert->push('cheques_id', $this->chequesAsignados);
+        $insert->push('cheques_id', $this->chequesAsignados);
        //$insert->unset('cheques_id');
       }
 
