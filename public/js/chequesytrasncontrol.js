@@ -555,7 +555,7 @@ function filepondRaya(rfc, anio, periodo) {
     // registrar plugin validacion filepond  se deben agregar los cdn despues del body
 
 
-    const iden = document.getElementById("listaRaya" + periodo);
+    const iden = document.getElementById("listaRaya" + periodo + anio);
     const ruta = iden;
 
     // Create a FilePond instance
@@ -610,7 +610,7 @@ function filepondRecibosNomina(rfc, anio, periodo) {
     // registrar plugin validacion filepond  se deben agregar los cdn despues del body
 
 
-    const iden = document.getElementById("recibosNomina" + periodo);
+    const iden = document.getElementById("recibosNomina" + periodo + anio);
     const ruta = iden;
 
     // Create a FilePond instance

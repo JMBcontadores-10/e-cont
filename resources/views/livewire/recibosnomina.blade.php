@@ -5,33 +5,29 @@
 <!-- Modal -->
 
 
-<div wire:ignore.self class="modal fade" id="recibosnom{{ $datos->Folio }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div wire:ignore.self class="modal fade" id="recibosnom{{ $datos }}{{$fecha}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;" class="icons fas fa-file-invoice"> Subir Recibo de Nomina recibosnom{{ $datos->Folio }}</span></h6>
-                @if($datos->nombrec=="0")
-                    <button id="mdlP{{$datos->Folio}}" type="button" wire:click="refrecar()" class="close" data-dismiss="modal" aria-label="Close">
+                <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;" class="icons fas fa-file-invoice"> Subir Recibo de Nomina recibosnom{{ $datos}}</span></h6>
+
+                    <button id="mdln{{$datos}}{{$fecha}}" type="button" wire:click="refrescarNomina()" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true close-btn">×</span>
                     </button>
-                @else
-                    <button id="mdlP{{$datos->Folio}}" type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true close-btn">×</span>
-                    </button>
-               @endif
+
             </div>
 
 {{--Cerramos la ventana cada vez que hagamos un cambio--}}
 <script>
-    window.addEventListener('cerrarPdfmodal', event => {
-        $("#mdlP"+event.detail.IdCheque).click();
+    window.addEventListener('cerrarNominamodal', event => {
+        $("#mdln"+event.detail.IdCheque+event.detail.fecha).click();
     });
 </script>
 
 <div class="modal-body"><!--modal body -->
     <div class="EncabezadoModalChequesYTransf">
         <h4>Recibos de Nomina</h4>
-        <h4 class="LblEncabezado"><b>{{$datos->numcheque}}</b></h4>
+
     </div>
 
     {{--Texto de archivos existentes--}}
@@ -48,12 +44,12 @@
 
 
                 @php $n=1;
-            $dateValue = strtotime($datos['Complemento.0.Nomina.FechaInicialPago']);//obtener la fecha
+            $dateValue = strtotime($fecha);//obtener la fecha
             $mes = date('m',$dateValue);// obtener el mes
             $anio= date('Y',$dateValue);// obtener el año
 
-            $ruta = "contarappv1_descargas/" .$RFC. "/". $anio."/Nomina/Periodo".$datos->Folio . "/RecibosNomina/RecibosPeriodo".$datos->Folio.".pdf";
-
+            $ruta = "contarappv1_descargas/" .$RFC. "/". $anio."/Nomina/Periodo".$datos . "/RecibosNomina/RecibosPeriodo".$datos.".pdf";
+            $dirname = "storage/contarappv1_descargas/" .$RFC. "/". $anio."/Nomina/Periodo".$datos. "/RecibosNomina";
           @endphp
 
 {{-- {{$RFC}} {{$datos->Folio}} --}}
@@ -64,7 +60,7 @@
 
 </div>
 {{---------Input filepond------------}}
-<input  name="recibosNomina" type="file" id="recibosNomina{{$datos->Folio}}"  />
+<input  name="recibosNomina" type="file" id="recibosNomina{{$datos}}{{$anio}}"  />
 
 {{--
 listaRaya{{$datos->Folio}} --}}
@@ -76,7 +72,7 @@ listaRaya{{$datos->Folio}} --}}
    @php
        //Obtenemos el nombre original de los PDF
 
-       $ruta = "storage/contarappv1_descargas/" .$RFC. "/". $anio."/Nomina/Periodo".$datos->Folio . "/RecibosNomina/RecibosPeriodo".$datos->Folio.".pdf";
+       $ruta = "storage/contarappv1_descargas/" .$RFC. "/". $anio."/Nomina/Periodo".$datos . "/RecibosNomina/RecibosPeriodo".$datos.".pdf";
 
    @endphp
 
@@ -85,8 +81,14 @@ listaRaya{{$datos->Folio}} --}}
        <a class="DocumentPDF fas fa-file-pdf" target="_blank" href="{{asset($ruta)}}"></a>
    </div>
    <div class="CuerpoNamePDFContainer">
-       <span class="SpanNamePDF"> {{Str::limit('NominaPeriodo'.$datos->Folio, 10); }} <span>
+       <span class="SpanNamePDF"> {{Str::limit('NominaPeriodo'.$datos, 10); }} <span>
    </div>
+   <div class="BotonesPDFContainer">
+    <!--Eliminar PDF-->
+    <div class="BtnDelPDF" wire:click="eliminar('{{$ruta}}','{{$datos}}','{{$dirname}}','{{$fecha}}')" wire:loading.attr="disabled">
+        <i class="icons fas fa-trash-alt"></i>
+    </div>
+</div>
 
 
 
@@ -110,13 +112,7 @@ listaRaya{{$datos->Folio}} --}}
 </div>
 </div>
 
-{{--Parte inferior del modal--}}
-<div class="modal-footer">
 
-<button type="button" name="cierra"  wire:click="$emitTo('nominas','nominarefresh')" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-
-
-   </div>
 </div>
 </div>
 

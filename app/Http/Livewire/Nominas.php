@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\MetadataE;
 use App\Models\XmlE;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -9,7 +10,7 @@ use Livewire\Component;
 class Nominas extends Component
 {
     public $rfcEmpresa;
-    public $anio;
+    public $anio,$mes;
 
     public function mount()
     {
@@ -23,6 +24,7 @@ class Nominas extends Component
 
         /////////////////
         $this->anio=date("Y");
+        $this->mes=date("m");
 
     }
 
@@ -32,16 +34,10 @@ class Nominas extends Component
 
     ];
 
-
-
-
-
-
-
-
-
     public function render()
     {
+
+
 
         set_time_limit(9200); //Tiempo limite dado 1 hora
 
@@ -101,10 +97,12 @@ class Nominas extends Component
 
 
                 $nominas=XmlE::
-                where('Emisor.Rfc',$this->rfcEmpresa)
+
+            where('Emisor.Rfc',$this->rfcEmpresa)
                 ->where('TipoDeComprobante','N')
                 ->where('Serie', $this->anio)
-                ->select('Fecha','Complemento','Total')
+                ->where('Complemento.0.Nomina.FechaPago','like','%' ."-".$this->mes."-".'%')
+                ->select('Fecha','Complemento','Total','Emisor')
                 ->groupBy('Folio')
                 ->orderBy('Folio','Asc')
                 ->get();
@@ -112,12 +110,29 @@ class Nominas extends Component
 
 
 
+          ###################################################
+          $meses = array(
+            '01' => 'Enero',
+            '02' => 'Febrero',
+            '03' => 'Marzo',
+            '04' => 'Abril',
+            '05' => 'Mayo',
+            '06' => 'Junio',
+            '07' => 'Julio',
+            '08' => 'Agosto',
+            '09' => 'Septiembre',
+            '10' => 'Octubre',
+            '11' => 'Noviembre',
+            '12' => 'Diciembre'
+        );
+
+
+          ###################################################
+
+
 
 
                 $anios = range(2014, date('Y'));
-
-
-
 
         return view('livewire.nominas',[
         'empresas'=>$emp,
@@ -125,7 +140,7 @@ class Nominas extends Component
         'nominas'=>$nominas,
         'anio'=>$this->anio,
         'anios'=>$anios,
-
+        'meses'=>$meses,
         ])
         ->extends('layouts.livewire-layout')
         ->section('content');

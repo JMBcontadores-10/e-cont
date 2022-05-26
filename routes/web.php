@@ -108,6 +108,8 @@ Route::get('/descargascfdi', [App\Http\Controllers\DescargascfdiController::clas
 Route::get('zip-download/{id}', [Eliminar::class, 'descargarZip']);
 Route::get('/exportar/{facturas}', [FacturasVinculadas::class, 'export']);
 Route::get('/descargasAutomaticas/{valor}', [App\Http\Controllers\DescargasAutomaticas::class, 'ConsultSAT'])->name('descargasAutomaticas');
+
+
 // Route::get('/descargasAutomaticas1', [App\Http\Livewire\DescargasAutomaticas::class, 'index'])->name('descargasAutomaticas1');
 Route::get('/auditoria',Auditoria::class)->name('auditoria');
 Route::get('/nominas',Nominas::class)->name('nominas');

@@ -13,6 +13,7 @@
    <script src="{{ asset('js/tableExport/libs/pdfmake/vfs_fonts.js') }}" defer></script>
    @php
    use App\Models\XmlE;
+   use App\Models\MetadataE;
 
        $class = '';
        if (empty($class)) {
@@ -28,8 +29,6 @@
        <div class="content-wrapper">
            <div class="content-body">
                <section class="invoice-list-wrapper">
-
-
 
 
 
@@ -52,6 +51,9 @@
  <br>
 @endempty
 
+  {{-- Filtros de busqueda --}}
+  <div class="form-inline mr-auto">
+
 
  {{-- Busqueda por año --}}
  <label for="inputState">Año</label>
@@ -62,7 +64,19 @@
      } ?>
  </select>
  &nbsp;&nbsp;
+{{-- Busqueda por mes --}}
+  <label for="inputState">Mes</label>
+  <select wire:model="mes" id="inputState1" wire:loading.attr="disabled"
+      class=" select form-control">
+      <option value="00">--Selecciona--</option>
+      <?php foreach ($meses as $key => $value) {
+          echo '<option value="' . $key . '">' . $value . '</option>';
+      } ?>
+  </select>
+  &nbsp;&nbsp;
 
+
+  </div>
 
                    {{-- fin seccion de  Filtros --}}
                    {{-- Animacion de cargando --}}
@@ -105,38 +119,55 @@
 
                                </tr>
                            </thead>
-
                        {{---------  INCIO DEL FOR   -----}}
-
 
                            <tbody>
                            @foreach ($nominas as  $nom)
                                      @php
-                // $TotalPagado=DB::Table('xmlemitidos')
-                //  -> where('Emisor.Rfc',$this->rfcEmpresa)
-                //  ->where('TipoDeComprobante','N')
-                //  ->where('Serie', $this->anio)
-                // ->where('Folio',$nom['Folio'])
-                // // ->select('Fecha','Complemento','Total')
-                // ->get();
+
+
+                 $metadata=MetadataE::
+                  where('emisorRfc',$this->rfcEmpresa)
+                ->where('estado','!=','Cancelado')
+                ->where('efecto','Nómina')
+                ->select('folioFiscal')
+                ->project(['_id' => 0])
+                ->get();
+
+               foreach($metadata as $m){
+
+               $cont[]=$m->folioFiscal;
+
+                    }
+
+
+                $TotalPagado=DB::Table('xmlemitidos')
+                ->whereIn('UUID',$cont)
+                 ->where('Emisor.Rfc',$this->rfcEmpresa)
+                 ->where('TipoDeComprobante','N')
+                 ->where('Serie', $this->anio)
+                ->where('Folio',$nom['Folio'])
+                // ->select('Fecha','Complemento','Total')
+                ->get()->sum('Total');
                 ##############################################
-                // $ISR=XmlE::
-                // where('Emisor.Rfc',$this->rfcEmpresa)
-                // ->where('TipoDeComprobante','N')
-                //  ->where('Serie', $this->anio)
-                // ->where('Folio',$nom['Folio'])
-                // // ->select('Fecha','Complemento','Total')
-                // ->get()->sum('Complemento.0.Nomina.Deducciones.Deduccion.1.Importe');
+                $ISR=XmlE::
+                whereIn('UUID',$cont)
+                ->where('Emisor.Rfc',$this->rfcEmpresa)
+                ->where('TipoDeComprobante','N')
+                 ->where('Serie', $this->anio)
+                ->where('Folio',$nom['Folio'])
+                // ->select('Fecha','Complemento','Total')
+                ->get()->sum('Complemento.0.Nomina.Deducciones.Deduccion.1.Importe');
 
 
 
                 if (isset($nom['Complemento.0.Nomina.FechaFinalPago'])){
-                $dateValue = strtotime($nom['Complemento.0.Nomina.FechaFinalPago']);//obtener la fecha
+                $dateValue = strtotime($nom['Complemento.0.Nomina.FechaPago']);//obtener la fecha
                 $mes = date('m',$dateValue);// obtener el mes
                 $anio= date('Y',$dateValue);// obtener el año
                 }else{
 
-                $dateValue = strtotime($nom['Complemento.Nomina.FechaFinalPago']);//obtener la fecha
+                $dateValue = strtotime($nom['Complemento.Nomina.FechaPago']);//obtener la fecha
                 $mes = date('m',$dateValue);// obtener el mes
                 $anio= date('Y',$dateValue);// obtener el año
 
@@ -145,11 +176,17 @@
                                      @endphp
 
                             <tr>
-                         <td class="text-center align-middle">{{$nom['Folio']}} </td>
-                                      @if (isset($nom['Complemento.0.Nomina.FechaInicialPago']))
+                         <td class="text-center align-middle">
+                             @if ($nom['Complemento.0.Nomina.TipoNomina'] == "E")
+                             <a class="icon_basic">E</a>
+                             @endif
+                              {{$nom['Folio']}} </td>
+                                     @if (isset($nom['Complemento.0.Nomina.FechaInicialPago']))
+                                     @php  $fechaPago=$nom['Complemento.0.Nomina.FechaPago']  ;    @endphp
                         <td class="text-center align-middle">{{$nom['Complemento.0.Nomina.FechaInicialPago']}} al {{$nom['Complemento.0.Nomina.FechaFinalPago']}} </td>
                         <td class="text-center align-middle">{{$nom['Complemento.0.Nomina.FechaPago']}} </td>
                                      @else
+                                     @php  $fechaPago=$nom['Complemento.Nomina.FechaPago']  ;    @endphp
                        <td class="text-center align-middle">{{$nom['Complemento.Nomina.FechaInicialPago']}} al {{$nom['Complemento.Nomina.FechaFinalPago']}} </td>
                        <td class="text-center align-middle">{{$nom['Complemento.Nomina.FechaPago']}} </td>
                        @endif
@@ -178,27 +215,27 @@
 
 
                          <td class="text-center align-middle">
-                             <i data-toggle="modal"
-                            data-controls-modal="#raya"
-                            name="14" id="{{$nom['Folio']}}" data-backdrop="static"
-                            data-keyboard="false" onclick="filepondRaya('{{$this->rfcEmpresa}}','{{$anio}}','{{$nom['Folio']}}')"
-                            data-target="#raya{{ $nom['Folio'] }}" class="{{$clas}} fas fa-clipboard-list"></i>
+
+                            <a  wire:loading.attr="hidden" class="{{ $clas }} fas fa-clipboard-list"
+                            onclick="filepondRaya('{{$this->rfcEmpresa}}','{{$anio}}','{{$nom['Folio']}}')"
+                             data-toggle="modal"data-backdrop="static"
+                            data-target="#raya{{ $nom['Folio'] }}{{$fechaPago}}"></a>
                         </td>
                          <td class="text-center align-middle">
-                            <i data-toggle="modal"
-                            data-controls-modal="#recibosnom"
-                            name="14" id="{{$nom['Folio']}}" data-backdrop="static"
-                            data-keyboard="false" onclick="filepondRecibosNomina('{{$this->rfcEmpresa}}','{{$anio}}','{{$nom['Folio']}}')"
-                            data-target="#recibosnom{{ $nom['Folio'] }}" class="{{$clasR}} fas fa-file-invoice"></i>
+
+                            <a wire:loading.attr="hidden" class="{{$clasR}}  fas fa-file-invoice"
+                            onclick="filepondRecibosNomina('{{$this->rfcEmpresa}}','{{$anio}}','{{$nom['Folio']}}')"
+                             data-toggle="modal"data-backdrop="static"
+                            data-target="#recibosnom{{ $nom['Folio'] }}{{$fechaPago}}"></a>
 
                         </td>
                          <td class="text-center align-middle">
-                             <i  data-toggle="modal" data-controls-modal="#detallesEmpleados{{ $nom['Folio'] }}" data-backdrop="static"
-                             data-keyboard="false" data-target="#detallesEmpleados{{ $nom['Folio'] }}"   class=" icons fas fa-eye"></i></td>
-                         <td class="text-center align-middle"> </td>
-                         <td class="text-center align-middle"></td>
+                             <a wire:loading.attr="hidden" data-toggle="modal" data-controls-modal="#detallesEmpleados{{ $nom['Folio'] }}" data-backdrop="static"
+                             data-keyboard="false" data-target="#detallesEmpleados{{ $nom['Folio'] }}"   class=" icons fas fa-eye"></a></td>
+                         <td class="text-center align-middle">${{$TotalPagado}}</td>
+                         <td class="text-center align-middle">${{$ISR}}</td>
                          <td class="text-center align-middle">
-                            <i  data-toggle="modal"
+                            <i wire:loading.attr="hidden" data-toggle="modal"
                             data-controls-modal="#asingnarCheque"
                             name="14" id="{{$nom['Folio']}}" data-backdrop="static"
                             data-keyboard="false"
@@ -206,32 +243,31 @@
                         </td>
 
                             </tr>
-                            @livewire('lista-raya', ['raya' => $nom, 'RFC' =>$this->rfcEmpresa], key('user-profile-one-'.$nom['Folio']))
-                            @livewire('recibosnomina',['recibosNomina' => $nom, 'RFC' =>$this->rfcEmpresa], key('user-profile-twoo-'.$nom['Folio']))
-                            @livewire('asignar-cheque',['fecha'=>$nom['Complemento.0.Nomina.FechaFinalPago'],'asignarCheque' => $nom['Folio'],'RFC' =>$this->rfcEmpresa], key('user-profile-three-'.$nom['Folio']))
-                            @livewire('detallesempleados',['fecha'=>$nom['Complemento.0.Nomina.FechaFinalPago'],'folio' => $nom['Folio'],'RFC' =>$this->rfcEmpresa], key('user-profile-four-'.$nom['Folio']))
+                            {{-- <livewire:lista-raya :raya="$nom" :wire:key="'user-profile-one-'.$nom['Folio']"> --}}
+                            @livewire('lista-raya', ['folio' => $nom['Folio'], 'RFC' =>$this->rfcEmpresa, 'fecha'=> $fechaPago ,'ruta'=>$ruta], key('user-profile-one-'.$nom['Folio'].$fechaPago))
+                            @livewire('recibosnomina',['folio' => $nom['Folio'], 'RFC' =>$this->rfcEmpresa,'fecha'=> $fechaPago], key('user-profile-twoo-'.$nom['Folio'].$fechaPago))
+                            @livewire('asignar-cheque',['fecha'=>$nom['Complemento.0.Nomina.FechaFinalPago'],'asignarCheque' => $nom['Folio'],'RFC' =>$this->rfcEmpresa], key('user-profile-three-'.$nom['Folio'].$fechaPago))
+                            @livewire('detallesempleados',['anio'=>$anio,'fecha'=>$fechaPago,'folio' => $nom['Folio'],'RFC' =>$this->rfcEmpresa], key('user-profile-four-'.$nom['Folio'].$fechaPago))
                             @endforeach
 
                            </tbody>
 
                       {{---------  FIN  DEL FOR   -----}}
+
                        </table>
 
                    </div>
 
                </section>
 
-
-
-
+               <livewire:agregarcheque>
+                <livewire:vincular-pagos-automatico>
+                    <livewire:uploadrelacionados>
            </div>
        </div>
    </div>
 
-</div>
 
-
-<livewire:agregarcheque>
 
 
 
@@ -239,3 +275,4 @@
 
 
 </div>{{-------fin div principal-------}}
+

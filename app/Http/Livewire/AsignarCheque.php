@@ -17,7 +17,7 @@ class AsignarCheque extends Component
 
 
     public $asignarCheque; // coneccion al model cheques
-    public $RFC,$fechaFinal;
+    public $RFC,$fecha;
     public $chequesAsignados=[];
     public $condicion, $idNuevoCheque;
 
@@ -34,10 +34,11 @@ class AsignarCheque extends Component
     public function mount(){
 
 
-        $this->chequesAsignados[]="hola";
+
         $this->condicion='>';
         $this->idNuevoCheque=Null;
         $this->anio=date("Y");
+
 
     }
 
@@ -52,15 +53,25 @@ class AsignarCheque extends Component
     public function asignar(){
 
       $asignacion =XmlE::where('Emisor.Rfc',$this->RFC)
-      ->where('Complemento.0.Nomina.FechaFinalPago',$this->fechaFinal)
+      ->where('Complemento.0.Nomina.FechaFinalPago',$this->fecha)
       ->where('Folio',$this->asignarCheque)
       ->where('Serie', $this->anio)
-
       ->get();
 
+      foreach($asignacion as $a){
 
 
-$this->cont=count($asignacion);
+        $insert=MetadataE::where('folioFiscal',$a['UUID'])->first();
+        //$insert->push('cheques_id', $this->chequesAsignados);
+       //$insert->unset('cheques_id');
+      }
+
+
+
+
+
+
+// $this->cont=count($this->chequesAsignados);
 
 
 
@@ -68,14 +79,16 @@ $this->cont=count($asignacion);
 
 
 
-    public function enviar($a){
+    public function enviar($folio,$rfc,$fecha){
 
 
 
 
-        $this->emitTo('agregarcheque','arreg',$a);
+        $this->emitTo('agregarcheque','arreg',$folio,$rfc,$fecha);
 
     }
+
+
 
 
 
@@ -99,9 +112,10 @@ $this->cont=count($asignacion);
          $Cheques = Cheques::
          where('rfc', $this->RFC)
          ->where('tipoopera','Nómina')
+         ->orderBy('fecha','Desc')
 
          ->get();
 
-        return view('livewire.asignar-cheque',['datos'=>$this->asignarCheque,'RFC'=>$this->RFC,'Cheques'=>$Cheques,'chequesAsignados'=>$this->chequesAsignados]);
+        return view('livewire.asignar-cheque',['datos'=>$this->asignarCheque,'RFC'=>$this->RFC,'Cheques'=>$Cheques,'chequesAsig'=>$this->chequesAsignados,'fechaFinal'=>$this->fecha]);
     }
 }

@@ -252,14 +252,14 @@ $UUIDtemporales=DB::table('ppdPendientesVincular')->get();
    echo "####################--- [TEMPORALES] ---##################################<br>";
    foreach($UUIDtemporales as $temp):
 
-    if($temp->ppdRealcionados==NULL){
+if($temp->ppdRealcionados==NULL){
  ////////// se elimina el registro si ya no hay folios pendientes
 $temp->delete();
 
    }
 
 
- $metas=MetadataR::whereIn('folioFiscal',$temp['ppdRealcionados'] )->whereNotNull('cheques_id')->first();
+$metas=MetadataR::whereIn('folioFiscal',$temp['ppdRealcionados'] )->whereNotNull('cheques_id')->first();
 
 
  if($metas){

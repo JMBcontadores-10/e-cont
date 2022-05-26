@@ -93,12 +93,14 @@ $("#step3").fadeIn("slow");
 <div id="step1">
 
 {{--<h2><strong>C</strong></h2>--}}
-@if ($arr!="vacio")
-{{$arr}}
+{{-- @if ($folio!="vacio")
+{{$folio}}
+{{$rfc}}
+{{$fecha}}
 
 @else
 <p>  esta vacio</p>
-@endif
+@endif --}}
 <p>Llena los campos correspondientes</p>
 <div class="row">
    <div class="col-md-12 mx-0">
@@ -109,11 +111,10 @@ $("#step3").fadeIn("slow");
 <div  ALIGN="center">
 
 
-    @if (isset($chequesAsignados))
-    <form  wire:submit.prevent="AsignarChequeNuevo">
-     @else
+
+
     <form  wire:submit.prevent="guardar_nuevo_cheque">
-    @endif
+
 
    @csrf
    <div class="form-row">
@@ -121,8 +122,12 @@ $("#step3").fadeIn("slow");
 @if (auth()->user()->tipo || auth()->user()->TipoSE)
 
 
+       @if (isset($folio))
+
+
        <label for="inputState">Empresa</label>
-       <select wire:model="rfcEmpresa" id="empresas" class=" select form-control" required >
+
+     <select wire:model="rfcEmpresa" id="empresas" class=" select form-control" required disabled >
            <option  value="" >--Selecciona Empresa--</option>
            <?php $rfc=0; $rS=1;foreach($empresas as $fila)
            {
@@ -132,6 +137,25 @@ $("#step3").fadeIn("slow");
      }
            ?>
        </select>
+
+       @else
+
+       <label for="inputState">Empresa</label>
+       <select wire:model="rfcEmpresa" id="empresas" class=" select form-control" required  >
+           <option  value="" >--Selecciona Empresa--</option>
+           <?php $rfc=0; $rS=1;foreach($empresas as $fila)
+           {
+
+               echo '<option value="' . $fila[$rfc] . '">'. $fila[$rS] . '</option>';
+
+     }
+           ?>
+       </select>
+
+
+       @endif
+
+
 
        @endif
 
@@ -314,7 +338,6 @@ document.getElementById("tipo").disabled = false;
   </script>
 @endif
 @endif
-
 
 <input   name="adicionalesNuevoCheque" type="file" id="adicionalesNuevoCheque"  /><!--input filepond -->
 <div style="background-color: #61A2C8; color:white;"  class="alert  alert-dismissible mb-2" role="alert">
