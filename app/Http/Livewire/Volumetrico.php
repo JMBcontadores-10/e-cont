@@ -13,6 +13,8 @@ class Volumetrico extends Component
     //Variables globales
     public $rfcEmpresa;
     public $active = "hidden";
+    public $infogas;
+    public $sucursal;
 
     //Variables para la seccion del calendario
     public $mescal;
@@ -32,9 +34,55 @@ class Volumetrico extends Component
     public $historicopremium = [];
     public $historicodiesel = [];
 
+
     //Escuchar los emitidos de otros componentes
     public $listeners = ['volumrefresh' => '$refresh'];
 
+
+    //Metodo para marcar revisado los archvos PDF subidos
+    public function ReviPDF()
+    {
+        //Funcion de reviar PDF de empresa y sucursales
+        function RevisarPDF($tipo, $fechafin, $fechainic)
+        {
+            $infovolu = VolumetricoModel::where('rfc', $tipo);
+
+            //Obtenemos los datos del volumetrico
+            $datavolu = $infovolu->get()->first();
+
+            //Ciclo for para marcar las fechas
+            for ($i = $fechainic; $i <= $fechafin; $i = date("Y-m-d", strtotime($i . "+ 1 days"))) {
+                //Condicional para revisar solamente los que tenganv un PDF
+                if (!empty($datavolu['volumetrico.' . $i . '.PDFVolu'])) {
+                    $infovolu->update([
+                        'rfc' => $tipo,
+                        'volumetrico.' . $i . '.Revisado' => 1,
+                    ], ['upsert' => true]);
+                }
+            }
+        }
+
+        //Construimos la fecha inicial
+        $fechainicstr = $this->aniocal . '-' . $this->mescal . '-01';
+
+        //Contruimos la fecha final del  mes seleccionada
+        $fechafinstr = date('t', strtotime($fechainicstr));
+        $fechafinstr = $this->aniocal . '-' . $this->mescal . '-' . $fechafinstr;
+
+        //Establecemo las fechas de inicio y fin
+        $fechafin = date('Y-m-d', strtotime($fechafinstr));
+        $fechainic = date('Y-m-d', strtotime($fechainicstr));
+
+        //Condicional para saber si el seleccionado es una empresa o una sucursal
+        if (!empty($this->sucursal)) {
+            RevisarPDF($this->sucursal, $fechafin, $fechainic); //Si es sucursal
+        } else {
+            RevisarPDF($this->rfcEmpresa, $fechafin, $fechainic); //Si es empresa sin sucursal
+        }
+
+        //Cerramos el modal al terminar
+        $this->dispatchBrowserEvent('CerrarVoluRevi', []);
+    }
 
     //Metodo para consultar historico
     public function ConsulHistoric()
@@ -42,8 +90,13 @@ class Volumetrico extends Component
         //Condicional para verificar que las fechas estan puestas
         if (!empty($this->fechainic) && !empty($this->fechafin)) {
             //Almacenamos la consulta de todos los volumetricos para realizar el filtro
-            $historico = VolumetricoModel::where('rfc', $this->rfcEmpresa)
+            if(!empty($this->sucursal)){
+                $historico = VolumetricoModel::where('rfc', $this->sucursal)
                 ->get()->first();
+            }else{
+                $historico = VolumetricoModel::where('rfc', $this->rfcEmpresa)
+                ->get()->first();
+            }
 
             //Separamos los datos por combustibles
 
@@ -359,9 +412,17 @@ class Volumetrico extends Component
         $week .= str_repeat('<td></td>', $str);
 
         //Vamos a hacer una consulta a los volumetricos para obtener
-        $voludata = VolumetricoModel::where('rfc', $this->rfcEmpresa)
-            ->get()
-            ->first();
+
+        //Condicional para mostrar los volumetricos de una empresa o sucrusal
+        if (!empty($this->sucursal)) {
+            $voludata = VolumetricoModel::where('rfc', $this->sucursal)
+                ->get()
+                ->first();
+        } else {
+            $voludata = VolumetricoModel::where('rfc', $this->rfcEmpresa)
+                ->get()
+                ->first();
+        }
 
         //Ciclo for para llenar los campos con los dias que le pertenece
         for ($day = 01; $day <= $day_count; $day++, $str++) {
@@ -377,7 +438,8 @@ class Volumetrico extends Component
                 case $today:
                     $week .= '<td class="hoy" style="color:white">' . $day;
 
-                    if ($this->rfcEmpresa) {
+                    //Condicional para mostrar el contenido de cada dia
+                    if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infogas['Sucursales']))) {
                         //Mensaje de cambio de precio
                         if (!empty($voludata['volumetrico.' . $date . '-C.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterD'])) {
                             $week .= '<br> Cambio de precio <br>';
@@ -428,7 +490,8 @@ class Volumetrico extends Component
                 default:
                     $week .= '<td>' . $day;
 
-                    if ($this->rfcEmpresa) {
+                    //Condicional para mostrar el contenido de cada dia
+                    if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infogas['Sucursales']))) {
                         //Mensaje de cambio de precio
                         if (!empty($voludata['volumetrico.' . $date . '-C.InvDeterM']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterP']) || !empty($voludata['volumetrico.' . $date . '-C.InvDeterD'])) {
                             $week .= '<br> Cambio de precio <br>';
@@ -517,6 +580,8 @@ class Volumetrico extends Component
         //Ocultamos los botonos de exportacion
         $this->active = "hidden";
 
+        //Emitimos el metodo de refrescar la pagina
+        $this->emit('refrashpdfvolu');
         //Refrescamos la pagina
         $this->emit("volumrefresh");
     }
@@ -542,8 +607,8 @@ class Volumetrico extends Component
 
     public function render()
     {
-        //Obtenemos el valor del metodo del calendario
-        $weeks = $this->Calendario();
+        //Hacemos una consulta de la empresa para saber que datos vamos a mostrar
+        $this->infogas = User::where('RFC', $this->rfcEmpresa)->get()->first();
 
         //Arreglo de los meses
         $meses = array(
@@ -600,18 +665,11 @@ class Volumetrico extends Component
             $emp = '';
         }
 
-        //Hacemos una consulta de la empresa para saber que datos vamos a mostrar
-        $infogas = User::where('RFC', $this->rfcEmpresa)->get();
-
         //Obtenemos los datos requeridos
-        if (count($infogas) > 0) {
-            //Recorremos la consulta para obtener los datos
-            foreach ($infogas as $datagas) {
-                //Obtenemos los tipo de combustible que maneja las gasolineras
-                $this->Magna = $datagas->TipoM;
-                $this->Premium = $datagas->TipoP;
-                $this->Diesel = $datagas->TipoD;
-            }
+        if (!empty($this->infogas)) {
+            $this->Magna = $this->infogas['TipoM'];
+            $this->Premium = $this->infogas['TipoP'];
+            $this->Diesel = $this->infogas['TipoD'];
         } else {
             //De lo contrario los declaramos vacios
             $this->Magna = '';
@@ -619,7 +677,15 @@ class Volumetrico extends Component
             $this->Diesel = '';
         }
 
-        return view('livewire.volumetrico', ['empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'weeks' => $weeks, 'meses' => $meses, 'anios' => $anios])
+        //Condicional para limpiar la variable de sucursal
+        if (empty($this->infogas['Sucursales'])) {
+            $this->sucursal = "";
+        }
+
+        //Obtenemos el valor del metodo del calendario
+        $weeks = $this->Calendario();
+
+        return view('livewire.volumetrico', ['empresa' => $this->rfcEmpresa, 'sucursales' => $this->sucursal, 'empresas' => $emp, 'infogas' => $this->infogas, 'weeks' => $weeks, 'meses' => $meses, 'anios' => $anios])
             ->extends('layouts.livewire-layout')
             ->section('content');
     }

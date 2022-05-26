@@ -327,7 +327,7 @@ public function  recibosNomina(Request $r, $rfc,$anio,$periodo)
             //Descomponemos el id para obtener los datos enviados
             $iddescompuestos = explode("&", $id);
 
-            //RFC
+            //RFC 
             $RFC = $iddescompuestos[1];
 
             //Fecha
@@ -345,7 +345,7 @@ public function  recibosNomina(Request $r, $rfc,$anio,$periodo)
             $mesfPago = date('m', $dateValue);
             $mesActual = date('m');
 
-            $espa = new Cheques(); //Vamos a ocupas un metodo para
+            $espa = new Cheques(); //Vamos a ocupas un metodo para 
 
             //Nombramos al archivo
             $renameFile = $Id2 . $espa->fecha_es($mesActual) . $Id . "&" . $nombreArchivo;
@@ -389,7 +389,7 @@ public function  recibosNomina(Request $r, $rfc,$anio,$periodo)
             //Descomponemos el id para obtener los datos enviados
             $iddescompuestos = explode("&", $id);
 
-            //RFC
+            //RFC 
             $RFC = $iddescompuestos[1];
 
             //Fecha
@@ -407,7 +407,7 @@ public function  recibosNomina(Request $r, $rfc,$anio,$periodo)
             $mesfPago = date('m', $dateValue);
             $mesActual = date('m');
 
-            $espa = new Cheques(); //Vamos a ocupas un metodo para
+            $espa = new Cheques(); //Vamos a ocupas un metodo para 
 
             //Nombramos al archivo
             $renameFile = $Id2 . $espa->fecha_es($mesActual) . $Id . "&" . $nombreArchivo;

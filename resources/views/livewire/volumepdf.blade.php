@@ -140,7 +140,7 @@
                                             </div>
 
 
-                                            @if (empty($datavolu['volumetrico.' . $dia . '.PDFVolu']) || empty($datavolu['volumetrico.' . $dia . '.Fecha']))
+                                            @if (empty($datavolu['volumetrico.' . $dia . '.Revisado']))
                                                 <div class="BotonesPDFContainer">
                                                     <!--Eliminar PDF-->
                                                     <div class="BtnDelPDF" wire:loading.attr="disabled"

@@ -31,8 +31,8 @@
                 {{-- Encabezado --}}
                 <div class="modal-header">
                     <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
-                            class="icons fas fa-history">Historico {{ $empresa }}</span></h6>
-                    <button type="button" class="close" wire:click="Refresh()" data-dismiss="modal"
+                            class="icons fas fa-history">Histórico {{ $empresa }}</span></h6>
+                    <button type="button" class="closerevi close" wire:click="Refresh()" data-dismiss="modal"
                         aria-label="Close">
                         <span aria-hidden="true close-btn">×</span>
                     </button>
@@ -72,20 +72,31 @@
                         <div class="table-responsive">
                             <table id="voluhistorimagna" class="voluhistori {{ $class }}" style="width:100%">
                                 <thead>
-                                    <tr style="background-color:#C8F5DE">
-                                        <th colspan="9" class="text-center align-middle">MAGNA</th>
-                                        {{-- Columnas --}}
-                                    <tr style="background-color:#C8F5DE">
-                                        <th class="text-center align-middle">Fecha</th>
-                                        <th class="text-center align-middle">Inventario inicial</th>
-                                        <th class="text-center align-middle">Compras</th>
-                                        <th class="text-center align-middle">Litros vendidos</th>
-                                        <th class="text-center align-middle">Precio de compra</th>
-                                        <th class="text-center align-middle">Precio venta</th>
-                                        <th class="text-center align-middle">AutoStick</th>
-                                        <th class="text-center align-middle">Inventario determinado</th>
-                                        <th class="text-center align-middle">Merma</th>
+                                    <tr>
+                                        <th style="background-color:rgb(200, 245, 222)" colspan="9"
+                                            class="text-center align-middle">MAGNA</th>
                                     </tr>
+
+                                    {{-- Columnas --}}
+                                    <tr>
+                                        <th style="background-color:rgb(200, 245, 222)"
+                                            class="text-center align-middle">Fecha</th>
+                                        <th style="background-color:rgb(200, 245, 222)"
+                                            class="text-center align-middle">Inventario inicial</th>
+                                        <th style="background-color:rgb(200, 245, 222)"
+                                            class="text-center align-middle">Compras</th>
+                                        <th style="background-color:rgb(200, 245, 222)"
+                                            class="text-center align-middle">Litros vendidos</th>
+                                        <th style="background-color:rgb(200, 245, 222)"
+                                            class="text-center align-middle">Precio de compra</th>
+                                        <th style="background-color:rgb(200, 245, 222)"
+                                            class="text-center align-middle">Precio venta</th>
+                                        <th style="background-color:rgb(200, 245, 222)"
+                                            class="text-center align-middle">AutoStick</th>
+                                        <th style="background-color:rgb(200, 245, 222)"
+                                            class="text-center align-middle">Inventario determinado</th>
+                                        <th style="background-color:rgb(200, 245, 222)"
+                                            class="text-center align-middle">Merma</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -109,21 +120,31 @@
                             <table id="voluhistoripremium" class="voluhistori {{ $class }}" style="width:100%">
                                 <thead>
                                     {{-- Encabezado/Titulo --}}
-                                    <tr style="background-color:#FFD1D1">
-                                        <th colspan="9" class="text-center align-middle">PREMIUM</th>
+                                    <tr>
+                                        <th style="background-color:rgb(255, 209, 209)" colspan="9"
+                                            class="text-center align-middle">PREMIUM</th>
                                     </tr>
 
                                     {{-- Columnas --}}
-                                    <tr style="background-color:#FFD1D1">
-                                        <th class="text-center align-middle">Fecha</th>
-                                        <th class="text-center align-middle">Inventario inicial</th>
-                                        <th class="text-center align-middle">Compras</th>
-                                        <th class="text-center align-middle">Litros vendidos</th>
-                                        <th class="text-center align-middle">Precio de compra</th>
-                                        <th class="text-center align-middle">Precio venta</th>
-                                        <th class="text-center align-middle">AutoStick</th>
-                                        <th class="text-center align-middle">Inventario determinado</th>
-                                        <th class="text-center align-middle">Merma</th>
+                                    <tr>
+                                        <th style="background-color:rgb(255, 209, 209)"
+                                            class="text-center align-middle">Fecha</th>
+                                        <th style="background-color:rgb(255, 209, 209)"
+                                            class="text-center align-middle">Inventario inicial</th>
+                                        <th style="background-color:rgb(255, 209, 209)"
+                                            class="text-center align-middle">Compras</th>
+                                        <th style="background-color:rgb(255, 209, 209)"
+                                            class="text-center align-middle">Litros vendidos</th>
+                                        <th style="background-color:rgb(255, 209, 209)"
+                                            class="text-center align-middle">Precio de compra</th>
+                                        <th style="background-color:rgb(255, 209, 209)"
+                                            class="text-center align-middle">Precio venta</th>
+                                        <th style="background-color:rgb(255, 209, 209)"
+                                            class="text-center align-middle">AutoStick</th>
+                                        <th style="background-color:rgb(255, 209, 209)"
+                                            class="text-center align-middle">Inventario determinado</th>
+                                        <th style="background-color:rgb(255, 209, 209)"
+                                            class="text-center align-middle">Merma</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -146,21 +167,31 @@
                         <div class="table-responsive">
                             <table id="voluhistoridiesel" class="voluhistori {{ $class }}" style="width:100%">
                                 <thead>
-                                    <tr style="background-color:#cdcdcd">
-                                        <th colspan="9" class="text-center align-middle">DIESEL</th>
+                                    <tr>
+                                        <th style="background-color:rgb(205, 205, 205)" colspan="9"
+                                            class="text-center align-middle">DIESEL</th>
                                     </tr>
 
                                     {{-- Columnas --}}
-                                    <tr style="background-color:#cdcdcd">
-                                        <th class="text-center align-middle">Fecha</th>
-                                        <th class="text-center align-middle">Inventario inicial</th>
-                                        <th class="text-center align-middle">Compras</th>
-                                        <th class="text-center align-middle">Litros vendidos</th>
-                                        <th class="text-center align-middle">Precio de compra</th>
-                                        <th class="text-center align-middle">Precio venta</th>
-                                        <th class="text-center align-middle">AutoStick</th>
-                                        <th class="text-center align-middle">Inventario determinado</th>
-                                        <th class="text-center align-middle">Merma</th>
+                                    <tr>
+                                        <th style="background-color:rgb(205, 205, 205)"
+                                            class="text-center align-middle">Fecha</th>
+                                        <th style="background-color:rgb(205, 205, 205)"
+                                            class="text-center align-middle">Inventario inicial</th>
+                                        <th style="background-color:rgb(205, 205, 205)"
+                                            class="text-center align-middle">Compras</th>
+                                        <th style="background-color:rgb(205, 205, 205)"
+                                            class="text-center align-middle">Litros vendidos</th>
+                                        <th style="background-color:rgb(205, 205, 205)"
+                                            class="text-center align-middle">Precio de compra</th>
+                                        <th style="background-color:rgb(205, 205, 205)"
+                                            class="text-center align-middle">Precio venta</th>
+                                        <th style="background-color:rgb(205, 205, 205)"
+                                            class="text-center align-middle">AutoStick</th>
+                                        <th style="background-color:rgb(205, 205, 205)"
+                                            class="text-center align-middle">Inventario determinado</th>
+                                        <th style="background-color:rgb(205, 205, 205)"
+                                            class="text-center align-middle">Merma</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -174,6 +205,42 @@
                             </table>
                         </div>
                     @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal revisado --}}
+    {{-- Creacion del modal (BASE) --}}
+    <div wire:ignore.self class="modal fade" id="revisapdf" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true" class="volucaptumodal">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                {{-- Encabezado --}}
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
+                            class="icons fas fa-check-circle">Revisado PDF</span></h6>
+                    <button type="button" class="closerevi close" wire:click="Refresh()" data-dismiss="modal"
+                        aria-label="Close">
+                        <span aria-hidden="true close-btn">×</span>
+                    </button>
+                </div>
+                {{-- Cuerpo del modal --}}
+                <div class="modal-body">
+                    <h5>Esta opción marca como revisado los PDF subidos del mes y bloquea la opción de eliminar el
+                        archivo PDF
+                    </h5>
+
+                    <br>
+
+                    <div align="center">
+                        <h5>¿Está seguro de marcar como revisado?</h5>
+
+                        <br>
+
+                        <button wire:click="ReviPDF()" class="btn btn-success BtnVinculadas">Marcar como
+                            revisado</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -200,7 +267,23 @@
                                 echo '<option value="' . $fila[$rfc] . '">' . $fila[$rS] . '</option>';
                             } ?>
                         </select>
+
+                        <br>
                     @endempty
+
+                    {{-- Select para selccionar la empresa (Contadores) --}}
+                    @if (!empty($infogas['Sucursales']))
+                        {{-- Mostramos el RFC de la empresa que se selecciona --}}
+                        <label for="inputState">Sucursal: {{ $sucursales }}</label>
+                        <select wire:model="sucursal" wire:change="Refresh()" class="select form-control">
+                            <option value="">--Selecciona Sucursal--</option>
+
+                            {{-- Mostramos las sucursales --}}
+                            @foreach ($infogas['Sucursales'] as $datagas)
+                                <option value="{{ $datagas['RFC'] }}">{{ $datagas['Nombre'] }}</option>
+                            @endforeach
+                        </select>
+                    @endif
 
                     <br>
 
@@ -289,9 +372,17 @@
                         </select>
                         &nbsp;&nbsp;&nbsp;&nbsp;
 
-                        {{-- Historico --}}
-                        <button class="btn btn-secondary" data-toggle="modal" data-target="#voluhistorymodal"
-                            data-backdrop="static" data-keyboard="false">Historico</button>
+                        {{-- Revisado --}}
+                        @if (auth()->user()->tipo && !empty($empresa))
+                            {{-- Historico --}}
+                            <button class="btn btn-secondary BtnVinculadas" data-toggle="modal"
+                                data-target="#voluhistorymodal" data-backdrop="static"
+                                data-keyboard="false">Histórico</button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+
+                            <button class="btn btn-success BtnVinculadas" data-toggle="modal" data-target="#revisapdf"
+                                data-backdrop="static" data-keyboard="false">Marcar revisado PDF</button>
+                        @endif
                     </div>
 
                     <br>
@@ -336,15 +427,33 @@
             $fecha = date('Y-m-d', strtotime($aniocal . '-' . $mescal . '-' . $dias)); //Creacion de la fecha con el formato
         @endphp
 
-        {{-- Llamamos al componente del modal junto con los datos necesarios --}}
-        <livewire:volumedata :empresa=$empresa :dia=$fecha :wire:key="'user-profile-one-'.$empresa.$fecha">
-            <livewire:volumepdf :empresa=$empresa :dia=$fecha :wire:key="'user-profile-two-'.$empresa.$fecha">
-                <livewire:volumecre :empresa=$empresa :dia=$fecha :wire:key="'user-profile-three-'.$empresa.$fecha">
+        {{-- Condicional para saber si se selecciono una sucursal --}}
+        @if (!empty($sucursales))
+            {{-- Llamamos al componente del modal junto con los datos necesarios --}}
+            <livewire:volumedata :empresa=$sucursales :dia=$fecha :wire:key="'user-profile-one-'.$sucursales.$fecha">
+                <livewire:volumepdf :empresa=$sucursales :dia=$fecha :wire:key="'user-profile-two-'.$sucursales.$fecha">
+                    <livewire:volumecre :empresa=$sucursales :dia=$fecha
+                        :wire:key="'user-profile-three-'.$sucursales.$fecha">
+                    @else
+                        {{-- Llamamos al componente del modal junto con los datos necesarios --}}
+                        <livewire:volumedata :empresa=$empresa :dia=$fecha
+                            :wire:key="'user-profile-one-'.$empresa.$fecha">
+                            <livewire:volumepdf :empresa=$empresa :dia=$fecha
+                                :wire:key="'user-profile-two-'.$empresa.$fecha">
+                                <livewire:volumecre :empresa=$empresa :dia=$fecha
+                                    :wire:key="'user-profile-three-'.$empresa.$fecha">
+        @endif
     @endfor
 
     {{-- Js --}}
     <script>
         $(document).ready(function() {
+            //Hacemos click al boton de cerrar del modal
+            window.addEventListener('CerrarVoluRevi', event => {
+                $(".closerevi").click();
+            });
+
+
             //Funcion para obtener la fecha seleccionada
             $(".selectfecha").click(function() {
                 //Guardamos en una variable el atributo que contiene la fecha
@@ -353,9 +462,19 @@
                 //Almacenamos la fecha seleccionada en un input
                 $("#FechaSelect").val(fechaselect);
 
-                //Creamos el ID y la ruta ID
-                var rutaid = "volupdf" + fechaselect + "&{{ $empresa }}";
-                var id = fechaselect + "&{{ $empresa }}";
+                //Variable que alamcenara el rfc de la sucursal
+                var RFCSucur = '{{ $sucursales }}';
+
+                //Condicional para saber si elegimos una sucursal o una empresa
+                if (RFCSucur.length < 1) {
+                    //Creamos el ID y la ruta ID
+                    var rutaid = "volupdf" + fechaselect + "&{{ $empresa }}";
+                    var id = fechaselect + "&{{ $empresa }}";
+                } else {
+                    //Creamos el ID y la ruta ID
+                    var rutaid = "volupdf" + fechaselect + "&{{ $sucursales }}";
+                    var id = fechaselect + "&{{ $sucursales }}";
+                }
 
                 //Llamamos a la funcion de FilePond
                 FilePondPDFVolu(rutaid, id);
@@ -368,9 +487,19 @@
                 //Almacenamos la fecha seleccionada en un input
                 $("#FechaSelect").val(fechaselect);
 
-                //Creamos el ID y la ruta ID
-                var rutaidcre = "volupdfcre" + fechaselect + "&{{ $empresa }}";
-                var idcre = fechaselect + "&{{ $empresa }}";
+                //Variable que alamcenara el rfc de la sucursal
+                var RFCSucur = '{{ $sucursales }}';
+
+                //Condicional para saber si elegimos una sucursal o una empresa
+                if (RFCSucur.length < 1) {
+                    //Creamos el ID y la ruta ID
+                    var rutaidcre = "volupdfcre" + fechaselect + "&{{ $empresa }}";
+                    var idcre = fechaselect + "&{{ $empresa }}";
+                } else {
+                    //Creamos el ID y la ruta ID
+                    var rutaidcre = "volupdfcre" + fechaselect + "&{{ $sucursales }}";
+                    var idcre = fechaselect + "&{{ $sucursales }}";
+                }
 
                 //Llamamos a la funcion de FilePond
                 FilePondPDFCRE(rutaidcre, idcre);

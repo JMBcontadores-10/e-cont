@@ -1,6 +1,11 @@
 function exportReportToExcel(empresa) {
       $('.voluhistori').tableExport({
-            type: 'excel', fileName: 'E-cont Volumetrico ' + empresa});
+            type: 'excel',
+            fileName: 'E-cont Volumetrico ' + empresa,
+            mso: {
+                  styles: ['background-color'],
+            }
+      });
 }
 
 
@@ -9,9 +14,16 @@ function exportReportToPdf(empresa) {
       $('.voluhistori').tableExport({
             fileName: 'E-cont Volumetrico ' + empresa,
             type: 'pdf',
-            pdfmake: {
-                  enabled: true,
-                  docDefinition: { pageOrientation: 'landscape' }
+            jspdf: {
+                  orientation: 'l',
+                  format: 'a4',
+                  autotable: {
+                        styles: {
+                              fillColor: 'inherit',
+                              textColor: 'inherit',
+                        },
+                        tableWidth: 'auto',
+                  }
             }
       });
 }
