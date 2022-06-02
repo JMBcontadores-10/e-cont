@@ -86,18 +86,18 @@ class DescargasAutomaticas extends Controller
   public $rfcs = [/// array que contiene las empresas
     // '1',
    // 'AHF060131G59',
-// 'AHF060131G59',
+//'AHF060131G59',
 //     'AFU1809135Y4',
 //   'AIJ161001UD1',
 //    'AAE160217C36',
-//    'CDI1801116Y9',
+    'CDI1801116Y9',
 //    'COB191129AZ2',
 //    'DOT1911294F3',
 //     'DRO191104EZ0',
 //    'DRO191129DK5',
 //    'ERO1911044L4',
  // 'PERE9308105X4',
-   'FGA980316918',
+ //  'FGA980316918',
 //    'GPA161202UG8',
 //    'GEM190507UW8',
 //    'GPR020411182',
@@ -371,8 +371,8 @@ try{
               $satScraper = new SatScraper(FielSessionManager::create($credential), $gateway, $handler);
               $rutas =
               [
-                  //'Emitidos',
-                  'Recibidos'
+                  'Emitidos',
+                  //'Recibidos'
               ];
               foreach ($rutas as $r) {
                 $totaldesc=0;
@@ -385,8 +385,8 @@ try{
 
                   /// -->[EMITIDOS]<---/////
                   $query = new QueryByFilters(
-                    new DateTimeImmutable('2022-04-01'),
-                      new DateTimeImmutable('2022-04-05'),
+                    new DateTimeImmutable('2022-05-01'),
+                      new DateTimeImmutable('2022-05-24'),
 
                   );
 

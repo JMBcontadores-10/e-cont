@@ -152,7 +152,6 @@
   </select>
 &nbsp;&nbsp;
 
-
            {{-- Busqueda por mes --}}
         <input required class="form-control" type="date" min="2014-01-01"
         max={{ $date }} wire:model.defer="fecha_ini"  >

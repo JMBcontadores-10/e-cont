@@ -60,7 +60,7 @@ $("#step3").fadeIn("slow");
 
 
 
-<div wire:ignore.self class="modal fade" id="nuevo-cheque" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div  wire:ignore.self class="modal fade" id="nuevo-cheque" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog " role="document">
       <div class="modal-content">
           <div class="modal-header">
@@ -78,6 +78,9 @@ $("#step3").fadeIn("slow");
 
           </div>
 <div class="modal-body"><!--modal body -->
+@if (isset($chequesAsignados))
+{{var_dump($chequesAsignados)}}
+@endif
 
   {{-- <div class="steps">
   <div class="active_step step_desing"> <li  style="color:white;"class="icons fas fa-plus"></li><br>Información Basica</div>
@@ -90,6 +93,14 @@ $("#step3").fadeIn("slow");
 <div id="step1">
 
 {{--<h2><strong>C</strong></h2>--}}
+{{-- @if ($folio!="vacio")
+{{$folio}}
+{{$rfc}}
+{{$fecha}}
+
+@else
+<p>  esta vacio</p>
+@endif --}}
 <p>Llena los campos correspondientes</p>
 <div class="row">
    <div class="col-md-12 mx-0">
@@ -99,15 +110,24 @@ $("#step3").fadeIn("slow");
 <!----------------------------------- ---->
 <div  ALIGN="center">
 
-<form  wire:submit.prevent="guardar_nuevo_cheque">
+
+
+
+    <form  wire:submit.prevent="guardar_nuevo_cheque">
+
+
    @csrf
    <div class="form-row">
 
 @if (auth()->user()->tipo || auth()->user()->TipoSE)
 
 
+       @if (isset($folio))
+
+
        <label for="inputState">Empresa</label>
-       <select wire:model="rfcEmpresa" id="empresas" class=" select form-control" required >
+
+     <select wire:model="rfcEmpresa" id="empresas" class=" select form-control" required disabled >
            <option  value="" >--Selecciona Empresa--</option>
            <?php $rfc=0; $rS=1;foreach($empresas as $fila)
            {
@@ -118,11 +138,30 @@ $("#step3").fadeIn("slow");
            ?>
        </select>
 
+       @else
+
+       <label for="inputState">Empresa</label>
+       <select wire:model="rfcEmpresa" id="empresas" class=" select form-control" required  >
+           <option  value="" >--Selecciona Empresa--</option>
+           <?php $rfc=0; $rS=1;foreach($empresas as $fila)
+           {
+
+               echo '<option value="' . $fila[$rfc] . '">'. $fila[$rS] . '</option>';
+
+     }
+           ?>
+       </select>
+
+
+       @endif
+
+
+
        @endif
 
 
        {{-- <script>
-         
+
     $('#empresas').on('change', function() {
 
 //alert('hola');
@@ -299,7 +338,6 @@ document.getElementById("tipo").disabled = false;
   </script>
 @endif
 @endif
-
 
 <input   name="adicionalesNuevoCheque" type="file" id="adicionalesNuevoCheque"  /><!--input filepond -->
 <div style="background-color: #61A2C8; color:white;"  class="alert  alert-dismissible mb-2" role="alert">

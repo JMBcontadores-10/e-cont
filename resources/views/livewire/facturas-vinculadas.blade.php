@@ -544,7 +544,6 @@ $iva_Egreso [] = $vIva;
 
 
 
-
         </div><!--end modal body -->
     </div>
   </div>

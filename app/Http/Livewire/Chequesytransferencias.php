@@ -96,7 +96,11 @@ $this->condicion='>=';
         'mostvincu' => 'mostmovivincu',
         'notivincu'=>'notivinculo',
         'vercheq'=>'vercheque',
+
      ];
+
+
+
 
 public function mostmovivincu($data)
 {

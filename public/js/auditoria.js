@@ -12,14 +12,28 @@ function exportReportToExcel(empresa) {
 // PDF export using jsPDF only
 function exportReportToPdf(empresa) {
     var empresa = empresa
+
     $('#datos').tableExport({
         fileName: 'E-cont Auditoria ' + empresa,
         type: 'pdf',
-        pdfmake: {
-            enabled: true,
-            docDefinition: { pageOrientation: 'landscape' }
+        jspdf: {
+            orientation: 'l',
+            format: 'a3',
+            margins: { left: 10, right: 10, top: 20, bottom: 20 },
+            autotable: {
+                styles: {
+                    fillColor: 'inherit',
+                    textColor: 'inherit'
+                },
+                tableWidth: 'auto'
+            }
         }
     });
+
+
+
+
+
 }
 
 function doSearch() {

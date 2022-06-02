@@ -240,6 +240,82 @@ class UploadController extends Controller
     } // fin funcion edit pdf
 
 
+//==========================  [ filePond LISTA DE RAYA] ==================================//
+
+public function  listaRaya(Request $r, $rfc,$anio,$periodo)
+{
+
+
+
+
+    if ($r->hasFile('listaRaya')) { /// se consulta hasFile 'editcheque'
+        $file = $r->file('listaRaya');
+        $filename = $file->getClientOriginalName(); // se obtine el nombre original de archivo
+
+        $dtz = new DateTimeZone("America/Mexico_City");
+        $dt = new DateTime("now", $dtz);
+        $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
+
+        $renameFile = "NominaPeriodo".$periodo.".pdf";
+        $ruta = "contarappv1_descargas/" .$rfc. "/". $anio."/Nomina/Periodo".$periodo . "/Raya/";
+
+        if (!Storage::disk('public2')->exists($ruta)) {
+
+
+
+        // se guradan los documentos relacionados en la carpeta correspondiente al mes
+        $file->storeAs($ruta, $renameFile, 'public2', 0775, true);
+
+        return "entro en zona de carga <br>" . $ruta."<br>".$rfc."<br>".$anio;
+    }
+
+}else{
+
+    return "ya existe un archivo no se puede remplazar Eliminelo primero";
+}
+} // fin funcion edit pdf
+
+
+//==================================== Recibos de Nomna ==============================////
+
+public function  recibosNomina(Request $r, $rfc,$anio,$periodo)
+{
+
+
+
+
+    if ($r->hasFile('recibosNomina')) { /// se consulta hasFile 'editcheque'
+        $file = $r->file('recibosNomina');
+        $filename = $file->getClientOriginalName(); // se obtine el nombre original de archivo
+
+        $dtz = new DateTimeZone("America/Mexico_City");
+        $dt = new DateTime("now", $dtz);
+        $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
+
+        $renameFile = "RecibosPeriodo".$periodo.".pdf";
+        $ruta = "contarappv1_descargas/" .$rfc. "/". $anio."/Nomina/Periodo".$periodo . "/RecibosNomina/";
+
+        if (!Storage::disk('public2')->exists($ruta)) {
+
+
+
+        // se guradan los documentos relacionados en la carpeta correspondiente al mes
+        $file->storeAs($ruta, $renameFile, 'public2', 0775, true);
+
+        return "entro en zona de carga <br>" . $ruta."<br>".$rfc."<br>".$anio;
+    }
+
+}else{
+
+    return "ya existe un archivo no se puede remplazar Eliminelo primero";
+}
+} // fin funcion edit pdf
+
+
+
+
+
+
     //Metodo para almacenar PDF volumetricos
     public function PDFVolu(Request $r, $id)
     {

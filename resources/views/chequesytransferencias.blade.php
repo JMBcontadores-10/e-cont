@@ -148,9 +148,9 @@ use App\Http\Controllers\ChequesYTransferenciasController;
             </thead>
             <tbody class="buscar">
                 @foreach ($colCheques as $i)
-              
+
                     @php
-                       
+
                         $editar = true;
                         $id = $i['_id'];
                         $tipo = $i['tipomov'];
@@ -516,7 +516,7 @@ use App\Http\Controllers\ChequesYTransferenciasController;
 
       </nav>
 
-      
+
 
 
 

@@ -8,10 +8,13 @@ use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cheques;
+use App\Models\MetadataE;
 use App\Models\Notificaciones;
+use App\Models\XmlE;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+
 use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Support\Facades\DB;
@@ -20,6 +23,7 @@ class Agregarcheque extends Component
 {
 
  use WithFileUploads;
+
     // public Cheques $ajusteCheque; // coneccion al model cheques
     public Cheques $Crear;// enlaza al modelo cheques
     public $Nuevo_numcheque,
@@ -31,12 +35,29 @@ class Agregarcheque extends Component
     $Nuevo_nombrec,
     $rfcEmpresa,
     $pushArchivos=[],
-    $step3;
+    $step3,
+    $folio,
+    $rfc,
+    $fecha;
+
 
 
     public $idNuevoCheque;
 
-    protected $listeners = ['actualizar' => '$refresh' ]; // listeners para refrescar el modal
+    protected $listeners = ['actualizar' => '$refresh',
+   'arreg'
+
+]; // listeners para refrescar el modal
+
+
+public function arreg($folio,$rfc,$fecha){
+
+$this->folio=$folio;
+$this->rfc=$rfc;
+$this->fecha=$fecha;
+$this->rfcEmpresa=$rfc;
+
+}
 
     public function mount()
     {
@@ -50,6 +71,8 @@ class Agregarcheque extends Component
        $this->idNuevoCheque=null;
 
        $this->step3=true;
+
+       $this->arr="vacio";
 
     }
 
@@ -78,9 +101,6 @@ class Agregarcheque extends Component
 
 
     public function guardar_nuevo_cheque(){
-
-
-
 
 
         $dtz = new DateTimeZone("America/Mexico_City");
@@ -164,6 +184,13 @@ class Agregarcheque extends Component
       //  $this->dispatchBrowserEvent('hola', []);
 }
 
+
+
+//######## [se identifica si viene de nominas la creacion del nuevo cheque para vincular el cheque alos empleados]#########///
+
+
+//##### [FIN DE LA SECCION NOMINAS ]###################///
+
 /// crea la notificacion
 $tipo[]='CA';
 $chequeC1 = Notificaciones::create([
@@ -192,6 +219,30 @@ $this->Nuevo_tipomov="";
 $this->Nuevo_tipoopera="";
 
 
+######################### [ SI EL CHEQUE SE CREA DESDE NOMINAS SE ASIGNA EL ID ALOS EMPLEADOS ]################
+if($this->folio){
+    // $this->folio="definido";
+
+    $dat = strtotime($this->fecha);//obtener la fecha
+    $anio= date('Y',$dat);// obtener el año
+
+    $asignacion =XmlE::where('Emisor.Rfc',$this->rfc)
+    ->where('Complemento.0.Nomina.FechaFinalPago',$this->fecha)
+    ->where('Folio',$this->folio)
+    ->where('Serie', $anio)
+    ->get();
+
+    foreach($asignacion as $a){
+
+
+      $insert=MetadataE::where('folioFiscal',$a['UUID'])->first();
+      $insert->push('cheques_id', $chequeC->_id);
+     //$insert->unset('cheques_id');
+    }
+
+    }
+######################### [ FIN ]################
+
 //$this->dispatchBrowserEvent('cier', []);// recarga la pagina mediante js checar chequesytranscontrol.js
 $this->emitTo( 'chequesytransferencias','chequesRefresh');//actualiza la tabla cheques y transferencias
 
@@ -217,6 +268,7 @@ $this->emitTo( 'notification-secction','avisoPush');
 
     public function render()
     {
+
 
         if(!empty(auth()->user()->tipo) ||!empty(auth()->user()->TipoSE) ){
 
@@ -246,7 +298,7 @@ $this->emitTo( 'notification-secction','avisoPush');
 
 
                 }//end if
-        return view('livewire.agregarcheque',['empresas'=>$emp, 'idNuevoCheque'=>$this->idNuevoCheque,'step3'=>$this->step3]);
+        return view('livewire.agregarcheque',['empresas'=>$emp, 'idNuevoCheque'=>$this->idNuevoCheque,'step3'=>$this->step3,'folio'=>$this->folio,'rfc'=>$this->rfc,'fecha'=>$this->fecha]);
     }
 
 
