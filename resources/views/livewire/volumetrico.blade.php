@@ -305,40 +305,40 @@
                             //Swich para convertir Int mes en String
                             switch ($mescal) {
                                 case 1:
-                                    $mescalstr = 'Enero de ';
+                                    $mescalstr = 'Enero ';
                                     break;
                                 case 2:
-                                    $mescalstr = 'Febrero de ';
+                                    $mescalstr = 'Febrero ';
                                     break;
                                 case 3:
-                                    $mescalstr = 'Marzo de ';
+                                    $mescalstr = 'Marzo ';
                                     break;
                                 case 4:
-                                    $mescalstr = 'Abril de ';
+                                    $mescalstr = 'Abril ';
                                     break;
                                 case 5:
-                                    $mescalstr = 'Mayo de ';
+                                    $mescalstr = 'Mayo ';
                                     break;
                                 case 6:
-                                    $mescalstr = 'Junio de ';
+                                    $mescalstr = 'Junio ';
                                     break;
                                 case 7:
-                                    $mescalstr = 'Julio de ';
+                                    $mescalstr = 'Julio ';
                                     break;
                                 case 8:
-                                    $mescalstr = 'Agosto de ';
+                                    $mescalstr = 'Agosto ';
                                     break;
                                 case 9:
-                                    $mescalstr = 'Septiembre de ';
+                                    $mescalstr = 'Septiembre ';
                                     break;
                                 case 10:
-                                    $mescalstr = 'Octubre de ';
+                                    $mescalstr = 'Octubre ';
                                     break;
                                 case 11:
-                                    $mescalstr = 'Noviembre de ';
+                                    $mescalstr = 'Noviembre ';
                                     break;
                                 case 12:
-                                    $mescalstr = 'Diciembre de ';
+                                    $mescalstr = 'Diciembre ';
                                     break;
                             }
                         @endphp

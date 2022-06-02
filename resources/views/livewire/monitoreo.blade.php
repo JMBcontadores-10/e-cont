@@ -1,7 +1,7 @@
 <div>
     {{-- Libreria de exportacion --}}
     <script src="{{ asset('js/tableExport/libs/FileSaver/FileSaver.min.js') }}" defer></script>
-    <script src="{{ asset('js/tableExport/tableExport.min.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/tableExport.js') }}" defer></script>
     <script src="{{ asset('js/tableExport/libs/jsPDF/jspdf.umd.min.js') }}" defer></script>
     <script src="{{ asset('js/tableExport/libs/pdfmake/pdfmake.min.js') }}" defer></script>
     <script src="{{ asset('js/tableExport/libs/pdfmake/vfs_fonts.js') }}" defer></script>
@@ -22,6 +22,9 @@
         if (empty($class)) {
             $class = 'table nowrap dataTable no-footer';
         }
+        
+        //Descomponemos el Json en un objeto
+        $consulmetaporhora = json_decode($consulemit);
     @endphp
 
     {{-- Contenedor para mantener responsivo el contenido del modulo --}}
@@ -68,7 +71,7 @@
 
                     {{-- Filtros de busqueda --}}
                     <label>Periodo a consultar</label>
-                    <form wire:submit.prevent="ConsulMeta">
+                    <form wire:submit.prevent="ConsulEmit">
                         {{-- Filtros de busqueda --}}
                         <div class="form-inline mr-auto">
                             <input class="form-control" id="fecha" wire:model.defer="fechainic" type="date"
@@ -83,20 +86,12 @@
                                 wire:loading.attr="disabled">Buscar</button>
                             &nbsp;&nbsp;
 
-                            <button {{ $active }} type="button" class="btn btn-success BtnVinculadas"
-                                onclick="exportReportToExcel('{{ $fechaayer }}')">Excel</button>
-                            &nbsp;&nbsp;
-
-                            <button {{ $active }} type="button" class="btn btn-danger BtnVinculadas"
-                                onclick="exportReportToPdf('{{ $fechaayer }}')">Pdf</button>
-
-
                             {{-- Espaciado --}}
-                            <div id="espmonifilt" style="width: 8.2em;"></div>
+                            <div id="espmonifilt" style="width: 18.6em;"></div>
 
-                            <button {{ $active }} id="btnfactuclient" type="button" data-backdrop="static" data-keyboard="false"
-                                data-toggle="modal" data-target="#factuporclient"
-                                class="btn btn-secondary BtnVinculadas">
+                            <button {{ $active }} wire:click="ClientDetaActive()" type="button"
+                                data-backdrop="static" data-keyboard="false" data-toggle="modal"
+                                data-target="#factuporclient" class="btn btn-secondary BtnVinculadas">
                                 Factu. por cliente</button>
                             &nbsp;&nbsp;
 
@@ -108,6 +103,7 @@
                     </form>
 
                     <br>
+
 
                     <div class="row">
                         {{-- Tabla de informacion de las facturas por hora --}}
@@ -141,6 +137,33 @@
                                                 //Variables de contadores y sumatorios
                                                 $facturas = 0;
                                                 $monto = 0;
+                                                
+                                                //Condicional para saber si hay un dato de consulta
+                                                if ($consulmetaporhora) {
+                                                    //Ciclo para obtener los datos de la consulta
+                                                    foreach ($consulmetaporhora as $factura) {
+                                                        //Obtenemos la fecha
+                                                        $hora = date('G', strtotime($factura->FechaEmision));
+                                                
+                                                        //Condicional para verificar si la hora concuerda
+                                                        if ($hora == $i) {
+                                                            //Si concuerda vamos acumulando las facturas
+                                                            $facturas++;
+                                                            //Si concuerda vamos sumando los totales
+                                                            $monto += floatval($factura->Total);
+                                                        }
+                                                    }
+                                                
+                                                    //Obtenemos la cantidad de facturas
+                                                    array_push($cantidades, $facturas);
+                                                    //Obtenemos la cantidad de facturas
+                                                    array_push($montos, $monto);
+                                                
+                                                    //Sumamos la el total obtenido
+                                                    $totalfact += $facturas;
+                                                    //Sumamos la el total obtenido
+                                                    $totalmonto += $monto;
+                                                }
                                             @endphp
 
                                             <tr>
@@ -153,27 +176,6 @@
                                                 <td>
                                                     {{-- Condicional para saber si hay un dato de consulta --}}
                                                     @if ($consulmetaporhora)
-                                                        {{-- Ciclo para obtener los datos de la consulta --}}
-                                                        @foreach ($consulmetaporhora as $factura)
-                                                            @php
-                                                                //Obtenemos la fecha
-                                                                $hora = date('G', strtotime($factura['fechaEmision']));
-                                                                
-                                                                //Condicional para verificar si la hora concuerda
-                                                                if ($hora == $i) {
-                                                                    //Si concuerda vamos acumulando las facturas
-                                                                    $facturas++;
-                                                                }
-                                                            @endphp
-                                                        @endforeach
-
-                                                        @php
-                                                            //Obtenemos la cantidad de facturas
-                                                            array_push($cantidades, $facturas);
-                                                            //Sumamos la el total obtenido
-                                                            $totalfact += intval($facturas);
-                                                        @endphp
-
                                                         {{-- Mostramos el total --}}
                                                         {{ $facturas }}
                                                     @else
@@ -185,33 +187,11 @@
                                                 <td>
                                                     {{-- Condicional para saber si hay un dato de consulta --}}
                                                     @if ($consulmetaporhora)
-                                                        {{-- Ciclo para obtener los datos de la consulta --}}
-                                                        @foreach ($consulmetaporhora as $factura)
-                                                            @php
-                                                                //Obtenemos la fecha
-                                                                $hora = date('G', strtotime($factura['fechaEmision']));
-                                                                
-                                                                //Variable acumuladora de facturas
-                                                                if ($hora == $i) {
-                                                                    //Si concuerda vamos sumando los totales
-                                                                    $monto += floatval($factura['total']);
-                                                                }
-                                                            @endphp
-                                                        @endforeach
-
-                                                        @php
-                                                            //Obtenemos la cantidad de facturas
-                                                            array_push($montos, $monto);
-                                                            //Sumamos la el total obtenido
-                                                            $totalmonto += floatval($monto);
-                                                        @endphp
-
                                                         {{-- Mostramos el total --}}
                                                         $ {{ number_format($monto, 2) }}
                                                     @else
                                                         -
                                                     @endif
-
                                                 </td>
 
                                                 {{-- Detalles --}}
@@ -376,17 +356,14 @@
     {{-- Llamado de modale --}}
     @if ($empresa)
         {{-- Facturas por hora --}}
-        <livewire:monithora :empresa=$empresa :fechainic=$fechainic :fechafin=$fechafin
-            :infofactumetaemit=$consulmetaporhora :infofactuxmlemit=$consulxmlporhora
-            :wire:key="'user-profile-one-'.$empresa.$fechainic.$fechafin">
+        <livewire:monithora :empresa=$empresa :emitidos=$consulemit
+            :wire:key="'user-profile-one-'.$consulemit.$empresa">
 
-            <livewire:monitclient :empresa=$empresa :consulmetaclient=$consulmetaclient
-                :consulmetaporhora=$consulmetaporhora
-                :wire:key="'user-profile-two-'.$empresa.$consulmetaclient.$consulmetaporhora">
+            <livewire:monitclient :empresa=$empresa :emitidos=$consulemit
+                :wire:key="'user-profile-two-'.$empresa.$consulemit">
 
-                <livewire:monitdetaclient :empresa=$empresa :consulxmlporhora=$consulxmlporhora
-                    :consulmetaclient=$consulmetaclient :consulmetaporhora=$consulmetaporhora
-                    :wire:key="'user-profile-three-'.$empresa.$consulmetaclient.$consulmetaporhora.$consulxmlporhora">
+                <livewire:monitdetaclient :empresa=$empresa :emitidos=$consulemit
+                    :wire:key="'user-profile-four-'.$empresa.$consulemit">
 
                     <livewire:monitmes :empresa=$empresa :wire:key="'user-profile-three-'.$empresa">
     @endif

@@ -607,7 +607,7 @@ class Volumetrico extends Component
 
     public function render()
     {
-        //Hacemos una consulta de la empresa para saber que datos vamos a mostrar
+        //Hacemos una consulta de la empresa para obtener la sucursal
         $this->infogas = User::where('RFC', $this->rfcEmpresa)->get()->first();
 
         //Arreglo de los meses

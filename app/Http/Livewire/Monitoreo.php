@@ -7,8 +7,9 @@ use App\Models\XmlE;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
-//Funcion para aumentar la ejecucion de los procesos
+//Funcion para aumentar la ejecucion de los procesos, lo utilizaremos para las descargas ()
 set_time_limit(3600); //Tiempo limite dado 1 hora
+ini_set('memory_limit', '1024M'); //Incrementamos la memoria 
 
 class Monitoreo extends Component
 {
@@ -21,53 +22,58 @@ class Monitoreo extends Component
     public $fechainic;
     public $fechafin;
 
+    //Estado en el que creamos nuestro componente
+    public $clientactive = false;
+
+    //Metodo para mostrar el componente
+    public function ClientDetaActive()
+    {
+        $this->clientactive = true;
+    }
 
     //Metodo para realizar la consulta del monitoreo
-    public function ConsulMeta()
+    public function ConsulEmit()
     {
         if ($this->rfcEmpresa) {
+            //Arreglo donde tendra los datos de los emitidos (Metadatos y XML)
+            $listemit = array();
+
             //Consultamos los metadatos
             $infometaemit = MetadataE::where('emisorRfc', $this->rfcEmpresa)
                 ->whereBetween('fechaEmision',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
-                ->get();
+                ->get(['estado', 'efecto', 'fechaEmision', 'fechaCertificacion', 'folioFiscal', 'receptorRfc', 'receptorNombre', 'total']);
+
+            //Ciclo para descomponer los datos del Metadato
+            foreach ($infometaemit as $datametaemit) {
+                //Consulta para obtener los datos del XML
+                $infofactuxmlemit = XmlE::where('UUID', $datametaemit['folioFiscal'])
+                    ->first(['UUID', 'Serie', 'Folio', 'LugarExpedicion', 'FormaPago', 'Conceptos.Concepto']);
+
+                //Metemos en el arreglo los datos emitidos
+                $listemit[] = [
+                    'Estado' => $datametaemit['estado'] ?? null,
+                    'Efecto' => $datametaemit['efecto'] ?? null,
+                    'FechaEmision' => $datametaemit['fechaEmision'] ?? null,
+                    'FechaCertificacion' => $datametaemit['fechaCertificacion'] ?? null,
+                    'Serie' => $infofactuxmlemit['Serie'] ?? null,
+                    'Folio' => $infofactuxmlemit['Folio'] ?? null,
+                    'UUID' => $infofactuxmlemit['UUID'] ?? null,
+                    'LugarExpedicion' => $infofactuxmlemit['LugarExpedicion'] ?? null,
+                    'ReceptorRfc' => $datametaemit['receptorRfc'] ?? null,
+                    'ReceptorNombre' => $datametaemit['receptorNombre'] ?? null,
+                    'Total' => $datametaemit['total'] ?? null,
+                    'FormaPago' => $infofactuxmlemit['FormaPago'] ?? null,
+                    'Concepto' => $infofactuxmlemit['Conceptos.Concepto'] ?? null,
+                ];
+            }
 
             //Activamos los botones de exportacion
             $this->active = null;
 
             $this->dispatchBrowserEvent('cargagrafic', []);
 
-            return $infometaemit;
-        }
-    }
-
-    //Metodo para comsultar los XML
-    public function ConsulXML()
-    {
-        if ($this->rfcEmpresa) {
-            //Consultamos los metadatos
-            $infoxmlemit = XmlE::where('Emisor.Rfc', $this->rfcEmpresa)
-                ->whereBetween('Fecha',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
-                ->where('TipoDeComprobante', '!=', 'N')
-                ->get();
-
-            return $infoxmlemit;
-        }
-    }
-
-    //Metodo para realizar la consulta del monitoreo
-    public function ConsulMetaClient()
-    {
-        if ($this->rfcEmpresa) {
-            //Consultamos los metadatos
-            $infometaemitclient = MetadataE::select('receptorRfc', 'receptorNombre')
-                ->where('emisorRfc', $this->rfcEmpresa)
-                ->whereBetween('fechaEmision',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
-                ->where('efecto', '!=', 'Nómina')
-                ->groupBy('receptorRfc')
-                ->get();
-
-            return $infometaemitclient;
+            return json_encode($listemit);
         }
     }
 
@@ -99,40 +105,40 @@ class Monitoreo extends Component
         //switch para cambiar el mes de numero a letras
         switch ($mesayer) {
             case 1:
-                $mesayerstr = ' de Enero de ';
+                $mesayerstr = ' de Enero ';
                 break;
             case 2:
-                $mesayerstr = ' de Febrero de ';
+                $mesayerstr = ' de Febrero ';
                 break;
             case 3:
-                $mesayerstr = ' de Marzo de ';
+                $mesayerstr = ' de Marzo ';
                 break;
             case 4:
-                $mesayerstr = ' de Abril de ';
+                $mesayerstr = ' de Abril ';
                 break;
             case 5:
-                $mesayerstr = ' de Mayo de ';
+                $mesayerstr = ' de Mayo ';
                 break;
             case 6:
-                $mesayerstr = ' de Junio de ';
+                $mesayerstr = ' de Junio ';
                 break;
             case 7:
-                $mesayerstr = ' de Julio de ';
+                $mesayerstr = ' de Julio ';
                 break;
             case 8:
-                $mesayerstr = ' de Agosto de ';
+                $mesayerstr = ' de Agosto ';
                 break;
             case 9:
-                $mesayerstr = ' de Septiembre de ';
+                $mesayerstr = ' de Septiembre ';
                 break;
             case 10:
-                $mesayerstr = ' de Octubre de ';
+                $mesayerstr = ' de Octubre ';
                 break;
             case 11:
-                $mesayerstr = ' de Noviembre de ';
+                $mesayerstr = ' de Noviembre ';
                 break;
             case 12:
-                $mesayerstr = ' de Diciembre de ';
+                $mesayerstr = ' de Diciembre ';
                 break;
         }
 
@@ -195,7 +201,7 @@ class Monitoreo extends Component
         //Arreglo (rango) del año actual al 2014
         $anios = range(2014, date('Y'));
 
-        return view('livewire.monitoreo', ['meses' => $meses, 'anios' => $anios, 'fechaayer' => $fechaayerstr, 'empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'consulmetaporhora' => $this->ConsulMeta(), 'consulxmlporhora' => $this->ConsulXML(), 'consulmetaclient' => $this->ConsulMetaClient()])
+        return view('livewire.monitoreo', ['meses' => $meses, 'anios' => $anios, 'fechaayer' => $fechaayerstr, 'empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'consulemit' => $this->ConsulEmit()])
             ->extends('layouts.livewire-layout')
             ->section('content');
     }

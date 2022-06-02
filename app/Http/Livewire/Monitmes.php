@@ -5,6 +5,9 @@ namespace App\Http\Livewire;
 use App\Models\MetadataE;
 use Livewire\Component;
 
+//Funcion para aumentar la ejecucion de los procesos, lo utilizaremos para las descargas ()
+set_time_limit(6000); //Tiempo limite dado 1 hora
+
 class Monitmes extends Component
 {
     //Variables globales
@@ -52,7 +55,7 @@ class Monitmes extends Component
             //Realizaremos una consulta de los metadatos emitidos en el mes
             $infometaemitmes = MetadataE::where('emisorRfc', $this->empresa)
                 ->whereBetween('fechaEmision',  [$fechaselect . 'T00:00:00', $fechaselectfin . 'T23:59:59'])
-                ->get();
+                ->get(['fechaEmision', 'total']);
 
             //En un ciclo obtendremos los datos necesarios
             for ($i = 1; $i <= $totaldiasmes; $i++) {
@@ -96,6 +99,8 @@ class Monitmes extends Component
                 //Vaciamos la variable para almacenar las otras
                 $datametames = "";
             }
+
+            $this->dispatchBrowserEvent('cargagrafic', []);
 
             return $rowmetames;
         }

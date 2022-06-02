@@ -1,12 +1,23 @@
 <div>
     @php
+        //Llamamos al modelo
+        use App\Models\User;
         use App\Models\MetadataR;
+        use App\Models\XmlE;
         
         //Obtenemos la clase al cargar la tabla
         $class = '';
         if (empty($class)) {
             $class = 'table nowrap dataTable no-footer';
         }
+        
+        //Obtnemos el nombre de la empresa
+        $consulempre = User::where('RFC', $empresa)
+            ->get()
+            ->first();
+        
+        //Descomponemos el Json en un objeto
+        $consulmetaporhora = json_decode($emitidos);
     @endphp
 
     {{-- DETALLES POR CLIENTE --}}
@@ -19,15 +30,15 @@
 
         {{-- DETALLES POR CLIENTE --}}
         {{-- Creacion del modal (BASE) --}}
-        <div wire:ignore.self class="modal fade" id="detalleporclient{{ $datametaclient['receptorRfc'] }}"
-            tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="volucaptumodal">
+        <div wire:ignore.self class="modal fade" id="detalleporclient{{ $datametaclient['RFC'] }}" tabindex="-1"
+            role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="volucaptumodal">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
                 <div class="modal-content">
                     {{-- Encabezado --}}
                     <div class="modal-header">
                         <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
                                 class="icons fas fa-comments">Detalles por
-                                clientes </span></h6>
+                                cliente </span></h6>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true close-btn">×</span>
                         </button>
@@ -37,20 +48,30 @@
                         {{-- Boton de exportacion --}}
                         <div class="form-inline mr-auto">
                             <button type="button" class="btn btn-success BtnVinculadas"
-                                onclick="ExportHoraClientExcel('{{ $empresa }}{{ $datametaclient['receptorRfc'] }}', '{{ $empresa }}')">Excel</button>
+                                onclick="ExportHoraClientExcel('{{ $empresa }}{{ $datametaclient['RFC'] }}', 'Detalles por cliente {{ $empresa }}')">Excel</button>
                             &nbsp;&nbsp;
 
                             <button type="button" class="btn btn-danger BtnVinculadas"
-                                onclick="ExportHoraClientPDF('{{ $empresa }}{{ $datametaclient['receptorRfc'] }}', '{{ $empresa }}')">Pdf</button>
+                                onclick="ExportHoraClientPDF('{{ $empresa }}{{ $datametaclient['RFC'] }}', 'Detalles por cliente {{ $empresa }}')">Pdf</button>
                             &nbsp;&nbsp;
                         </div>
 
                         <br>
 
                         <div class="table-responsive">
-                            <table class="{{ $class }}"
-                                id="{{ $empresa }}{{ $datametaclient['receptorRfc'] }}" style="width:100%">
+                            <table class="{{ $class }}" id="{{ $empresa }}{{ $datametaclient['RFC'] }}"
+                                style="width:100%">
                                 <thead>
+                                    <tr hidden>
+                                        <th colspan="14" data-tableexport-colspan="13" class="text-center align-middle">
+                                            {{ $empresa }} - {{ strtoupper($consulempre['nombre']) }}
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="14" data-tableexport-colspan="13" class="text-center align-middle">
+                                            Detalles de facturación
+                                        </th>
+                                    </tr>
                                     <tr>
                                         <th class="text-center align-middle">Estado SAT</th>
                                         <th class="text-center align-middle">Tipo</th>
@@ -70,14 +91,14 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($consulmetaporhora as $datacliente)
-                                        @if ($datacliente['receptorRfc'] == $datametaclient['receptorRfc'])
+                                        @if ($datacliente->ReceptorRfc == $datametaclient['RFC'])
                                             @php
                                                 //Contador de conceptos
                                                 $ConceptCount = 0;
                                                 
                                                 $espa = new MetadataR();
-                                                $fechaE = $datacliente['fechaEmision'];
-                                                $folioF = $datacliente['folioFiscal'];
+                                                $fechaE = $datacliente->FechaEmision;
+                                                $folioF = $datacliente->UUID;
                                                 $numero = (string) (int) substr($fechaE, 5, 2);
                                                 $mesNombre = (string) (int) substr($fechaE, 5, 2);
                                                 $anio = (string) (int) substr($fechaE, 0, 4);
@@ -85,94 +106,82 @@
                                                 
                                                 $rutaXml = "storage/contarappv1_descargas/$empresa/$anio/Descargas/$numero.$mees/Emitidos/XML/$folioF.xml";
                                                 $rutaPdf = "storage/contarappv1_descargas/$empresa/$anio/Descargas/$numero.$mees/Emitidos/PDF/$folioF.pdf";
-                                                
-                                                foreach ($consulxmlporhora as $dataclientexml) {
-                                                    if ($dataclientexml['UUID'] == $datacliente['folioFiscal']) {
-                                                        $serie = $dataclientexml['Serie'];
-                                                        $folio = $dataclientexml['Folio'];
-                                                        $expedicion = $dataclientexml['LugarExpedicion'];
-                                                        $forma = $dataclientexml['FormaPago'];
-                                                        $concepto = $dataclientexml['Conceptos.Concepto'];
-                                                
-                                                        //Realizaremos una sumatoria de todos los totales
-                                                        $totalfactu += floatval($datacliente['total']);
-                                                    }
-                                                }
                                             @endphp
 
                                             <tr>
                                                 {{-- Estado SAT --}}
                                                 <td>
-                                                    {{ $datacliente['estado'] }}
+                                                    {{ $datacliente->Estado }}
                                                 </td>
 
                                                 {{-- Tipo --}}
                                                 <td>
-                                                    {{ $datacliente['efecto'] }}
+                                                    {{ $datacliente->Efecto }}
                                                 </td>
 
                                                 {{-- Fecha emision --}}
                                                 <td>
-                                                    {{ $datacliente['fechaEmision'] }}
+                                                    {{ $datacliente->FechaEmision }}
                                                 </td>
 
                                                 {{-- Fecha timbrado --}}
                                                 <td>
-                                                    {{ $datacliente['fechaCertificacion'] }}
+                                                    {{ $datacliente->FechaCertificacion }}
                                                 </td>
 
                                                 {{-- Serie --}}
                                                 <td>
-                                                    {{ $serie }}
+                                                    {{ $datacliente->Serie }}
                                                 </td>
 
                                                 {{-- Folio --}}
                                                 <td>
-                                                    {{ $folio }}
+                                                    {{ $datacliente->Folio }}
                                                 </td>
 
                                                 {{-- UUID --}}
                                                 <td>
-                                                    {{ $datacliente['folioFiscal'] }}
+                                                    {{ $datacliente->UUID }}
                                                 </td>
 
                                                 {{-- Lugar de expedicion --}}
                                                 <td>
-                                                    {{ $expedicion }}
+                                                    {{ $datacliente->LugarExpedicion }}
                                                 </td>
 
                                                 {{-- RFC receptor --}}
                                                 <td>
-                                                    {{ $datacliente['receptorRfc'] }}
+                                                    {{ $datacliente->ReceptorRfc }}
                                                 </td>
 
                                                 {{-- Nombre receptor --}}
                                                 <td>
-                                                    {{ $datacliente['receptorNombre'] }}
+                                                    {{ $datacliente->ReceptorNombre }}
                                                 </td>
 
                                                 {{-- Total --}}
                                                 <td>
-                                                    {{ number_format(floatval($datacliente['total']), 2) }}
+                                                    {{ number_format(floatval($datacliente->Total), 2) }}
                                                 </td>
 
                                                 {{-- Forma de pago --}}
                                                 <td>
-                                                    {{ $forma }}
+                                                    {{ $datacliente->FormaPago }}
                                                 </td>
 
                                                 {{-- Concepto --}}
                                                 <td>
-                                                    @if (isset($concepto[0]['Descripcion']))
-                                                        @foreach ($concepto as $detaconcepto)
-                                                            {{ ++$ConceptCount . '.- ' . Str::limit($detaconcepto['Descripcion'], 20) }}
+                                                    @if ($datacliente->Concepto)
+                                                        @foreach ($datacliente->Concepto as $detaconcepto)
+                                                            {{ ++$ConceptCount . '.- ' . Str::limit($detaconcepto->Descripcion, 20) }}
+                                                            <br>
                                                         @endforeach
                                                     @endif
                                                 </td>
 
                                                 {{-- Detalles --}}
                                                 <td>
-                                                    @if ($datacliente['estado'] != 'Cancelado')
+                                                    @if ($datacliente->Estado != 'Cancelado')
                                                         <a href="{{ $rutaXml }}"
                                                             download="{{ $folioF }}.xml">
                                                             <i class="fas fa-file-download fa-2x"></i>

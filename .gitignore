@@ -4,6 +4,7 @@
 /public/storage/claves
 /public/claves
 /public/build
+/public/informonit
 /storage/*.key
 /vendor
 .env

@@ -1,10 +1,17 @@
 <div>
     @php
+        //Importamos los modelos necesarios
+        use App\Models\User;
+        
         //Obtenemos la clase al cargar la tabla
         $class = '';
         if (empty($class)) {
             $class = 'table nowrap dataTable no-footer';
         }
+        //Obtnemos el nombre de la empresa
+        $consulempre = User::where('RFC', $empresa)
+            ->get()
+            ->first();
     @endphp
 
     {{-- FACTURACION POR MES --}}
@@ -66,9 +73,8 @@
                                 <table id="factumes" class="{{ $class }}" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th colspan="3" class="text-center align-middle">Facturación
-                                                por
-                                                mes
+                                            <th colspan="3" class="text-center align-middle">
+                                                Facturación por mes
                                             </th>
                                         </tr>
                                         <tr>
@@ -89,7 +95,6 @@
                                             <td><b>Total:</b></td>
                                             <td>{{ $totalcantimes }}</td>
                                             <td>$ {{ number_format($totalmontomes, 2) }}</td>
-                                            <td></td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -1,15 +1,23 @@
 <div>
-
     @php
         //Importamos los modelos necesarios
         use App\Models\MetadataR;
         use App\Models\XmlE;
+        use App\Models\User;
         
         //Obtenemos la clase al cargar la tabla
         $class = '';
         if (empty($class)) {
             $class = 'table nowrap dataTable no-footer';
         }
+        
+        //Obtnemos el nombre de la empresa
+        $consulempre = User::where('RFC', $empresa)
+            ->get()
+            ->first();
+        
+        //Descomponemos el Json en un objeto
+        $consulmetaporhora = json_decode($emitidos);
     @endphp
 
     {{-- Modal que muestre las facturas --}}
@@ -37,11 +45,11 @@
                         {{-- Boton de exportacion --}}
                         <div class="form-inline mr-auto">
                             <button type="button" class="btn btn-success BtnVinculadas"
-                                onclick="ExportHoraClientExcel('{{ $empresa }}{{ $i }}', '{{ $empresa }}')">Excel</button>
+                                onclick="ExportHoraClientExcel('{{ $empresa }}{{ $i }}', 'Detalles por cliente {{ $empresa }}')">Excel</button>
                             &nbsp;&nbsp;
 
                             <button type="button" class="btn btn-danger BtnVinculadas"
-                                onclick="ExportHoraClientPDF('{{ $empresa }}{{ $i }}', '{{ $empresa }}')">Pdf</button>
+                                onclick="ExportHoraClientPDF('{{ $empresa }}{{ $i }}', 'Detalles por cliente {{ $empresa }}')">Pdf</button>
                             &nbsp;&nbsp;
                         </div>
 
@@ -51,6 +59,16 @@
                             <table id="{{ $empresa }}{{ $i }}" class="{{ $class }}"
                                 style="width:100%">
                                 <thead>
+                                    <tr hidden>
+                                        <th colspan="14" data-tableexport-colspan="13" class="text-center align-middle">
+                                            {{ $empresa }} - {{ strtoupper($consulempre['nombre']) }}
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="14" data-tableexport-colspan="13" class="text-center align-middle">
+                                            Facturación por hora
+                                        </th>
+                                    </tr>
                                     <tr>
                                         <th class="text-center align-middle">Estado SAT</th>
                                         <th class="text-center align-middle">Tipo</th>
@@ -69,14 +87,14 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($infofactumetaemit as $datametahora)
+                                    @foreach ($consulmetaporhora as $datametahora)
                                         @php
                                             //Contador de conceptos
                                             $ConceptCount = 0;
                                             
                                             $espa = new MetadataR();
-                                            $fechaE = $datametahora['fechaEmision'];
-                                            $folioF = $datametahora['folioFiscal'];
+                                            $fechaE = $datametahora->FechaEmision;
+                                            $folioF = $datametahora->UUID;
                                             $numero = (string) (int) substr($fechaE, 5, 2);
                                             $mesNombre = (string) (int) substr($fechaE, 5, 2);
                                             $anio = (string) (int) substr($fechaE, 0, 4);
@@ -86,101 +104,88 @@
                                             $rutaPdf = "storage/contarappv1_descargas/$empresa/$anio/Descargas/$numero.$mees/Emitidos/PDF/$folioF.pdf";
                                             
                                             //Obtenemos la fecha
-                                            $horameta = date('G', strtotime($datametahora['fechaEmision']));
-                                            
-                                            foreach ($infofactuxmlemit as $dataxmlhora) {
-                                                //Obtenemos la fecha
-                                                $horaxml = date('G', strtotime($dataxmlhora['Fecha']));
-                                            
-                                                //Condicional para saber si pertenece a la fecha
-                                                if ($dataxmlhora['UUID'] == $datametahora['folioFiscal']) {
-                                                    $serie = $dataxmlhora['Serie'];
-                                                    $folio = $dataxmlhora['Folio'];
-                                                    $expedicion = $dataxmlhora['LugarExpedicion'];
-                                                    $forma = $dataxmlhora['FormaPago'];
-                                                    $concepto = $dataxmlhora['Conceptos.Concepto'];
-                                                }
-                                            }
+                                            $horameta = date('G', strtotime($datametahora->FechaEmision));
                                         @endphp
 
                                         @if ($horameta == $i)
                                             @php
                                                 //Realizaremos una sumatoria de todos los totales
-                                                $totalfactu += floatval($datametahora['total']);
+                                                $totalfactu += floatval($datametahora->Total);
                                             @endphp
                                             <tr>
                                                 {{-- Estado SAT --}}
                                                 <td>
-                                                    {{ $datametahora['estado'] }}
+                                                    {{ $datametahora->Estado }}
                                                 </td>
 
                                                 {{-- Tipo --}}
                                                 <td>
-                                                    {{ $datametahora['efecto'] }}
+                                                    {{ $datametahora->Efecto }}
                                                 </td>
 
                                                 {{-- Fecha emision --}}
                                                 <td>
-                                                    {{ $datametahora['fechaEmision'] }}
+                                                    {{ $datametahora->FechaEmision }}
                                                 </td>
 
                                                 {{-- Fecha timbrado --}}
                                                 <td>
-                                                    {{ $datametahora['fechaCertificacion'] }}
+                                                    {{ $datametahora->FechaCertificacion }}
                                                 </td>
 
                                                 {{-- Serie --}}
                                                 <td>
-                                                    {{ $serie }}
+                                                    {{ $datametahora->Serie }}
                                                 </td>
 
                                                 {{-- Folio --}}
                                                 <td>
-                                                    {{ $folio }}
+                                                    {{ $datametahora->Folio }}
                                                 </td>
 
                                                 {{-- UUID --}}
                                                 <td>
-                                                    {{ $datametahora['folioFiscal'] }}
+                                                    {{ $datametahora->UUID }}
                                                 </td>
 
                                                 {{-- Lugar de expedicion --}}
                                                 <td>
-                                                    {{ $expedicion }}
+                                                    {{ $datametahora->LugarExpedicion }}
                                                 </td>
 
                                                 {{-- RFC receptor --}}
                                                 <td>
-                                                    {{ $datametahora['receptorRfc'] }}
+                                                    {{ $datametahora->ReceptorRfc }}
                                                 </td>
 
                                                 {{-- Nombre receptor --}}
                                                 <td>
-                                                    {{ $datametahora['receptorNombre'] }}
+                                                    {{ $datametahora->ReceptorNombre }}
                                                 </td>
 
                                                 {{-- Total --}}
                                                 <td>
-                                                    {{ number_format(floatval($datametahora['total']), 2) }}
+                                                    {{ number_format(floatval($datametahora->Total), 2) }}
                                                 </td>
 
                                                 {{-- Forma de pago --}}
                                                 <td>
-                                                    {{ $forma }}
+                                                    {{ $datametahora->FormaPago }}
                                                 </td>
 
                                                 {{-- Concepto --}}
                                                 <td>
-                                                    @if (isset($concepto[0]['Descripcion']))
-                                                        @foreach ($concepto as $detaconcepto)
-                                                            {{ ++$ConceptCount . '.- ' . Str::limit($detaconcepto['Descripcion'], 20) }}
+                                                    @if ($datametahora->Concepto)
+                                                        @foreach ($datametahora->Concepto as $detaconcepto)
+                                                            {{ ++$ConceptCount . '.- ' . Str::limit($detaconcepto->Descripcion, 20) }}
+                                                            <br>
                                                         @endforeach
                                                     @endif
                                                 </td>
 
                                                 {{-- Detalles --}}
                                                 <td>
-                                                    @if ($datametahora['estado'] != 'Cancelado')
+                                                    @if ($datametahora->Estado != 'Cancelado')
                                                         <a href="{{ $rutaXml }}"
                                                             download="{{ $folioF }}.xml">
                                                             <i class="fas fa-file-download fa-2x"></i>

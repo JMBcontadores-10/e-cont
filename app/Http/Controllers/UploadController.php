@@ -281,7 +281,7 @@ class UploadController extends Controller
             $fileextencion = $file->getClientOriginalExtension();
 
             //Condicional para saber si el archivo es extencion PDF
-            if ($fileextencion == 'pdf') {
+            if ($fileextencion == 'pdf' || $fileextencion == 'PDF') {
                 //Realizamos la consulta para agregar el dato de PDF
                 $infovolumetric = Volumetrico::where(['rfc' => $RFC]);
 
@@ -343,7 +343,7 @@ class UploadController extends Controller
             $fileextencion = $file->getClientOriginalExtension();
 
             //Condicional para saber si el archivo es extencion PDF
-            if ($fileextencion == 'pdf') {
+            if ($fileextencion == 'pdf' ||  $fileextencion == 'PDF') {
                 //Realizamos la consulta para agregar el dato de PDF
                 $infovolumetric = Volumetrico::where(['rfc' => $RFC]);
 
