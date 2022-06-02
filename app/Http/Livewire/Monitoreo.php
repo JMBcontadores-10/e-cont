@@ -22,13 +22,12 @@ class Monitoreo extends Component
     public $fechainic;
     public $fechafin;
 
-    //Estado en el que creamos nuestro componente
-    public $clientactive = false;
+    //Variable del RFC recibido
+    public $rfcrecib;
 
-    //Metodo para mostrar el componente
-    public function ClientDetaActive()
+    public function SendRFCReci($rfc)
     {
-        $this->clientactive = true;
+        $this->$rfcrecib = $rfc;
     }
 
     //Metodo para realizar la consulta del monitoreo

@@ -89,7 +89,7 @@
                             {{-- Espaciado --}}
                             <div id="espmonifilt" style="width: 18.6em;"></div>
 
-                            <button {{ $active }} wire:click="ClientDetaActive()" type="button"
+                            <button {{ $active }} type="button"
                                 data-backdrop="static" data-keyboard="false" data-toggle="modal"
                                 data-target="#factuporclient" class="btn btn-secondary BtnVinculadas">
                                 Factu. por cliente</button>
@@ -361,9 +361,6 @@
 
             <livewire:monitclient :empresa=$empresa :emitidos=$consulemit
                 :wire:key="'user-profile-two-'.$empresa.$consulemit">
-
-                <livewire:monitdetaclient :empresa=$empresa :emitidos=$consulemit
-                    :wire:key="'user-profile-four-'.$empresa.$consulemit">
 
                     <livewire:monitmes :empresa=$empresa :wire:key="'user-profile-three-'.$empresa">
     @endif

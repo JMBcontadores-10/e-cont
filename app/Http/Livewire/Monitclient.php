@@ -15,6 +15,14 @@ class Monitclient extends Component
     //Variable de consulta de los metadatos emitidos
     public $emitidos;
 
+    //Variable para obtener el RFC seleccionado
+    public $rfcinfo;
+
+    public function SendRFCReci($rfc)
+    {
+        $this->rfcinfo = $rfc;
+    }
+
     public function render()
     {
         //Vamos a obtener los RFC recibidos

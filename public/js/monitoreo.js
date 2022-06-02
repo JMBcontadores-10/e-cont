@@ -59,6 +59,12 @@ function ExportHoraClientPDF(idempre, empresa) {
       });
 }
 
+//Funcion para limpiar la tabla de detalle clientes
+function CleanTableClient() {
+      $('.detaclientbody').remove();
+      $('#totaldetaclient').text("0.00");
+}
+
 $(document).ready(function () {
       //Variables globales
       var dias = [];

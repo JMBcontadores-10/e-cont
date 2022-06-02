@@ -17,22 +17,20 @@ class Monitdetaclient extends Component
     //Variable de consulta de los metadatos emitidos
     public $emitidos;
 
+    //Variable que recibirla el RFC
+    public $rfcreci;
+
+    //Escuchamos el emit del componente padre
+    protected $listeners = ['sendrfc'];
+
+    //Metodo que recibimos el RFC del componente padre 
+    public function sendrfc($rfc)
+    {
+        $this->rfcreci = $rfc;
+    }
+
     public function render()
     {
-        //Vamos a obtener los RFC recibidos
-        $listrecirfc = array(); //Arreglo donde obtendremos los rfc
-
-        $emitidoslist = json_decode($this->emitidos); //Descomponemos Json
-
-        //Ciclo para descomponer los emitidos
-        foreach ($emitidoslist as $dataemitidos) {
-            $listrecirfc[] = ['RFC' => $dataemitidos->ReceptorRfc, 'Nombre' => $dataemitidos->ReceptorNombre]; //Insertamos los datos en el arreglo
-        }
-
-        //Eliminamos los repetidos
-        $listrecirfcclean = array_unique(array_column($listrecirfc, 'RFC'));
-        $listrecirfc = array_intersect_key($listrecirfc, $listrecirfcclean);
-
-        return view('livewire.monitdetaclient', ['consulmetaclient' => $listrecirfc]);
+        return view('livewire.monitdetaclient', []);
     }
 }

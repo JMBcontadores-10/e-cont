@@ -21,80 +21,92 @@
     @endphp
 
     {{-- DETALLES POR CLIENTE --}}
+    @php
+        //Definimos la variable de la suma total
+        $totalfactu = 0;
+    @endphp
+
+    {{-- DETALLES POR CLIENTE --}}
     {{-- Creacion del modal (BASE) --}}
-    @foreach ($consulmetaclient as $datametaclient)
-        @php
-            //Definimos la variable de la suma total
-            $totalfactu = 0;
-        @endphp
+    <div wire:ignore.self class="modal fade" id="detalleporclient" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true" class="volucaptumodal">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
+            <div class="modal-content">
+                {{-- Encabezado --}}
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
+                            class="icons fas fa-comments">Detalles por
+                            cliente </span></h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true close-btn" onclick="CleanTableClient()">×</span>
+                    </button>
+                </div>
+                {{-- Cuerpo del modal --}}
+                <div class="modal-body">
+                    {{-- Boton de exportacion --}}
+                    <div class="form-inline mr-auto">
+                        <button type="button" class="btn btn-success BtnVinculadas"
+                            onclick="ExportHoraClientExcel('{{ $empresa }}{{ $rfcreci }}', 'Detalles por cliente {{ $empresa }}')">Excel</button>
+                        &nbsp;&nbsp;
 
-        {{-- DETALLES POR CLIENTE --}}
-        {{-- Creacion del modal (BASE) --}}
-        <div wire:ignore.self class="modal fade" id="detalleporclient{{ $datametaclient['RFC'] }}" tabindex="-1"
-            role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" class="volucaptumodal">
-            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-full" role="document">
-                <div class="modal-content">
-                    {{-- Encabezado --}}
-                    <div class="modal-header">
-                        <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
-                                class="icons fas fa-comments">Detalles por
-                                cliente </span></h6>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true close-btn">×</span>
-                        </button>
+                        <button type="button" class="btn btn-danger BtnVinculadas"
+                            onclick="ExportHoraClientPDF('{{ $empresa }}{{ $rfcreci }}', 'Detalles por cliente {{ $empresa }}')">Pdf</button>
+                        &nbsp;&nbsp;
                     </div>
-                    {{-- Cuerpo del modal --}}
-                    <div class="modal-body">
-                        {{-- Boton de exportacion --}}
-                        <div class="form-inline mr-auto">
-                            <button type="button" class="btn btn-success BtnVinculadas"
-                                onclick="ExportHoraClientExcel('{{ $empresa }}{{ $datametaclient['RFC'] }}', 'Detalles por cliente {{ $empresa }}')">Excel</button>
-                            &nbsp;&nbsp;
 
-                            <button type="button" class="btn btn-danger BtnVinculadas"
-                                onclick="ExportHoraClientPDF('{{ $empresa }}{{ $datametaclient['RFC'] }}', 'Detalles por cliente {{ $empresa }}')">Pdf</button>
-                            &nbsp;&nbsp;
-                        </div>
+                    <br>
 
+                    <div wire:loading>
                         <br>
+                        <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
+                        <br>
+                    </div>
 
-                        <div class="table-responsive">
-                            <table class="{{ $class }}" id="{{ $empresa }}{{ $datametaclient['RFC'] }}"
-                                style="width:100%">
-                                <thead>
-                                    <tr hidden>
-                                        <th colspan="14" data-tableexport-colspan="13" class="text-center align-middle">
-                                            {{ $empresa }} - {{ strtoupper($consulempre['nombre']) }}
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th colspan="14" data-tableexport-colspan="13" class="text-center align-middle">
-                                            Detalles de facturación
-                                        </th>
-                                    </tr>
-                                    <tr>
-                                        <th class="text-center align-middle">Estado SAT</th>
-                                        <th class="text-center align-middle">Tipo</th>
-                                        <th class="text-center align-middle">Fecha Emit.</th>
-                                        <th class="text-center align-middle">Fecha Timb.</th>
-                                        <th class="text-center align-middle">Serie</th>
-                                        <th class="text-center align-middle">Folio</th>
-                                        <th class="text-center align-middle">UUID</th>
-                                        <th class="text-center align-middle">Lugar Exped.</th>
-                                        <th class="text-center align-middle">RFC Recept.</th>
-                                        <th class="text-center align-middle">Nombre Recept.</th>
-                                        <th class="text-center align-middle">Total</th>
-                                        <th class="text-center align-middle">Forma Pago</th>
-                                        <th class="text-center align-middle">Concepto</th>
-                                        <th class="text-center align-middle">Detalles</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
+                    <div class="table-responsive">
+                        <table class="{{ $class }}" id="{{ $empresa }}{{ $rfcreci }}"
+                            style="width:100%">
+                            <thead>
+                                <tr hidden>
+                                    <th colspan="14" data-tableexport-colspan="13" class="text-center align-middle">
+                                        {{ $empresa }} - {{ strtoupper($consulempre['nombre']) }}
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th colspan="14" data-tableexport-colspan="13" class="text-center align-middle">
+                                        Detalles de facturación
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center align-middle">Estado SAT</th>
+                                    <th class="text-center align-middle">Tipo</th>
+                                    <th class="text-center align-middle">Fecha Emit.</th>
+                                    <th class="text-center align-middle">Fecha Timb.</th>
+                                    <th class="text-center align-middle">Serie</th>
+                                    <th class="text-center align-middle">Folio</th>
+                                    <th class="text-center align-middle">UUID</th>
+                                    <th class="text-center align-middle">Lugar Exped.</th>
+                                    <th class="text-center align-middle">RFC Recept.</th>
+                                    <th class="text-center align-middle">Nombre Recept.</th>
+                                    <th class="text-center align-middle">Total</th>
+                                    <th class="text-center align-middle">Forma Pago</th>
+                                    <th class="text-center align-middle">Concepto</th>
+                                    <th class="text-center align-middle">Detalles</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if ($consulmetaporhora)
                                     @foreach ($consulmetaporhora as $datacliente)
-                                        @if ($datacliente->ReceptorRfc == $datametaclient['RFC'])
+                                        @if ($datacliente->ReceptorRfc == $rfcreci)
                                             @php
                                                 //Contador de conceptos
                                                 $ConceptCount = 0;
+                                                
+                                                //Sumamos los totales
+                                                $totalfactu += $datacliente->Total;
                                                 
                                                 $espa = new MetadataR();
                                                 $fechaE = $datacliente->FechaEmision;
@@ -108,7 +120,7 @@
                                                 $rutaPdf = "storage/contarappv1_descargas/$empresa/$anio/Descargas/$numero.$mees/Emitidos/PDF/$folioF.pdf";
                                             @endphp
 
-                                            <tr>
+                                            <tr class="detaclientbody">
                                                 {{-- Estado SAT --}}
                                                 <td>
                                                     {{ $datacliente->Estado }}
@@ -195,7 +207,6 @@
                                             </tr>
                                         @endif
                                     @endforeach
-
                                     {{-- Mostramos el total --}}
                                     <tr>
                                         {{-- Estado SAT --}}
@@ -240,7 +251,7 @@
                                         </td>
 
                                         {{-- Total --}}
-                                        <td>
+                                        <td id="totaldetaclient">
                                             {{ number_format($totalfactu, 2) }}
                                         </td>
 
@@ -256,12 +267,12 @@
                                         <td>
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                                @endif
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-    @endforeach
+    </div>
 </div>
