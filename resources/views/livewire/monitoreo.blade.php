@@ -68,6 +68,14 @@
                     <br>
                     <br>
 
+                    {{-- Mensaje de alerta cuando no se selecciona CFDI --}}
+                    <div id="Mnstotaldias" hidden>
+                        <div id="mnsexcep" class="alert alert-danger">
+                        </div>
+                    </div>
+
+                    <br>
+
                     {{-- Encabezado del dia --}}
                     <div align="center">
                         <h3>Facturación {{ $fechaayer }}</h3>
@@ -368,16 +376,17 @@
             </div>
         </div>
     </div>
-
     {{-- Llamado de modale --}}
-    @if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales'])))
-        {{-- Facturas por hora --}}
-        <livewire:monithora :empresa=$empresa :emitidos=$consulemit
-            :wire:key="'user-profile-one-'.$consulemit.$empresa">
+    @if ($this->diainter < 31)
+        @if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales'])))
+            {{-- Facturas por hora --}}
+            <livewire:monithora :empresa=$empresa :emitidos=$consulemit
+                :wire:key="'user-profile-one-'.$consulemit.$empresa">
 
-            <livewire:monitclient :empresa=$empresa :emitidos=$consulemit
-                :wire:key="'user-profile-two-'.$empresa.$consulemit">
+                <livewire:monitclient :empresa=$empresa :emitidos=$consulemit
+                    :wire:key="'user-profile-two-'.$empresa.$consulemit">
 
-                <livewire:monitmes :empresa=$empresa :wire:key="'user-profile-three-'.$empresa">
+                    <livewire:monitmes :empresa=$empresa :wire:key="'user-profile-three-'.$empresa">
+        @endif
     @endif
 </div>

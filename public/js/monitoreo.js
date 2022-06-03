@@ -319,7 +319,22 @@ $(document).ready(function () {
             });
       }
 
+      //Funcion para ejecutar acciones al precionar el boton de buscar
       window.addEventListener('cargagrafic', event => {
+            //Obtenemos el total de dias
+            var totaldias = event.detail.dias;
+
+            //Condicional para saber si esta en el rango de dias permitido
+            if (totaldias > 31) {
+                  $("#mnsexcep").text(
+                        "Lo sentimos el rango máximo a seleccionar son 31 días");
+                  $("#Mnstotaldias").prop("hidden", false);
+                  setTimeout(function () {
+                        $("#Mnstotaldias").prop("hidden", true);
+                  }, 2500);
+            }
+
+            //Funcion para crear los graficos
             creategrafic();
       });
 });

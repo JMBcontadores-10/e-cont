@@ -5,6 +5,7 @@ namespace App\Http\Livewire;
 use App\Models\MetadataE;
 use App\Models\User;
 use App\Models\XmlE;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -28,6 +29,10 @@ class Monitoreo extends Component
     //Variable del RFC recibido
     public $rfcrecib;
 
+    //Variable que obtiene la diferencia de dias
+    public $diainter;
+
+
     public function SendRFCReci($rfc)
     {
         $this->$rfcrecib = $rfc;
@@ -36,83 +41,104 @@ class Monitoreo extends Component
     //Metodo para realizar la consulta del monitoreo
     public function ConsulEmit()
     {
-        if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales']))) {
-            //Arreglo donde tendra los datos de los emitidos (Metadatos y XML)
-            $listemit = array();
+        //Obtenenmos el total de dias
+        $this->diainter = 0; //Acumulador de los dias
 
-            //Consultamos los metadatos
-            $infometaemit = MetadataE::where('emisorRfc', $this->rfcEmpresa)
-                ->whereBetween('fechaEmision',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
-                ->where('efecto', '!=', 'Nómina')
-                ->get(['estado', 'efecto', 'fechaEmision', 'fechaCertificacion', 'folioFiscal', 'receptorRfc', 'receptorNombre', 'total']);
+        //Obtenemos el rango de fechas
+        $Inicial = $this->fechainic; //Fecha incial
+        $Fin = $this->fechafin; //Fecha final
 
-            //Ciclo para descomponer los datos del Metadato
-            foreach ($infometaemit as $datametaemit) {
+        //Ciclo para obtener el total de fechas
+        for ($i = $Inicial; $i <= $Fin; $i = date("Y-m-d", strtotime($i . "+ 1 days"))) {
+            //Sumamos los dias de diferencia
+            $this->diainter++;
+        }
 
-                //Condicional para saber si hay o no una sucursal
-                if (empty($this->infoempre['Sucursales'])) {
-                    //Consulta para obtener los datos del XML
-                    $infofactuxmlemit = XmlE::where('UUID', $datametaemit['folioFiscal'])
-                        ->first(['Serie', 'Folio', 'LugarExpedicion', 'FormaPago', 'Conceptos.Concepto']);
+        //En cada consulta el maximo de dias a consultar seran cada mes (31 dias)
+        if ($this->diainter <= 31) {
+            if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales']))) {
+                //Arreglo donde tendra los datos de los emitidos (Metadatos y XML)
+                $listemit = array();
 
-                    //Metemos en el arreglo los datos emitidos
-                    $listemit[] = [
-                        'Estado' => $datametaemit['estado'] ?? null,
-                        'Efecto' => $datametaemit['efecto'] ?? null,
-                        'FechaEmision' => $datametaemit['fechaEmision'] ?? null,
-                        'FechaCertificacion' => $datametaemit['fechaCertificacion'] ?? null,
-                        'Serie' => $infofactuxmlemit['Serie'] ?? null,
-                        'Folio' => $infofactuxmlemit['Folio'] ?? null,
-                        'UUID' => $datametaemit['folioFiscal'] ?? null,
-                        'LugarExpedicion' => $infofactuxmlemit['LugarExpedicion'] ?? null,
-                        'ReceptorRfc' => $datametaemit['receptorRfc'] ?? null,
-                        'ReceptorNombre' => $datametaemit['receptorNombre'] ?? null,
-                        'Total' => $datametaemit['total'] ?? null,
-                        'FormaPago' => $infofactuxmlemit['FormaPago'] ?? null,
-                        'Concepto' => $infofactuxmlemit['Conceptos.Concepto'] ?? null,
-                    ];
-                } else {
-                    if (!empty($this->sucursal)) {
+                //Consultamos los metadatos
+                $infometaemit = MetadataE::where('emisorRfc', $this->rfcEmpresa)
+                    ->whereBetween('fechaEmision',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
+                    ->where('efecto', '!=', 'Nómina')
+                    ->get(['estado', 'efecto', 'fechaEmision', 'fechaCertificacion', 'folioFiscal', 'receptorRfc', 'receptorNombre', 'total']);
+
+                //Ciclo para descomponer los datos del Metadato
+                foreach ($infometaemit as $datametaemit) {
+
+                    //Condicional para saber si hay o no una sucursal
+                    if (empty($this->infoempre['Sucursales'])) {
                         //Consulta para obtener los datos del XML
                         $infofactuxmlemit = XmlE::where('UUID', $datametaemit['folioFiscal'])
-                            ->where('LugarExpedicion', $this->sucursal)
                             ->first(['Serie', 'Folio', 'LugarExpedicion', 'FormaPago', 'Conceptos.Concepto']);
 
-                        $lugarexped = $infofactuxmlemit['LugarExpedicion'] ?? null;
+                        //Metemos en el arreglo los datos emitidos
+                        $listemit[] = [
+                            'Estado' => $datametaemit['estado'] ?? null,
+                            'Efecto' => $datametaemit['efecto'] ?? null,
+                            'FechaEmision' => $datametaemit['fechaEmision'] ?? null,
+                            'FechaCertificacion' => $datametaemit['fechaCertificacion'] ?? null,
+                            'Serie' => $infofactuxmlemit['Serie'] ?? null,
+                            'Folio' => $infofactuxmlemit['Folio'] ?? null,
+                            'UUID' => $datametaemit['folioFiscal'] ?? null,
+                            'LugarExpedicion' => $infofactuxmlemit['LugarExpedicion'] ?? null,
+                            'ReceptorRfc' => $datametaemit['receptorRfc'] ?? null,
+                            'ReceptorNombre' => $datametaemit['receptorNombre'] ?? null,
+                            'Total' => $datametaemit['total'] ?? null,
+                            'FormaPago' => $infofactuxmlemit['FormaPago'] ?? null,
+                            'Concepto' => $infofactuxmlemit['Conceptos.Concepto'] ?? null,
+                        ];
+                    } else {
+                        if (!empty($this->sucursal)) {
+                            //Consulta para obtener los datos del XML
+                            $infofactuxmlemit = XmlE::where('UUID', $datametaemit['folioFiscal'])
+                                ->where('LugarExpedicion', $this->sucursal)
+                                ->first(['Serie', 'Folio', 'LugarExpedicion', 'FormaPago', 'Conceptos.Concepto']);
 
-                        if ($this->sucursal == $lugarexped) {
-                            //Metemos en el arreglo los datos emitidos
-                            $listemit[] = [
-                                'Estado' => $datametaemit['estado'] ?? null,
-                                'Efecto' => $datametaemit['efecto'] ?? null,
-                                'FechaEmision' => $datametaemit['fechaEmision'] ?? null,
-                                'FechaCertificacion' => $datametaemit['fechaCertificacion'] ?? null,
-                                'Serie' => $infofactuxmlemit['Serie'] ?? null,
-                                'Folio' => $infofactuxmlemit['Folio'] ?? null,
-                                'UUID' => $datametaemit['folioFiscal'] ?? null,
-                                'LugarExpedicion' => $infofactuxmlemit['LugarExpedicion'] ?? null,
-                                'ReceptorRfc' => $datametaemit['receptorRfc'] ?? null,
-                                'ReceptorNombre' => $datametaemit['receptorNombre'] ?? null,
-                                'Total' => $datametaemit['total'] ?? null,
-                                'FormaPago' => $infofactuxmlemit['FormaPago'] ?? null,
-                                'Concepto' => $infofactuxmlemit['Conceptos.Concepto'] ?? null,
-                            ];
+                            $lugarexped = $infofactuxmlemit['LugarExpedicion'] ?? null;
+
+                            if ($this->sucursal == $lugarexped) {
+                                //Metemos en el arreglo los datos emitidos
+                                $listemit[] = [
+                                    'Estado' => $datametaemit['estado'] ?? null,
+                                    'Efecto' => $datametaemit['efecto'] ?? null,
+                                    'FechaEmision' => $datametaemit['fechaEmision'] ?? null,
+                                    'FechaCertificacion' => $datametaemit['fechaCertificacion'] ?? null,
+                                    'Serie' => $infofactuxmlemit['Serie'] ?? null,
+                                    'Folio' => $infofactuxmlemit['Folio'] ?? null,
+                                    'UUID' => $datametaemit['folioFiscal'] ?? null,
+                                    'LugarExpedicion' => $infofactuxmlemit['LugarExpedicion'] ?? null,
+                                    'ReceptorRfc' => $datametaemit['receptorRfc'] ?? null,
+                                    'ReceptorNombre' => $datametaemit['receptorNombre'] ?? null,
+                                    'Total' => $datametaemit['total'] ?? null,
+                                    'FormaPago' => $infofactuxmlemit['FormaPago'] ?? null,
+                                    'Concepto' => $infofactuxmlemit['Conceptos.Concepto'] ?? null,
+                                ];
+                            }
                         }
                     }
                 }
+
+                //Activamos los botones de exportacion
+                $this->active = null;
+
+                $this->dispatchBrowserEvent('cargagrafic', []);
+
+                return json_encode($listemit);
+            } else {
+                //Activamos los botones de exportacion
+                $this->active = null;
+
+                $this->dispatchBrowserEvent('cargagrafic', []);
             }
-
-            //Activamos los botones de exportacion
-            $this->active = null;
-
-            $this->dispatchBrowserEvent('cargagrafic', []);
-
-            return json_encode($listemit);
         } else {
             //Activamos los botones de exportacion
             $this->active = null;
 
-            $this->dispatchBrowserEvent('cargagrafic', []);
+            $this->dispatchBrowserEvent('cargagrafic', ['dias' => $this->diainter]);
         }
     }
 
