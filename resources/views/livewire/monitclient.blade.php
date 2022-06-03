@@ -36,11 +36,11 @@
                 <div class="modal-body">
                     <div class="form-inline mr-auto">
                         <button type="button" class="btn btn-success BtnVinculadas"
-                            onclick="exportReportToExcel('{{ $empresa }}')">Excel</button>
+                            onclick="exportReportToExcel('Facturacion por cliente {{ $empresa }}')">Excel</button>
                         &nbsp;&nbsp;
 
                         <button type="button" class="btn btn-danger BtnVinculadas"
-                            onclick="exportReportToPdf('{{ $empresa }}')">Pdf</button>
+                            onclick="exportReportToPdf('Facturacion por cliente {{ $empresa }}')">Pdf</button>
                     </div>
 
                     <br>

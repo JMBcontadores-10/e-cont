@@ -46,7 +46,23 @@
                                 echo '<option value="' . $fila[$rfc] . '">' . $fila[$rS] . '</option>';
                             } ?>
                         </select>
+
+                        <br>
                     @endempty
+
+                    {{-- Select para selccionar la sucursal (Contadores) --}}
+                    @if (!empty($infoempre['Sucursales']))
+                        {{-- Mostramos el RFC de la sucursal que se selecciona --}}
+                        <label for="inputState">Sucursal: {{ $sucursales }}</label>
+                        <select wire:model="sucursal" class="select form-control">
+                            <option value="">--Selecciona Sucursal--</option>
+
+                            {{-- Mostramos las sucursales --}}
+                            @foreach ($infoempre['Sucursales'] as $dataempre)
+                                <option value="{{ $dataempre['Clave'] }}">{{ $dataempre['Nombre'] }}</option>
+                            @endforeach
+                        </select>
+                    @endif
 
                     <br>
                     <br>
@@ -89,9 +105,9 @@
                             {{-- Espaciado --}}
                             <div id="espmonifilt" style="width: 18.6em;"></div>
 
-                            <button {{ $active }} type="button"
-                                data-backdrop="static" data-keyboard="false" data-toggle="modal"
-                                data-target="#factuporclient" class="btn btn-secondary BtnVinculadas">
+                            <button {{ $active }} type="button" data-backdrop="static" data-keyboard="false"
+                                data-toggle="modal" data-target="#factuporclient"
+                                class="btn btn-secondary BtnVinculadas">
                                 Factu. por cliente</button>
                             &nbsp;&nbsp;
 
@@ -354,7 +370,7 @@
     </div>
 
     {{-- Llamado de modale --}}
-    @if ($empresa)
+    @if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales'])))
         {{-- Facturas por hora --}}
         <livewire:monithora :empresa=$empresa :emitidos=$consulemit
             :wire:key="'user-profile-one-'.$consulemit.$empresa">
@@ -362,6 +378,6 @@
             <livewire:monitclient :empresa=$empresa :emitidos=$consulemit
                 :wire:key="'user-profile-two-'.$empresa.$consulemit">
 
-                    <livewire:monitmes :empresa=$empresa :wire:key="'user-profile-three-'.$empresa">
+                <livewire:monitmes :empresa=$empresa :wire:key="'user-profile-three-'.$empresa">
     @endif
 </div>

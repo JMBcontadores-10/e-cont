@@ -9,7 +9,7 @@ function exportReportToExcel(empresa) {
       $('#tableclient').tableExport({
             exportHiddenCells: true,
             type: 'excel',
-            fileName: 'E-cont Facturación por cliente ' + empresa,
+            fileName: 'E-cont ' + empresa,
             ignoreColumn: [4], //Quitamos la ultima columna de destalles
             mso: {
                   styles: ['background-color'],
@@ -46,7 +46,7 @@ function ExportHoraClientExcel(idempre, empresa) {
 //Exportacion por de la tabla de facturacion por hora o cliente (PDF)
 function ExportHoraClientPDF(idempre, empresa) {
       $('#' + idempre).tableExport({
-            fileName: 'E-cont Facturación por ' + empresa,
+            fileName: 'E-cont ' + empresa,
             ignoreColumn: [13],  //Quitamos la ultima columna de destalles
             type: 'pdf',
             pdfmake: {

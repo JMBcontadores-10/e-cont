@@ -45,11 +45,11 @@
                         {{-- Boton de exportacion --}}
                         <div class="form-inline mr-auto">
                             <button type="button" class="btn btn-success BtnVinculadas"
-                                onclick="ExportHoraClientExcel('{{ $empresa }}{{ $i }}', 'Detalles por cliente {{ $empresa }}')">Excel</button>
+                                onclick="ExportHoraClientExcel('{{ $empresa }}{{ $i }}', 'Detalles por hora {{ $empresa }}')">Excel</button>
                             &nbsp;&nbsp;
 
                             <button type="button" class="btn btn-danger BtnVinculadas"
-                                onclick="ExportHoraClientPDF('{{ $empresa }}{{ $i }}', 'Detalles por cliente {{ $empresa }}')">Pdf</button>
+                                onclick="ExportHoraClientPDF('{{ $empresa }}{{ $i }}', 'Detalles por hora {{ $empresa }}')">Pdf</button>
                             &nbsp;&nbsp;
                         </div>
 

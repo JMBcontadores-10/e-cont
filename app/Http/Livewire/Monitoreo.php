@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\MetadataE;
+use App\Models\User;
 use App\Models\XmlE;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -17,6 +18,8 @@ class Monitoreo extends Component
     public $rfcEmpresa;
     public $active = "hidden";
     public $fechaayer;
+    public $infoempre;
+    public $sucursal;
 
     //Variables del rango de fecha
     public $fechainic;
@@ -33,7 +36,7 @@ class Monitoreo extends Component
     //Metodo para realizar la consulta del monitoreo
     public function ConsulEmit()
     {
-        if ($this->rfcEmpresa) {
+        if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales']))) {
             //Arreglo donde tendra los datos de los emitidos (Metadatos y XML)
             $listemit = array();
 
@@ -45,26 +48,58 @@ class Monitoreo extends Component
 
             //Ciclo para descomponer los datos del Metadato
             foreach ($infometaemit as $datametaemit) {
-                //Consulta para obtener los datos del XML
-                $infofactuxmlemit = XmlE::where('UUID', $datametaemit['folioFiscal'])
-                    ->first(['UUID', 'Serie', 'Folio', 'LugarExpedicion', 'FormaPago', 'Conceptos.Concepto']);
 
-                //Metemos en el arreglo los datos emitidos
-                $listemit[] = [
-                    'Estado' => $datametaemit['estado'] ?? null,
-                    'Efecto' => $datametaemit['efecto'] ?? null,
-                    'FechaEmision' => $datametaemit['fechaEmision'] ?? null,
-                    'FechaCertificacion' => $datametaemit['fechaCertificacion'] ?? null,
-                    'Serie' => $infofactuxmlemit['Serie'] ?? null,
-                    'Folio' => $infofactuxmlemit['Folio'] ?? null,
-                    'UUID' => $infofactuxmlemit['UUID'] ?? null,
-                    'LugarExpedicion' => $infofactuxmlemit['LugarExpedicion'] ?? null,
-                    'ReceptorRfc' => $datametaemit['receptorRfc'] ?? null,
-                    'ReceptorNombre' => $datametaemit['receptorNombre'] ?? null,
-                    'Total' => $datametaemit['total'] ?? null,
-                    'FormaPago' => $infofactuxmlemit['FormaPago'] ?? null,
-                    'Concepto' => $infofactuxmlemit['Conceptos.Concepto'] ?? null,
-                ];
+                //Condicional para saber si hay o no una sucursal
+                if (empty($this->infoempre['Sucursales'])) {
+                    //Consulta para obtener los datos del XML
+                    $infofactuxmlemit = XmlE::where('UUID', $datametaemit['folioFiscal'])
+                        ->first(['Serie', 'Folio', 'LugarExpedicion', 'FormaPago', 'Conceptos.Concepto']);
+
+                    //Metemos en el arreglo los datos emitidos
+                    $listemit[] = [
+                        'Estado' => $datametaemit['estado'] ?? null,
+                        'Efecto' => $datametaemit['efecto'] ?? null,
+                        'FechaEmision' => $datametaemit['fechaEmision'] ?? null,
+                        'FechaCertificacion' => $datametaemit['fechaCertificacion'] ?? null,
+                        'Serie' => $infofactuxmlemit['Serie'] ?? null,
+                        'Folio' => $infofactuxmlemit['Folio'] ?? null,
+                        'UUID' => $datametaemit['folioFiscal'] ?? null,
+                        'LugarExpedicion' => $infofactuxmlemit['LugarExpedicion'] ?? null,
+                        'ReceptorRfc' => $datametaemit['receptorRfc'] ?? null,
+                        'ReceptorNombre' => $datametaemit['receptorNombre'] ?? null,
+                        'Total' => $datametaemit['total'] ?? null,
+                        'FormaPago' => $infofactuxmlemit['FormaPago'] ?? null,
+                        'Concepto' => $infofactuxmlemit['Conceptos.Concepto'] ?? null,
+                    ];
+                } else {
+                    if (!empty($this->sucursal)) {
+                        //Consulta para obtener los datos del XML
+                        $infofactuxmlemit = XmlE::where('UUID', $datametaemit['folioFiscal'])
+                            ->where('LugarExpedicion', $this->sucursal)
+                            ->first(['Serie', 'Folio', 'LugarExpedicion', 'FormaPago', 'Conceptos.Concepto']);
+
+                        $lugarexped = $infofactuxmlemit['LugarExpedicion'] ?? null;
+
+                        if ($this->sucursal == $lugarexped) {
+                            //Metemos en el arreglo los datos emitidos
+                            $listemit[] = [
+                                'Estado' => $datametaemit['estado'] ?? null,
+                                'Efecto' => $datametaemit['efecto'] ?? null,
+                                'FechaEmision' => $datametaemit['fechaEmision'] ?? null,
+                                'FechaCertificacion' => $datametaemit['fechaCertificacion'] ?? null,
+                                'Serie' => $infofactuxmlemit['Serie'] ?? null,
+                                'Folio' => $infofactuxmlemit['Folio'] ?? null,
+                                'UUID' => $datametaemit['folioFiscal'] ?? null,
+                                'LugarExpedicion' => $infofactuxmlemit['LugarExpedicion'] ?? null,
+                                'ReceptorRfc' => $datametaemit['receptorRfc'] ?? null,
+                                'ReceptorNombre' => $datametaemit['receptorNombre'] ?? null,
+                                'Total' => $datametaemit['total'] ?? null,
+                                'FormaPago' => $infofactuxmlemit['FormaPago'] ?? null,
+                                'Concepto' => $infofactuxmlemit['Conceptos.Concepto'] ?? null,
+                            ];
+                        }
+                    }
+                }
             }
 
             //Activamos los botones de exportacion
@@ -73,6 +108,11 @@ class Monitoreo extends Component
             $this->dispatchBrowserEvent('cargagrafic', []);
 
             return json_encode($listemit);
+        } else {
+            //Activamos los botones de exportacion
+            $this->active = null;
+
+            $this->dispatchBrowserEvent('cargagrafic', []);
         }
     }
 
@@ -200,7 +240,15 @@ class Monitoreo extends Component
         //Arreglo (rango) del año actual al 2014
         $anios = range(2014, date('Y'));
 
-        return view('livewire.monitoreo', ['meses' => $meses, 'anios' => $anios, 'fechaayer' => $fechaayerstr, 'empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'consulemit' => $this->ConsulEmit()])
+        //Hacemos una consulta de la empresa para obtener la sucursal
+        $this->infoempre = User::where('RFC', $this->rfcEmpresa)->get()->first();
+
+        //Condicional para limpiar la variable de sucursal
+        if (empty($this->infoempre['Sucursales'])) {
+            $this->sucursal = "";
+        }
+
+        return view('livewire.monitoreo', ['sucursales' => $this->sucursal, 'infoempre' => $this->infoempre, 'meses' => $meses, 'anios' => $anios, 'fechaayer' => $fechaayerstr, 'empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'consulemit' => $this->ConsulEmit()])
             ->extends('layouts.livewire-layout')
             ->section('content');
     }
