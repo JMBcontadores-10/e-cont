@@ -55,6 +55,7 @@ class Monitmes extends Component
             //Realizaremos una consulta de los metadatos emitidos en el mes
             $infometaemitmes = MetadataE::where('emisorRfc', $this->empresa)
                 ->whereBetween('fechaEmision',  [$fechaselect . 'T00:00:00', $fechaselectfin . 'T23:59:59'])
+                ->where('efecto', '!=', 'Nómina')
                 ->get(['fechaEmision', 'total']);
 
             //En un ciclo obtendremos los datos necesarios
