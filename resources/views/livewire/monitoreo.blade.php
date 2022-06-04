@@ -62,11 +62,9 @@
                                 <option value="{{ $dataempre['Clave'] }}">{{ $dataempre['Nombre'] }}</option>
                             @endforeach
                         </select>
-                    @endif
 
-                    <br>
-                    <br>
-                    <br>
+                        <br>
+                    @endif
 
                     {{-- Mensaje de alerta cuando no se selecciona CFDI --}}
                     <div id="Mnstotaldias" hidden>
@@ -74,6 +72,7 @@
                         </div>
                     </div>
 
+                    <br>
                     <br>
 
                     {{-- Encabezado del dia --}}
@@ -90,11 +89,8 @@
                         <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
                         <br>
                     </div>
-
-                    <br>
-
                     {{-- Filtros de busqueda --}}
-                    <label>Periodo a consultar</label>
+                    <label>Periodo a consultar (Maximo de 31 dias)</label>
                     <form wire:submit.prevent="ConsulEmit">
                         {{-- Filtros de busqueda --}}
                         <div class="form-inline mr-auto">
@@ -371,13 +367,14 @@
                                 </table>
                             </div>
                         </div>
+                        
                     </div>
                 </section>
             </div>
         </div>
     </div>
     {{-- Llamado de modale --}}
-    @if ($this->diainter < 31)
+    @if ($this->diainter <= 31)
         @if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales'])))
             {{-- Facturas por hora --}}
             <livewire:monithora :empresa=$empresa :emitidos=$consulemit
@@ -386,7 +383,7 @@
                 <livewire:monitclient :empresa=$empresa :emitidos=$consulemit
                     :wire:key="'user-profile-two-'.$empresa.$consulemit">
 
-                    <livewire:monitmes :empresa=$empresa :wire:key="'user-profile-three-'.$empresa">
+                    <livewire:monitmes :empresa=$empresa :sucursal=$sucursal :wire:key="'user-profile-three-'.$empresa.$sucursal">
         @endif
     @endif
 </div>
