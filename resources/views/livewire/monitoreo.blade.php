@@ -89,6 +89,9 @@
                         <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
                         <br>
                     </div>
+
+                    <br>
+
                     {{-- Filtros de busqueda --}}
                     <label>Periodo a consultar (Maximo de 31 dias)</label>
                     <form wire:submit.prevent="ConsulEmit">
@@ -367,7 +370,7 @@
                                 </table>
                             </div>
                         </div>
-                        
+
                     </div>
                 </section>
             </div>
@@ -383,7 +386,8 @@
                 <livewire:monitclient :empresa=$empresa :emitidos=$consulemit
                     :wire:key="'user-profile-two-'.$empresa.$consulemit">
 
-                    <livewire:monitmes :empresa=$empresa :sucursal=$sucursal :wire:key="'user-profile-three-'.$empresa.$sucursal">
+                    <livewire:monitmes :empresa=$empresa :sucursal=$sucursal
+                        :wire:key="'user-profile-three-'.$empresa.$sucursal">
         @endif
     @endif
 </div>
