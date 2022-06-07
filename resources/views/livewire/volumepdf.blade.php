@@ -2,10 +2,17 @@
     @php
         use App\Models\Volumetrico;
         
-        //Vamos a realizar una consulta a los volumetricos
-        $datavolu = Volumetrico::where(['rfc' => $empresa])
-            ->get()
-            ->first();
+        if (!empty($sucursales)) {
+            //Vamos a realizar una consulta a los volumetricos
+            $datavolu = Volumetrico::where(['rfc' => $sucursales])
+                ->get()
+                ->first();
+        } else {
+            //Vamos a realizar una consulta a los volumetricos
+            $datavolu = Volumetrico::where(['rfc' => $empresa])
+                ->get()
+                ->first();
+        }
     @endphp
 
     {{-- Modal de PDF volumetricos --}}
@@ -51,10 +58,18 @@
                                             <div class="TxtNoArchivos">
                                                 <h4>No hay archivo</h4>
                                             </div>
-                                            {{-- -------Input FilePond---------- --}}
-                                            <input name="volupdf" type="file"
-                                                id="volupdf{{ $dia }}&{{ $empresa }}"
-                                                class="inputfilevolu" />
+
+                                            @if (!empty($sucursales))
+                                                {{-- -------Input FilePond---------- --}}
+                                                <input name="volupdf" type="file"
+                                                    id="volupdf{{ $dia }}&{{ $empresa }}&{{ $sucursales }}&{{ $nomsucur }}"
+                                                    class="inputfilevolu" />
+                                            @else
+                                                {{-- -------Input FilePond---------- --}}
+                                                <input name="volupdf" type="file"
+                                                    id="volupdf{{ $dia }}&{{ $empresa }}"
+                                                    class="inputfilevolu" />
+                                            @endif
                                         </form>
                                     @else
                                         <div class="b" id="c">
@@ -125,9 +140,13 @@
                                                         break;
                                                 }
                                                 
-                                                //Ruta predeterminada
-                                                $ruta = 'storage/contarappv1_descargas/' . $datavolu['rfc'] . '/' . $aniovolu . '/Volumetricos/' . $mesvolu . '/' . $datavolu['volumetrico.' . $dia . '.PDFVolu'] . '';
-                                                
+                                                if (!empty($sucursales)) {
+                                                    //Ruta predeterminada
+                                                    $ruta = 'storage/contarappv1_descargas/' . $empresa . '/' . $aniovolu . '/Volumetricos/' . $mesvolu . '/' . $nomsucur . '/' . $datavolu['volumetrico.' . $dia . '.PDFVolu'] . '';
+                                                } else {
+                                                    //Ruta predeterminada
+                                                    $ruta = 'storage/contarappv1_descargas/' . $empresa . '/' . $aniovolu . '/Volumetricos/' . $mesvolu . '/' . $datavolu['volumetrico.' . $dia . '.PDFVolu'] . '';
+                                                }
                                             @endphp
 
                                             <!--Contenedor para eliminar y visualizar PDF-->
@@ -144,7 +163,7 @@
                                                 <div class="BotonesPDFContainer">
                                                     <!--Eliminar PDF-->
                                                     <div class="BtnDelPDF" wire:loading.attr="disabled"
-                                                        wire:click="EmlimPDFVolu()">
+                                                        wire:click="ElimPDFVolu()">
                                                         <i class="icons fas fa-trash-alt"></i>
                                                     </div>
                                                 </div>

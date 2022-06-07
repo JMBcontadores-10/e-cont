@@ -6,7 +6,7 @@
         use App\Models\MetadataR;
         use App\Http\Controllers\ChequesYTransferenciasController;
         use Illuminate\Support\Facades\DB;
-
+        
         $rfc = Auth::user()->RFC;
         $class = '';
         if (empty($class)) {
@@ -67,7 +67,7 @@
                         {{-- <div class="alert alert-success">
 </div> --}}
                         @php
-
+                            
                             $name = Session::get('idns');
                             //    echo $name;
                         @endphp
@@ -122,8 +122,6 @@
 
                         <br>
                     @endempty
-
-
 
                     {{-- Filtros de busqueda --}}
                     <div class="form-inline mr-auto">
@@ -218,15 +216,15 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        <span class="align-middle">fecha </span>
+                                        <span class="align-middle">Fecha de pago</span>
                                     </th>
                                     <th>Factura#</th>
-                                    <th>beneficiario</th>
+                                    <th>Beneficiario</th>
                                     <th>T.operación</th>
                                     <th>F.pago</th>
                                     <th>Pagado</th>
                                     <th>$Cfdi</th>
-                                    <th>comprobar</th>
+                                    <th>Comprobar</th>
                                     <th>...</th>
                                 </tr>
                             </thead>
@@ -256,7 +254,7 @@
                                     $contabilizado = $i->conta;
                                     $pendiente = $i->pendi;
                                     $tipoO = $i->tipoopera;
-
+                                    
                                     if ($tipoO == 'Impuestos' or $tipoO == 'Parcialidad') {
                                         $diferencia = 0;
                                     } else {
@@ -268,10 +266,10 @@
                                     } else {
                                         $diferenciaP = 1;
                                     }
-
+                                    
                                     $diferencia = number_format($diferencia, 2);
                                     $nombreCheque = $i->nombrec;
-
+                                    
                                     if ($nombreCheque == '0') {
                                         $subirArchivo = true;
                                         $nombreChequeP = 0;
@@ -279,19 +277,20 @@
                                         $subirArchivo = false;
                                         $nombreChequeP = 1;
                                     }
-
+                                    
                                     $rutaArchivo = $rutaDescarga . $nombreCheque;
-
+                                    
                                     if (!empty($i->doc_relacionados)) {
                                         $docAdi = $i->doc_relacionados;
                                     }
-
+                                    
                                     $revisado_fecha = $i->revisado_fecha;
                                     $contabilizado_fecha = $i->contabilizado_fecha;
+                                    $contabili_fecha = $i->updated_at;
                                     $poliza = $i->poliza;
                                     $comentario = $i->comentario;
                                     $impresion = $i['impresion'];
-
+                                    
                                     if (strpos($nombreCheque, '/') !== false) {
                                         $p = explode('/', $nombreCheque);
                                         $i->update([
@@ -299,18 +298,16 @@
                                             'nombrec' => $p[1],
                                         ]);
                                     }
-
-                                    if (!empty($docAdi[0])){
-
-                                    if (strpos($docAdi[0], '/') !== false) {
-                                        foreach ($i->doc_relacionados as $doc) {
-                                            $pp = explode('/', $doc);
-                                            $i->pull('doc_relacionados', $doc);
-                                            $i->push('doc_relacionados', $pp[1]);
+                                    
+                                    if (!empty($docAdi[0])) {
+                                        if (strpos($docAdi[0], '/') !== false) {
+                                            foreach ($i->doc_relacionados as $doc) {
+                                                $pp = explode('/', $doc);
+                                                $i->pull('doc_relacionados', $doc);
+                                                $i->push('doc_relacionados', $pp[1]);
+                                            }
                                         }
                                     }
-
-                                }
                                 @endphp
 
                                 <tbody>
@@ -319,7 +316,7 @@
 
                                         {{-- Fecha --}}
                                         <td>
-                                            @if (  $tipoO != 'Parcialidad' && $tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+                                            @if ($tipoO != 'Parcialidad' && $tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                                 @php
                                                     Cheques::find($id)->update(['pendi' => 1]);
                                                 @endphp
@@ -434,7 +431,7 @@
 
                                                 {{-- PDF --}}
                                                 <div>
-                                                    <div class="tr">PDF</div>
+                                                    <div class="tr">Pago</div>
                                                     @if ($nombreCheque != '0')
                                                         <a id="rutArc" href="{{ $rutaArchivo }}" target="_blank"></a>
                                                         @php $class_p="content_true_pdf" @endphp
@@ -461,7 +458,7 @@
                                                 {{-- Documentos adicionales --}}
                                                 <div>
                                                     <div class="tr"> Doctos. Adicionales</div>
-                                                    @if ($verificado == 1)
+                                                    {{-- @if ($verificado == 1)
                                                         <a class="icons fas fa-upload"
                                                             onclick="alert('ya esta revisado no puedes hacer nada :)')"></a>
                                                     @else
@@ -470,7 +467,14 @@
                                                             name="{{ $id }}" data-backdrop="static"
                                                             data-keyboard="false" onclick="filepond(this.name)"
                                                             data-target="#uploadRelacionados"></a>
-                                                    @endif
+                                                    @endif --}}
+
+
+                                                    <a class="icons fas fa-upload" data-toggle="modal"
+                                                        data-controls-modal="#uploadRelacionados"
+                                                        name="{{ $id }}" data-backdrop="static"
+                                                        data-keyboard="false" onclick="filepond(this.name)"
+                                                        data-target="#uploadRelacionados"></a>
 
                                                     &nbsp; | &nbsp;
 
@@ -494,7 +498,7 @@
                                                 {{-- Vinculadas --}}
                                                 @if ($faltaxml != 0)
                                                     <div>
-                                                        <div class="tr">Vinculadas</div>
+                                                        <div class="tr">Facturas</div>
                                                         <a wire:click="$emitTo('facturas-vinculadas','refrescarModalFacturas')"
                                                             class="icons fas fa-eye" style="color: #3498DB"
                                                             data-toggle="modal"
@@ -509,26 +513,32 @@
                                                 <div>
                                                     <div class="tr">Editar</div>
                                                     {{-- Condicional para acciones con movimientos revisados --}}
-                                                    @if ($verificado == 1)
+                                                    {{-- @if ($verificado == 1)
                                                         <a class="icons fas fa-edit" data-toggle="modal"
                                                             data-target="#Revisado"></a>
                                                     @else
                                                         <a class="icons fas fa-edit" data-toggle="modal"
                                                             data-target="#editar-{{ $id }}"></a>
-                                                    @endif
+                                                    @endif --}}
+
+                                                    <a class="icons fas fa-edit" data-toggle="modal"
+                                                        data-target="#editar-{{ $id }}"></a>
                                                 </div>
 
                                                 {{-- Eliminar cheque --}}
                                                 <div>
                                                     <div class="tr">Eliminar Cheque</div>
                                                     {{-- Condicional para acciones con movimientos revisados --}}
-                                                    @if ($verificado == 1)
+                                                    {{-- @if ($verificado == 1)
                                                         <a class="icons fas fa-trash-alt fa-lg" data-toggle="modal"
                                                             data-target="#Revisado"></a>
                                                     @else
                                                         <a class="icons fas fa-trash-alt fa-lg" data-toggle="modal"
                                                             data-target="#eliminar-{{ $id }}"></a>
-                                                    @endif
+                                                    @endif --}}
+
+                                                    <a class="icons fas fa-trash-alt fa-lg" data-toggle="modal"
+                                                        data-target="#eliminar-{{ $id }}"></a>
                                                 </div>
 
                                                 {{-- Revisar --}}
@@ -544,7 +554,7 @@
                                                                     name="stOne{{ $id }}"
                                                                     id="Revi{{ $id }}">
                                                                 <label class="form-check-label"
-                                                                    for="Revi{{ $id }}">Revisado</label>
+                                                                    for="Revi{{ $id }}">Revisar</label>
                                                             </div>
                                                         @else
                                                             <div id="Revisado{{ $id }}"
@@ -588,7 +598,7 @@
                                                                         <p class="TextoMensaje">{{ $poliza }}
                                                                         </p>
                                                                         <p class="TextoMensaje">
-                                                                            {{ $contabilizado_fecha }}</p>
+                                                                            {{ $contabilizado_fecha ?? $contabili_fecha }}</p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -602,7 +612,7 @@
 
                                                 {{-- Impresion --}}
                                                 <div>
-                                                    <div class="tr">imp</div>
+                                                    <div class="tr">Impreso</div>
                                                     @if ($impresion == 'on')
                                                         <i class="icons fas fa-print fa-2x" style="color: green"></i>
                                                     @endif
@@ -695,25 +705,6 @@
                     </div>
                 </div>
 
-                 <script>
-                //Emitir los datos de la empresa al componente
-                $(document).ready(function() {
-                    //Guardamos en variables locales el contenido de sessionstorage
-                    var IdMovi = sessionStorage.getItem('idmovi');
-                    var Empresa = sessionStorage.getItem('empresa');
-
-                    //Condicion para saber si las variables no estan vacias
-                    if (IdMovi !== null && Empresa !== null) {
-                        //Emitimos los datos al controlador
-                        window.livewire.emit('mostvincu', {
-                            idmovi: IdMovi,
-                            empresa: Empresa
-                        });
-                        sessionStorage.clear();
-                    }
-                });
-                  </script>
-           </div>
                 <script>
                     //Emitir los datos de la empresa al componente
                     $(document).ready(function() {
@@ -732,4 +723,23 @@
                         }
                     });
                 </script>
+</div>
+<script>
+    //Emitir los datos de la empresa al componente
+    $(document).ready(function() {
+        //Guardamos en variables locales el contenido de sessionstorage
+        var IdMovi = sessionStorage.getItem('idmovi');
+        var Empresa = sessionStorage.getItem('empresa');
+
+        //Condicion para saber si las variables no estan vacias
+        if (IdMovi !== null && Empresa !== null) {
+            //Emitimos los datos al controlador
+            window.livewire.emit('mostvincu', {
+                idmovi: IdMovi,
+                empresa: Empresa
+            });
+            sessionStorage.clear();
+        }
+    });
+</script>
 </div>

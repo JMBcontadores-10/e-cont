@@ -61,15 +61,6 @@
                         </div>
                     </div>
 
-                    <br>
-
-                    {{-- Mostrar tabla de contenido --}}
-                    {{-- Filtros --}}
-                    <div class="form-inline mr-auto">
-                        <input wire:model.debounce.300ms="search" class="form-control" type="text"
-                            placeholder="Filtro" aria-label="Search">
-                    </div>
-
                     <div wire:loading>
                         <br>
                         <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
@@ -78,6 +69,15 @@
                         </div>
                         <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
                         <br>
+                    </div>
+
+                    <br>
+
+                    {{-- Mostrar tabla de contenido --}}
+                    {{-- Filtros --}}
+                    <div class="form-inline mr-auto">
+                        <input wire:model.debounce.300ms="search" class="form-control" type="text"
+                            placeholder="Filtro" aria-label="Search">
                     </div>
 
                     {{-- Tabla --}}
@@ -92,7 +92,6 @@
                                     <th class="text-center align-middle">N° de CFDI's</th>
                                     <th class="text-center align-middle">Total</th>
                                     <th class="text-center align-middle">Detalles</th>
-                                    <th>...</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -146,7 +145,7 @@
                                             </td>
                                             <td class="text-center align-middle">
                                                 <span
-                                                    class="invoice-amount">{{ Str::limit($i['emisorNombre'], 20) }}</span>
+                                                    class="invoice-amount">{{ Str::limit($i['emisorNombre'], 40) }}</span>
                                             </td>
 
                                             {{-- Valida si existe una coincidencia de RFC en la lista negra --}}
@@ -171,7 +170,6 @@
                                                     data-toggle="modal"
                                                     data-target="#detalles{{ $i['emisorRfc'] }}"></a>
                                             </td>
-                                            <td class="text-center align-middle"></td>
                                         </tr>
                                         {{-- Llamando a las vistas de otros componentes --}}
                                         <livewire:detalles :factu=$RFCEmit :empresa=$empresa
@@ -290,13 +288,13 @@
                                             break;
                                     }
 
-                                    //Condicional para mostrar lapaginacion particionada
-                                    if ({{ $pagiselect }} < 10) {
-                                        //Si es menor de 10
+                                    //Condicional para mostrar la paginacion particionada
+                                    if ({{ $pagiselect }} < {{ceil($totalpagi / 2)}}) {
+                                        //Si es menor de la mitad
                                         $(".inicpagi").hide();
                                         $(".finpagi").show();
                                     } else {
-                                        //Si es mayo de 10
+                                        //Si es mayo de la mitad
                                         $(".inicpagi").show();
                                         $(".finpagi").hide();
                                     }

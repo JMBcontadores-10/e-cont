@@ -1,4 +1,23 @@
 <div>
+    {{-- Estilo del boton de notificaciones --}}
+    <style>
+        .notification {
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 5px 10px;
+            border-radius: 30%;
+            background: #ff7a7a;
+            color: white;
+        }
+    </style>
+
     {{-- Libreria de exportacion --}}
     <script src="{{ asset('js/tableExport/libs/FileSaver/FileSaver.min.js') }}" defer></script>
     <script src="{{ asset('js/tableExport/tableExport.js') }}" defer></script>
@@ -53,7 +72,7 @@
                     {{-- Select para selccionar la sucursal (Contadores) --}}
                     @if (!empty($infoempre['Sucursales']))
                         {{-- Mostramos el RFC de la sucursal que se selecciona --}}
-                        <label for="inputState">Sucursal: {{ $sucursales }}</label>
+                        <label for="inputState">Sucursal</label>
                         <select wire:model="sucursal" class="select form-control">
                             <option value="">--Selecciona Sucursal--</option>
 
@@ -114,9 +133,11 @@
 
                             <button {{ $active }} type="button" data-backdrop="static" data-keyboard="false"
                                 data-toggle="modal" data-target="#factuporclient"
-                                class="btn btn-secondary BtnVinculadas">
-                                Factu. por cliente</button>
-                            &nbsp;&nbsp;
+                                class="btn btn-secondary BtnVinculadas notification">
+                                <span>Factu. por cliente</span>
+                                <span class="badge" id="numinconsis"></span>
+                            </button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                             <button {{ $active }} type="button" data-backdrop="static" data-keyboard="false"
                                 data-toggle="modal" data-target="#factupormes" class="btn btn-secondary BtnVinculadas">
@@ -380,14 +401,14 @@
     @if ($this->diainter <= 31)
         @if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales'])))
             {{-- Facturas por hora --}}
-            <livewire:monithora :empresa=$empresa :emitidos=$consulemit
-                :wire:key="'user-profile-one-'.$consulemit.$empresa">
+            <livewire:monithora :empresa=$empresa :emitidos=$consulemit :fechainic=$fechainic :fechafin=$fechafin
+                :wire:key="'user-profile-one-'.$consulemit.$empresa.$fechainic.$fechafin">
 
-                <livewire:monitclient :empresa=$empresa :emitidos=$consulemit
-                    :wire:key="'user-profile-two-'.$empresa.$consulemit">
+                <livewire:monitclient :empresa=$empresa :emitidos=$consulemit :fechainic=$fechainic :fechafin=$fechafin
+                    :wire:key="'user-profile-two-'.$empresa.$consulemit.$fechainic.$fechafin">
 
-                    <livewire:monitmes :empresa=$empresa :sucursal=$sucursal
-                        :wire:key="'user-profile-three-'.$empresa.$sucursal">
+                    <livewire:monitmes :empresa=$empresa :sucursal=$sucursal :fechainic=$fechainic :fechafin=$fechafin
+                        :wire:key="'user-profile-three-'.$empresa.$sucursal.$fechainic.$fechafin">
         @endif
     @endif
 </div>

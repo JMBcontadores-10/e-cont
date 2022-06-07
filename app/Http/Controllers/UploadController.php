@@ -240,76 +240,74 @@ class UploadController extends Controller
     } // fin funcion edit pdf
 
 
-//==========================  [ filePond LISTA DE RAYA] ==================================//
+    //==========================  [ filePond LISTA DE RAYA] ==================================//
 
-public function  listaRaya(Request $r, $rfc,$anio,$periodo)
-{
-
-
-
-
-    if ($r->hasFile('listaRaya')) { /// se consulta hasFile 'editcheque'
-        $file = $r->file('listaRaya');
-        $filename = $file->getClientOriginalName(); // se obtine el nombre original de archivo
-
-        $dtz = new DateTimeZone("America/Mexico_City");
-        $dt = new DateTime("now", $dtz);
-        $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
-
-        $renameFile = "NominaPeriodo".$periodo.".pdf";
-        $ruta = "contarappv1_descargas/" .$rfc. "/". $anio."/Nomina/Periodo".$periodo . "/Raya/";
-
-        if (!Storage::disk('public2')->exists($ruta)) {
-
-
-
-        // se guradan los documentos relacionados en la carpeta correspondiente al mes
-        $file->storeAs($ruta, $renameFile, 'public2', 0775, true);
-
-        return "entro en zona de carga <br>" . $ruta."<br>".$rfc."<br>".$anio;
-    }
-
-}else{
-
-    return "ya existe un archivo no se puede remplazar Eliminelo primero";
-}
-} // fin funcion edit pdf
-
-
-//==================================== Recibos de Nomna ==============================////
-
-public function  recibosNomina(Request $r, $rfc,$anio,$periodo)
-{
+    public function  listaRaya(Request $r, $rfc, $anio, $periodo)
+    {
 
 
 
 
-    if ($r->hasFile('recibosNomina')) { /// se consulta hasFile 'editcheque'
-        $file = $r->file('recibosNomina');
-        $filename = $file->getClientOriginalName(); // se obtine el nombre original de archivo
+        if ($r->hasFile('listaRaya')) { /// se consulta hasFile 'editcheque'
+            $file = $r->file('listaRaya');
+            $filename = $file->getClientOriginalName(); // se obtine el nombre original de archivo
 
-        $dtz = new DateTimeZone("America/Mexico_City");
-        $dt = new DateTime("now", $dtz);
-        $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
+            $dtz = new DateTimeZone("America/Mexico_City");
+            $dt = new DateTime("now", $dtz);
+            $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
 
-        $renameFile = "RecibosPeriodo".$periodo.".pdf";
-        $ruta = "contarappv1_descargas/" .$rfc. "/". $anio."/Nomina/Periodo".$periodo . "/RecibosNomina/";
+            $renameFile = "NominaPeriodo" . $periodo . ".pdf";
+            $ruta = "contarappv1_descargas/" . $rfc . "/" . $anio . "/Nomina/Periodo" . $periodo . "/Raya/";
 
-        if (!Storage::disk('public2')->exists($ruta)) {
+            if (!Storage::disk('public2')->exists($ruta)) {
 
 
 
-        // se guradan los documentos relacionados en la carpeta correspondiente al mes
-        $file->storeAs($ruta, $renameFile, 'public2', 0775, true);
+                // se guradan los documentos relacionados en la carpeta correspondiente al mes
+                $file->storeAs($ruta, $renameFile, 'public2', 0775, true);
 
-        return "entro en zona de carga <br>" . $ruta."<br>".$rfc."<br>".$anio;
-    }
+                return "entro en zona de carga <br>" . $ruta . "<br>" . $rfc . "<br>" . $anio;
+            }
+        } else {
 
-}else{
+            return "ya existe un archivo no se puede remplazar Eliminelo primero";
+        }
+    } // fin funcion edit pdf
 
-    return "ya existe un archivo no se puede remplazar Eliminelo primero";
-}
-} // fin funcion edit pdf
+
+    //==================================== Recibos de Nomna ==============================////
+
+    public function  recibosNomina(Request $r, $rfc, $anio, $periodo)
+    {
+
+
+
+
+        if ($r->hasFile('recibosNomina')) { /// se consulta hasFile 'editcheque'
+            $file = $r->file('recibosNomina');
+            $filename = $file->getClientOriginalName(); // se obtine el nombre original de archivo
+
+            $dtz = new DateTimeZone("America/Mexico_City");
+            $dt = new DateTime("now", $dtz);
+            $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
+
+            $renameFile = "RecibosPeriodo" . $periodo . ".pdf";
+            $ruta = "contarappv1_descargas/" . $rfc . "/" . $anio . "/Nomina/Periodo" . $periodo . "/RecibosNomina/";
+
+            if (!Storage::disk('public2')->exists($ruta)) {
+
+
+
+                // se guradan los documentos relacionados en la carpeta correspondiente al mes
+                $file->storeAs($ruta, $renameFile, 'public2', 0775, true);
+
+                return "entro en zona de carga <br>" . $ruta . "<br>" . $rfc . "<br>" . $anio;
+            }
+        } else {
+
+            return "ya existe un archivo no se puede remplazar Eliminelo primero";
+        }
+    } // fin funcion edit pdf
 
 
 
@@ -327,52 +325,109 @@ public function  recibosNomina(Request $r, $rfc,$anio,$periodo)
             //Descomponemos el id para obtener los datos enviados
             $iddescompuestos = explode("&", $id);
 
-            //RFC 
-            $RFC = $iddescompuestos[1];
+            if (sizeof($iddescompuestos) > 2) {
+                //Fecha
+                $Fecha = $iddescompuestos[0];
 
-            //Fecha
-            $Fecha = $iddescompuestos[0];
+                //RFC Empresa
+                $RFCEmpre = $iddescompuestos[1];
 
-            //Datos para nombrar el archivo
-            $dtz = new DateTimeZone("America/Mexico_City");
-            $dt = new DateTime("now", $dtz);
-            $Id = $dt->format('Y\Hh\Mi\SsA');
-            $Id2 = $dt->format('d');
-            $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
-            $anio = $dt->format('Y');
-            $dateValue = strtotime($Fecha);
-            $anio = date('Y', $dateValue);
-            $mesfPago = date('m', $dateValue);
-            $mesActual = date('m');
+                //RFC Sucursal
+                $RFCSucur = $iddescompuestos[2];
 
-            $espa = new Cheques(); //Vamos a ocupas un metodo para 
+                //Nombre Sucursal
+                $NomSucur = $iddescompuestos[3];
 
-            //Nombramos al archivo
-            $renameFile = $Id2 . $espa->fecha_es($mesActual) . $Id . "&" . $nombreArchivo;
+                //Datos para nombrar el archivo
+                $dtz = new DateTimeZone("America/Mexico_City");
+                $dt = new DateTime("now", $dtz);
+                $Id = $dt->format('Y\Hh\Mi\SsA');
+                $Id2 = $dt->format('d');
+                $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
+                $anio = $dt->format('Y');
+                $dateValue = strtotime($Fecha);
+                $anio = date('Y', $dateValue);
+                $mesfPago = date('m', $dateValue);
+                $mesActual = date('m');
 
-            //Ruta de descarga
-            $ruta = "contarappv1_descargas/" . $RFC . "/" . $anio . "/Volumetricos/" . $espa->fecha_es($mesfPago) . "/";
+                $espa = new Cheques(); //Vamos a ocupas un metodo para 
 
-            //Condicional para obtener la extencion
-            $fileextencion = $file->getClientOriginalExtension();
+                //Nombramos al archivo
+                $renameFile = $Id2 . $espa->fecha_es($mesActual) . $Id . "&" . $nombreArchivo;
 
-            //Condicional para saber si el archivo es extencion PDF
-            if ($fileextencion == 'pdf' || $fileextencion == 'PDF') {
-                //Realizamos la consulta para agregar el dato de PDF
-                $infovolumetric = Volumetrico::where(['rfc' => $RFC]);
+                //Ruta de descarga
+                $ruta = "contarappv1_descargas/" . $RFCEmpre . "/" . $anio . "/Volumetricos/" . $espa->fecha_es($mesfPago) . "/" . $NomSucur . "/";
 
-                //Obtenemos los datos de la consulta
-                $datavolumetric = $infovolumetric->get()->first();
+                //Condicional para obtener la extencion
+                $fileextencion = $file->getClientOriginalExtension();
 
-                if (empty($datavolumetric['volumetrico.' . $Fecha . '.PDFVolu'])) {
-                    //Se guradan los documentos relacionados en la carpeta correspondiente al mes
-                    $file->storeAs($ruta, $renameFile, 'public2');
+                //Condicional para saber si el archivo es extencion PDF
+                if ($fileextencion == 'pdf' || $fileextencion == 'PDF') {
+                    //Realizamos la consulta para agregar el dato de PDF
+                    $infovolumetric = Volumetrico::where(['rfc' => $RFCSucur]);
 
-                    //Almacenamos en la base de datos
-                    $infovolumetric->update([
-                        'rfc' => $RFC,
-                        'volumetrico.' . $Fecha . '.PDFVolu' => $renameFile,
-                    ], ['upsert' => true]);
+                    //Obtenemos los datos de la consulta
+                    $datavolumetric = $infovolumetric->get()->first();
+
+                    if (empty($datavolumetric['volumetrico.' . $Fecha . '.PDFVolu'])) {
+                        //Se guradan los documentos relacionados en la carpeta correspondiente al mes
+                        $file->storeAs($ruta, $renameFile, 'public2');
+
+                        //Almacenamos en la base de datos
+                        $infovolumetric->update([
+                            'rfc' => $RFCSucur,
+                            'volumetrico.' . $Fecha . '.PDFVolu' => $renameFile,
+                        ], ['upsert' => true]);
+                    }
+                }
+            } else {
+                //Fecha
+                $Fecha = $iddescompuestos[0];
+
+                //RFC Empresa
+                $RFCEmpre = $iddescompuestos[1];
+
+                //Datos para nombrar el archivo
+                $dtz = new DateTimeZone("America/Mexico_City");
+                $dt = new DateTime("now", $dtz);
+                $Id = $dt->format('Y\Hh\Mi\SsA');
+                $Id2 = $dt->format('d');
+                $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
+                $anio = $dt->format('Y');
+                $dateValue = strtotime($Fecha);
+                $anio = date('Y', $dateValue);
+                $mesfPago = date('m', $dateValue);
+                $mesActual = date('m');
+
+                $espa = new Cheques(); //Vamos a ocupas un metodo para 
+
+                //Nombramos al archivo
+                $renameFile = $Id2 . $espa->fecha_es($mesActual) . $Id . "&" . $nombreArchivo;
+
+                //Ruta de descarga
+                $ruta = "contarappv1_descargas/" . $RFCEmpre . "/" . $anio . "/Volumetricos/" . $espa->fecha_es($mesfPago) . "/";
+
+                //Condicional para obtener la extencion
+                $fileextencion = $file->getClientOriginalExtension();
+
+                //Condicional para saber si el archivo es extencion PDF
+                if ($fileextencion == 'pdf' || $fileextencion == 'PDF') {
+                    //Realizamos la consulta para agregar el dato de PDF
+                    $infovolumetric = Volumetrico::where(['rfc' => $RFCEmpre]);
+
+                    //Obtenemos los datos de la consulta
+                    $datavolumetric = $infovolumetric->get()->first();
+
+                    if (empty($datavolumetric['volumetrico.' . $Fecha . '.PDFVolu'])) {
+                        //Se guradan los documentos relacionados en la carpeta correspondiente al mes
+                        $file->storeAs($ruta, $renameFile, 'public2');
+
+                        //Almacenamos en la base de datos
+                        $infovolumetric->update([
+                            'rfc' => $RFCEmpre,
+                            'volumetrico.' . $Fecha . '.PDFVolu' => $renameFile,
+                        ], ['upsert' => true]);
+                    }
                 }
             }
         }
@@ -389,52 +444,109 @@ public function  recibosNomina(Request $r, $rfc,$anio,$periodo)
             //Descomponemos el id para obtener los datos enviados
             $iddescompuestos = explode("&", $id);
 
-            //RFC 
-            $RFC = $iddescompuestos[1];
+            if (sizeof($iddescompuestos) > 2) {
+                //Fecha
+                $Fecha = $iddescompuestos[0];
 
-            //Fecha
-            $Fecha = $iddescompuestos[0];
+                //RFC Empresa
+                $RFCEmpre = $iddescompuestos[1];
 
-            //Datos para nombrar el archivo
-            $dtz = new DateTimeZone("America/Mexico_City");
-            $dt = new DateTime("now", $dtz);
-            $Id = $dt->format('Y\Hh\Mi\SsA');
-            $Id2 = $dt->format('d');
-            $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
-            $anio = $dt->format('Y');
-            $dateValue = strtotime($Fecha);
-            $anio = date('Y', $dateValue);
-            $mesfPago = date('m', $dateValue);
-            $mesActual = date('m');
+                //RFC Sucursal
+                $RFCSucur = $iddescompuestos[2];
 
-            $espa = new Cheques(); //Vamos a ocupas un metodo para 
+                //Nombre Sucursal
+                $NomSucur = $iddescompuestos[3];
 
-            //Nombramos al archivo
-            $renameFile = $Id2 . $espa->fecha_es($mesActual) . $Id . "&" . $nombreArchivo;
+                //Datos para nombrar el archivo
+                $dtz = new DateTimeZone("America/Mexico_City");
+                $dt = new DateTime("now", $dtz);
+                $Id = $dt->format('Y\Hh\Mi\SsA');
+                $Id2 = $dt->format('d');
+                $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
+                $anio = $dt->format('Y');
+                $dateValue = strtotime($Fecha);
+                $anio = date('Y', $dateValue);
+                $mesfPago = date('m', $dateValue);
+                $mesActual = date('m');
 
-            //Ruta de descarga
-            $ruta = "contarappv1_descargas/" . $RFC . "/" . $anio . "/CRE/" . $espa->fecha_es($mesfPago) . "/";
+                $espa = new Cheques(); //Vamos a ocupas un metodo para 
 
-            //Condicional para obtener la extencion
-            $fileextencion = $file->getClientOriginalExtension();
+                //Nombramos al archivo
+                $renameFile = $Id2 . $espa->fecha_es($mesActual) . $Id . "&" . $nombreArchivo;
 
-            //Condicional para saber si el archivo es extencion PDF
-            if ($fileextencion == 'pdf' ||  $fileextencion == 'PDF') {
-                //Realizamos la consulta para agregar el dato de PDF
-                $infovolumetric = Volumetrico::where(['rfc' => $RFC]);
+                //Ruta de descarga
+                $ruta = "contarappv1_descargas/" . $RFCEmpre . "/" . $anio . "/CRE/" . $espa->fecha_es($mesfPago) . "/" . $NomSucur . "/";
 
-                //Obtenemos los datos de la consulta
-                $datavolumetric = $infovolumetric->get()->first();
+                //Condicional para obtener la extencion
+                $fileextencion = $file->getClientOriginalExtension();
 
-                if (empty($datavolumetric['volumetrico.' . $Fecha . '.PDFCRE'])) {
-                    //Se guradan los documentos relacionados en la carpeta correspondiente al mes
-                    $file->storeAs($ruta, $renameFile, 'public2');
+                //Condicional para saber si el archivo es extencion PDF
+                if ($fileextencion == 'pdf' || $fileextencion == 'PDF') {
+                    //Realizamos la consulta para agregar el dato de PDF
+                    $infovolumetric = Volumetrico::where(['rfc' => $RFCSucur]);
 
-                    //Almacenamos en la base de datos
-                    $infovolumetric->update([
-                        'rfc' => $RFC,
-                        'volumetrico.' . $Fecha . '.PDFCRE' => $renameFile,
-                    ], ['upsert' => true]);
+                    //Obtenemos los datos de la consulta
+                    $datavolumetric = $infovolumetric->get()->first();
+
+                    if (empty($datavolumetric['volumetrico.' . $Fecha . '.PDFCRE'])) {
+                        //Se guradan los documentos relacionados en la carpeta correspondiente al mes
+                        $file->storeAs($ruta, $renameFile, 'public2');
+
+                        //Almacenamos en la base de datos
+                        $infovolumetric->update([
+                            'rfc' => $RFCSucur,
+                            'volumetrico.' . $Fecha . '.PDFCRE' => $renameFile,
+                        ], ['upsert' => true]);
+                    }
+                }
+            } else {
+                //Fecha
+                $Fecha = $iddescompuestos[0];
+
+                //RFC Empresa
+                $RFCEmpre = $iddescompuestos[1];
+
+                //Datos para nombrar el archivo
+                $dtz = new DateTimeZone("America/Mexico_City");
+                $dt = new DateTime("now", $dtz);
+                $Id = $dt->format('Y\Hh\Mi\SsA');
+                $Id2 = $dt->format('d');
+                $nombreArchivo = preg_replace('/[^A-z0-9.-]+/', '', $filename);
+                $anio = $dt->format('Y');
+                $dateValue = strtotime($Fecha);
+                $anio = date('Y', $dateValue);
+                $mesfPago = date('m', $dateValue);
+                $mesActual = date('m');
+
+                $espa = new Cheques(); //Vamos a ocupas un metodo para 
+
+                //Nombramos al archivo
+                $renameFile = $Id2 . $espa->fecha_es($mesActual) . $Id . "&" . $nombreArchivo;
+
+                //Ruta de descarga
+                $ruta = "contarappv1_descargas/" . $RFCEmpre . "/" . $anio . "/CRE/" . $espa->fecha_es($mesfPago) . "/";
+
+                //Condicional para obtener la extencion
+                $fileextencion = $file->getClientOriginalExtension();
+
+                //Condicional para saber si el archivo es extencion PDF
+                if ($fileextencion == 'pdf' || $fileextencion == 'PDF') {
+                    //Realizamos la consulta para agregar el dato de PDF
+                    $infovolumetric = Volumetrico::where(['rfc' => $RFCEmpre]);
+
+                    //Obtenemos los datos de la consulta
+                    $datavolumetric = $infovolumetric->get()->first();
+
+                    if (empty($datavolumetric['volumetrico.' . $Fecha . '.PDFCRE'])) {
+                        //Se guradan los documentos relacionados en la carpeta correspondiente al mes
+                        $file->storeAs($ruta, $renameFile, 'public2');
+
+                        //Almacenamos en la base de datos
+                        $infovolumetric->update([
+                            'rfc' => $RFCEmpre,
+                            'volumetrico.' . $Fecha . '.PDFCRE' => $renameFile,
+                        ], ['upsert' => true]);
+                    }
                 }
             }
         }

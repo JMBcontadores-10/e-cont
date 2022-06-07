@@ -14,6 +14,8 @@ class Monithora extends Component
     //Variables globales
     public $emitidos;
     public $empresa;
+    public $fechainic;
+    public $fechafin;
 
     public function render()
     {

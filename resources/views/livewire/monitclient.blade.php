@@ -34,13 +34,17 @@
                 </div>
                 {{-- Cuerpo del modal --}}
                 <div class="modal-body">
+
+                    {{-- Input con el total de inconsistencias --}}
+                    <input id="TxtInconsis" value="{{ $inconsistencias }}" hidden>
+
                     <div class="form-inline mr-auto">
                         <button type="button" class="btn btn-success BtnVinculadas"
-                            onclick="exportReportToExcel('Facturacion por cliente {{ $empresa }}')">Excel</button>
+                            onclick="exportReportToExcel('{{ $empresa }}_Facturacion_{{ $fechainic }}_{{ $fechafin }}')">Excel</button>
                         &nbsp;&nbsp;
 
                         <button type="button" class="btn btn-danger BtnVinculadas"
-                            onclick="exportReportToPdf('Facturacion por cliente {{ $empresa }}')">Pdf</button>
+                            onclick="exportReportToPdf('{{ $empresa }}_Facturacion_{{ $fechainic }}_{{ $fechafin }}')">Pdf</button>
                     </div>
 
                     <br>
@@ -55,6 +59,9 @@
                         <br>
                     </div>
 
+                    {{-- Leyenda sobre los registros en rojo --}}
+                    <label>Los registros que se tornan en color rojo significan que presentan alguna inconsistencia, le
+                        recomendamos darle prioridad de revisión a esas facturas</label>
                     <div class="table-responsive">
                         <table class="{{ $class }}" id="tableclient" data-tableexport-display="always"
                             style="width:100%">
@@ -78,73 +85,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @php
-                                    //Construimos la tabla
-                                    //Variables de contenedor
-                                    $datainfomonit = '';
-                                    $rowinfomonit = [];
-                                    
-                                    //Variables para obtener el total
-                                    $totalfactu = 0;
-                                    $totalmonto = 0;
-                                @endphp
-
-                                {{-- Contruccion de la tabla --}}
-                                @foreach ($consulmetaclient as $datametaclient)
-                                    @php
-                                        //Variable de contenedor
-                                        $totalfactuclient = 0; //Cantidad de facturas
-                                        $montofactuclient = 0;
-                                        
-                                        //Alamacenamos el RFC para enviarlo
-                                        $rfcreci = "'" . $datametaclient['RFC'] . "'";
-                                        
-                                        //Ciclo para obtener la cantidad de facturas por cliente
-                                        foreach ($consulmetaporhora as $datametaporhora) {
-                                            if ($datametaclient['RFC'] == $datametaporhora->ReceptorRfc) {
-                                                $totalfactuclient++;
-                                                $montofactuclient += $datametaporhora->Total;
-                                            }
-                                        }
-                                        
-                                        //Obtenemos el total
-                                        $totalfactu += $totalfactuclient; //Cantidad
-                                        $totalmonto += $montofactuclient; //Monto
-                                        
-                                        //Ingresamos los datos requeridos
-                                        
-                                        //RFC receptor
-                                        $datainfomonit .= '<td>' . $datametaclient['RFC'] . '</td>';
-                                        
-                                        //Nombre receptor
-                                        $datainfomonit .= '<td>' . $datametaclient['Nombre'] . '</td>';
-                                        
-                                        //#Fact emitidas
-                                        $datainfomonit .= '<td>' . $totalfactuclient . '</td>';
-                                        
-                                        //Monto
-                                        $datainfomonit .= '<td> $ ' . number_format($montofactuclient, 2) . '</td>';
-                                        
-                                        //Detalle
-                                        $datainfomonit .=
-                                            '<td> <a data-backdrop="static" data-keyboard="false" data-toggle="modal"
-                                            data-target="#detalleporclient" wire:click="SendRFCReci(' .
-    $rfcreci .
-    ')" class="icons fas fa-eye"></a> </td>';
-                                        
-                                        //Alamcenamos los datos en el arreglo
-                                        $rowinfomonit[$totalfactuclient . $datametaclient['RFC']] = '<tr>' . $datainfomonit . '</tr>';
-                                        
-                                        //Vaciamos la variable para almacenar las otras
-                                        $datainfomonit = '';
-                                    @endphp
-                                @endforeach
-
-                                @php
-                                    //Ordenamos la tabla
-                                    krsort($rowinfomonit, SORT_STRING | SORT_FLAG_CASE | SORT_NATURAL);
-                                @endphp
-
                                 {{-- Imprimimos la tabla --}}
                                 @foreach ($rowinfomonit as $tableinfomonit)
                                     {!! $tableinfomonit !!}
@@ -197,11 +137,11 @@
                     {{-- Boton de exportacion --}}
                     <div class="form-inline mr-auto">
                         <button type="button" class="btn btn-success BtnVinculadas"
-                            onclick="ExportHoraClientExcel('{{ $empresa }}{{ $rfcinfo }}', 'Detalles por cliente {{ $empresa }}')">Excel</button>
+                            onclick="ExportHoraClientExcel('{{ $empresa }}{{ $rfcinfo }}', '{{ $empresa }}_Facturacion_{{ $fechainic }}_{{ $fechafin }}')">Excel</button>
                         &nbsp;&nbsp;
 
                         <button type="button" class="btn btn-danger BtnVinculadas"
-                            onclick="ExportHoraClientPDF('{{ $empresa }}{{ $rfcinfo }}', 'Detalles por cliente {{ $empresa }}')">Pdf</button>
+                            onclick="ExportHoraClientPDF('{{ $empresa }}{{ $rfcinfo }}', '{{ $empresa }}_Facturacion_{{ $fechainic }}_{{ $fechafin }}')">Pdf</button>
                         &nbsp;&nbsp;
                     </div>
 

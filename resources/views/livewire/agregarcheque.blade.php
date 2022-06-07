@@ -353,7 +353,7 @@ document.getElementById("tipo").disabled = false;
   </div>
 </div>
 
-<button type="button" wire:click="refresh()" class="btn btn-secondary close-btn" data-dismiss="modal">Cerrar</button>
+<button type="button" wire:click="refresh()" class="btn btn-secondary close-btn" data-dismiss="modal">Finalizar</button>
 
   {{-- <button wire:click="step3()" type="submit" class="btn btn-primary"></button> --}}
 

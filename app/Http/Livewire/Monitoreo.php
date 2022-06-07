@@ -26,17 +26,8 @@ class Monitoreo extends Component
     public $fechainic;
     public $fechafin;
 
-    //Variable del RFC recibido
-    public $rfcrecib;
-
     //Variable que obtiene la diferencia de dias
     public $diainter;
-
-
-    public function SendRFCReci($rfc)
-    {
-        $this->$rfcrecib = $rfc;
-    }
 
     //Metodo para realizar la consulta del monitoreo
     public function ConsulEmit()

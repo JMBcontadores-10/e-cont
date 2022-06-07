@@ -3,6 +3,8 @@
 namespace App\Http\Livewire;
 
 use App\Models\Cheques;
+use DateTime;
+use DateTimeZone;
 use Livewire\Component;
 
 class Poliza extends Component
@@ -12,45 +14,45 @@ class Poliza extends Component
 
 
 
-/////////////////////// funcion rules necesaria para validar datos en tiempo real
-//////////////////////comparandolos con la base datos (siempre con livewire)
-protected function rules(){
+    /////////////////////// funcion rules necesaria para validar datos en tiempo real
+    //////////////////////comparandolos con la base datos (siempre con livewire)
+    protected function rules()
+    {
 
-    return[
-
-
-        'polizaCheque.poliza' => 'required|',
+        return [
 
 
-    ];
-}
+            'polizaCheque.poliza' => 'required|',
+
+
+        ];
+    }
 
 
 
 
-    public function guardar(){
+    public function guardar()
+    {
 
         $this->validate();
 
+        //Agregamos los campos contabilizados
+        $dtz = new DateTimeZone("America/Mexico_City"); //Establecemos la zona horaria
+        $dt = new DateTime("now", $dtz); //Obtenemos los datos de la fecha de hoy
 
+        //Actualizamos los datos de la base de cheques
+        Cheques::where('_id', $this->polizaCheque->_id)->update([
+            'conta' => 1, //Ponemos en 1 el campo de conta
+            'contabilizado_fecha' => $dt->format('Y-m-d\TH:i:s'), //Establecemos el formato
+        ]);
 
-        $data=[
-
-
-            'conta' => 1,
-
-        ];
-
-        $this->polizaCheque->update($data);// actuliza la base de datos con el campo recibido 'ajuste'
-
-        $this->polizaCheque->save();// guarda todos los campos
-        $this->emitTo( 'chequesytransferencias','chequesRefresh');
-         $this->dispatchBrowserEvent('cerrarPolizamodal', []);
-
-     }
+        $this->polizaCheque->save(); // guarda todos los campos
+        $this->emitTo('chequesytransferencias', 'chequesRefresh');
+        $this->dispatchBrowserEvent('cerrarPolizamodal', []);
+    }
 
     public function render()
     {
-        return view('livewire.poliza',['datos'=>$this->polizaCheque]);
+        return view('livewire.poliza', ['datos' => $this->polizaCheque]);
     }
 }

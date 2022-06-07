@@ -89,6 +89,15 @@
                         </div>
                     </div>
 
+                    {{-- Mensaje de informacion de descarga --}}
+                    <div id="Mnsdeccompl" hidden>
+                        <div id="mnssuccess" class="alert alert-primary">
+                            <b><div id="meninic"></div></b>
+                            <div id="mendesc"></div>
+                            <div id="menerror"></div>
+                        </div>
+                    </div>
+
                     {{-- Muestra la cantidad de cfdi cosultados --}}
                     <label>Total de registros obtenidos: {{ $totallist }}</label>
 
@@ -1196,6 +1205,18 @@
 
                 //Cuando se realice el proceso de desmaracar todos los checkboxes, marcamos lo que no se han descargado
                 checksindesc();
+            });
+
+            //Funcion para mostrar la informacion de descarga
+            window.addEventListener('showresultdesc', event => {
+                $("#meninic").text("CFDI descargados con exito:");
+                $("#mendesc").text("Descargados: " + event.detail.descarg);
+                $("#menerror").text("Errores: " + event.detail.error);
+
+                $("#Mnsdeccompl").prop("hidden", false);
+                setTimeout(function() {
+                    $("#Mnsdeccompl").prop("hidden", true);
+                }, 5000);
             });
         });
     </script>

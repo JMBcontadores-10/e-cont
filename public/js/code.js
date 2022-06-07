@@ -786,7 +786,7 @@ function FilePondPDFVolu(rutaid, id) {
 
     //Parametros de validacion de archivos
     FilePond.create(inputfile, {
-        maxFileSize: '1000KB',
+        maxFileSize: '2048KB',
         labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
         labelIdle: 'Sube un archivo <span class="filepond--label-action"> Explorar </span>',
         labelFileLoading: 'Cargando',
@@ -830,7 +830,7 @@ function FilePondPDFCRE(rutaid, id) {
 
     //Parametros de validacion de archivos
     FilePond.create(inputfile, {
-        maxFileSize: '1000KB',
+        maxFileSize: '2048KB',
         labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
         labelIdle: 'Sube un archivo <span class="filepond--label-action"> Explorar </span>',
         labelFileLoading: 'Cargando',

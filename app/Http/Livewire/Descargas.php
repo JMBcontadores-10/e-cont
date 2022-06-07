@@ -743,7 +743,7 @@ class Descargas extends Component
 
                 //Con un bucle pasamos por los uuids almacenados en el arreglo
                 foreach ($allcfdi as $listuuids) {
-                    //Buscamos si exsiten los archivos (si estn descargados)
+                    //Buscamos si exsiten los archivos (si estan descargados)
                     //XML/PDF/Acuse
                     $xmlfile = $rutaxml . strtoupper($listuuids) . '.xml';
                     $pdffile = $rutapdf . strtoupper($listuuids) . '.pdf';
@@ -783,6 +783,9 @@ class Descargas extends Component
                     );
                 break;
         }
+
+        //Mostramos el mensaje al descargar
+        $this->dispatchBrowserEvent('showresultdesc', ['descarg' => $totaldesc, 'error' => $cfdierror]);
     }
 
     //Metodo para agregar los descargados emitidos en la base de datos de calendario
@@ -870,6 +873,9 @@ class Descargas extends Component
                     ['upsert' => true]
                 );
         }
+
+        //Mostramos el mensaje al descargar
+        $this->dispatchBrowserEvent('showresultdesc', ['descarg' => $totaldesc, 'error' => $cfdierror]);
     }
 
     //Metodo para limpiar los campos de busqueda (Esto sucedera al cambiar de empresa (si es contador) y al cambiar de recibido a emitidos)

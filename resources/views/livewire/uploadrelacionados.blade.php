@@ -5,7 +5,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;"  class="icons fas fa-upload"> Subir Archivoss</span></h6>
+                    <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;"  class="icons fas fa-upload"> Subir Archivos</span></h6>
                     <button id="mdl" type="button"  wire:click="refreshh()"  class="close" data-dismiss="modal" aria-label="Close">
                          <span aria-hidden="true close-btn">×</span>
                     </button>

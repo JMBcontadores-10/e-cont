@@ -511,6 +511,11 @@ class Volumedata extends Component
             'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickpremium,
             'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickdiesel,
 
+            //Obtenemos el precio de venta del siguiente dia
+            'volumetrico.' . $diasiguiente . '.PrecVentM' => $this->precventmagna,
+            'volumetrico.' . $diasiguiente . '.PrecVentP' => $this->precventpremium,
+            'volumetrico.' . $diasiguiente . '.PrecVentD' => $this->precventdiesel,
+
             //Obtenemos el inicial del cambio de precio
             'volumetrico.' . $this->dia . '-C.IventInicM' => $this->invdetermagna,
             'volumetrico.' . $this->dia . '-C.IventInicP' => $this->invdeterpremium,
@@ -571,6 +576,11 @@ class Volumedata extends Component
             'volumetrico.' . $diasiguiente . '.IventInicM' => $this->autostickcambmagna,
             'volumetrico.' . $diasiguiente . '.IventInicP' => $this->autostickcambpremium,
             'volumetrico.' . $diasiguiente . '.IventInicD' => $this->autostickcambdiesel,
+
+            //Obtenemos el precio de venta del siguiente dia
+            'volumetrico.' . $diasiguiente . '.PrecVentM' => $this->precventcambmagna,
+            'volumetrico.' . $diasiguiente . '.PrecVentP' => $this->precventcambpremium,
+            'volumetrico.' . $diasiguiente . '.PrecVentD' => $this->precventcambdiesel,
         ], ['upsert' => true]);
 
         //Agregamos el PDF si este existe

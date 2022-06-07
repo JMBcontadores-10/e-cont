@@ -9,7 +9,7 @@ function exportReportToExcel(empresa) {
       $('#tableclient').tableExport({
             exportHiddenCells: true,
             type: 'excel',
-            fileName: 'E-cont ' + empresa,
+            fileName: empresa,
             ignoreColumn: [4], //Quitamos la ultima columna de destalles
             mso: {
                   styles: ['background-color'],
@@ -21,7 +21,7 @@ function exportReportToExcel(empresa) {
 function exportReportToPdf(empresa) {
       $('#tableclient').tableExport({
             exportHiddenCells: true,
-            fileName: 'E-cont ' + empresa,
+            fileName: empresa,
             ignoreColumn: [4], //Quitamos la ultima columna de destalles
             type: 'pdf',
             pdfmake: {
@@ -34,7 +34,7 @@ function exportReportToPdf(empresa) {
 //Exportacion por de la tabla de facturacion por hora o cliente (Excel)
 function ExportHoraClientExcel(idempre, empresa) {
       $('#' + idempre).tableExport({
-            fileName: 'E-cont ' + empresa,
+            fileName: empresa,
             ignoreColumn: [13], //Quitamos la ultima columna de destalles
             type: 'excel',
             mso: {
@@ -46,7 +46,7 @@ function ExportHoraClientExcel(idempre, empresa) {
 //Exportacion por de la tabla de facturacion por hora o cliente (PDF)
 function ExportHoraClientPDF(idempre, empresa) {
       $('#' + idempre).tableExport({
-            fileName: 'E-cont ' + empresa,
+            fileName: empresa,
             ignoreColumn: [13],  //Quitamos la ultima columna de destalles
             type: 'pdf',
             pdfmake: {
@@ -332,6 +332,16 @@ $(document).ready(function () {
                   setTimeout(function () {
                         $("#Mnstotaldias").prop("hidden", true);
                   }, 2500);
+            }
+
+            //Obtenemos el total de inconsistencias
+            var totalinconsis = $("#TxtInconsis").val();
+
+            //Enviamos el numero de iniconsistencias (Se mostrara el contador cuando exista una inconsitencias)
+            if (totalinconsis > 0) {
+                  $("#numinconsis").text(totalinconsis);
+            } else {
+                  $(".badge").hide();
             }
 
             //Funcion para crear los graficos

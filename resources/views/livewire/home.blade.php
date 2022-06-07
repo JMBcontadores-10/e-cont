@@ -63,7 +63,7 @@
                             <h5 class="card-title mb-0"><b>Cheques y transferencias</b></h5>
                             <div class="row">
                                 <div class="col-7">
-                                  @if(Auth::user()->tipo)
+                                  @if(Auth::user()->tipo || Auth::user()->TipoSE)
                                     <label for="inputState">Empresa: {{$empresa}}</label>
                                     <select wire:model="rfcEmpresa" id="inputState1" class="select form-control"  >
                                         <option  value="" >--Selecciona Empresa--</option>
