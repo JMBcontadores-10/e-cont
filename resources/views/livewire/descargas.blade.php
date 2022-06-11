@@ -89,6 +89,15 @@
                         </div>
                     </div>
 
+                    {{-- Mensaje de informacion de descarga --}}
+                    <div id="Mnsdeccompl" hidden>
+                        <div id="mnssuccess" class="alert alert-primary">
+                            <b><div id="meninic"></div></b>
+                            <div id="mendesc"></div>
+                            <div id="menerror"></div>
+                        </div>
+                    </div>
+
                     {{-- Muestra la cantidad de cfdi cosultados --}}
                     <label>Total de registros obtenidos: {{ $totallist }}</label>
 
@@ -874,40 +883,40 @@
                             //Swich para convertir Int mes en String
                             switch ($mescal) {
                                 case 1:
-                                    $mescal = 'Enero de ';
+                                    $mescal = 'Enero ';
                                     break;
                                 case 2:
-                                    $mescal = 'Febrero de ';
+                                    $mescal = 'Febrero ';
                                     break;
                                 case 3:
-                                    $mescal = 'Marzo de ';
+                                    $mescal = 'Marzo ';
                                     break;
                                 case 4:
-                                    $mescal = 'Abril de ';
+                                    $mescal = 'Abril ';
                                     break;
                                 case 5:
-                                    $mescal = 'Mayo de ';
+                                    $mescal = 'Mayo ';
                                     break;
                                 case 6:
-                                    $mescal = 'Junio de ';
+                                    $mescal = 'Junio ';
                                     break;
                                 case 7:
-                                    $mescal = 'Julio de ';
+                                    $mescal = 'Julio ';
                                     break;
                                 case 8:
-                                    $mescal = 'Agosto de ';
+                                    $mescal = 'Agosto ';
                                     break;
                                 case 9:
-                                    $mescal = 'Septiembre de ';
+                                    $mescal = 'Septiembre ';
                                     break;
                                 case 10:
-                                    $mescal = 'Octubre de ';
+                                    $mescal = 'Octubre ';
                                     break;
                                 case 11:
-                                    $mescal = 'Noviembre de ';
+                                    $mescal = 'Noviembre ';
                                     break;
                                 case 12:
-                                    $mescal = 'Diciembre de ';
+                                    $mescal = 'Diciembre ';
                                     break;
                             }
                         @endphp
@@ -1196,6 +1205,18 @@
 
                 //Cuando se realice el proceso de desmaracar todos los checkboxes, marcamos lo que no se han descargado
                 checksindesc();
+            });
+
+            //Funcion para mostrar la informacion de descarga
+            window.addEventListener('showresultdesc', event => {
+                $("#meninic").text("CFDI descargados con exito:");
+                $("#mendesc").text("Descargados: " + event.detail.descarg);
+                $("#menerror").text("Errores: " + event.detail.error);
+
+                $("#Mnsdeccompl").prop("hidden", false);
+                setTimeout(function() {
+                    $("#Mnsdeccompl").prop("hidden", true);
+                }, 5000);
             });
         });
     </script>

@@ -1076,6 +1076,7 @@
                                           widths: widths,
                                           body: body
                                         },
+                                        alignment: "center",
                                         layout: {
                                           layout: 'noBorders',
                                           hLineStyle: function (i, node) { return 0; },

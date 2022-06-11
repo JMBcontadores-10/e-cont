@@ -138,8 +138,8 @@
     <script src="{{ asset('js/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.defaults.min.js') }}" defer></script>
     <script src="{{ asset('js/app-assets/fonts/LivIconsEvo/js/LivIconsEvo.min.js') }}" defer></script>
     <!-- BEGIN Vendor JS-->
-<!-- BEGIN: Page Vendor JS-->
-<script src="{{ asset('js/app-assets/vendors/js/editors/quill/quill.min.js') }}" defer></script>
+    <!-- BEGIN: Page Vendor JS-->
+    <script src="{{ asset('js/app-assets/vendors/js/editors/quill/quill.min.js') }}" defer></script>
 
     <!-- BEGIN: Page Vendor JS-->
     <script src="{{ asset('js/app-assets/vendors/js/tables/datatable/jquery.dataTables.min.js') }}" defer></script>
@@ -363,7 +363,7 @@
             <ul class="navigation navigation-main" id="main-menu-navigation" data-menu="menu-navigation"
                 data-icon-style="lines">
 
-                <li class=" nav-item"><a href="index.html"><i class="#" data-icon="desktop"></i><span
+                <li class=" nav-item"><a><i class="#" data-icon="desktop"></i><span
                             class="menu-title text-truncate" data-i18n="Dashboard">Módulos</span></a>
                     <ul class="menu-content">
 
@@ -378,10 +378,6 @@
                                     href="{{ url('cuentasporpagar') }}"><i class="bx bx-right-arrow-alt"></i><span
                                         class="menu-item text-truncate" data-i18n="Analytics">Cuentas
                                         por Pagar</span></a>
-                            </li>
-                            <li id="descargas"><a class="d-flex align-items-center" href="{{ url('descargas') }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Descargas</span></a>
                             </li>
                             <li id="Contruccion"><a class="d-flex align-items-center" href="{{ 'nominas' }}"><i
                                         class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
@@ -408,15 +404,19 @@
                                         class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
                                         data-i18n="Analytics">Expediente Fiscal</span></a>
                             </li>
-                            <li id="auditoria"><a class="d-flex align-items-center" href="{{ 'auditoria' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Auditoria</span></a>
-                            </li>
-                            <li id="consultas"><a class="d-flex align-items-center" href="{{ 'consultas' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Consultas</span></a>
-                            </li>
                             @if (auth()->user()->tipo)
+                                <li id="descargas"><a class="d-flex align-items-center"
+                                        href="{{ url('descargas') }}"><i class="bx bx-right-arrow-alt"></i><span
+                                            class="menu-item text-truncate" data-i18n="Analytics">Descargas</span></a>
+                                </li>
+                                <li id="auditoria"><a class="d-flex align-items-center" href="{{ 'auditoria' }}"><i
+                                            class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                            data-i18n="Analytics">Auditoria</span></a>
+                                </li>
+                                <li id="consultas"><a class="d-flex align-items-center" href="{{ 'consultas' }}"><i
+                                            class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                            data-i18n="Analytics">Consultas</span></a>
+                                </li>
                                 <li id="monitoreo"><a class="d-flex align-items-center" href="{{ 'monitoreo' }}"><i
                                             class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
                                             data-i18n="Analytics">Monitoreo de facturación</span></a>

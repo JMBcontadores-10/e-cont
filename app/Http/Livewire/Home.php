@@ -34,7 +34,7 @@ class Home extends Component
     public function render()
     {
         //Condicional para mostrar las empresas
-        if(!empty(auth()->user()->tipo)){
+        if(!empty(auth()->user()->tipo) || !empty(auth()->user()->TipoSE)){
             $e=array();
             $largo=sizeof(auth()->user()->empresas);
             for($i=0; $i <$largo; $i++) {

@@ -15,11 +15,16 @@
 
 
     @php
+        //Llamamos los modelos
+        use App\Models\User;
+        
         //Obtenemos la clase al cargar la tabla
         $class = '';
         if (empty($class)) {
             $class = 'table nowrap dataTable no-footer';
         }
+        
+        $nomsucur = '';
     @endphp
 
     {{-- Modal de hisatorico --}}
@@ -274,7 +279,7 @@
                     {{-- Select para selccionar la empresa (Contadores) --}}
                     @if (!empty($infogas['Sucursales']))
                         {{-- Mostramos el RFC de la empresa que se selecciona --}}
-                        <label for="inputState">Sucursal: {{ $sucursales }}</label>
+                        <label for="inputState">Sucursal</label>
                         <select wire:model="sucursal" wire:change="Refresh()" class="select form-control">
                             <option value="">--Selecciona Sucursal--</option>
 
@@ -305,40 +310,40 @@
                             //Swich para convertir Int mes en String
                             switch ($mescal) {
                                 case 1:
-                                    $mescalstr = 'Enero de ';
+                                    $mescalstr = 'Enero ';
                                     break;
                                 case 2:
-                                    $mescalstr = 'Febrero de ';
+                                    $mescalstr = 'Febrero ';
                                     break;
                                 case 3:
-                                    $mescalstr = 'Marzo de ';
+                                    $mescalstr = 'Marzo ';
                                     break;
                                 case 4:
-                                    $mescalstr = 'Abril de ';
+                                    $mescalstr = 'Abril ';
                                     break;
                                 case 5:
-                                    $mescalstr = 'Mayo de ';
+                                    $mescalstr = 'Mayo ';
                                     break;
                                 case 6:
-                                    $mescalstr = 'Junio de ';
+                                    $mescalstr = 'Junio ';
                                     break;
                                 case 7:
-                                    $mescalstr = 'Julio de ';
+                                    $mescalstr = 'Julio ';
                                     break;
                                 case 8:
-                                    $mescalstr = 'Agosto de ';
+                                    $mescalstr = 'Agosto ';
                                     break;
                                 case 9:
-                                    $mescalstr = 'Septiembre de ';
+                                    $mescalstr = 'Septiembre ';
                                     break;
                                 case 10:
-                                    $mescalstr = 'Octubre de ';
+                                    $mescalstr = 'Octubre ';
                                     break;
                                 case 11:
-                                    $mescalstr = 'Noviembre de ';
+                                    $mescalstr = 'Noviembre ';
                                     break;
                                 case 12:
-                                    $mescalstr = 'Diciembre de ';
+                                    $mescalstr = 'Diciembre ';
                                     break;
                             }
                         @endphp
@@ -429,10 +434,20 @@
 
         {{-- Condicional para saber si se selecciono una sucursal --}}
         @if (!empty($sucursales))
+            @php
+                $consulsucur = User::where('RFC', $empresa)->first();
+                foreach ($consulsucur['Sucursales'] as $infosucursales) {
+                    if ($infosucursales['RFC'] == $sucursales) {
+                        $nomsucur = $infosucursales['Nombre'];
+                    }
+                }
+            @endphp
+
             {{-- Llamamos al componente del modal junto con los datos necesarios --}}
             <livewire:volumedata :empresa=$sucursales :dia=$fecha :wire:key="'user-profile-one-'.$sucursales.$fecha">
-                <livewire:volumepdf :empresa=$sucursales :dia=$fecha :wire:key="'user-profile-two-'.$sucursales.$fecha">
-                    <livewire:volumecre :empresa=$sucursales :dia=$fecha
+                <livewire:volumepdf :empresa=$empresa :sucursales=$sucursales :nomsucur=$nomsucur :dia=$fecha
+                    :wire:key="'user-profile-two-'.$sucursales.$fecha">
+                    <livewire:volumecre :empresa=$empresa :sucursales=$sucursales :nomsucur=$nomsucur :dia=$fecha
                         :wire:key="'user-profile-three-'.$sucursales.$fecha">
                     @else
                         {{-- Llamamos al componente del modal junto con los datos necesarios --}}
@@ -472,8 +487,10 @@
                     var id = fechaselect + "&{{ $empresa }}";
                 } else {
                     //Creamos el ID y la ruta ID
-                    var rutaid = "volupdf" + fechaselect + "&{{ $sucursales }}";
-                    var id = fechaselect + "&{{ $sucursales }}";
+                    var rutaid = "volupdf" + fechaselect + "&{{ $empresa }}" +
+                        "&{{ $sucursales }}" + "&{{ $nomsucur }}";
+                    var id = fechaselect + "&{{ $empresa }}" + "&{{ $sucursales }}" +
+                        "&{{ $nomsucur }}";
                 }
 
                 //Llamamos a la funcion de FilePond
@@ -497,8 +514,10 @@
                     var idcre = fechaselect + "&{{ $empresa }}";
                 } else {
                     //Creamos el ID y la ruta ID
-                    var rutaidcre = "volupdfcre" + fechaselect + "&{{ $sucursales }}";
-                    var idcre = fechaselect + "&{{ $sucursales }}";
+                    var rutaidcre = "volupdfcre" + fechaselect + "&{{ $empresa }}" +
+                        "&{{ $sucursales }}" + "&{{ $nomsucur }}";
+                    var idcre = fechaselect + "&{{ $empresa }}" + "&{{ $sucursales }}" +
+                        "&{{ $nomsucur }}";
                 }
 
                 //Llamamos a la funcion de FilePond

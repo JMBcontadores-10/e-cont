@@ -1159,3 +1159,9 @@ tr:hover {
 .conttablemoni{
     overflow: hidden !important;
 }
+
+/*General*/
+.pagination{
+    background-color: #f2f4f4;
+    width: fit-content;
+}

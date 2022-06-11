@@ -4,10 +4,17 @@
         @php
             use App\Models\Volumetrico;
             
-            //Vamos a realizar una consulta a los volumetricos
-            $datavolu = Volumetrico::where(['rfc' => $empresa])
-                ->get()
-                ->first();
+            if (!empty($sucursales)) {
+                //Vamos a realizar una consulta a los volumetricos
+                $datavolu = Volumetrico::where(['rfc' => $sucursales])
+                    ->get()
+                    ->first();
+            } else {
+                //Vamos a realizar una consulta a los volumetricos
+                $datavolu = Volumetrico::where(['rfc' => $empresa])
+                    ->get()
+                    ->first();
+            }
         @endphp
 
         {{-- Modal de PDF volumetricos --}}
@@ -53,10 +60,18 @@
                                                 <div class="TxtNoArchivos">
                                                     <h4>No hay archivo</h4>
                                                 </div>
-                                                {{-- -------Input FilePond---------- --}}
-                                                <input name="volupdfcre" type="file"
-                                                    id="volupdfcre{{ $dia }}&{{ $empresa }}"
-                                                    class="inputfilevolu" />
+
+                                                @if (!empty($sucursales))
+                                                    {{-- -------Input FilePond---------- --}}
+                                                    <input name="volupdfcre" type="file"
+                                                        id="volupdfcre{{ $dia }}&{{ $empresa }}&{{ $sucursales }}&{{ $nomsucur }}"
+                                                        class="inputfilevolu" />
+                                                @else
+                                                    {{-- -------Input FilePond---------- --}}
+                                                    <input name="volupdfcre" type="file"
+                                                        id="volupdfcre{{ $dia }}&{{ $empresa }}"
+                                                        class="inputfilevolu" />
+                                                @endif
                                             </form>
                                         @else
                                             <div class="b" id="c">
@@ -128,9 +143,13 @@
                                                             break;
                                                     }
                                                     
-                                                    //Ruta predeterminada
-                                                    $ruta = 'storage/contarappv1_descargas/' . $datavolu['rfc'] . '/' . $aniovolu . '/CRE/' . $mesvolu . '/' . $datavolu['volumetrico.' . $dia . '.PDFCRE'] . '';
-                                                    
+                                                    if (!empty($sucursales)) {
+                                                        //Ruta predeterminada
+                                                        $ruta = 'storage/contarappv1_descargas/' . $empresa . '/' . $aniovolu . '/CRE/' . $mesvolu . '/' . $nomsucur . '/' . $datavolu['volumetrico.' . $dia . '.PDFCRE'] . '';
+                                                    } else {
+                                                        //Ruta predeterminada
+                                                        $ruta = 'storage/contarappv1_descargas/' . $empresa . '/' . $aniovolu . '/CRE/' . $mesvolu . '/' . $datavolu['volumetrico.' . $dia . '.PDFCRE'] . '';
+                                                    }
                                                 @endphp
 
                                                 <!--Contenedor para eliminar y visualizar PDF-->
@@ -139,12 +158,13 @@
                                                         href="{{ asset($ruta) }}"></a>
                                                 </div>
                                                 <div class="CuerpoNamePDFContainer">
-                                                    <span class="SpanNamePDF"> {{ Str::limit($NomPDF, 10) }} <span>
+                                                    <span class="SpanNamePDF"> {{ Str::limit($NomPDF, 10) }}
+                                                        <span>
                                                 </div>
                                                 <div class="BotonesPDFContainer">
                                                     <!--Eliminar PDF-->
                                                     <div class="BtnDelPDF" wire:loading.attr="disabled"
-                                                        wire:click="EmlimPDFVolu()">
+                                                        wire:click="ElimPDFVolu()">
                                                         <i class="icons fas fa-trash-alt"></i>
                                                     </div>
                                                 </div>

@@ -4,47 +4,12 @@ let ChartHora;
 let ChartMesMonto;
 let ChartMesCanti;
 
-//Funcion para acomodar la tabla
-$("#btnfactuclient").click(function () {
-            var table, i, x, y;
-            table = document.getElementById("tableclient");
-            var switching = true;
-
-            // Run loop until no switching is needed
-            while (switching) {
-                  switching = false;
-                  var rows = table.rows;
-
-                  // Loop to go through all rows
-                  for (i = 2; i < (rows.length - 2); i++) {
-                        var Switch = false;
-
-                        // Fetch 2 elements that need to be compared
-                        x = rows[i].getElementsByTagName("TD")[2];
-                        y = rows[i + 1].getElementsByTagName("TD")[2];
-
-                        // Check if 2 rows need to be switched
-                        if (parseFloat(x.innerHTML) < parseFloat(y.innerHTML)) {
-
-                              // If yes, mark Switch as needed and break loop
-                              Switch = true;
-                              break;
-                        }
-                  }
-                  if (Switch) {
-                        // Function to switch rows and mark switch as completed
-                        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                        switching = true;
-                  }
-            }
-});
-
 //Exportacion de la tabla de facturacion por clientes (Excel)
 function exportReportToExcel(empresa) {
       $('#tableclient').tableExport({
             exportHiddenCells: true,
             type: 'excel',
-            fileName: 'E-cont Facturación ' + empresa,
+            fileName: empresa,
             ignoreColumn: [4], //Quitamos la ultima columna de destalles
             mso: {
                   styles: ['background-color'],
@@ -56,7 +21,7 @@ function exportReportToExcel(empresa) {
 function exportReportToPdf(empresa) {
       $('#tableclient').tableExport({
             exportHiddenCells: true,
-            fileName: 'E-cont Facturación ' + empresa,
+            fileName: empresa,
             ignoreColumn: [4], //Quitamos la ultima columna de destalles
             type: 'pdf',
             pdfmake: {
@@ -69,7 +34,7 @@ function exportReportToPdf(empresa) {
 //Exportacion por de la tabla de facturacion por hora o cliente (Excel)
 function ExportHoraClientExcel(idempre, empresa) {
       $('#' + idempre).tableExport({
-            fileName: 'E-cont Reporte ' + empresa,
+            fileName: empresa,
             ignoreColumn: [13], //Quitamos la ultima columna de destalles
             type: 'excel',
             mso: {
@@ -81,14 +46,23 @@ function ExportHoraClientExcel(idempre, empresa) {
 //Exportacion por de la tabla de facturacion por hora o cliente (PDF)
 function ExportHoraClientPDF(idempre, empresa) {
       $('#' + idempre).tableExport({
-            fileName: 'E-cont Reporte ' + empresa,
+            fileName: empresa,
             ignoreColumn: [13],  //Quitamos la ultima columna de destalles
             type: 'pdf',
-            jspdf: {
-                  orientation: 'l',
-                  format: 'bestfit',
+            pdfmake: {
+                  enabled: true,
+                  docDefinition: {
+                        pageSize: 'A1',
+                        pageOrientation: 'landscape'
+                  }
             }
       });
+}
+
+//Funcion para limpiar la tabla de detalle clientes
+function CleanTableClient() {
+      $('.detaclientbody').remove();
+      $('#totaldetaclient').text("0.00");
 }
 
 $(document).ready(function () {
@@ -345,7 +319,32 @@ $(document).ready(function () {
             });
       }
 
+      //Funcion para ejecutar acciones al precionar el boton de buscar
       window.addEventListener('cargagrafic', event => {
+            //Obtenemos el total de dias
+            var totaldias = event.detail.dias;
+
+            //Condicional para saber si esta en el rango de dias permitido
+            if (totaldias > 31) {
+                  $("#mnsexcep").text(
+                        "Lo sentimos el rango máximo a seleccionar son 31 días");
+                  $("#Mnstotaldias").prop("hidden", false);
+                  setTimeout(function () {
+                        $("#Mnstotaldias").prop("hidden", true);
+                  }, 2500);
+            }
+
+            //Obtenemos el total de inconsistencias
+            var totalinconsis = $("#TxtInconsis").val();
+
+            //Enviamos el numero de iniconsistencias (Se mostrara el contador cuando exista una inconsitencias)
+            if (totalinconsis > 0) {
+                  $("#numinconsis").text(totalinconsis);
+            } else {
+                  $(".badge").hide();
+            }
+
+            //Funcion para crear los graficos
             creategrafic();
       });
 });

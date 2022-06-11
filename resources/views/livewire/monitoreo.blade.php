@@ -1,7 +1,26 @@
 <div>
+    {{-- Estilo del boton de notificaciones --}}
+    <style>
+        .notification {
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+        }
+
+        .notification .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 5px 10px;
+            border-radius: 30%;
+            background: #ff7a7a;
+            color: white;
+        }
+    </style>
+
     {{-- Libreria de exportacion --}}
     <script src="{{ asset('js/tableExport/libs/FileSaver/FileSaver.min.js') }}" defer></script>
-    <script src="{{ asset('js/tableExport/tableExport.min.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/tableExport.js') }}" defer></script>
     <script src="{{ asset('js/tableExport/libs/jsPDF/jspdf.umd.min.js') }}" defer></script>
     <script src="{{ asset('js/tableExport/libs/pdfmake/pdfmake.min.js') }}" defer></script>
     <script src="{{ asset('js/tableExport/libs/pdfmake/vfs_fonts.js') }}" defer></script>
@@ -22,6 +41,9 @@
         if (empty($class)) {
             $class = 'table nowrap dataTable no-footer';
         }
+        
+        //Descomponemos el Json en un objeto
+        $consulmetaporhora = json_decode($consulemit);
     @endphp
 
     {{-- Contenedor para mantener responsivo el contenido del modulo --}}
@@ -43,9 +65,32 @@
                                 echo '<option value="' . $fila[$rfc] . '">' . $fila[$rS] . '</option>';
                             } ?>
                         </select>
+
+                        <br>
                     @endempty
 
-                    <br>
+                    {{-- Select para selccionar la sucursal (Contadores) --}}
+                    @if (!empty($infoempre['Sucursales']))
+                        {{-- Mostramos el RFC de la sucursal que se selecciona --}}
+                        <label for="inputState">Sucursal</label>
+                        <select wire:model="sucursal" class="select form-control">
+                            <option value="">--Selecciona Sucursal--</option>
+
+                            {{-- Mostramos las sucursales --}}
+                            @foreach ($infoempre['Sucursales'] as $dataempre)
+                                <option value="{{ $dataempre['Clave'] }}">{{ $dataempre['Nombre'] }}</option>
+                            @endforeach
+                        </select>
+
+                        <br>
+                    @endif
+
+                    {{-- Mensaje de alerta cuando no se selecciona CFDI --}}
+                    <div id="Mnstotaldias" hidden>
+                        <div id="mnsexcep" class="alert alert-danger">
+                        </div>
+                    </div>
+
                     <br>
                     <br>
 
@@ -67,8 +112,8 @@
                     <br>
 
                     {{-- Filtros de busqueda --}}
-                    <label>Periodo a consultar</label>
-                    <form wire:submit.prevent="ConsulMeta">
+                    <label>Periodo a consultar (Maximo de 31 dias)</label>
+                    <form wire:submit.prevent="ConsulEmit">
                         {{-- Filtros de busqueda --}}
                         <div class="form-inline mr-auto">
                             <input class="form-control" id="fecha" wire:model.defer="fechainic" type="date"
@@ -83,22 +128,16 @@
                                 wire:loading.attr="disabled">Buscar</button>
                             &nbsp;&nbsp;
 
-                            <button {{ $active }} type="button" class="btn btn-success BtnVinculadas"
-                                onclick="exportReportToExcel('{{ $fechaayer }}')">Excel</button>
-                            &nbsp;&nbsp;
-
-                            <button {{ $active }} type="button" class="btn btn-danger BtnVinculadas"
-                                onclick="exportReportToPdf('{{ $fechaayer }}')">Pdf</button>
-
-
                             {{-- Espaciado --}}
-                            <div id="espmonifilt" style="width: 8.2em;"></div>
+                            <div id="espmonifilt" style="width: 18.6em;"></div>
 
-                            <button {{ $active }} id="btnfactuclient" type="button" data-backdrop="static" data-keyboard="false"
+                            <button {{ $active }} type="button" data-backdrop="static" data-keyboard="false"
                                 data-toggle="modal" data-target="#factuporclient"
-                                class="btn btn-secondary BtnVinculadas">
-                                Factu. por cliente</button>
-                            &nbsp;&nbsp;
+                                class="btn btn-secondary BtnVinculadas notification">
+                                <span>Factu. por cliente</span>
+                                <span class="badge" id="numinconsis"></span>
+                            </button>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                             <button {{ $active }} type="button" data-backdrop="static" data-keyboard="false"
                                 data-toggle="modal" data-target="#factupormes" class="btn btn-secondary BtnVinculadas">
@@ -108,6 +147,7 @@
                     </form>
 
                     <br>
+
 
                     <div class="row">
                         {{-- Tabla de informacion de las facturas por hora --}}
@@ -141,6 +181,33 @@
                                                 //Variables de contadores y sumatorios
                                                 $facturas = 0;
                                                 $monto = 0;
+                                                
+                                                //Condicional para saber si hay un dato de consulta
+                                                if ($consulmetaporhora) {
+                                                    //Ciclo para obtener los datos de la consulta
+                                                    foreach ($consulmetaporhora as $factura) {
+                                                        //Obtenemos la fecha
+                                                        $hora = date('G', strtotime($factura->FechaEmision));
+                                                
+                                                        //Condicional para verificar si la hora concuerda
+                                                        if ($hora == $i) {
+                                                            //Si concuerda vamos acumulando las facturas
+                                                            $facturas++;
+                                                            //Si concuerda vamos sumando los totales
+                                                            $monto += floatval($factura->Total);
+                                                        }
+                                                    }
+                                                
+                                                    //Obtenemos la cantidad de facturas
+                                                    array_push($cantidades, $facturas);
+                                                    //Obtenemos la cantidad de facturas
+                                                    array_push($montos, $monto);
+                                                
+                                                    //Sumamos la el total obtenido
+                                                    $totalfact += $facturas;
+                                                    //Sumamos la el total obtenido
+                                                    $totalmonto += $monto;
+                                                }
                                             @endphp
 
                                             <tr>
@@ -153,27 +220,6 @@
                                                 <td>
                                                     {{-- Condicional para saber si hay un dato de consulta --}}
                                                     @if ($consulmetaporhora)
-                                                        {{-- Ciclo para obtener los datos de la consulta --}}
-                                                        @foreach ($consulmetaporhora as $factura)
-                                                            @php
-                                                                //Obtenemos la fecha
-                                                                $hora = date('G', strtotime($factura['fechaEmision']));
-                                                                
-                                                                //Condicional para verificar si la hora concuerda
-                                                                if ($hora == $i) {
-                                                                    //Si concuerda vamos acumulando las facturas
-                                                                    $facturas++;
-                                                                }
-                                                            @endphp
-                                                        @endforeach
-
-                                                        @php
-                                                            //Obtenemos la cantidad de facturas
-                                                            array_push($cantidades, $facturas);
-                                                            //Sumamos la el total obtenido
-                                                            $totalfact += intval($facturas);
-                                                        @endphp
-
                                                         {{-- Mostramos el total --}}
                                                         {{ $facturas }}
                                                     @else
@@ -185,33 +231,11 @@
                                                 <td>
                                                     {{-- Condicional para saber si hay un dato de consulta --}}
                                                     @if ($consulmetaporhora)
-                                                        {{-- Ciclo para obtener los datos de la consulta --}}
-                                                        @foreach ($consulmetaporhora as $factura)
-                                                            @php
-                                                                //Obtenemos la fecha
-                                                                $hora = date('G', strtotime($factura['fechaEmision']));
-                                                                
-                                                                //Variable acumuladora de facturas
-                                                                if ($hora == $i) {
-                                                                    //Si concuerda vamos sumando los totales
-                                                                    $monto += floatval($factura['total']);
-                                                                }
-                                                            @endphp
-                                                        @endforeach
-
-                                                        @php
-                                                            //Obtenemos la cantidad de facturas
-                                                            array_push($montos, $monto);
-                                                            //Sumamos la el total obtenido
-                                                            $totalmonto += floatval($monto);
-                                                        @endphp
-
                                                         {{-- Mostramos el total --}}
                                                         $ {{ number_format($monto, 2) }}
                                                     @else
                                                         -
                                                     @endif
-
                                                 </td>
 
                                                 {{-- Detalles --}}
@@ -367,27 +391,24 @@
                                 </table>
                             </div>
                         </div>
+
                     </div>
                 </section>
             </div>
         </div>
     </div>
-
     {{-- Llamado de modale --}}
-    @if ($empresa)
-        {{-- Facturas por hora --}}
-        <livewire:monithora :empresa=$empresa :fechainic=$fechainic :fechafin=$fechafin
-            :infofactumetaemit=$consulmetaporhora :infofactuxmlemit=$consulxmlporhora
-            :wire:key="'user-profile-one-'.$empresa.$fechainic.$fechafin">
+    @if ($this->diainter <= 31)
+        @if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales'])))
+            {{-- Facturas por hora --}}
+            <livewire:monithora :empresa=$empresa :emitidos=$consulemit :fechainic=$fechainic :fechafin=$fechafin
+                :wire:key="'user-profile-one-'.$consulemit.$empresa.$fechainic.$fechafin">
 
-            <livewire:monitclient :empresa=$empresa :consulmetaclient=$consulmetaclient
-                :consulmetaporhora=$consulmetaporhora
-                :wire:key="'user-profile-two-'.$empresa.$consulmetaclient.$consulmetaporhora">
+                <livewire:monitclient :empresa=$empresa :emitidos=$consulemit :fechainic=$fechainic :fechafin=$fechafin
+                    :wire:key="'user-profile-two-'.$empresa.$consulemit.$fechainic.$fechafin">
 
-                <livewire:monitdetaclient :empresa=$empresa :consulxmlporhora=$consulxmlporhora
-                    :consulmetaclient=$consulmetaclient :consulmetaporhora=$consulmetaporhora
-                    :wire:key="'user-profile-three-'.$empresa.$consulmetaclient.$consulmetaporhora.$consulxmlporhora">
-
-                    <livewire:monitmes :empresa=$empresa :wire:key="'user-profile-three-'.$empresa">
+                    <livewire:monitmes :empresa=$empresa :sucursal=$sucursal :fechainic=$fechainic :fechafin=$fechafin
+                        :wire:key="'user-profile-three-'.$empresa.$sucursal.$fechainic.$fechafin">
+        @endif
     @endif
 </div>

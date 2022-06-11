@@ -12,23 +12,38 @@ class Volumecre extends Component
     //Variables globales
     public $dia;
     public $empresa;
+    public $sucursales;
+    public $nomsucur;
 
 
     //Metdodo para eliminar el PDF
-    public function EmlimPDFVolu()
+    public function ElimPDFVolu()
     {
         $mes = date('m', strtotime($this->dia));
         $anio = date('Y', strtotime($this->dia));
         $espa = new Cheques();
 
-        //Consultamos lo datos de los volumetricos
-        $datavolum = Volumetrico::where(['rfc' => $this->empresa])
-            ->get()
-            ->first();
+        if (!empty($this->sucursales)) {
+            $empresadele = $this->sucursales;
 
-        $path = "contarappv1_descargas/" . $this->empresa . "/" . $anio . "/CRE/" . $espa->fecha_es($mes) . "/" . $datavolum['volumetrico.' . $this->dia . '.PDFCRE'];
+            //Consultamos lo datos de los volumetricos
+            $datavolum = Volumetrico::where(['rfc' => $empresadele])
+                ->get()
+                ->first();
 
-        Volumetrico::where('rfc', $this->empresa)
+            $path = "contarappv1_descargas/" . $this->empresa . "/" . $anio . "/CRE/" . $espa->fecha_es($mes) . "/" . $this->nomsucur . "/" . $datavolum['volumetrico.' . $this->dia . '.PDFCRE'];
+        } else {
+            $empresadele = $this->empresa;
+
+            //Consultamos lo datos de los volumetricos
+            $datavolum = Volumetrico::where(['rfc' => $empresadele])
+                ->get()
+                ->first();
+
+            $path = "contarappv1_descargas/" . $this->empresa . "/" . $anio . "/CRE/" . $espa->fecha_es($mes) . "/" . $datavolum['volumetrico.' . $this->dia . '.PDFCRE'];
+        }
+
+        Volumetrico::where('rfc', $empresadele)
             ->update([
                 'volumetrico.' . $this->dia . '.PDFCRE' => null,
             ]);
