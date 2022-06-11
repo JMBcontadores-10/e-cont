@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cheques;
+use App\Models\MetadataE;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -47,6 +48,7 @@ class Chequesytransferencias extends Component
     public $anio;
     public $todos;
     public $rfcEmpresa;
+    public $ids=[];
 
     protected $paginationTheme='bootstrap';//para dar e estilo numerico al paginador
 
@@ -96,9 +98,29 @@ $this->condicion='>=';
         'mostvincu' => 'mostmovivincu',
         'notivincu'=>'notivinculo',
         'vercheq'=>'vercheque',
+        'asig'=>'asignar',
 
      ];
 
+
+public function asignar($idnominas,$rfc)
+{
+
+    $this->estatus='nominas';
+ $cheques= MetadataE::
+            where('folioFiscal',$idnominas)
+            ->first();
+
+            foreach($cheques['cheques_id'] as $c){
+               $this->ids[]=  $c; }
+
+
+
+    // $this->todos =1;
+    // $this->search=$idnominas;
+    $this->rfcEmpresa=$rfc;
+
+}
 
 
 
@@ -222,6 +244,16 @@ protected function rules(){
                     ->orderBy('fecha', 'desc')
                     ->paginate($this->perPage);
                     break;
+
+                    case 'nominas':
+                        $cheque = Cheques::
+                          search($this->search)
+                        ->whereIn('_id',$this->ids)
+                        ->where('rfc',$this->rfcEmpresa)
+                        ->where('importecheque',$this->condicion,$this->importe)
+                        ->orderBy('fecha', 'desc')
+                        ->paginate($this->perPage);
+                        break;
 
                   default:
                     $cheque = Cheques::

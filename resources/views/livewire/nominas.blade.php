@@ -14,6 +14,7 @@
    @php
    use App\Models\XmlE;
    use App\Models\MetadataE;
+   use App\Models\Cheques;
 
        $class = '';
        if (empty($class)) {
@@ -125,20 +126,15 @@
                            @foreach ($nominas as  $nom)
                                      @php
 
-
                  $metadata=MetadataE::
                   where('emisorRfc',$this->rfcEmpresa)
                 ->where('estado','!=','Cancelado')
                 ->where('efecto','Nómina')
-                ->select('folioFiscal')
+                ->select('folioFiscal','cheques_id')
                 ->project(['_id' => 0])
                 ->get();
 
-               foreach($metadata as $m){
-
-               $cont[]=$m->folioFiscal;
-
-                    }
+               foreach($metadata as $m){$cont[]=$m->folioFiscal;}
 
 
                 $TotalPagado=DB::Table('xmlemitidos')
@@ -149,6 +145,46 @@
                 ->where('Folio',$nom['Folio'])
                 // ->select('Fecha','Complemento','Total')
                 ->get()->sum('Total');
+
+
+                $id=MetadataE::
+                  where('emisorRfc',$this->rfcEmpresa)
+                ->where('estado','!=','Cancelado')
+                ->where('efecto','Nómina')
+                ->whereNotNull('cheques_id')
+                // ->project(['_id' => 0])
+                ->get();
+
+
+
+                foreach($id as $i){$ids[]=$i->folioFiscal;}
+
+                    if(isset($ids)){
+                $idd=XmlE::
+                whereIn('UUID',$ids)
+                 ->where('Emisor.Rfc',$this->rfcEmpresa)
+                 ->where('TipoDeComprobante','N')
+                 ->where('Serie', $this->anio)
+                ->where('Folio',$nom['Folio'])
+                // ->select('Fecha','Complemento','Total')
+                ->get();
+                  echo count($idd);
+
+                foreach($idd as $c){
+                $uuids[]=  $c['UUID']; }
+
+
+                $metas=MetadataE::
+                  where('folioFiscal',$uuids[0])
+
+                ->first();
+                 echo $metas['_id'];
+                 echo $metas['folioFiscal'];
+
+
+
+                }
+
                 ##############################################
                 $ISR=XmlE::
                 whereIn('UUID',$cont)
@@ -235,18 +271,95 @@
                          <td class="text-center align-middle">${{$TotalPagado}}</td>
                          <td class="text-center align-middle">${{$ISR}}</td>
                          <td class="text-center align-middle">
-                            <i wire:loading.attr="hidden" data-toggle="modal"
+
+
+                            @if(isset($ids))
+
+                            @if (count($idd)>0)
+                         @php $clascheque="content_true" ;    @endphp
+                         @else
+                         @php $clascheque="icons" ;    @endphp
+                            @endif
+
+                            @php
+                             $cheques= MetadataE::
+            where('folioFiscal',$metas['folioFiscal'])
+            ->first();
+
+            foreach($cheques['cheques_id'] as $c){
+               $ids[]=  $c; }
+
+               $saldo=Cheques::
+                whereIn('_id',$ids)
+                //->select('Fecha','Complemento','Total')
+                ->get()->sum('saldo');
+
+               $TotalchequesAsociados=Cheques::
+                whereIn('_id',$ids)
+                //->select('Fecha','Complemento','Total')
+                ->get()->sum('importecheque');
+                $TotalchequesAsociados=$TotalchequesAsociados-$saldo;
+
+                            // $TotalPagado
+
+                 $granTotal = $TotalPagado-$TotalchequesAsociados;
+
+
+                            @endphp
+
+                        @if ($clascheque== "content_true" && $granTotal==0)
+
+                        <a  wire:loading.attr="hidden"
+                        wire:click="$emitTo('asignar-cheque','refresAsignar')"
+                            {{-- wire:click="cheque('{{$metas['folioFiscal']}}')" --}}
+                            name="14" id="{{$nom['Folio']}}"data-toggle="modal"data-controls-modal="#asingnarCheque"
+                            class="{{$clascheque}} fas fa-money-check" data-target="#asignarCheque{{ $nom['Folio'] }}" >
+                        </a>
+                        @elseif($clascheque== "content_true" && $granTotal>0)
+                        <a  wire:loading.attr="hidden" data-toggle="modal"
                             data-controls-modal="#asingnarCheque"
                             name="14" id="{{$nom['Folio']}}" data-backdrop="static"
                             data-keyboard="false"
-                            data-target="#asignarCheque{{ $nom['Folio'] }}" class=" icons fas fa-money-check"></i>
+                            wire:click="$emitTo('asignar-cheque','refresAsignar')"
+                            data-target="#asignarCheque{{ $nom['Folio'] }}" style="color:orange" class="icons fas fa-money-check">
+                        </a>
+                        @else
+                        <a  wire:loading.attr="hidden" data-toggle="modal"
+                            data-controls-modal="#asingnarCheque"
+                            name="14" id="{{$nom['Folio']}}" data-backdrop="static"
+                            data-keyboard="false"
+                            wire:click="$emitTo('asignar-cheque','refresAsignar')"
+                            data-target="#asignarCheque{{ $nom['Folio'] }}" class="icons fas fa-money-check">
+                        </a>
+
+                        @endif
+
+                        @else
+                        <a  wire:loading.attr="hidden" data-toggle="modal"
+                        data-controls-modal="#asingnarCheque"
+                        name="14" id="{{$nom['Folio']}}" data-backdrop="static"
+                        data-keyboard="false"
+                        wire:click="$emitTo('asignar-cheque','refresAsignar')"
+                        data-target="#asignarCheque{{ $nom['Folio'] }}" class="icons fas fa-money-check">
+                    </a>
+
+                        @endif {{-----end if isset--}}
+
+
+                       {{$TotalPagado}}
                         </td>
 
                             </tr>
                             {{-- <livewire:lista-raya :raya="$nom" :wire:key="'user-profile-one-'.$nom['Folio']"> --}}
                             @livewire('lista-raya', ['folio' => $nom['Folio'], 'RFC' =>$this->rfcEmpresa, 'fecha'=> $fechaPago ,'ruta'=>$ruta], key('user-profile-one-'.$nom['Folio'].$fechaPago))
                             @livewire('recibosnomina',['folio' => $nom['Folio'], 'RFC' =>$this->rfcEmpresa,'fecha'=> $fechaPago], key('user-profile-twoo-'.$nom['Folio'].$fechaPago))
-                            @livewire('asignar-cheque',['fecha'=>$nom['Complemento.0.Nomina.FechaFinalPago'],'asignarCheque' => $nom['Folio'],'RFC' =>$this->rfcEmpresa], key('user-profile-three-'.$nom['Folio'].$fechaPago))
+
+                            @if(isset($idd)&&count($idd)!=0)
+                            @livewire('asignar-cheque',['fecha'=>$nom['Complemento.0.Nomina.FechaFinalPago'],'asignarCheque' => $nom['Folio'],'RFC' =>$this->rfcEmpresa,'content'=> $clascheque, 'granTotal'=>$granTotal,'folioFiscal'=>$metas['folioFiscal']], key('user-profile-three-'.$nom['Folio'].$fechaPago))
+                             @else
+                          @livewire('asignar-cheque',['fecha'=>$nom['Complemento.0.Nomina.FechaFinalPago'],'asignarCheque' => $nom['Folio'],'RFC' =>$this->rfcEmpresa,'content'=> 'icons','TotalPagado'=>$TotalPagado], key('user-profile-three-'.$nom['Folio'].$fechaPago))
+                            @endif
+
                             @livewire('detallesempleados',['anio'=>$anio,'fecha'=>$fechaPago,'folio' => $nom['Folio'],'RFC' =>$this->rfcEmpresa], key('user-profile-four-'.$nom['Folio'].$fechaPago))
                             @endforeach
 
@@ -268,10 +381,6 @@
    </div>
 
 
-
-
-
-    <!-- Modal -->
 
 
 </div>{{-------fin div principal-------}}

@@ -86,7 +86,7 @@ class DescargasAutomaticas extends Controller
   public $rfcs = [/// array que contiene las empresas
     // '1',
    // 'AHF060131G59',
-//'AHF060131G59',
+// 'AHF060131G59',
 //     'AFU1809135Y4',
 //   'AIJ161001UD1',
 //    'AAE160217C36',
@@ -96,8 +96,8 @@ class DescargasAutomaticas extends Controller
 //     'DRO191104EZ0',
 //    'DRO191129DK5',
 //    'ERO1911044L4',
- // 'PERE9308105X4',
- //  'FGA980316918',
+//  'PERE9308105X4',
+//   'FGA980316918',
 //    'GPA161202UG8',
 //    'GEM190507UW8',
 //    'GPR020411182',
@@ -121,7 +121,7 @@ class DescargasAutomaticas extends Controller
 //    'SBE190522I97',
 //    'SGA1905229H3',
 // 'SGA1410217U4',
-//    'SGT190523QX8',
+  // 'SGT190523QX8',
 // 'SGX190523KA4',
 //    'SGX160127MC4',
 //    'STR9303188X3',
@@ -385,8 +385,8 @@ try{
 
                   /// -->[EMITIDOS]<---/////
                   $query = new QueryByFilters(
-                    new DateTimeImmutable('2022-05-01'),
-                      new DateTimeImmutable('2022-05-24'),
+                    new DateTimeImmutable($diaX),
+                      new DateTimeImmutable($diaX),
 
                   );
 

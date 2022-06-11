@@ -34,6 +34,17 @@ class Nominas extends Component
 
     ];
 
+
+    // public function cheque($id)
+    // {
+
+    //   session()->put('idnominas',$id);
+    //   session()->put('rfcnomina', $this->rfcEmpresa);
+
+    // return redirect()->to('/chequesytransferencias');
+
+    // }
+
     public function render()
     {
 
@@ -47,7 +58,7 @@ class Nominas extends Component
                   $largo=sizeof(auth()->user()->empresas);// obtener el largo del array empresas
 
 
-                  for($i=0; $i <$largo; $i++) {
+                 for($i=0; $i <$largo; $i++) {
 
                   $rfc=auth()->user()->empresas[$i];
                    $e=DB::Table('clientes')

@@ -290,6 +290,10 @@ $iva_Egreso [] = $vIva;
                                $docRel = $v['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'];
                            }
 
+                           if(!isset($docRel)){
+                            $docRel = $v['Complemento.Pagos.Pago.0.DoctoRelacionado'];
+                           }
+
                        }elseif ($efecto == 'Egreso' or $efecto == 'Ingreso') {
                            $docRel = $v['CfdiRelacionados.CfdiRelacionado'];
                            if(!isset($docRel)){

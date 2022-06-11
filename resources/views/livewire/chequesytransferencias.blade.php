@@ -107,6 +107,37 @@
                         @endphp
                     @endif
 
+
+                    @if (session()->get('rfcnomina'))
+                    {{-- <div class="alert alert-success">
+
+</div> --}}            @php
+
+
+                            //    echo $name;
+                        @endphp
+
+
+                    <script>
+                        $(document).ready(function() {
+                            // alert('{{ session('id') }}');
+                            window.livewire.emit('asig', '{{Session::get('idnominas') }}','{{ Session::get('rfcnomina') }}');
+
+                        });
+                    </script>
+
+                    @php
+                        Session::forget('idnominas');
+                        Session::forget('rfcnomina');
+
+                    @endphp
+                @endif
+
+
+
+
+
+
                     {{-- Condicional para mostrar un listado de empresas --}}
                     @empty(!$empresas)
                         <label for="inputState">Empresa: {{ $empresa }}</label>
@@ -713,23 +744,7 @@
                     }
                 });
                   </script>
-           </div>
-                <script>
-                    //Emitir los datos de la empresa al componente
-                    $(document).ready(function() {
-                        //Guardamos en variables locales el contenido de sessionstorage
-                        var IdMovi = sessionStorage.getItem('idmovi');
-                        var Empresa = sessionStorage.getItem('empresa');
 
-                        //Condicion para saber si las variables no estan vacias
-                        if (IdMovi !== null && Empresa !== null) {
-                            //Emitimos los datos al controlador
-                            window.livewire.emit('mostvincu', {
-                                idmovi: IdMovi,
-                                empresa: Empresa
-                            });
-                            sessionStorage.clear();
-                        }
-                    });
-                </script>
+           </div>
+
 </div>
