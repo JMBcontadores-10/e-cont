@@ -114,8 +114,8 @@ Route::get('/descargasAutomaticas/{valor}', [App\Http\Controllers\DescargasAutom
 
 
 // Route::get('/descargasAutomaticas1', [App\Http\Livewire\DescargasAutomaticas::class, 'index'])->name('descargasAutomaticas1');
-Route::get('/auditoria', Auditoria::class)->name('auditoria');
-//Route::get('/nominas',Nominas::class)->name('nominas');
+Route::get('/auditoria',Auditoria::class)->name('auditoria');
+Route::get('/nominas',Nominas::class)->name('nominas');
 
 
 

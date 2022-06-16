@@ -20,7 +20,7 @@ class Chequesytransferencias extends Component
     public Cheques $Crear; // enlaza al modelo cheques
     public $datos;
     public float $ajuste;
-    public $users, $name, $email, $user_id, $fecha, $ajuste2, $datos1, $user;
+    public  $users, $name, $email, $user_id, $fecha, $ajuste2, $datos1, $user;
     public $cheque;
     public $importe = "";
     public $condicion;
@@ -65,6 +65,13 @@ class Chequesytransferencias extends Component
         $this->resetPage();
     }
 
+    /// Actualizar mes
+    public function updatingMes()
+    {
+        $this->resetPage();
+    }
+
+
     public function updatingImporte()
     {
         $this->resetPage();
@@ -75,6 +82,7 @@ class Chequesytransferencias extends Component
         'mostvincu' => 'mostmovivincu',
         'notivincu' => 'notivinculo',
         'vercheq' => 'vercheque',
+
     ];
 
     public function mostmovivincu($data)
@@ -108,6 +116,7 @@ class Chequesytransferencias extends Component
             'Nuevo_fecha' => '',
             'Nuevo_importecheque' => '',
             'Nuevo_beneficiario' => '',
+            'estatus' => '',
             //======== modal ajuste =====//
         ];
     }
@@ -280,7 +289,14 @@ class Chequesytransferencias extends Component
             $this->emitTo('chequesytransferencias', 'chequesRefresh');
         }
 
-        return view('livewire.chequesytransferencias', ['colCheques' => $cheque, 'meses' => $meses, 'anios' => $anios, 'empresa' => $this->rfcEmpresa, 'empresas' => $emp])
+        return view('livewire.chequesytransferencias', [
+            'colCheques' => $cheque,
+            'meses' => $meses,
+            'anios' => $anios,
+            'empresa' => $this->rfcEmpresa,
+            'empresas' => $emp,
+            'estatus' => $this->estatus,
+            ])
             ->extends('layouts.livewire-layout')
             ->section('content');
     }
@@ -316,4 +332,33 @@ class Chequesytransferencias extends Component
     {
         $this->emit('uploadrelacionados', $id);
     }
+
+//// metodo pendientes
+
+    public function pendientes($a, $b,$c)
+    {
+
+    $salto = "\r\n";
+    $msg = '';
+    if($b == 0) {
+        $msg += "- No tiene CFDI's vinculados.";
+        $msg += $salto;
+    }
+    if ($c == 0) {
+        $msg += "- No tiene pdf asociado.";
+        $msg += $salto;
+    }
+    if ($a == 0) {
+        $msg += "- Existe diferencia con el importe total.";
+        $msg += $salto;
+    }
+
+    return $msg;
+
+}
+
+
+
+
+
 }/// fin de la clase principal

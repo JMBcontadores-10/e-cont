@@ -49,13 +49,43 @@ class Auditoria extends Component
 
         $this->metadata = null;
         $this->metadata2 = [];
+
+        /// establecer fechas por defecto Null
+        $this->fecha_ini = null;
+        $this->fecha_fin = null;
+
+
     }
+
+
+
+   //Reglas de validacion
+    public function rules()
+    {
+        return [
+            'fecha_ini' => 'required',
+            'fecha_fin' => 'required',
+            'rfcEmpresa' => 'required',
+
+        ];
+    }
+
+    //Mensajes de error
+    public function messages()
+    {
+        return [
+            'fecha_ini.required' => 'La fecha inicial es requerida',
+            'fecha_fin.required' => 'La fecha final es requerida',
+            'rfcEmpresa.required' => 'El RFC de la empresa es requerido',
+        ];
+    }
+
 
 
     public function consultar()
     {
 
-          if($this->fecha_ini !=Null){
+           if($this->fecha_ini !=Null && $this->fecha_fin !=Null){
 
 
         try {
@@ -216,12 +246,12 @@ class Auditoria extends Component
 
 
 
-
         return view('livewire.auditoria',['list'=>$this->consultar(),
         'contador'=>$this->contador,
         'active'=>$this->active,
         'empresas'=>$emp,
-        'empresa'=>$this->rfcEmpresa
+        'empresa'=>$this->rfcEmpresa,
+        'fecha_ini'=>$this->fecha_ini,
 
         ])
         ->extends('layouts.livewire-layout')

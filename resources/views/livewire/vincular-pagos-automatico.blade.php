@@ -6,7 +6,7 @@
         <div class="modal-dialog " role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLabel">  <span style="text-decoration: none;"  class="icons fas fa-sitemap">&nbsp;Vinculacion Automatica</span></h6>
+                    <h6 class="modal-title" id="exampleModalLabel">  <span style="text-decoration: none;"  class="icons fas fa-sitemap">&nbsp;Vinculación Automática</span></h6>
 
                    <button id="mdla" type="button"  class="close" data-dismiss="modal" aria-label="Close">
                     <span  aria-hidden="true close-btn">×</span>
@@ -35,7 +35,7 @@ $rfc="contador";
 
         <button wire:loading.remove  class="btn btn-success" style="vertical-align:middle">
         <a wire:click="vincularAutomatico('{{$rfc}}')">
-            <span>Iniciar Vinculación Automatica </span>
+            <span>Iniciar Vinculación Automática </span>
         </a>
         </button >
 
@@ -66,7 +66,7 @@ $rfc="contador";
 
       @else
       {{count($vinculos)}}<br>
-      se vincularon pagos a los siguientes cheques:<br>
+      Se vincularon pagos a los siguientes cheques:<br>
       @php
       foreach ($vinculo1 as $v) {
       echo "<small>".$v."</small><br>";

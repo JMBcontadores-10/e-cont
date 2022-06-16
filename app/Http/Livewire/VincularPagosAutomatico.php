@@ -151,7 +151,16 @@ foreach($metadataPago as $meta){ $foliosmetaSinVinculo[]=$meta->folioFiscal; }
         $complemento =$Pago['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado'];
         $color="red";
     }
-/////// si no se define  formato 1 ó 2 se establece el formato que no esta bien emitido
+
+
+      ///// si complemento no obtiene el dato del formato 1 Y 2   busca en el formato 3 [VERSION : 4.0]
+  ////////////////[VERSION : 4.0]////////////////////////////
+  if (!isset($complemento)) {
+    $complemento =$Pago['Complemento.Pagos.Pago.0.DoctoRelacionado'];
+      $color="blue";
+       }
+
+/////// si no se define  formato 1 ,2  ó 3 se establece el formato que no esta bien emitido
     if(!isset($complemento)){
          $complemento=['Complemento.0.Pagos.Pago'];
          $color="yellow";
@@ -159,7 +168,7 @@ foreach($metadataPago as $meta){ $foliosmetaSinVinculo[]=$meta->folioFiscal; }
 /////// se imprime los datos cfdi relacionados
     //  echo "<div style='background-color:$color'>  tiene&nbsp;&nbsp;".count($complemento)."&nbsp;Id relacionados</div><br>";
 
-     if($color =="white" && count($complemento)>1){
+     if($color=="blue" ||  $color =="white" && count($complemento)>1){
 
      foreach($complemento as $c):
 $mayus=strtoupper($c['IdDocumento']);
@@ -237,7 +246,8 @@ $mayus=strtoupper($c['IdDocumento']);
 
      }
 
-     if($color =="red"){
+     if($color =="red")
+     {
 
  $id2= strtoupper($Pago['Complemento.0.default:Pagos.default:Pago.default:DoctoRelacionado.IdDocumento'])."<br><br>";
     $vinculopago=MetadataR::where('folioFiscal',$id2)->whereNotNull('cheques_id')->first();

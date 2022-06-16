@@ -1040,6 +1040,7 @@
     <!-- END: Footer-->
 
 
+
 </body>
 <livewire:notification-content>
     <footer style="margin-top: 20px;">

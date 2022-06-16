@@ -5,6 +5,7 @@ use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cheques;
+use App\Models\Notificaciones;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Component;
 use LivewireUI\Modal\ModalComponent;
@@ -32,6 +33,9 @@ class Editar extends ModalComponent
         $this->importe =$this->editCheque->importecheque;
 
     }
+
+
+
 
 
 /////////////////////// funcion rules necesaria para validar datos en tiempo real
@@ -151,10 +155,25 @@ $data=[
 $this->editCheque->update($data);// actuliza la base de datos con el campo recibido 'ajuste'
 
 
+// si auth()->user()->tipo esta definido se crea una notificacion
+if(empty(auth()->user()->tipo)){
+$chequeC1 = Notificaciones::create([
+
+    'numcheque' => $numcheque,
+    'fecha' =>$fecha,
+    'importecheque' => $valor,
+    'Beneficiario' => $Beneficiario,
+    'tipoopera' => $tipoopera,
+    'cheques_id' => $this->editCheque->_id,
+    'rfc' => $this->editCheque->rfc,
+    'read_at' => 0,
+    'tipo'=> 'CED',
 
 
+]);
 
-// && $this->editCheque->doc_relacionados !=""
+
+}
 if ($this->editCheque->nombrec!="0" ){
 
     // $porcionesnombrec = explode("/", $this->editCheque->nombrec);
