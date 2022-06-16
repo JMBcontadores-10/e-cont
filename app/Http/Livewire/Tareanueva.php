@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Notificaciones;
 use App\Models\Tareas;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -65,6 +66,8 @@ class Tareanueva extends Component
             $this->frecuentetarea = null;
             $this->periodotarea = null;
             $this->colaboradorestarea = [];
+
+            //Mandamos un notificacion
 
             //Cerramos el modal de agregar tarea
             $this->dispatchBrowserEvent('cerrartarea', []);

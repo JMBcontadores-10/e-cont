@@ -28,8 +28,7 @@ Notificacion de Mensaje= M
 Factura Cancelada = FC
 Cheque Editado = CED
 Cheque Fecha Anterior = CFA
-
-
+Nueva Tarea = NT
 */
 
 
