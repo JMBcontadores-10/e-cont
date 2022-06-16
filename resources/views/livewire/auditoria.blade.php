@@ -152,6 +152,7 @@
   </select>
 &nbsp;&nbsp;
 
+
            {{-- Busqueda por mes --}}
         <input required class="form-control" type="date" min="2014-01-01"
         max={{ $date }} wire:model.defer="fecha_ini"  >
@@ -300,8 +301,11 @@ data-keyboard="false" data-target="#listacdfi"    class="btn btn-info notificati
                               <td class="text-center align-middle">{{ $cfdi->get('estadoComprobante') }}</td>
                               <td class="text-center align-middle">
                                   @if ($cfdi->get('estadoComprobante') == $estadoM)
-                                      <i class="far fa-check-circle fa-2x" style="color: green"></i>
+                                       <i style="visibility: hidden"> No </i>
+                                      <i class="far fa-check-circle fa-2x" style="color: green"> </i>
                                   @else
+                                      <i style="visibility: hidden">Si </i>
+
                                       <i class="far fa-times-circle fa-2x" style="color: red"></i>
                                   @endif
                               </td>
