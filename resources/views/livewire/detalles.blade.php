@@ -11,7 +11,7 @@
         if (empty($class)) {
             $class = 'table nowrap dataTable no-footer';
         }
-        
+
         //Obtenemos el valor de la fecha del dia de hoy
         $date = date('Y-m-d');
     @endphp
@@ -69,14 +69,14 @@
                                 </div>
                             @endif
                         </div>
+
                         {{-- Vincular a un nuevo movimiento --}}
                         <div class="col-3">
                             {{-- Condicional para activar o desactivar el boton --}}
                             @if ($btnvinanewctiv == 1)
                                 <div class="invoice-create-btn mb-1">
-                                    <button class="btn btn-secondary" id="Btnmostrarnewcheq" data-backdrop="static"
-                                        data-keyboard="false" data-toggle="modal"
-                                        data-target="#newchequevinc{{ $facturas }}">Vincular a nuevo
+                                    <button class="btn btn-secondary" data-toggle="modal"
+                                    data-target="#nuevo-cheque" wire:click="$emitTo('agregarcheque','agregar','{{json_encode($movivinc)}}')"> Vincular a nuevo
                                         Movimiento</button>
                                 </div>
                             @else
@@ -88,7 +88,7 @@
                         </div>
                     </div>
 
-                    <br>
+
 
                     {{-- Filtro de busqueda --}}
                     <div class="form-inline mr-auto">
@@ -120,17 +120,17 @@
                                 @php
                                     //Guardamos el folio fiscal en una variable
                                     $folioF = $FolioCFDI->folioFiscal;
-                                    
+
                                     //Contador de conceptos
                                     $ConceptCount = 0;
-                                    
+
                                     //Variables que contiene los resultados de la consulta
                                     $efecto = $FolioCFDI->efecto;
                                     $total = $FolioCFDI->total;
                                     $estado = $FolioCFDI->estado;
                                     $fechaE = $FolioCFDI->fechaEmision;
                                     $nUR = 0;
-                                    
+
                                     //Rutas de archivos
                                     $espa = new MetadataR();
                                     $numero = (string) (int) substr($fechaE, 5, 2);
@@ -138,20 +138,20 @@
                                     $anio = (string) (int) substr($fechaE, 0, 4);
                                     $mees = $espa->fecha_es($mesNombre);
                                     $RFC = $this->factu;
-                                    
+
                                     //Se asignan las rutas donde está almacenando
                                     $rutaXml = "storage/contarappv1_descargas/$empresa/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
                                     $rutaPdf = "storage/contarappv1_descargas/$empresa/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
-                                    
+
                                     //Condicional para saber si el efecto es un egreso
                                     if ($efecto == 'Egreso') {
                                         //Si es un egreso entonces se saca el valor absoluto del total para descontar
                                         $total = -1 * abs($total);
                                     }
-                                    
+
                                     //Consulta de los datos
                                     $XmlReci = XmlR::where('UUID', $folioF)->get();
-                                    
+
                                     //Condicional para revisa si la consulta nos arrojo algo
                                     if (!$XmlReci->isEmpty()) {
                                         //Por medio de un foreach guardaremos los datos requeridos
@@ -159,7 +159,7 @@
                                             $Concept = $CompleCFDI['Conceptos.Concepto'];
                                             $Folio = $CompleCFDI['Folio'];
                                             $MetodPago = $CompleCFDI['MetodoPago'];
-                                    
+
                                             if ($efecto == 'Pago') {
                                                 $docRel = $CompleCFDI['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
                                                 $MetodPago = '-';
@@ -289,8 +289,8 @@
 
     {{-- Llamamos a las modales --}}
     {{-- Modal de detalles de cuentas por pagar --}}
-    {{-- Creacion del modal --}}
-    <div wire:ignore.self class="modal fade" id="newchequevinc{{ $facturas }}" tabindex="-1" role="dialog"
+    {{-- Creacion del modal newchequevinc{{ $facturas }} --}}
+    <div wire:ignore.self class="modal fade" id="" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -518,3 +518,4 @@
         </div>
     </div>
 </div>
+

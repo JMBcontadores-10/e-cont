@@ -6,7 +6,7 @@
         use App\Models\MetadataR;
         use App\Http\Controllers\ChequesYTransferenciasController;
         use Illuminate\Support\Facades\DB;
-        
+
         $rfc = Auth::user()->RFC;
         $class = '';
         if (empty($class)) {
@@ -16,6 +16,17 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
+
+    <!-- TableExport js --->
+    {{-- ----Referencias: https://github.com/hhurz/tableExport.jquery.plugin
+                         https://examples.bootstrap-table.com/#extensions/export.html
+    ------------- --}}
+
+    <script src="{{ asset('js/tableExport/libs/FileSaver/FileSaver.min.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/tableExport.min.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/libs/jsPDF/jspdf.umd.min.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/libs/pdfmake/pdfmake.min.js') }}" defer></script>
+    <script src="{{ asset('js/tableExport/libs/pdfmake/vfs_fonts.js') }}" defer></script>
 
     {{-- Contenedor --}}
     <div class="app-content content">
@@ -38,6 +49,17 @@
                                 <span>Vincular pagos </span>
                             </a>
                         </button>
+
+                        {{-- si $estatus es igual a Pendiente y $colCheques igual o mayor a 1  muestra boton pdf --}}
+
+                        @if ($estatus == 'pendi' && count($colCheques) >= 1)
+                            &nbsp;&nbsp;
+                            <button type="button" class="btn btn-danger"
+                                onclick="exportReportToPdf('{{ $empresa }}')">
+                                <i class="fas fa-file-pdf"></i>
+                                PDF pendientes
+                            </button>
+                        @endif
 
                     </div>
 
@@ -67,7 +89,7 @@
                         {{-- <div class="alert alert-success">
 </div> --}}
                         @php
-                            
+
                             $name = Session::get('idns');
                             //    echo $name;
                         @endphp
@@ -107,37 +129,6 @@
                         @endphp
                     @endif
 
-
-                    @if (session()->get('rfcnomina'))
-                    {{-- <div class="alert alert-success">
-
-</div> --}}            @php
-
-
-                            //    echo $name;
-                        @endphp
-
-
-                    <script>
-                        $(document).ready(function() {
-                            // alert('{{ session('id') }}');
-                            window.livewire.emit('asig', '{{Session::get('idnominas') }}','{{ Session::get('rfcnomina') }}');
-
-                        });
-                    </script>
-
-                    @php
-                        Session::forget('idnominas');
-                        Session::forget('rfcnomina');
-
-                    @endphp
-                @endif
-
-
-
-
-
-
                     {{-- Condicional para mostrar un listado de empresas --}}
                     @empty(!$empresas)
                         <label for="inputState">Empresa: {{ $empresa }}</label>
@@ -158,8 +149,8 @@
                     <div class="form-inline mr-auto">
 
                         {{-- Busqueda por texto --}}
-                        <input wire:model.debounce.300ms="search" class="form-control" type="text" placeholder="Filtro"
-                            aria-label="Search">
+                        <input wire:model.debounce.300ms="search" class="form-control" type="text"
+                            placeholder="Filtro" aria-label="Search">
                         &nbsp;&nbsp;
 
                         {{-- Busqueda por mes --}}
@@ -219,6 +210,9 @@
                                 <option value="sin_conta">Sin Contabilizar</option>
                             @endif
                         </select>
+
+
+
                     </div>
 
                     {{-- Animacion de cargando --}}
@@ -242,7 +236,7 @@
 
                     {{-- Tabla de contenido --}}
                     <div class="table-responsive">
-                        <table id="example" class="{{ $class }}" style="width:100%">
+                        <table id="datos" class="{{ $class }}" style="width:100%">
                             {{-- Encabezado --}}
                             <thead>
                                 <tr>
@@ -251,11 +245,16 @@
                                     </th>
                                     <th>Factura#</th>
                                     <th>Beneficiario</th>
-                                    <th>T.operación</th>
+                                    <th data-tableexport-display="none">T.operación</th>
                                     <th>F.pago</th>
                                     <th>Pagado</th>
                                     <th>$Cfdi</th>
-                                    <th>Comprobar</th>
+                                    <th data-tableexport-display="none">Comprobar</th>
+                                    <!-- Celdas unicas para expotacion PDF pendientes -->
+                                    <th style="display:none;" data-tableexport-display="always">Detalles
+                                        {{-- Pendientes --}} </th>
+                                    <th style="display:none;" data-tableexport-display="always">Comentarios</th>
+                                    <!-- fin Celdas unicas para expotacion PDF pendientes -->
                                     <th>...</th>
                                 </tr>
                             </thead>
@@ -285,7 +284,8 @@
                                     $contabilizado = $i->conta;
                                     $pendiente = $i->pendi;
                                     $tipoO = $i->tipoopera;
-                                    
+                                    $comentario = $i->comentario;
+
                                     if ($tipoO == 'Impuestos' or $tipoO == 'Parcialidad') {
                                         $diferencia = 0;
                                     } else {
@@ -297,10 +297,10 @@
                                     } else {
                                         $diferenciaP = 1;
                                     }
-                                    
+
                                     $diferencia = number_format($diferencia, 2);
                                     $nombreCheque = $i->nombrec;
-                                    
+
                                     if ($nombreCheque == '0') {
                                         $subirArchivo = true;
                                         $nombreChequeP = 0;
@@ -308,20 +308,20 @@
                                         $subirArchivo = false;
                                         $nombreChequeP = 1;
                                     }
-                                    
+
                                     $rutaArchivo = $rutaDescarga . $nombreCheque;
-                                    
+
                                     if (!empty($i->doc_relacionados)) {
                                         $docAdi = $i->doc_relacionados;
                                     }
-                                    
+
                                     $revisado_fecha = $i->revisado_fecha;
                                     $contabilizado_fecha = $i->contabilizado_fecha;
                                     $contabili_fecha = $i->updated_at;
                                     $poliza = $i->poliza;
                                     $comentario = $i->comentario;
                                     $impresion = $i['impresion'];
-                                    
+
                                     if (strpos($nombreCheque, '/') !== false) {
                                         $p = explode('/', $nombreCheque);
                                         $i->update([
@@ -329,7 +329,7 @@
                                             'nombrec' => $p[1],
                                         ]);
                                     }
-                                    
+
                                     if (!empty($docAdi[0])) {
                                         if (strpos($docAdi[0], '/') !== false) {
                                             foreach ($i->doc_relacionados as $doc) {
@@ -388,7 +388,7 @@
                                         </td>
 
                                         {{-- Tipo de operacion --}}
-                                        <td>
+                                        <td data-tableexport-display="none">
                                             {{ $tipoO }}
                                         </td>
 
@@ -408,9 +408,26 @@
                                         </td>
 
                                         {{-- Comprobar --}}
-                                        <td>
+                                        <td data-tableexport-display="none">
                                             <span class="invoice-amount">${{ $diferencia }}</span>
                                         </td>
+                                        {{-- - Detalles pendientes --}}
+                                        <td style="display:none;" data-tableexport-display="always">
+                                            <span class="invoice-amount">
+
+
+                                            </span>
+                                        </td>
+                                        {{-- - comentarios pendientes --}}
+                                        <td style="display:none;" data-tableexport-display="always">
+                                            <span class="invoice-amount">
+                                                {{ $comentario }}
+
+                                            </span>
+
+                                        </td>
+
+
 
                                         {{-- ... --}}
                                         <td></td>
@@ -629,7 +646,8 @@
                                                                         <p class="TextoMensaje">{{ $poliza }}
                                                                         </p>
                                                                         <p class="TextoMensaje">
-                                                                            {{ $contabilizado_fecha ?? $contabili_fecha }}</p>
+                                                                            {{ $contabilizado_fecha ?? $contabili_fecha }}
+                                                                        </p>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -694,7 +712,19 @@
                                 </tbody>
                             @endforeach
                         </table>
-                        {{ $colCheques->links() }}
+
+                        {{ $colCheques->links() }} {{-- Animacion de cargando --}}
+                        {{-- -- si $colCheques es mayor a 0 - --}}
+                        @if ($colCheques->count() > 0)
+                            <div wire:loading>
+                                <div style=" color: #3CA2DB" class="la-ball-clip-rotate-multiple">
+                                    <div></div>
+                                    <div></div>
+                                </div>
+
+                                <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
+                            </div>
+                        @endif
                         @livewireScripts
                     </div>
                 </section>
@@ -736,36 +766,24 @@
                     </div>
                 </div>
 
-<<<<<<< HEAD
-                 <script>
-                //Emitir los datos de la empresa al componente
-                $(document).ready(function() {
-                    //Guardamos en variables locales el contenido de sessionstorage
-                    var IdMovi = sessionStorage.getItem('idmovi');
-                    var Empresa = sessionStorage.getItem('empresa');
-
-                    //Condicion para saber si las variables no estan vacias
-                    if (IdMovi !== null && Empresa !== null) {
-                        //Emitimos los datos al controlador
-                        window.livewire.emit('mostvincu', {
-                            idmovi: IdMovi,
-                            empresa: Empresa
-                        });
-                        sessionStorage.clear();
-                    }
-                });
-                  </script>
-=======
                 <script>
                     //Emitir los datos de la empresa al componente
                     $(document).ready(function() {
                         //Guardamos en variables locales el contenido de sessionstorage
                         var IdMovi = sessionStorage.getItem('idmovi');
                         var Empresa = sessionStorage.getItem('empresa');
->>>>>>> 9a2de1db747d89d9d8c45b4f53b085315c4c2e11
 
-           </div>
-
+                        //Condicion para saber si las variables no estan vacias
+                        if (IdMovi !== null && Empresa !== null) {
+                            //Emitimos los datos al controlador
+                            window.livewire.emit('mostvincu', {
+                                idmovi: IdMovi,
+                                empresa: Empresa
+                            });
+                            sessionStorage.clear();
+                        }
+                    });
+                </script>
 </div>
 <script>
     //Emitir los datos de la empresa al componente

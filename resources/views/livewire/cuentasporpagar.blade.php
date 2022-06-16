@@ -5,17 +5,19 @@
         use App\Models\ListaNegra;
         use App\Models\XmlR;
         use App\Models\Cheques;
-        
+
         //Obtenemos la clase para agregar a la tabla
         $rfc = Auth::user()->RFC;
         $class = '';
         if (empty($class)) {
             $class = 'table nowrap dataTable no-footer';
         }
-        
+
         //Obtenemos el valor de la fecha del dia de hoy
         $date = date('Y-m-d');
     @endphp
+
+
 
     {{-- Contenedor para mantener responsivo el contenido del modulo --}}
     <div class="app-content content">
@@ -102,10 +104,10 @@
                                     @php
                                         //Obtenemos el rfcemisor para enviarlo a los modales
                                         $RFCEmit = $i['emisorRfc'];
-                                        
+
                                         //Variable para obtener el total
                                         $SumTotal = 0;
-                                        
+
                                         //Obtener el numero de CFDI
                                         $DatosMetaR = MetadataR::select('total', 'efecto')
                                             ->where('receptorRfc', $this->rfcEmpresa)
@@ -113,17 +115,17 @@
                                             ->where('estado', '<>', 'Cancelado')
                                             ->whereNull('cheques_id')
                                             ->get();
-                                        
+
                                         //Obtenemos el numero de CFDI
                                         $NoCFDI = $DatosMetaR->count();
-                                        
+
                                         //Calcular el total (Convierte el campo total en en float y negativo si es egreso)
                                         foreach ($DatosMetaR as $Total) {
                                             $TotalFloat = (float) $Total['total'];
                                             if ($Total['efecto'] == 'Egreso') {
                                                 $TotalFloat = -1 * abs($TotalFloat);
                                             }
-                                        
+
                                             $SumTotal = $SumTotal + $TotalFloat;
                                         }
                                     @endphp
@@ -161,8 +163,7 @@
                                                 <span class="invoice-amount">{{ $NoCFDI }}</span>
                                             </td>
                                             <td class="text-center align-middle">
-                                                <span
-                                                    class="invoice-amount">${{ number_format($SumTotal, 2) }}</span>
+                                                <span class="invoice-amount">${{ number_format($SumTotal, 2) }}</span>
                                             </td>
                                             <td class="text-center align-middle">
                                                 {{-- Boton para abrir el modal --}}
@@ -289,7 +290,7 @@
                                     }
 
                                     //Condicional para mostrar la paginacion particionada
-                                    if ({{ $pagiselect }} < {{ceil($totalpagi / 2)}}) {
+                                    if ({{ $pagiselect }} < {{ ceil($totalpagi / 2) }}) {
                                         //Si es menor de la mitad
                                         $(".inicpagi").hide();
                                         $(".finpagi").show();
@@ -439,24 +440,24 @@
                                 @php
                                     //Guardamos el folio fiscal en una variable
                                     $folioF = $FolioCFDI->folioFiscal;
-                                    
+
                                     //Contador de conceptos
                                     $ConceptCount = 0;
-                                    
+
                                     //Variables que contiene los resultados de la consulta
                                     $efecto = $FolioCFDI->efecto;
                                     $total = $FolioCFDI->total;
                                     $estado = $FolioCFDI->estado;
                                     $fechaE = $FolioCFDI->fechaEmision;
                                     $nUR = 0;
-                                    
+
                                     //Rutas de archivos
                                     $espa = new MetadataR();
                                     $numero = (string) (int) substr($fechaE, 5, 2);
                                     $mesNombre = (string) (int) substr($fechaE, 5, 2);
                                     $anio = (string) (int) substr($fechaE, 0, 4);
                                     $mees = $espa->fecha_es($mesNombre);
-                                    
+
                                     //Se asignan las rutas donde está almacenado el
                                     //Condicional para saber si el RFC es un arreglo
                                     if (is_array($RFC)) {
@@ -470,16 +471,16 @@
                                         $rutaXml = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Recibidos/XML/$folioF.xml";
                                         $rutaPdf = "storage/contarappv1_descargas/$rfcEmpresa/$anio/Descargas/$numero.$mees/Recibidos/PDF/$folioF.pdf";
                                     }
-                                    
+
                                     //Condicional para saber si el efecto es un egreso
                                     if ($efecto == 'Egreso') {
                                         //Si es un egreso entonces se saca el valor absoluto del total para descontar
                                         $total = -1 * abs($total);
                                     }
-                                    
+
                                     //Consulta de los datos
                                     $XmlReci = XmlR::where('UUID', $folioF)->get();
-                                    
+
                                     //Condicional para revisa si la consulta nos arrojo algo
                                     if (!$XmlReci->isEmpty()) {
                                         //Por medio de un foreach guardaremos los datos requeridos
@@ -487,7 +488,7 @@
                                             $Concept = $CompleCFDI['Conceptos.Concepto'];
                                             $Folio = $CompleCFDI['Folio'];
                                             $MetodPago = $CompleCFDI['MetodoPago'];
-                                    
+
                                             if ($efecto == 'Pago') {
                                                 $docRel = $CompleCFDI['Complemento.0.Pagos.Pago.0.DoctoRelacionado'];
                                                 $metodoPago = '-';
@@ -887,4 +888,16 @@
             $(".step3").fadeIn("slow");
         });
     </script>
+
+
+
 </div>
+
+</div>
+
+                 {{-- Modal agregarcheque --}}
+
+                 <livewire:agregarcheque>
+                    <livewire:vincular-pagos-automatico>
+                        <livewire:uploadrelacionados>
+

@@ -411,7 +411,7 @@
                                 </li>
                                 <li id="auditoria"><a class="d-flex align-items-center" href="{{ 'auditoria' }}"><i
                                             class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                            data-i18n="Analytics">Auditoria</span></a>
+                                            data-i18n="Analytics">Auditoría</span></a>
                                 </li>
                                 <li id="consultas"><a class="d-flex align-items-center" href="{{ 'consultas' }}"><i
                                             class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
@@ -1039,6 +1039,7 @@
     </p>
   </footer> --}}
     <!-- END: Footer-->
+
 
 
 </body>

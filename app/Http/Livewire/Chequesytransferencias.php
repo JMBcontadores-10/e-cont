@@ -6,7 +6,6 @@ use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cheques;
-use App\Models\MetadataE;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -21,7 +20,7 @@ class Chequesytransferencias extends Component
     public Cheques $Crear; // enlaza al modelo cheques
     public $datos;
     public float $ajuste;
-    public $users, $name, $email, $user_id, $fecha, $ajuste2, $datos1, $user;
+    public  $users, $name, $email, $user_id, $fecha, $ajuste2, $datos1, $user;
     public $cheque;
     public $importe = "";
     public $condicion;
@@ -39,7 +38,6 @@ class Chequesytransferencias extends Component
     public $anio;
     public $todos;
     public $rfcEmpresa;
-    public $ids=[];
 
     protected $paginationTheme = 'bootstrap'; //para dar e estilo numerico al paginador
 
@@ -67,6 +65,13 @@ class Chequesytransferencias extends Component
         $this->resetPage();
     }
 
+    /// Actualizar mes
+    public function updatingMes()
+    {
+        $this->resetPage();
+    }
+
+
     public function updatingImporte()
     {
         $this->resetPage();
@@ -75,82 +80,9 @@ class Chequesytransferencias extends Component
     protected $listeners = [
         'chequesRefresh' => '$refresh',
         'mostvincu' => 'mostmovivincu',
-<<<<<<< HEAD
-        'notivincu'=>'notivinculo',
-        'vercheq'=>'vercheque',
-        'asig'=>'asignar',
-
-     ];
-
-
-public function asignar($idnominas,$rfc)
-{
-
-    $this->estatus='nominas';
- $cheques= MetadataE::
-            where('folioFiscal',$idnominas)
-            ->first();
-
-            foreach($cheques['cheques_id'] as $c){
-               $this->ids[]=  $c; }
-
-
-
-    // $this->todos =1;
-    // $this->search=$idnominas;
-    $this->rfcEmpresa=$rfc;
-
-}
-
-
-
-public function mostmovivincu($data)
-{
-    $this->todos =1;
-    $this->search =$data['idmovi'];
-    $this->rfcEmpresa =$data['empresa'];
-}
-
-public function notivinculo($id,$rfc){
-    $this->todos = 1;
-    $this->search =$id;
-    $this->rfcEmpresa =$rfc;
-
-}
-
-public function vercheque($rfc,$id){
-
-    $this->todos = 1;
-
-    $this->rfcEmpresa=$rfc;
-    $this->search = $id;
-
-
-
-}
-
-
-
-protected function rules(){
-
-
-    return [
-        'user_id' => '',
-        'name' => '',
-        'Nuevo_numcheque'=>'required',
-        'Nuevo_tipomov'=>'',
-        'Nuevo_fecha'=>'',
-        'Nuevo_importecheque'=>'',
-        'Nuevo_beneficiario'=>'',
-
-        //======== modal ajuste =====//
-
-
-
-=======
         'notivincu' => 'notivinculo',
         'vercheq' => 'vercheque',
->>>>>>> 9a2de1db747d89d9d8c45b4f53b085315c4c2e11
+
     ];
 
     public function mostmovivincu($data)
@@ -184,6 +116,7 @@ protected function rules(){
             'Nuevo_fecha' => '',
             'Nuevo_importecheque' => '',
             'Nuevo_beneficiario' => '',
+            'estatus' => '',
             //======== modal ajuste =====//
         ];
     }
@@ -266,28 +199,6 @@ protected function rules(){
                         ->paginate($this->perPage);
                     break;
 
-<<<<<<< HEAD
-                    case 'nominas':
-                        $cheque = Cheques::
-                          search($this->search)
-                        ->whereIn('_id',$this->ids)
-                        ->where('rfc',$this->rfcEmpresa)
-                        ->where('importecheque',$this->condicion,$this->importe)
-                        ->orderBy('fecha', 'desc')
-                        ->paginate($this->perPage);
-                        break;
-
-                  default:
-                    $cheque = Cheques::
-                    search($this->search)
-                    ->where('rfc',$this->rfcEmpresa)
-                    ->where('importecheque',$this->condicion,$this->importe)
-                    ->where('fecha', 'like','%'.$this->anio."-".'%')
-                    ->where('fecha', 'like','%' ."-".$this->mes."-".'%')
-                    ->orderBy('fecha', 'desc')
-                    ->orderBy('created_at', 'desc')
-                    ->paginate($this->perPage);
-=======
                 default:
                     $cheque = Cheques::search($this->search)
                         ->where('rfc', $this->rfcEmpresa)
@@ -296,7 +207,6 @@ protected function rules(){
                         ->orderBy('fecha', 'desc')
                         ->orderBy('created_at', 'desc')
                         ->paginate($this->perPage);
->>>>>>> 9a2de1db747d89d9d8c45b4f53b085315c4c2e11
                     break;
             }
         }
@@ -379,7 +289,14 @@ protected function rules(){
             $this->emitTo('chequesytransferencias', 'chequesRefresh');
         }
 
-        return view('livewire.chequesytransferencias', ['colCheques' => $cheque, 'meses' => $meses, 'anios' => $anios, 'empresa' => $this->rfcEmpresa, 'empresas' => $emp])
+        return view('livewire.chequesytransferencias', [
+            'colCheques' => $cheque,
+            'meses' => $meses,
+            'anios' => $anios,
+            'empresa' => $this->rfcEmpresa,
+            'empresas' => $emp,
+            'estatus' => $this->estatus,
+            ])
             ->extends('layouts.livewire-layout')
             ->section('content');
     }
@@ -415,4 +332,33 @@ protected function rules(){
     {
         $this->emit('uploadrelacionados', $id);
     }
+
+//// metodo pendientes
+
+    public function pendientes($a, $b,$c)
+    {
+
+    $salto = "\r\n";
+    $msg = '';
+    if($b == 0) {
+        $msg += "- No tiene CFDI's vinculados.";
+        $msg += $salto;
+    }
+    if ($c == 0) {
+        $msg += "- No tiene pdf asociado.";
+        $msg += $salto;
+    }
+    if ($a == 0) {
+        $msg += "- Existe diferencia con el importe total.";
+        $msg += $salto;
+    }
+
+    return $msg;
+
+}
+
+
+
+
+
 }/// fin de la clase principal

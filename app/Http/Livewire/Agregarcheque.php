@@ -9,6 +9,7 @@ use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cheques;
 use App\Models\MetadataE;
+use App\Models\MetadataR;
 use App\Models\Notificaciones;
 use App\Models\XmlE;
 use Livewire\Component;
@@ -38,16 +39,26 @@ class Agregarcheque extends Component
     $step3,
     $folio,
     $rfc,
-    $fecha;
+    $fecha,
+    $movivinc;
 
 
 
     public $idNuevoCheque;
 
     protected $listeners = ['actualizar' => '$refresh',
-   'arreg'
+    'agregar',
 
 ]; // listeners para refrescar el modal
+
+
+
+
+//// funcion agregarDesdeCuentas
+public function agregar($id){
+    $this->movivinc = $id;
+}
+
 
 
 public function arreg($folio,$rfc,$fecha){
@@ -184,6 +195,39 @@ $this->rfcEmpresa=$rfc;
       //  $this->dispatchBrowserEvent('hola', []);
 }
 
+////////////////////////////////////////////////////////////////////
+######-->[ SI EL CHEQUE SE CREA DESDE cuentasporpagar SE VINCULAN LOS UUIDS]<--##########
+
+/// si movivinc no es vacio se vincula el cheque con el movimiento
+if($this->movivinc){
+  //Vinculamos los CFDI al movimiento creado recientemente
+  foreach(json_decode($this->movivinc) as $mov){
+    $xml_r = MetadataR::where('folioFiscal', $mov)->first(); //Consulta a metadata_r
+    $cheque = Cheques::find($this->idNuevoCheque->_id);
+    $cheque->metadata_r()->save($xml_r);
+
+    // Obtiene el total de facturas vinculadas y suma el total
+    $Ingresos = MetadataR::where(['cheques_id' => $this->idNuevoCheque->_id])
+    ->where('efecto','!=','Egreso')
+    ->get()->sum('total');
+
+    $TotalIngresos = round($Ingresos, 2);
+
+    $Egresos = MetadataR::where(['cheques_id' => $this->idNuevoCheque->_id])
+    ->where('efecto','Egreso')
+    ->get()->sum('total');
+
+    $TotalEgresos= round($Egresos, 2);
+
+    //Actualiza el contador faltaxml descontando cada factura
+    $cheque->update(['faltaxml'=> $cheque->faltaxml + 1]);
+}
+
+
+}// fin if movivinc
+
+#################[ FIN DE LA SECCION VICNULACION DESE CUENTAS]################################
+///////////////////////////////////////////////////////////////////////////
 
 
 //######## [se identifica si viene de nominas la creacion del nuevo cheque para vincular el cheque alos empleados]#########///
@@ -192,7 +236,13 @@ $this->rfcEmpresa=$rfc;
 //##### [FIN DE LA SECCION NOMINAS ]###################///
 
 /// crea la notificacion
-$tipo[]='CA';
+$tipo[]='CFA';
+
+/// si mesfpago ó anioPago son diferentes al mes y año actual se crea la notificacion
+if(empty(auth()->user()->tipo)){
+
+    if($mesfPago!=$mesActual || $anioPago!=$anio_actual){
+
 $chequeC1 = Notificaciones::create([
 
         'numcheque' => $this->Nuevo_numcheque,
@@ -203,10 +253,15 @@ $chequeC1 = Notificaciones::create([
         'cheques_id' => $chequeC->_id,
         'rfc' => $this->rfcEmpresa,
         'read_at' => 0,
-        'tipo'=> 'CA',
+        'tipo'=> 'CFA',
 
 
 ]);
+
+    }///fin del if de mesfpago y anioPago
+} // fin del if de tipo
+
+
 
 session()->put('idns', $chequeC->_id);
 session()->put('rfcn', $rfc);
@@ -240,6 +295,7 @@ if($this->folio){
      //$insert->unset('cheques_id');
     }
 
+
     }
 ######################### [ FIN ]################
 
@@ -252,10 +308,6 @@ $this->dispatchBrowserEvent('step2', []);
 
 
 $this->emitTo( 'notification-secction','avisoPush');
-
-
-
-
 
 
 
@@ -298,7 +350,16 @@ $this->emitTo( 'notification-secction','avisoPush');
 
 
                 }//end if
-        return view('livewire.agregarcheque',['empresas'=>$emp, 'idNuevoCheque'=>$this->idNuevoCheque,'step3'=>$this->step3,'folio'=>$this->folio,'rfc'=>$this->rfc,'fecha'=>$this->fecha]);
+        return view('livewire.agregarcheque',[
+            'empresas'=>$emp,
+            'idNuevoCheque'=>$this->idNuevoCheque,
+            'step3'=>$this->step3,
+            'folio'=>$this->folio,
+            'rfc'=>$this->rfc,
+            'fecha'=>$this->fecha,
+            // 'arreglo_cuentas'=>$this->arreglo_cuentas,
+
+        ]);
     }
 
 
@@ -326,8 +387,27 @@ $this->Nuevo_tipoopera="";
 $this->idNuevoCheque=null;
 $this->step3=true;
         // $this->emit('refreshUpload');
+        return redirect()->to('/chequesytransferencias');
     }
 
+
+    public function refresh2(){
+
+        //
+        $this->emitUp('chequesRefresh');//actualiza la tabla cheques y transferencias
+    //  $this->emitSelf('actualizar');
+
+
+$this->Nuevo_numcheque="";
+$this->Nuevo_fecha="";
+$this->Nuevo_beneficiario="";
+$this->Nuevo_importecheque="";
+$this->Nuevo_tipomov="";
+$this->Nuevo_tipoopera="";
+$this->idNuevoCheque=null;
+$this->step3=true;
+
+    }
 
 
 

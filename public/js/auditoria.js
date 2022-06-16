@@ -13,23 +13,24 @@ function exportReportToExcel(empresa) {
 function exportReportToPdf(empresa) {
     var empresa = empresa
 
-    $('#datos').tableExport({
-        fileName: 'E-cont Auditoria ' + empresa,
-        type: 'pdf',
-        jspdf: {
-            orientation: 'l',
-            format: 'a3',
-            margins: { left: 10, right: 10, top: 20, bottom: 20 },
-            autotable: {
-                styles: {
-                    fillColor: 'inherit',
-                    textColor: 'inherit'
-                },
-                tableWidth: 'auto'
-            }
-        }
-    });
 
+// PDF format using jsPDF and jsPDF Autotable
+
+
+function DoCellData(cell, row, col, data) {}
+function DoBeforeAutotable(table, headers, rows, AutotableSettings) {}
+
+$('table').tableExport({fileName: 'E-cont Auditoria ' + empresa,
+                        type: 'pdf',
+                        jspdf: {format: 'bestfit',
+                                margins: {left:20, right:10, top:20, bottom:20},
+                                autotable: {styles: {overflow: 'linebreak',
+                                                     cellPadding: 2,
+                                                     fontSize:15,},
+                                            tableWidth: 'auto',
+                                            tableExport: {onBeforeAutotable: DoBeforeAutotable,
+                                                          onCellData: DoCellData}}}
+                       });
 
 
 

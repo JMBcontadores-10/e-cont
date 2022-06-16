@@ -32,7 +32,8 @@ class Detalles extends Component
     $Nuevo_nombrec,
     $pushArchivos=[],
     $step3,
-    $idNuevoCheque;
+    $idNuevoCheque,
+    $hola;
 
     //Variable para la suma de totales de las facturas seleccionadas
     public $sumtotalfactu;
@@ -55,6 +56,7 @@ class Detalles extends Component
         $this->idNuevoCheque=null;
         $this->step3=true;
         $this->selectempresa = $this->empresa;
+        $this->hola='hola';
     }
 
     //Metodo para vaciar la variable
@@ -78,6 +80,18 @@ class Detalles extends Component
         ];
     }
 
+    ///Metodo enviarAcuentas
+    public function enviar(){
+
+     $this->hola='quetal';
+
+
+    }
+
+
+
+
+
     //Metodo para guardar un cheque nuevo con el CFDI vinculado
     public function AgregarChequeCFDI(){
         $dtz = new DateTimeZone("America/Mexico_City");
@@ -85,7 +99,7 @@ class Detalles extends Component
         $Id = $dt->format('H\Mi\SsA');
         $Id = $dt->format('Y\Hh\Mi\SsA');// obtener año y hora con segundos para evitar repetidos
         $Id2= $dt->format('d');
-
+        $anio_actual = $dt->format('Y');/// año actual para registro de cuando se sube el pdf
         $mesActual=date('m');// mes actual para registro de cuando se sube el pdf
         //==== variables que obtienen elaño y mes de pago que pone el ususario
         $dateValue = strtotime($this->Nuevo_fecha);//obtener la fecha
@@ -175,18 +189,32 @@ class Detalles extends Component
         //Inserta el total de la suma de los cfdis  en importexml para corregir
         $cheque->update(['importexml' => $ImporteTotal]);
 
-        /// crea la notificacion
-        $tipo[]='CA';
-        $chequeC = Notificaciones::create([
+    /// crea la notificacion
+$tipo[]='CFA';
+
+/// si mesfpago ó anioPago son diferentes al mes y año actual se crea la notificacion
+if(empty(auth()->user()->tipo)){
+
+    if($mesfPago!=$mesActual || $anioPago!=$anio_actual){
+
+$chequeC1 = Notificaciones::create([
+
         'numcheque' => $this->Nuevo_numcheque,
         'fecha' => $this->Nuevo_fecha,
         'importecheque' => $importeCheque,
         'Beneficiario' => $this->Nuevo_beneficiario,
         'tipoopera' => $this->Nuevo_tipoopera,
-        'rfc' => $this->empresa,
+        'cheques_id' => $chequeC->_id,
+        'rfc' => $this->rfcEmpresa,
         'read_at' => 0,
-        'tipo'=> 'CA',
-        ]);
+        'tipo'=> 'CFA',
+
+
+]);
+
+    }///fin del if de mesfpago y anioPago
+} // fin del if de tipo
+
 
         $this->Nuevo_numcheque="";
         $this->Nuevo_fecha="";

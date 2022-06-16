@@ -896,3 +896,36 @@ function estilos() {
     document.getElementById("notificacion").style.display = "block";
     $("#notificacion").delay(6500).fadeOut(1500, "swing");
 }
+
+
+
+////// funcion para exportar a pdf
+
+
+// PDF export using jsPDF only
+function exportReportToPdf(empresa) {
+    var empresa = empresa
+
+
+// PDF format using jsPDF and jsPDF Autotable
+
+
+function DoCellData(cell, row, col, data) {}
+function DoBeforeAutotable(table, headers, rows, AutotableSettings) {}
+
+$('table').tableExport({fileName: 'E-cont Auditoria ' + empresa,
+                        type: 'pdf',
+                        jspdf: {format: 'bestfit',
+                                margins: {left:20, right:10, top:20, bottom:20},
+                                autotable: {styles: {overflow: 'linebreak',
+                                                     cellPadding: 2,
+                                                     fontSize:12,},
+                                            tableWidth: 'auto',
+                                            tableExport: {onBeforeAutotable: DoBeforeAutotable,
+                                                          onCellData: DoCellData}}}
+                       });
+
+
+
+
+}

@@ -61,6 +61,8 @@
                                 </tr>
                             </thead>
 
+                    {{-- try catch para capturar errores --}}
+
                     @empty(!$list)
 
                     @foreach ($list as $me2)
@@ -155,11 +157,13 @@
 
            {{-- Busqueda por mes --}}
         <input required class="form-control" type="date" min="2014-01-01"
-        max={{ $date }} wire:model.defer="fecha_ini"  >
+        max={{ $date }} wire:model="fecha_ini"  >
         &nbsp; A
         &nbsp;
 
-    <input required class="form-control" type="date" min="2014-01-01"
+     {{-- Busqueda por mes --}}
+
+    <input required class="form-control" type="date" min="{{$fecha_ini}}"
     max={{ $date }} wire:model.defer="fecha_fin" />
     <button  type="submit"  class="btn btn-primary">Consultar</button>
 

@@ -26,6 +26,9 @@ Cheque Agregado = CA
 Cheque Eliminado =CE
 Notificacion de Mensaje= M
 Factura Cancelada = FC
+Cheque Editado = CED
+Cheque Fecha Anterior = CFA
+
 
 */
 

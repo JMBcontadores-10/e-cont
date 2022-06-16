@@ -230,7 +230,12 @@ class FacturasVinculadas extends Component
 
     public function export($facturas)
     {
-        $cheque = Cheques::where(['_id' => $facturas])->first();
-        return Excel::download(new FacturasExport($facturas), $cheque->numcheque . 'FacturasVinculadas.xlsx');
+/// elimina los caracteres especiales
+$cheque = Cheques::where(['_id' => $facturas])->first();
+$nombre=preg_replace('/[^A-z0-9.-]+/', '', $cheque->numcheque);
+
+
+
+        return Excel::download(new FacturasExport($facturas), $nombre . 'FacturasVinculadas.xlsx');
     }
 }
