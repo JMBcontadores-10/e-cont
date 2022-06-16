@@ -9,10 +9,12 @@ use App\Http\Livewire\CuentasPorpagar;
 use App\Http\Livewire\Cheques;
 use App\Http\Livewire\Descargas;
 use App\Http\Livewire\Eliminar;
+use App\Http\Livewire\Expedientefiscal;
 use App\Http\Livewire\Home;
 use App\Http\Livewire\FacturasVinculadas;
 use App\Http\Livewire\Modals\Editar;
 use App\Http\Livewire\Monitoreo;
+use App\Http\Livewire\Tareas;
 use App\Http\Livewire\Nominas;
 use App\Http\Livewire\Pdfcheque;
 use App\Http\Livewire\Volumepdf;
@@ -135,3 +137,9 @@ Route::post('/pdfcrevolu/{id}', [App\Http\Controllers\UploadController::class, '
 Route::get('/monitoreo', Monitoreo::class)->name('monitoreo');
 //Ruta para la creacion de PDF de monitoreo
 Route::get('/infomonitpdf', [App\Http\Controllers\InfoMonit::class, 'MakePDFMonit'])->name('infomonitpdf');
+//Ruta para la vista de expediente fiscal
+Route::get('/expedifiscal', Expedientefiscal::class)->name('expedifiscal');
+//Ruta de almacenamiento de PDF (Expediente fiscal)
+Route::post('/pdfacuse/{id}', [App\Http\Controllers\UploadController::class, 'AcuseExpFisc']);
+//|Ruta de la vista de tareas
+Route::get('/tareas', Tareas::class)->name('tareas');

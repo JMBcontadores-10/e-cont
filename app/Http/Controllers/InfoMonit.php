@@ -66,34 +66,60 @@ class InfoMonit extends Controller
             //15. RUCE750317I21
             ['rfc' => 'RUCE750317I21', 'email' => 'servicio.sanjuan@permergas.mx'],
 
-
-
             //CORREOS DE CONFIMACION (VERIFICAR QUE SI SALIERON LOS CORREOS)
+            //Contabilidad
 
-            //Confirmacion (Tecnologia)
-            ['rfc' => 'SST030407D77M', 'email' => 'tecnologia@jmbcontadores.mx'],
+            //1. SGA1410217U4
+            ['rfc' => 'SGA1410217U4', 'email' => 'contabilidad@jmbcontadores.mx'],
 
-            //Confirmacion (Tecnologia)
-            ['rfc' => 'SST030407D77J', 'email' => 'tecnologia@jmbcontadores.mx'],
+            //2. AHF060131G59
+            ['rfc' => 'AHF060131G59', 'email' => 'contabilidad@jmbcontadores.mx'],
 
-            //Confirmacion (Tecnologia)
-            ['rfc' => 'PERE9308105X4', 'email' => 'tecnologia@jmbcontadores.mx'],
+            //3. FGA980316918
+            ['rfc' => 'FGA980316918', 'email' => 'contabilidad@jmbcontadores.mx'],
 
-            //Confirmacion (Contabilidad)
+            //4. PERE9308105X4
+            ['rfc' => 'PERE9308105X4', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //5. SCT150918RC9
+            ['rfc' => 'SCT150918RC9', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //6. SGX190523KA4
+            // ['rfc' => 'SGX190523KA4', 'email' => ''], PENDIENTE DE OPERACION
+
+            //7. GPA161202UG8
+            ['rfc' => 'GPA161202UG8', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //8. PEMJ7110258J3
+            ['rfc' => 'PEMJ7110258J3', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //9. VCO990603D84
+            ['rfc' => 'VCO990603D84', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //10. STR9303188X3
+            ['rfc' => 'STR9303188X3', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //11. SGX160127MC4
+            ['rfc' => 'SGX160127MC4', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //12. SGT190523QX8
+            ['rfc' => 'SGT190523QX8', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //13. SST030407D77
             ['rfc' => 'SST030407D77J', 'email' => 'contabilidad@jmbcontadores.mx'],
 
-            //Confirmacion (Tecnologia)
+            //14. SST030407D77
             ['rfc' => 'SST030407D77M', 'email' => 'contabilidad@jmbcontadores.mx'],
 
-            //Confirmacion (Contabilidad)
-            ['rfc' => 'SGA1410217U4', 'email' => 'contabilidad@jmbcontadores.mx'],
+            //15. RUCE750317I21
+            ['rfc' => 'RUCE750317I21', 'email' => 'contabilidad@jmbcontadores.mx'],
         ];
 
         //Bucle para enviar de forma automatica los correos
         foreach ($infomail as $datamail) {
             try {
                 $filename = $datamail['rfc'] . '.pdf';
-                $path = '../informonit';
+                $path = '/home/lnrhdwjb/informonit';
                 $file = $path . "/" . $filename;
 
                 //Condicional si el archivo existe
@@ -114,7 +140,7 @@ class InfoMonit extends Controller
                     $eol = "\r\n";
 
                     //Encabezado
-                    $headers = "From: Econt <Econt@e-cont.com>" . $eol;
+                    $headers = "From: Econt <econt@correosecont.x10.mx>" . $eol;
                     $headers .= "MIME-Version: 1.0" . $eol;
                     $headers .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\"" . $eol;
                     $headers .= "Content-Transfer-Encoding: 7bit" . $eol;
@@ -155,7 +181,7 @@ class InfoMonit extends Controller
         }
 
         //Eliminamos los archivos en la carpeta local
-        $files = glob('../informonit/*'); //Obtenemos todos los nombres de los ficheros
+        $files = glob('/home/lnrhdwjb/informonit/*'); //Obtenemos todos los nombres de los ficheros
         foreach ($files as $file) {
             if (is_file($file))
                 unlink($file); //Elimino el fichero
@@ -163,7 +189,7 @@ class InfoMonit extends Controller
     }
 
 
-//**********************************************************************************************************************************************/
+    //**********************************************************************************************************************************************/
 
 
     //Metodo para recrear los PDF por si se crean con errores
@@ -439,7 +465,7 @@ class InfoMonit extends Controller
 
 
 
-//*********************************************************************************************************************************************/
+    //*********************************************************************************************************************************************/
 
 
 
@@ -447,9 +473,9 @@ class InfoMonit extends Controller
     public function SendFTP()
     {
         //Informacion de conexion FTP
-        $server = 'files.000webhost.com';
-        $ftp_user_name = 'correosecont';
-        $ftp_user_pass = 'C04taD4n13l/*';
+        $server = 'correosecont.x10.mx';
+        $ftp_user_name = 'lnrhdwjb';
+        $ftp_user_pass = 'Tecnologi@1';
 
         //Subimos los archivos a la servidor FTP y eliminamos los archivos en la carpeta local
         $files = glob('informonit/*'); //Obtenemos todos los nombres de los ficheros
@@ -511,7 +537,7 @@ class InfoMonit extends Controller
 
 
 
-//*********************************************************************************************************************************************/
+    //*********************************************************************************************************************************************/
 
 
 

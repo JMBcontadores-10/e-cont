@@ -96,7 +96,12 @@
 
                     {{-- Encabezado del dia --}}
                     <div align="center">
-                        <h3>Facturación {{ $fechaayer }}</h3>
+                        {{-- Condicional para saber si se selecciono un rango --}}
+                        @if ($fechainic == $fechafin)
+                            <h3>Facturación {{ $fechainic }}</h3>
+                        @else
+                            <h3>Facturación {{ $fechainic }} al {{ $fechafin }}</h3>
+                        @endif
                     </div>
 
                     <div wire:loading>

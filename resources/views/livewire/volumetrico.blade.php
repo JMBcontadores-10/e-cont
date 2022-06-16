@@ -77,10 +77,17 @@
                         <div class="table-responsive">
                             <table id="voluhistorimagna" class="voluhistori {{ $class }}" style="width:100%">
                                 <thead>
-                                    <tr>
-                                        <th style="background-color:rgb(200, 245, 222)" colspan="9"
-                                            class="text-center align-middle">MAGNA</th>
-                                    </tr>
+                                    @if ($infogas['PrecCompDesc'] == 1)
+                                        <tr>
+                                            <th style="background-color:rgb(200, 245, 222)" colspan="10"
+                                                class="text-center align-middle">MAGNA</th>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <th style="background-color:rgb(200, 245, 222)" colspan="9"
+                                                class="text-center align-middle">MAGNA</th>
+                                        </tr>
+                                    @endif
 
                                     {{-- Columnas --}}
                                     <tr>
@@ -91,9 +98,13 @@
                                         <th style="background-color:rgb(200, 245, 222)"
                                             class="text-center align-middle">Compras</th>
                                         <th style="background-color:rgb(200, 245, 222)"
-                                            class="text-center align-middle">Litros vendidos</th>
-                                        <th style="background-color:rgb(200, 245, 222)"
                                             class="text-center align-middle">Precio de compra</th>
+                                        @if ($infogas['PrecCompDesc'] == 1)
+                                            <th style="background-color:rgb(200, 245, 222)"
+                                                class="text-center align-middle">Precio de compra (Con descuento)</th>
+                                        @endif
+                                        <th style="background-color:rgb(200, 245, 222)"
+                                            class="text-center align-middle">Litros vendidos</th>
                                         <th style="background-color:rgb(200, 245, 222)"
                                             class="text-center align-middle">Precio venta</th>
                                         <th style="background-color:rgb(200, 245, 222)"
@@ -125,10 +136,17 @@
                             <table id="voluhistoripremium" class="voluhistori {{ $class }}" style="width:100%">
                                 <thead>
                                     {{-- Encabezado/Titulo --}}
-                                    <tr>
-                                        <th style="background-color:rgb(255, 209, 209)" colspan="9"
-                                            class="text-center align-middle">PREMIUM</th>
-                                    </tr>
+                                    @if ($infogas['PrecCompDesc'] == 1)
+                                        <tr>
+                                            <th style="background-color:rgb(255, 209, 209)" colspan="10"
+                                                class="text-center align-middle">PREMIUM</th>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <th style="background-color:rgb(255, 209, 209)" colspan="9"
+                                                class="text-center align-middle">PREMIUM</th>
+                                        </tr>
+                                    @endif
 
                                     {{-- Columnas --}}
                                     <tr>
@@ -139,9 +157,13 @@
                                         <th style="background-color:rgb(255, 209, 209)"
                                             class="text-center align-middle">Compras</th>
                                         <th style="background-color:rgb(255, 209, 209)"
-                                            class="text-center align-middle">Litros vendidos</th>
-                                        <th style="background-color:rgb(255, 209, 209)"
                                             class="text-center align-middle">Precio de compra</th>
+                                        @if ($infogas['PrecCompDesc'] == 1)
+                                            <th style="background-color:rgb(255, 209, 209)"
+                                                class="text-center align-middle">Precio de compra (Con descuento)</th>
+                                        @endif
+                                        <th style="background-color:rgb(255, 209, 209)"
+                                            class="text-center align-middle">Litros vendidos</th>
                                         <th style="background-color:rgb(255, 209, 209)"
                                             class="text-center align-middle">Precio venta</th>
                                         <th style="background-color:rgb(255, 209, 209)"
@@ -172,10 +194,17 @@
                         <div class="table-responsive">
                             <table id="voluhistoridiesel" class="voluhistori {{ $class }}" style="width:100%">
                                 <thead>
-                                    <tr>
-                                        <th style="background-color:rgb(205, 205, 205)" colspan="9"
-                                            class="text-center align-middle">DIESEL</th>
-                                    </tr>
+                                    @if ($infogas['PrecCompDesc'] == 1)
+                                        <tr>
+                                            <th style="background-color:rgb(205, 205, 205)" colspan="10"
+                                                class="text-center align-middle">DIESEL</th>
+                                        </tr>
+                                    @else
+                                        <tr>
+                                            <th style="background-color:rgb(205, 205, 205)" colspan="9"
+                                                class="text-center align-middle">DIESEL</th>
+                                        </tr>
+                                    @endif
 
                                     {{-- Columnas --}}
                                     <tr>
@@ -186,9 +215,13 @@
                                         <th style="background-color:rgb(205, 205, 205)"
                                             class="text-center align-middle">Compras</th>
                                         <th style="background-color:rgb(205, 205, 205)"
-                                            class="text-center align-middle">Litros vendidos</th>
-                                        <th style="background-color:rgb(205, 205, 205)"
                                             class="text-center align-middle">Precio de compra</th>
+                                        @if ($infogas['PrecCompDesc'] == 1)
+                                            <th style="background-color:rgb(205, 205, 205)"
+                                                class="text-center align-middle">Precio de compra (Con descuento)</th>
+                                        @endif
+                                        <th style="background-color:rgb(205, 205, 205)"
+                                            class="text-center align-middle">Litros vendidos</th>
                                         <th style="background-color:rgb(205, 205, 205)"
                                             class="text-center align-middle">Precio venta</th>
                                         <th style="background-color:rgb(205, 205, 205)"

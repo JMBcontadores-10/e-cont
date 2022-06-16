@@ -89,14 +89,18 @@ class Volumetrico extends Component
     {
         //Condicional para verificar que las fechas estan puestas
         if (!empty($this->fechainic) && !empty($this->fechafin)) {
+
             //Almacenamos la consulta de todos los volumetricos para realizar el filtro
-            if(!empty($this->sucursal)){
+            if (!empty($this->sucursal)) {
                 $historico = VolumetricoModel::where('rfc', $this->sucursal)
-                ->get()->first();
-            }else{
+                    ->get()->first();
+            } else {
                 $historico = VolumetricoModel::where('rfc', $this->rfcEmpresa)
-                ->get()->first();
+                    ->get()->first();
             }
+
+            //Obtenemos las mermas
+
 
             //Separamos los datos por combustibles
 
@@ -122,11 +126,20 @@ class Volumetrico extends Component
                         //Compra
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.CompraM'] . '</td>';
 
-                        //Lit. Vendidos
-                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.LitVendM'] . '</td>';
-
                         //Prec. Compra
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.PrecCompM'] . '</td>';
+
+                        //Condicional para saber si la empresa cuenta con compra con descuento
+                        if ($this->infogas['PrecCompDesc'] == 1 && !empty($historico['volumetrico.' . $i . '.CompraDescM'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.CompraDescM'] . '</td>';
+                        } elseif ($this->infogas['PrecCompDesc'] == 1 && empty($historico['volumetrico.' . $i . '.CompraDescM'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricomagna .= '<td> 0 </td>';
+                        }
+
+                        //Lit. Vendidos
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.LitVendM'] . '</td>';
 
                         //Prec. Venta
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.PrecVentM'] . '</td>';
@@ -137,8 +150,14 @@ class Volumetrico extends Component
                         //Inv. Determinado
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.InvDeterM'] . '</td>';
 
-                        //Merma
-                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.MermaM'] . '</td>';
+                        //Condicional para saber si hubi cambio de precio
+                        if (!empty($historico['volumetrico.' . $i . '-C.Fecha'])) {
+                            //Merma
+                            $volumetricomagna .= '<td data-tableexport-display="none">' . $historico['volumetrico.' . $i . '.MermaM'] . '</td>';
+                        } else {
+                            //Merma
+                            $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '.MermaM'] . '</td>';
+                        }
 
                         //Alamcenamos los datos en el arreglo
                         $rowvolumetricomagna[] =  '<tr>' . $volumetricomagna . '</tr>';
@@ -160,11 +179,20 @@ class Volumetrico extends Component
                         //Compra
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.CompraM'] . '</td>';
 
-                        //Lit. Vendidos
-                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.LitVendM'] . '</td>';
-
                         //Prec. Compra 
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecCompM'] . '</td>';
+
+                        //Condicional para saber si la empresa cuenta con compra con descuento
+                        if ($this->infogas['PrecCompDesc'] == 1 && !empty($historico['volumetrico.' . $i . '-C.CompraDescM'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.CompraDescM'] . '</td>';
+                        } elseif ($this->infogas['PrecCompDesc'] == 1 && empty($historico['volumetrico.' . $i . '-C.CompraDescM'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricomagna .= '<td> 0 </td>';
+                        }
+
+                        //Lit. Vendidos
+                        $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.LitVendM'] . '</td>';
 
                         //Prec. Venta
                         $volumetricomagna .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecVentM'] . '</td>';
@@ -211,11 +239,20 @@ class Volumetrico extends Component
                         //Compra
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.CompraP'] . '</td>';
 
-                        //Lit. Vendidos
-                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.LitVendP'] . '</td>';
-
                         //Prec. Compra
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.PrecCompP'] . '</td>';
+
+                        //Condicional para saber si la empresa cuenta con compra con descuento
+                        if ($this->infogas['PrecCompDesc'] == 1 && !empty($historico['volumetrico.' . $i . '.CompraDescP'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.CompraDescP'] . '</td>';
+                        } elseif ($this->infogas['PrecCompDesc'] == 1 && empty($historico['volumetrico.' . $i . '.CompraDescP'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricopremium .= '<td> 0 </td>';
+                        }
+
+                        //Lit. Vendidos
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.LitVendP'] . '</td>';
 
                         //Prec. Venta
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.PrecVentP'] . '</td>';
@@ -226,8 +263,14 @@ class Volumetrico extends Component
                         //Inv. Determinado
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.InvDeterP'] . '</td>';
 
-                        //Merma
-                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.MermaP'] . '</td>';
+                        //Condicional para saber si hubi cambio de precio
+                        if (!empty($historico['volumetrico.' . $i . '-C.Fecha'])) {
+                            //Merma
+                            $volumetricopremium .= '<td data-tableexport-display="none">' . $historico['volumetrico.' . $i . '.MermaP'] . '</td>';
+                        } else {
+                            //Merma
+                            $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '.MermaP'] . '</td>';
+                        }
 
                         //Alamcenamos los datos en el arreglo
                         $rowvolumetricopremium[] =  '<tr>' . $volumetricopremium . '</tr>';
@@ -249,11 +292,20 @@ class Volumetrico extends Component
                         //Compra
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.CompraP'] . '</td>';
 
+                        //Prec. Compra
+                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecCompP'] . '</td>';
+
+                        //Condicional para saber si la empresa cuenta con compra con descuento
+                        if ($this->infogas['PrecCompDesc'] == 1 && !empty($historico['volumetrico.' . $i . '-C.CompraDescP'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.CompraDescP'] . '</td>';
+                        } elseif ($this->infogas['PrecCompDesc'] == 1 && empty($historico['volumetrico.' . $i . '-C.CompraDescP'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricopremium .= '<td> 0 </td>';
+                        }
+
                         //Lit. Vendidos
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.LitVendP'] . '</td>';
-
-                        //Prec. Venta
-                        $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecCompP'] . '</td>';
 
                         //Prec. Venta
                         $volumetricopremium .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecVentP'] . '</td>';
@@ -300,11 +352,20 @@ class Volumetrico extends Component
                         //Compra
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.CompraD'] . '</td>';
 
+                        //Prec. Compra
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.PrecCompD'] . '</td>';
+
+                        //Condicional para saber si la empresa cuenta con compra con descuento
+                        if ($this->infogas['PrecCompDesc'] == 1 && !empty($historico['volumetrico.' . $i . '.CompraDescD'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.CompraDescD'] . '</td>';
+                        } elseif ($this->infogas['PrecCompDesc'] == 1 && empty($historico['volumetrico.' . $i . '.CompraDescD'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricodiesel .= '<td> 0 </td>';
+                        }
+
                         //Lit. Vendidos
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.LitVendD'] . '</td>';
-
-                        //Prec. Venta
-                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.PrecCompD'] . '</td>';
 
                         //Prec. Venta
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.PrecVentD'] . '</td>';
@@ -315,8 +376,14 @@ class Volumetrico extends Component
                         //Inv. Determinado
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.InvDeterD'] . '</td>';
 
-                        //Merma
-                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.MermaD'] . '</td>';
+                        //Condicional para saber si hubi cambio de precio
+                        if (!empty($historico['volumetrico.' . $i . '-C.Fecha'])) {
+                            //Merma
+                            $volumetricodiesel .= '<td data-tableexport-display="none">' . $historico['volumetrico.' . $i . '.MermaD'] . '</td>';
+                        } else {
+                            //Merma
+                            $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '.MermaD'] . '</td>';
+                        }
 
                         //Alamcenamos los datos en el arreglo
                         $rowvolumetricodiesel[] =  '<tr>' . $volumetricodiesel . '</tr>';
@@ -338,11 +405,20 @@ class Volumetrico extends Component
                         //Compra
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.CompraD'] . '</td>';
 
+                        //Prec. Compra
+                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecCompD'] . '</td>';
+
+                        //Condicional para saber si la empresa cuenta con compra con descuento
+                        if ($this->infogas['PrecCompDesc'] == 1 && !empty($historico['volumetrico.' . $i . '-C.CompraDescD'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.CompraDescD'] . '</td>';
+                        } elseif ($this->infogas['PrecCompDesc'] == 1 && empty($historico['volumetrico.' . $i . '-C.CompraDescD'])) {
+                            //Prec. Compra (Con descuento)
+                            $volumetricodiesel .= '<td> 0 </td>';
+                        }
+
                         //Lit. Vendidos
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.LitVendD'] . '</td>';
-
-                        //Prec. Venta
-                        $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecCompD'] . '</td>';
 
                         //Prec. Venta
                         $volumetricodiesel .= '<td>' . $historico['volumetrico.' . $i . '-C.PrecVentD'] . '</td>';
