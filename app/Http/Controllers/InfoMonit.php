@@ -66,6 +66,8 @@ class InfoMonit extends Controller
             //15. RUCE750317I21
             ['rfc' => 'RUCE750317I21', 'email' => 'servicio.sanjuan@permergas.mx'],
 
+            
+            
             //CORREOS DE CONFIMACION (VERIFICAR QUE SI SALIERON LOS CORREOS)
             //Contabilidad
 
@@ -113,6 +115,56 @@ class InfoMonit extends Controller
 
             //15. RUCE750317I21
             ['rfc' => 'RUCE750317I21', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+
+
+            //CORREOS DE CONFIMACION (VERIFICAR QUE SI SALIERON LOS CORREOS)
+            //Tecnologia
+
+            //1. SGA1410217U4
+            ['rfc' => 'SGA1410217U4', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //2. AHF060131G59
+            ['rfc' => 'AHF060131G59', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //3. FGA980316918
+            ['rfc' => 'FGA980316918', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //4. PERE9308105X4
+            ['rfc' => 'PERE9308105X4', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //5. SCT150918RC9
+            ['rfc' => 'SCT150918RC9', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //6. SGX190523KA4
+            // ['rfc' => 'SGX190523KA4', 'email' => ''], PENDIENTE DE OPERACION
+
+            //7. GPA161202UG8
+            ['rfc' => 'GPA161202UG8', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //8. PEMJ7110258J3
+            ['rfc' => 'PEMJ7110258J3', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //9. VCO990603D84
+            ['rfc' => 'VCO990603D84', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //10. STR9303188X3
+            ['rfc' => 'STR9303188X3', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //11. SGX160127MC4
+            ['rfc' => 'SGX160127MC4', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //12. SGT190523QX8
+            ['rfc' => 'SGT190523QX8', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //13. SST030407D77
+            ['rfc' => 'SST030407D77J', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //14. SST030407D77
+            ['rfc' => 'SST030407D77M', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //15. RUCE750317I21
+            ['rfc' => 'RUCE750317I21', 'email' => 'tecnologia@jmbcontadores.mx'],
         ];
 
         //Bucle para enviar de forma automatica los correos
@@ -124,11 +176,14 @@ class InfoMonit extends Controller
 
                 //Condicional si el archivo existe
                 if (file_exists($file)) {
+                    //Obtenenmos la fecha de la semana pasada
+                    $semanaanterior = date('Y-m-d', strtotime('-1 week'));
+
                     //Obtenemos la fecha del dia anterior
                     $diaanterior = date('Y-m-d', strtotime('-1 day'));
 
                     $mailto = $datamail['email'];
-                    $subject = 'Reporte de facturación por clientes ' . $diaanterior;
+                    $subject = 'Reporte de facturación semanal por clientes ' . $semanaanterior . ' - ' . $diaanterior;
 
                     $content = file_get_contents($file);
                     $content = chunk_split(base64_encode($content));
@@ -566,6 +621,9 @@ class InfoMonit extends Controller
             'SST030407D77',
         ];
 
+        //Obtenenmos la fecha de la semana pasada
+        $semanaanterior = date('Y-m-d', strtotime('-1 week'));
+
         //Obtenemos la fecha del dia anterior
         $diaanterior = date('Y-m-d', strtotime('-1 day'));
 
@@ -575,7 +633,7 @@ class InfoMonit extends Controller
             //Metadato (Ordenado)
             $consulmetamonitclient = MetadataE::select('receptorRfc', 'receptorNombre',)
                 ->where('emisorRfc', $rfc)
-                ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                ->whereBetween('fechaEmision',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
                 ->groupBy('receptorRfc')
                 ->orderBy('receptorRfc', 'asc')
@@ -583,7 +641,7 @@ class InfoMonit extends Controller
 
             //Metadato (Completo)
             $consulmetamonit = MetadataE::where('emisorRfc', $rfc)
-                ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                ->whereBetween('fechaEmision',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
                 ->get();
 
@@ -662,7 +720,8 @@ class InfoMonit extends Controller
 
                 //Pasamos los datos de la tabla
                 $data = [
-                    'fechamonit' => $diaanterior,
+                    'fechainic' => $semanaanterior,
+                    'fechafin' => $diaanterior,
                     'rfcmonit' => $rfc,
                     'nommonit' => $nomclient['nombre'],
                     'infomonit' => $rowinfomonit
@@ -706,7 +765,7 @@ class InfoMonit extends Controller
                     //Consulta para obtener la informacion XML
                     $consulxmlclient = XmlE::where('Emisor.Rfc', $rfcsucur)
                         ->where('LugarExpedicion', $Clave)
-                        ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                        ->whereBetween('Fecha',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                         ->where('TipoDeComprobante', '!=', 'N')
                         ->get();
 
@@ -736,7 +795,7 @@ class InfoMonit extends Controller
                             $consulxmlinfo = XmlE::where('Emisor.Rfc', $rfcsucur)
                                 ->where('Receptor.Rfc', $datarecept['RFC'])
                                 ->where('LugarExpedicion', $Clave)
-                                ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                                ->whereBetween('Fecha',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                                 ->where('TipoDeComprobante', '!=', 'N')
                                 ->get();
 
@@ -809,7 +868,8 @@ class InfoMonit extends Controller
 
                         //Pasamos los datos de la tabla
                         $data = [
-                            'fechamonit' => $diaanterior,
+                            'fechainic' => $semanaanterior,
+                            'fechafin' => $diaanterior,
                             'rfcmonit' => $rfcsucur,
                             'nommonit' => $clavesucur['Nombre'],
                             'infomonit' => $rowinfomonit

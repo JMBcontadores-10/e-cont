@@ -70,14 +70,7 @@ class Expediacuse extends Component
     //Metodo para refrescar los datos de la vista principal
     public function Refresh()
     {
-        //Descomponemos la cadena enviada (a un arreglo)
-        $iddescompuestos = explode('&', $this->dataacuse);
-
-        //Mes
-        $Mes = $iddescompuestos[2];
-
-        //Funcion para emitir el refresco
-        $this->emit('uploadcomp', $Mes);
+        $this->emit('refreshexpedi');
     }
 
     public function render()

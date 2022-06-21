@@ -67,8 +67,6 @@ class Tareanueva extends Component
             $this->periodotarea = null;
             $this->colaboradorestarea = [];
 
-            //Mandamos un notificacion
-
             //Cerramos el modal de agregar tarea
             $this->dispatchBrowserEvent('cerrartarea', []);
         } else {
@@ -154,6 +152,7 @@ class Tareanueva extends Component
 
         //Obtenenmos los datos de los usuarios (Contadores)
         $consulconta = User::where('tipo', '2')
+            ->orwhere('tipo', 'VOLU')
             ->where('nombre', '!=', null)
             ->get(['RFC', 'nombre']);
 

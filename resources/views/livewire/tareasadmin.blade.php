@@ -69,6 +69,9 @@
         @break
 
         @case('Colaboradores')
+            {{-- Importamos los componentes --}}
+            <livewire:tareacolab :mestareaadmin=$mestareaadmin :aniotareaadmin=$aniotareaadmin
+                :wire:key="'user-profile-one-'.$mestareaadmin.$aniotareaadmin" />
         @break
 
         @case('Proyecto')
@@ -201,8 +204,8 @@
                                     @else
                                         <td class="text-center align-middle">
                                             <form wire:submit.prevent="ImpuFin('{{ $empresa['RFC'] }}', 'IMSS')">
-                                                <input wire:model.defer="fechaimpu" min="2014-01-01" max={{ date('Y-m-d') }}
-                                                    type="date" required>
+                                                <input wire:model.defer="fechaimpu" min="2014-01-01"
+                                                    max={{ date('Y-m-d') }} type="date" required>
                                                 <button class="tn btn-secondary BtnVinculadas" type="submit"
                                                     wire:loading.attr="disabled">Capturar</button>
                                             </form>
@@ -222,8 +225,8 @@
                                     @elseif (!empty($empresa['DIOT']))
                                         <td class="text-center align-middle">
                                             <form wire:submit.prevent="ImpuFin('{{ $empresa['RFC'] }}', 'DIOT')">
-                                                <input wire:model.defer="fechaimpu" min="2014-01-01" max={{ date('Y-m-d') }}
-                                                    type="date" required>
+                                                <input wire:model.defer="fechaimpu" min="2014-01-01"
+                                                    max={{ date('Y-m-d') }} type="date" required>
                                                 <button class="tn btn-secondary BtnVinculadas" type="submit"
                                                     wire:loading.attr="disabled">Capturar</button>
                                             </form>
@@ -231,8 +234,8 @@
                                     @else
                                         <td class="text-center align-middle">
                                             <form wire:submit.prevent="ImpuFin('{{ $empresa['RFC'] }}', 'DIOT')">
-                                                <input wire:model.defer="fechaimpu" min="2014-01-01" max={{ date('Y-m-d') }}
-                                                    type="date" required>
+                                                <input wire:model.defer="fechaimpu" min="2014-01-01"
+                                                    max={{ date('Y-m-d') }} type="date" required>
                                                 <button class="tn btn-secondary BtnVinculadas" type="submit"
                                                     wire:loading.attr="disabled">Capturar</button>
                                             </form>
@@ -252,8 +255,8 @@
                                     @elseif (!empty($empresa['Balanza_Mensual']))
                                         <td class="text-center align-middle">
                                             <form wire:submit.prevent="ImpuFin('{{ $empresa['RFC'] }}', 'Balanza_Mensual')">
-                                                <input wire:model.defer="fechaimpu" min="2014-01-01" max={{ date('Y-m-d') }}
-                                                    type="date" required>
+                                                <input wire:model.defer="fechaimpu" min="2014-01-01"
+                                                    max={{ date('Y-m-d') }} type="date" required>
                                                 <button class="tn btn-secondary BtnVinculadas" type="submit"
                                                     wire:loading.attr="disabled">Capturar</button>
                                             </form>
@@ -261,8 +264,8 @@
                                     @else
                                         <td class="text-center align-middle">
                                             <form wire:submit.prevent="ImpuFin('{{ $empresa['RFC'] }}', 'Balanza_Mensual')">
-                                                <input wire:model.defer="fechaimpu" min="2014-01-01" max={{ date('Y-m-d') }}
-                                                    type="date" required>
+                                                <input wire:model.defer="fechaimpu" min="2014-01-01"
+                                                    max={{ date('Y-m-d') }} type="date" required>
                                                 <button class="tn btn-secondary BtnVinculadas" type="submit"
                                                     wire:loading.attr="disabled">Capturar</button>
                                             </form>

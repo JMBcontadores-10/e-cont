@@ -14,6 +14,7 @@ class Expedientefiscal extends Component
     public $anioexpe;
     public $active = 'hidden';
     public $sucursal;
+    public $idcomplem;
 
     //Variables para el formulario
     public $fechapresent;
@@ -27,21 +28,6 @@ class Expedientefiscal extends Component
         $this->anioexpe =  date("Y");
     }
 
-    //Metodo para no cerrar la fila de complementos
-    public function uploadcomp($Mes)
-    {
-        //Vamos a buscar si existe los caracteres "_C" en el mes para arrojar una funcion JS
-        $filtromes = strpos($Mes, '_C');
-
-        if ($filtromes !== false) {
-            //Aqui llamamos a la funcion JS
-            $this->dispatchBrowserEvent('addcomplement', ['idfecha' => $Mes]);
-        } else {
-            //Aqui llamamos a la funcion JS
-            $this->dispatchBrowserEvent('addcomplement', ['idfecha' => "0"]);
-        }
-    }
-
     //Metodo para enviar el identificador para subir los acuses
     public function SendDataAcuse($tipo, $empresa, $mes, $anio, $matriz, $nombre)
     {
@@ -51,63 +37,72 @@ class Expedientefiscal extends Component
         //Emitimos el resultado al componente que se encargara de subr los acuses
         $this->emit('recidataacuse', $identacuse);
 
-        //Vamos a buscar si existe los caracteres "_C" en el mes para arrojar una funcion JS
-        $filtromes = strpos($mes, '_C');
-
-        if ($filtromes !== false) {
-            //Aqui llamamos a la funcion JS
-            $this->dispatchBrowserEvent('addcomplement', ['idfecha' => $mes]);
-        } else {
-            //Aqui llamamos a la funcion JS
-            $this->dispatchBrowserEvent('addcomplement', ['idfecha' => "0"]);
-        }
+        //Almacenamos el identificador de los complementarios
+        $this->idcomplem = $mes;
     }
 
     //Metodo para capturar la fecha de presentacion
-    public function FechaPresent()
+    public function FechaPresent($Tipo, $Empresa, $Mes, $Anio)
     {
         //Condicional para saber si se selecciono una fecha
         if (!empty($this->fechapresent)) {
-            //Descomponemos los valores para alamcenar en la base de datos
-            $dataexpdecom = explode("-", $this->dataregistr);
-
-            //Obtenemos los datos del arreglo creado
-            //Tipo
-            $Tipo = $dataexpdecom[0];
-
-            //Empresa
-            $Empresa = $dataexpdecom[1];
-
-            //Mes
-            $Mes = $dataexpdecom[2];
-
-            //Año
-            $Año = $dataexpdecom[3];
-
             //Lo alamacenamos en la base de datos
             ExpedFiscal::where('rfc', $Empresa)
                 ->update([
-                    'ExpedFisc.' . $Año . '.' . $Tipo . '.' . $Mes . '.Declaracion' => $this->fechapresent,
+                    'ExpedFisc.' . $Anio . '.' . $Tipo . '.' . $Mes . '.Declaracion' => $this->fechapresent,
                 ], ['upsert' => true]);
 
             //Limpiamos los el registro de la fecha de presentacio
             $this->fechapresent = null;
 
-            //Vamos a buscar si existe los caracteres "_C" en el mes para arrojar una funcion JS
-            $filtromes = strpos($Mes, '_C');
+            //Descomponesmos la cadena enviada (a un arreglo)
+            $mesdescompuesto = explode('_', $Mes);
 
-            if ($filtromes !== false) {
-                //Aqui llamamos a la funcion JS
-                $this->dispatchBrowserEvent('addcomplement', ['idfecha' => $Mes]);
-            } else {
-                //Aqui llamamos a la funcion JS
-                $this->dispatchBrowserEvent('addcomplement', ['idfecha' => "0"]);
-            }
+            //Emitimos una accion de JS para no cerrar los complementarios
+            $this->dispatchBrowserEvent('noclosecomple', ['Mes' => $mesdescompuesto[0], 'TipoComp' => $mesdescompuesto[2] ?? $mesdescompuesto[1] ?? ""]);
         }
     }
 
     public function render()
     {
+        //Victor
+        //SUPER SERVICIO TOLUCA, SA DE CV (JET/MATLAZINCAS)
+        $InfoUser = User::where('RFC', 'SST030407D77');
+        $InfoUser->update([
+            'Sucursales' => null
+        ], ['upsert' => true]);
+
+        $InfoUser->update([
+            'Sucursales' => [
+                [
+                    'RFC' => 'SST030407D77J',
+                    'Nombre' => 'JET',
+                    'Clave' => '50140',
+                    'ImptoFederal' => 1,
+                    'ImptoRemuneracion' => 1,
+                    'IMSS' => 1,
+                    'DIOT' => 1,
+                    'BalanMensual' => 1,
+                ],
+                [
+                    'RFC' => 'SST030407D77M',
+                    'Nombre' => 'MATLAZINCAS',
+                    'Clave' => '50040',
+                    'IMSS' => 1,
+                ]
+            ],
+        ], ['upsert' => true]);
+
+
+        //Abrimos los complementarios en caso de que se haya seleccionado uno
+        if (!empty($this->idcomplem)) {
+            //Descomponesmos la cadena enviada (a un arreglo)
+            $mesdescompuesto = explode('_', $this->idcomplem);
+
+            //Emitimos una accion de JS para mantener los complementarios abiertos
+            $this->dispatchBrowserEvent('noclosecomple', ['Mes' => $mesdescompuesto[0], 'TipoComp' => $mesdescompuesto[2] ?? $mesdescompuesto[1] ?? ""]);
+        }
+
         //Condicional para saber si se selecciono una empresa ara mostras los elementos de la tabla
         if (!empty($this->rfcEmpresa)) {
             $this->active = null; //Escondemos los elementos cuando no se selecciono una empresa
