@@ -65,35 +65,6 @@ class Expedientefiscal extends Component
 
     public function render()
     {
-        //Victor
-        //SUPER SERVICIO TOLUCA, SA DE CV (JET/MATLAZINCAS)
-        $InfoUser = User::where('RFC', 'SST030407D77');
-        $InfoUser->update([
-            'Sucursales' => null
-        ], ['upsert' => true]);
-
-        $InfoUser->update([
-            'Sucursales' => [
-                [
-                    'RFC' => 'SST030407D77J',
-                    'Nombre' => 'JET',
-                    'Clave' => '50140',
-                    'ImptoFederal' => 1,
-                    'ImptoRemuneracion' => 1,
-                    'IMSS' => 1,
-                    'DIOT' => 1,
-                    'BalanMensual' => 1,
-                ],
-                [
-                    'RFC' => 'SST030407D77M',
-                    'Nombre' => 'MATLAZINCAS',
-                    'Clave' => '50040',
-                    'IMSS' => 1,
-                ]
-            ],
-        ], ['upsert' => true]);
-
-
         //Abrimos los complementarios en caso de que se haya seleccionado uno
         if (!empty($this->idcomplem)) {
             //Descomponesmos la cadena enviada (a un arreglo)

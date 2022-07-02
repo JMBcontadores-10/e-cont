@@ -7,28 +7,12 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\Cheques;
 
-class Tareasadmin extends Component
+class Tareaproyect extends Component
 {
-    //Variables
+    //Variable para la captura de impuestos
     public $mestareaadmin;
     public $aniotareaadmin;
-    public $avancetareaadmin;
-    public $departament;
-    public $active = "hidden";
-
-    //Variable para la captura de impuestos
     public $fechaimpu;
-
-    protected $listeners = [
-        'tareaselect' => 'tareaselect',
-    ];
-
-    //Metodo para mostrar el modal con el movimiento seleccionado de cheques y transferencias
-    public function tareaselect($data)
-    {
-        //Accedemos a la seccion de tareas
-        $this->avancetareaadmin = $data['seccion'];
-    }
 
     //Metodo para marcar un impuesto finalizado
     public function ImpuFin($rfc, $tipo)
@@ -45,19 +29,6 @@ class Tareasadmin extends Component
 
         //Limpiamos el datos de fecha
         $this->fechaimpu = null;
-    }
-
-    public function mount()
-    {
-        //Alamcenamos la fecha actual en variables
-        $this->mestareaadmin = date('m');
-        $this->aniotareaadmin = date('Y');
-
-        //Almacenamos el avance de la tarea en variables
-        $this->avancetareaadmin = 'Departamento';
-
-        //Almacenamos el avance de la tarea en variables
-        $this->departament = 'Contabilidad';
     }
 
     public function render()
@@ -116,32 +87,7 @@ class Tareasadmin extends Component
             $emp = '';
         }
 
-        //Mostramos los departamentos
-        if ($this->avancetareaadmin == 'Departamento') {
-            $this->active = null;
-        } else {
-            $this->active = 'hidden';
-        }
 
-        //Arreglo de los meses
-        $meses = array(
-            '01' => 'Enero',
-            '02' => 'Febrero',
-            '03' => 'Marzo',
-            '04' => 'Abril',
-            '05' => 'Mayo',
-            '06' => 'Junio',
-            '07' => 'Julio',
-            '08' => 'Agosto',
-            '09' => 'Septiembre',
-            '10' => 'Octubre',
-            '11' => 'Noviembre',
-            '12' => 'Diciembre'
-        );
-
-        //Arreglo (rango) del año actual al 2014
-        $anios = range(2014, date('Y'));
-
-        return view('livewire.tareasadmin', ['meses' => $meses, 'anios' => $anios, 'empresas' => $emp]);
+        return view('livewire.tareaproyect', ['empresas' => $emp]);
     }
 }

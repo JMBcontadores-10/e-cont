@@ -19,7 +19,7 @@
                 </div>
                 {{-- Cuerpo del modal --}}
                 <div class="modal-body">
-                    <form wire:submit.prevent="NuevaTarea">
+                    <form id="NuevaTarea" wire:submit.prevent="NuevaTarea">
                         {{-- Nombre de la tarea --}}
                         <div class="form-group">
                             <label for="nombre">*Nombre de la tarea</label>
@@ -84,8 +84,7 @@
 
                             <div class="row">
                                 <div class="col-8">
-                                    <select class="form-control" id="colaboradores"
-                                        wire:model.defer="colaboradortarea">
+                                    <select class="form-control" id="colaboradores" wire:model.defer="colaboradortarea">
                                         <option value="">Seleccione un colaborador</option>
                                         @foreach ($contadores as $contador)
                                             <option
@@ -123,8 +122,7 @@
 
                             <div class="row">
                                 <div class="col-8">
-                                    <select class="form-control" id="colaboradores"
-                                        wire:model.defer="colaboradortarea">
+                                    <select class="form-control" id="colaboradores" wire:model.defer="colaboradortarea">
                                         <option value="">Seleccione un colaborador</option>
                                         @foreach ($colaboradorestarea as $colaboradores)
                                             <option value="{{ $colaboradores }}">
@@ -151,7 +149,7 @@
                         </div>
 
                         {{-- Establecemos el periodo --}}
-                        <div id="periodogroup" class="form-group" hidden>
+                        <div class="form-group periodogroup" hidden>
                             <label for="periodo">Periodo</label>
                             <select class="form-control" id="periodo" wire:model.defer="periodotarea">
                                 <option value="">Seleccione una opcion</option>
@@ -161,6 +159,11 @@
                                 <option value="Bimestral">Bimestral</option>
                                 <option value="Anual">Anual</option>
                             </select>
+                        </div>
+
+                        {{-- Mensaje --}}
+                        <div class="form-group periodogroup" hidden>
+                            <label>Al seleccionar un periodo este se genera de forma automatica en el periodo</label>
                         </div>
 
                         {{-- Boton para enviar y cancelar --}}

@@ -252,25 +252,16 @@
                                     data-toggle="tooltip" data-placement="top" title="Chat"><i
                                         class="ficon bx bx-chat"></i></a></li>
 
-                            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link"
-                                    data-toggle="tooltip" data-placement="top" title="Todo"><i
-                                        class="ficon bx bx-check-circle"></i></a></li>
+                            @if (!empty(auth()->user()->tipo))
+                                <livewire:notifitarea-section />
 
-                            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link"
-                                    data-toggle="tooltip" data-placement="top" title="Calendario"><i
-                                        class="ficon bx bx-calendar-alt"></i></a></li>
-                        </ul>
+                                <li class="nav-item d-none d-lg-block" data-backdrop="static" data-keyboard="false"
+                                    data-toggle="modal" data-target="#calcolabotarea"><a class="nav-link"
+                                        data-toggle="tooltip" data-placement="top" title="Calendario"><i
+                                            class="ficon bx bx-calendar-alt"></i></a></li>
 
-                        <ul class="nav navbar-nav">
-                            <li class="nav-item d-none d-lg-block"><a class="nav-link bookmark-star"><i
-                                        class="ficon bx bx-star warning"></i></a>
-                                <div class="bookmark-input search-input">
-                                    <div class="bookmark-input-icon"><i class="bx bx-search primary"></i></div>
-                                    <input class="form-control input" type="text" placeholder="Explorar..." tabindex="0"
-                                        data-search="template-search">
-                                    <ul class="search-list"></ul>
-                                </div>
-                            </li>
+                                <livewire:tarearanking-section />
+                            @endif
                         </ul>
                     </div>
 
@@ -318,9 +309,9 @@
                                         onclick="alerta()"><i class="bx bx-user mr-50"></i> Editar
                                         Perfil</a><a class="dropdown-item" onclick="alerta()"><i
                                             class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item"
-                                        onclick="alerta()"><i class="bx bx-check-square mr-50"></i>Tareas</a><a
-                                        class="dropdown-item" onclick="alerta()"><i
-                                            class="bx bx-message mr-50"></i>Chats</a>
+                                        href="{{ url('tareas') }}"><i
+                                            class="bx bx-check-square mr-50"></i>Tareas</a><a class="dropdown-item"
+                                        onclick="alerta()"><i class="bx bx-message mr-50"></i>Chats</a>
                                     <div class="dropdown-divider mb-0"></div>
                                     <form action="{{ route('logout') }}" method="POST">
                                         @csrf
@@ -383,18 +374,19 @@
                                         class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
                                         data-i18n="Analytics">Nóminas</span></a>
                             </li>
-                            <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()" href=""><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Expediente Digital</span></a>
+                            <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"
+                                    href=""><i class="bx bx-right-arrow-alt"></i><span
+                                        class="menu-item text-truncate" data-i18n="Analytics">Expediente
+                                        Digital</span></a>
                             </li>
                         @endif
 
 
                         {{-- Modulo solo para gasolinerias --}}
                         @if (auth()->user()->gas == 1 || auth()->user()->tipo)
-                            <li id="volumetrico"><a class="d-flex align-items-center" href="{{ 'volumetrico' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Control
+                            <li id="volumetrico"><a class="d-flex align-items-center"
+                                    href="{{ 'volumetrico' }}"><i class="bx bx-right-arrow-alt"></i><span
+                                        class="menu-item text-truncate" data-i18n="Analytics">Control
                                         Volumétrico</span></a>
                             </li>
                         @endif
@@ -405,9 +397,9 @@
                                         class="menu-item text-truncate" data-i18n="Analytics">Expediente
                                         Fiscal</span></a>
                             </li>
-                            <li id="descargas"><a class="d-flex align-items-center" href="{{ url('descargas') }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Descargas</span></a>
+                            <li id="descargas"><a class="d-flex align-items-center"
+                                    href="{{ url('descargas') }}"><i class="bx bx-right-arrow-alt"></i><span
+                                        class="menu-item text-truncate" data-i18n="Analytics">Descargas</span></a>
                             </li>
                             <li id="auditoria"><a class="d-flex align-items-center" href="{{ 'auditoria' }}"><i
                                         class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
@@ -1018,7 +1010,8 @@
             <div class="card-footer border-top p-1">
                 <form class="d-flex" onsubmit="widgetChatMessageDemo();" action="javascript:void(0);">
                     <input type="text" class="form-control chat-message-demo mr-75" placeholder="Type here...">
-                    <button type="submit" class="btn btn-primary glow px-1"><i class="bx bx-paper-plane"></i></button>
+                    <button type="submit" class="btn btn-primary glow px-1"><i
+                            class="bx bx-paper-plane"></i></button>
                 </form>
             </div>
         </div>
@@ -1039,10 +1032,13 @@
   </footer> --}}
     <!-- END: Footer-->
 
-
+    {{-- Calendario de actividades --}}
+    <livewire:tareacal />
 
 </body>
 <livewire:notification-content>
+    <livewire:notifitarea-content />
+    <livewire:tarearanking-content />
     <footer style="margin-top: 20px;">
         {{-- <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |
       JMB Contadores</p> --}}

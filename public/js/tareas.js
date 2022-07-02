@@ -5,10 +5,19 @@ $("#frecuente").change(function () {
 
       //Condicional para mostrar el input de periodo
       if (frecuencia == "Si") {
-            $("#periodogroup").attr('hidden', false);
+            $(".periodogroup").attr('hidden', false);
       } else {
-            $("#periodogroup").attr('hidden', true);
+            $(".periodogroup").attr('hidden', true);
       }
+});
+
+//Acciones al cerrar el modal de nueva tarea
+$(".closetarea").click(function () {
+      //Reiniciamos el formulario
+      $('#NuevaTarea').trigger("reset");
+
+      //Escondemos la seccion de frecuencia
+      $(".periodogroup").attr("hidden", true);
 });
 
 //Funciones al cargar la pagina

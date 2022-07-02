@@ -5,6 +5,8 @@ namespace App\Http\Livewire;
 use App\Models\Notificaciones;
 use App\Models\Tareas;
 use App\Models\User;
+use DateTime;
+use DateTimeZone;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
@@ -34,27 +36,34 @@ class Tareanueva extends Component
                 'colaboradorestarea' => 'required',
             ]);
 
-            //Transformamos a los colaboradores en un array
-            foreach ($this->colaboradorestarea as $colaborador) {
-                $colaborador = json_decode($colaborador);
-                $colaboradores[] = $colaborador;
-            }
-
             //Obtenemos los datos de proyecto
             $infoproyect = json_decode($this->proyectotarea);
 
-            //Crear nueva tarea
-            Tareas::create([
-                'nombre' => $this->nombretarea,
-                'descripcion' => $this->descripciontarea,
-                'nomproyecto' => $infoproyect->Nombre ?? null,
-                'rfcproyecto' => $infoproyect->RFC ?? null,
-                'fechaentrega' => $this->fechaentregatarea,
-                'prioridad' => $this->prioridadtarea,
-                'frecuencia' => $this->frecuentetarea,
-                'periodo' => $this->periodotarea,
-                'colaboradores' => $colaboradores,
-            ]);
+            //Transformamos a los colaboradores en un array
+            foreach ($this->colaboradorestarea as $colaborador) {
+                $colaborador = json_decode($colaborador);
+                $dtz = new DateTimeZone("America/Mexico_City");
+                $dt = new DateTime("now", $dtz);
+
+                //Crear nueva tarea
+                Tareas::create([
+                    'id' => $this->nombretarea . '&' . $dt->format('Y-m-d H:i:s'),
+                    'nombreadmin' => auth()->user()->nombre,
+                    'rfcadmin' => auth()->user()->RFC,
+                    'nombre' => $this->nombretarea,
+                    'descripcion' => $this->descripciontarea,
+                    'nomproyecto' => $infoproyect->Nombre ?? 'Sin proyecto',
+                    'rfcproyecto' => $infoproyect->RFC ?? 'Sin proyecto',
+                    'fechaentrega' => $this->fechaentregatarea,
+                    'prioridad' => $this->prioridadtarea,
+                    'frecuencia' => $this->frecuentetarea,
+                    'periodo' => $this->periodotarea,
+                    'asigntarea' => date('Y-m-d'),
+                    'rfccolaborador' => $colaborador->RFC,
+                    'nomcolaborador' => $colaborador->Nombre,
+                    'estado' => '0',
+                ]);
+            }
 
             //Limpiamos las variables
             $this->nombretarea = null;
@@ -66,6 +75,9 @@ class Tareanueva extends Component
             $this->frecuentetarea = null;
             $this->periodotarea = null;
             $this->colaboradorestarea = [];
+
+            //Emitimos el refresco de la vista colaboradores
+            $this->emit('tareacolabrefresh');
 
             //Cerramos el modal de agregar tarea
             $this->dispatchBrowserEvent('cerrartarea', []);
@@ -134,22 +146,37 @@ class Tareanueva extends Component
         //Obtenemos las empresas del usuario (Administrador)
         if (!empty(auth()->user()->admin)) {
             $e = array();
-            $largo = sizeof(auth()->user()->empresas);
-            for ($i = 0; $i < $largo; $i++) {
-                $rfc = auth()->user()->empresas[$i];
 
-                $e = DB::Table('clientes')
-                    ->select('RFC', 'nombre')
-                    ->where('RFC', $rfc)
-                    ->get();
+            $e = DB::Table('clientes')
+                ->where('RFC', '!=', 'ADMINISTRADOR')
+                ->whereNull('tipo')
+                ->whereNull('TipoSE')
+                ->get();
 
-                foreach ($e as $em)
+            foreach ($e as $em) {
+                //Condicional para saber si existe sucursales a las empresas
+                if (!empty($em['Sucursales'])) {
+                    foreach ($em['Sucursales'] as $sucursal) {
+                        $emp[] = array(
+                            'RFC' => $sucursal['RFC'],
+                            'Nombre' => $em['nombre'] . ' ' . $sucursal['Nombre'],
+                            'Impuestos_Federales' => $sucursal['ImptoFederal'] ?? null,
+                            'Impuestos_Remuneraciones' => $sucursal['ImptoRemuneracion'] ?? null,
+                            'Impuestos_Hospedaje' => $sucursal['ImptoHospedaje'] ?? null,
+                            'IMSS' => $sucursal['IMSS'] ?? null,
+                            'DIOT' => $sucursal['DIOT'] ?? null,
+                            'Balanza_Mensual' => $sucursal['BalanMensual'] ?? null,
+                        );
+                    }
+                } else {
                     $emp[] = array('RFC' => $em['RFC'], 'Nombre' => $em['nombre']);
+                }
             }
         } else {
             $emp = '';
         }
 
+        
         //Obtenenmos los datos de los usuarios (Contadores)
         $consulconta = User::where('tipo', '2')
             ->orwhere('tipo', 'VOLU')

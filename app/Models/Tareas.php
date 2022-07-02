@@ -12,6 +12,9 @@ class Tareas extends Model
     protected $primaryKey = '_id';
 
     protected $fillable = [
+        'id',
+        'nombreadmin',
+        'rfcadmin',
         'nombre',
         'descripcion',
         'nomproyecto',
@@ -20,7 +23,10 @@ class Tareas extends Model
         'prioridad',
         'frecuencia',
         'periodo',
-        'colaboradores',
+        'asigntarea',
+        'rfccolaborador',
+        'nomcolaborador',
+        'estado',
     ];
 
     protected $collection = 'tareas';

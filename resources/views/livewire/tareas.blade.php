@@ -13,6 +13,7 @@
                         <livewire:tareasadmin />
                     @else
                         {{-- Seccion de usuario --}}
+                        <livewire:tareacolab />
                     @endif
                 </section>
             </div>

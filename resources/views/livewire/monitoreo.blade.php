@@ -161,7 +161,8 @@
                                 <table id="factuhisto" class="monihora {{ $class }}" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th colspan="4" class="text-center align-middle">Facturación por hora</th>
+                                            <th colspan="4" class="text-center align-middle">Facturación por hora
+                                            </th>
                                             {{-- Columnas --}}
                                         <tr>
                                             <th class="text-center align-middle">Hora</th>

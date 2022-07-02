@@ -114,8 +114,8 @@ Route::get('/descargasAutomaticas/{valor}', [App\Http\Controllers\DescargasAutom
 
 
 // Route::get('/descargasAutomaticas1', [App\Http\Livewire\DescargasAutomaticas::class, 'index'])->name('descargasAutomaticas1');
-Route::get('/auditoria',Auditoria::class)->name('auditoria');
-Route::get('/nominas',Nominas::class)->name('nominas');
+Route::get('/auditoria', Auditoria::class)->name('auditoria');
+Route::get('/nominas', Nominas::class)->name('nominas');
 
 
 
@@ -141,5 +141,7 @@ Route::get('/infomonitpdf', [App\Http\Controllers\InfoMonit::class, 'MakePDFMoni
 Route::get('/expedifiscal', Expedientefiscal::class)->name('expedifiscal');
 //Ruta de almacenamiento de PDF (Expediente fiscal)
 Route::post('/pdfacuse/{id}', [App\Http\Controllers\UploadController::class, 'AcuseExpFisc']);
-//|Ruta de la vista de tareas
+//Ruta de la vista de tareas
 Route::get('/tareas', Tareas::class)->name('tareas');
+//Ruta para las tareas con periodos
+Route::get('/renovtareas', [App\Http\Controllers\FrecTarea::class, 'TareaPeriodo'])->name('renovtareas');
