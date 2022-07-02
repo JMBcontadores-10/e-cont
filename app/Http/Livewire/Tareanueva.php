@@ -2,7 +2,6 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Notificaciones;
 use App\Models\Tareas;
 use App\Models\User;
 use DateTime;

@@ -66,8 +66,8 @@ class InfoMonit extends Controller
             //15. RUCE750317I21
             ['rfc' => 'RUCE750317I21', 'email' => 'servicio.sanjuan@permergas.mx'],
 
-            
-            
+
+
             //CORREOS DE CONFIMACION (VERIFICAR QUE SI SALIERON LOS CORREOS)
             //Contabilidad
 
@@ -273,49 +273,75 @@ class InfoMonit extends Controller
                     $RFCSucur = $clavesucur['RFC']; //RFC
                     $Clave = $clavesucur['Clave']; //Clave
 
-                    //Consulta para obtener la informacion XML
-                    $consulxmlclient = XmlE::where('Emisor.Rfc', $rfcerror)
-                        ->where('LugarExpedicion', $Clave)
-                        ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
-                        ->where('TipoDeComprobante', '!=', 'N')
+                    //Consulta para obtener la informacion de los Metadatos
+                    $consultmetaclient = MetadataE::where('receptorRfc', $rfcerror)
+                        ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                        ->where('efecto', '!=', 'Nómina')
+                        ->where('estado', '!=', 'Cancelado')
                         ->get();
 
+                    //Arreglo para obtener la informacion de los XML
+                    $XMLEInfo = [];
+
+                    foreach ($consultmetaclient as $infometaclient) {
+                        //Consulta para obtener la informacion XML
+                        $consulxmlclient = XmlE::where('UUID', $infometaclient['_id'])
+                            ->where('LugarExpedicion', $Clave)
+                            ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                            ->where('TipoDeComprobante', '!=', 'N')
+                            ->get();
+
+                        //Ciclo para extraer los datos
+                        foreach ($consulxmlclient as $infoxmlclient) {
+                            $XMLEInfo[] = ['RFC' => $infoxmlclient['Receptor.Rfc'], 'Nombre' => $infoxmlclient['Receptor.Nombre']];
+                        }
+                    }
 
                     //Condicional para saber si existen regisitros y aprovechar los 50 correos 
-                    if (count($consulxmlclient) > 0) {
+                    if (count($XMLEInfo) > 0) {
                         //Construimos la tabla
                         //Variables de contenedor
                         $datainfomonit = "";
                         $rowinfomonit = array();
 
-                        //Obtenemos una lista de los receptores
-                        $listarecept = []; //Arreglo que contedra los RFC recibidos
-
-                        //Ciclo para extraer los datos
-                        foreach ($consulxmlclient as $infoxmlclient) {
-                            array_push($listarecept, ['RFC' => $infoxmlclient['Receptor.Rfc'], 'Nombre' => $infoxmlclient['Receptor.Nombre']]);
-                        }
-
                         //Eliminamos los datos repetidos
-                        $listareceptrfc = array_unique(array_column($listarecept, 'RFC')); //Eliminamos las columnas con RFC repetido
-                        $listarecept = array_intersect_key($listarecept, $listareceptrfc); //Comparamos el arreglo original con el arreglo filtrado
+                        $listareceptrfc = array_unique(array_column($XMLEInfo, 'RFC')); //Eliminamos las columnas con RFC repetido
+                        $listarecept = array_intersect_key($XMLEInfo, $listareceptrfc); //Comparamos el arreglo original con el arreglo filtrado
 
                         //Ciclo para pasar por todos los RFC registrados en el arreglo
                         foreach ($listarecept as $datarecept) {
-                            //Realizaremos otra consulta para obtener los totales
-                            $consulxmlinfo = XmlE::where('Emisor.Rfc', $rfcerror)
-                                ->where('Receptor.Rfc', $datarecept['RFC'])
-                                ->where('LugarExpedicion', $Clave)
-                                ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
-                                ->where('TipoDeComprobante', '!=', 'N')
+                            //Consulta para obtener la informacion de los Metadatos
+                            $consultmetaclientempre = MetadataE::where('emisorRfc', $rfcerror)
+                                ->where('receptorRfcF', $datarecept['RFC'])
+                                ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                                ->where('efecto', '!=', 'Nómina')
+                                ->where('estado', '!=', 'Cancelado')
                                 ->get();
+
+
+                            //Arreglo para obtener la informacion de los XML
+                            $XMLEInfoEmpre = [];
+
+                            foreach ($consultmetaclientempre as $infometaclientempre) {
+                                //Consulta para obtener la informacion XML
+                                $consulxmlclientempre = XmlE::where('UUID', $infometaclientempre['_id'])
+                                    ->where('LugarExpedicion', $Clave)
+                                    ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                                    ->where('TipoDeComprobante', '!=', 'N')
+                                    ->get();
+
+                                //Ciclo para extraer los datos
+                                foreach ($consulxmlclientempre as $infoxmlclientempre) {
+                                    $XMLEInfoEmpre[] = ['Total' => $infoxmlclientempre['Total'], 'Nombre' => $infoxmlclientempre['Receptor.Nombre']];
+                                }
+                            }
 
                             //Variables para obtener el total
                             $totalfactu = 0;
                             $totalmonto = 0;
 
                             //Ciclo para descomponer la consulta
-                            foreach ($consulxmlinfo as $dataxmlinfo) {
+                            foreach ($XMLEInfoEmpre as $dataxmlinfo) {
                                 $totalfactu++; //Cantidad de facturas
                                 $totalmonto += $dataxmlinfo['Total']; //Monto
 
@@ -409,6 +435,7 @@ class InfoMonit extends Controller
                 ->where('emisorRfc', $rfcerror)
                 ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
+                ->where('estado', '!=', 'Cancelado')
                 ->groupBy('receptorRfc')
                 ->orderBy('receptorRfc', 'asc')
                 ->get();
@@ -417,6 +444,7 @@ class InfoMonit extends Controller
             $consulmetamonit = MetadataE::where('emisorRfc', $rfcerror)
                 ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
+                ->where('estado', '!=', 'Cancelado')
                 ->get();
 
             //Condicional para saber si existen regisitros y aprovechar los 50 correos 
@@ -635,6 +663,7 @@ class InfoMonit extends Controller
                 ->where('emisorRfc', $rfc)
                 ->whereBetween('fechaEmision',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
+                ->where('estado', '!=', 'Cancelado')
                 ->groupBy('receptorRfc')
                 ->orderBy('receptorRfc', 'asc')
                 ->get();
@@ -643,6 +672,7 @@ class InfoMonit extends Controller
             $consulmetamonit = MetadataE::where('emisorRfc', $rfc)
                 ->whereBetween('fechaEmision',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
+                ->where('estado', '!=', 'Cancelado')
                 ->get();
 
             //Condicional para saber si existen regisitros y aprovechar los 50 correos 
@@ -762,55 +792,81 @@ class InfoMonit extends Controller
                     $RFCSucur = $clavesucur['RFC']; //RFC
                     $Clave = $clavesucur['Clave']; //Clave
 
-                    //Consulta para obtener la informacion XML
-                    $consulxmlclient = XmlE::where('Emisor.Rfc', $rfcsucur)
-                        ->where('LugarExpedicion', $Clave)
-                        ->whereBetween('Fecha',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
-                        ->where('TipoDeComprobante', '!=', 'N')
+                    //Consulta para obtener la informacion de los Metadatos
+                    $consultmetaclient = MetadataE::where('receptorRfc', $rfcsucur)
+                        ->whereBetween('fechaEmision',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                        ->where('efecto', '!=', 'Nómina')
+                        ->where('estado', '!=', 'Cancelado')
                         ->get();
 
+                    //Arreglo para obtener la informacion de los XML
+                    $XMLEInfo = [];
+
+                    foreach ($consultmetaclient as $infometaclient) {
+                        //Consulta para obtener la informacion XML
+                        $consulxmlclient = XmlE::where('UUID', $infometaclient['_id'])
+                            ->where('LugarExpedicion', $Clave)
+                            ->whereBetween('Fecha',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                            ->where('TipoDeComprobante', '!=', 'N')
+                            ->get();
+
+                        //Ciclo para extraer los datos
+                        foreach ($consulxmlclient as $infoxmlclient) {
+                            $XMLEInfo[] = ['RFC' => $infoxmlclient['Receptor.Rfc'], 'Nombre' => $infoxmlclient['Receptor.Nombre']];
+                        }
+                    }
 
                     //Condicional para saber si existen regisitros y aprovechar los 50 correos 
-                    if (count($consulxmlclient) > 0) {
+                    if (count($XMLEInfo) > 0) {
                         //Construimos la tabla
                         //Variables de contenedor
                         $datainfomonit = "";
                         $rowinfomonit = array();
 
-                        //Obtenemos una lista de los receptores
-                        $listarecept = []; //Arreglo que contedra los RFC recibidos
-
-                        //Ciclo para extraer los datos
-                        foreach ($consulxmlclient as $infoxmlclient) {
-                            array_push($listarecept, ['RFC' => $infoxmlclient['Receptor.Rfc'], 'Nombre' => $infoxmlclient['Receptor.Nombre']]);
-                        }
-
                         //Eliminamos los datos repetidos
-                        $listareceptrfc = array_unique(array_column($listarecept, 'RFC')); //Eliminamos las columnas con RFC repetido
-                        $listarecept = array_intersect_key($listarecept, $listareceptrfc); //Comparamos el arreglo original con el arreglo filtrado
+                        $listareceptrfc = array_unique(array_column($XMLEInfo, 'RFC')); //Eliminamos las columnas con RFC repetido
+                        $listarecept = array_intersect_key($XMLEInfo, $listareceptrfc); //Comparamos el arreglo original con el arreglo filtrado
 
                         //Ciclo para pasar por todos los RFC registrados en el arreglo
                         foreach ($listarecept as $datarecept) {
-                            //Realizaremos otra consulta para obtener los totales
-                            $consulxmlinfo = XmlE::where('Emisor.Rfc', $rfcsucur)
-                                ->where('Receptor.Rfc', $datarecept['RFC'])
-                                ->where('LugarExpedicion', $Clave)
-                                ->whereBetween('Fecha',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
-                                ->where('TipoDeComprobante', '!=', 'N')
+                            //Consulta para obtener la informacion de los Metadatos
+                            $consultmetaclientempre = MetadataE::where('emisorRfc', $rfcsucur)
+                                ->where('receptorRfcF', $datarecept['RFC'])
+                                ->whereBetween('fechaEmision',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                                ->where('efecto', '!=', 'Nómina')
+                                ->where('estado', '!=', 'Cancelado')
                                 ->get();
+
+
+                            //Arreglo para obtener la informacion de los XML
+                            $XMLEInfoEmpre = [];
+
+                            foreach ($consultmetaclientempre as $infometaclientempre) {
+                                //Consulta para obtener la informacion XML
+                                $consulxmlclientempre = XmlE::where('UUID', $infometaclientempre['_id'])
+                                    ->where('LugarExpedicion', $Clave)
+                                    ->whereBetween('Fecha',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                                    ->where('TipoDeComprobante', '!=', 'N')
+                                    ->get();
+
+                                //Ciclo para extraer los datos
+                                foreach ($consulxmlclientempre as $infoxmlclientempre) {
+                                    $XMLEInfoEmpre[] = ['Total' => $infoxmlclientempre['Total'], 'Nombre' => $infoxmlclientempre['Receptor.Nombre']];
+                                }
+                            }
 
                             //Variables para obtener el total
                             $totalfactu = 0;
                             $totalmonto = 0;
 
                             //Ciclo para descomponer la consulta
-                            foreach ($consulxmlinfo as $dataxmlinfo) {
+                            foreach ($XMLEInfoEmpre as $dataxmlinfo) {
                                 $totalfactu++; //Cantidad de facturas
                                 $totalmonto += $dataxmlinfo['Total']; //Monto
 
                                 //Condicional para obtener la razon solcial (A veces obtiene un registro con una razon social vacia)
-                                if (strlen($dataxmlinfo['Receptor.Nombre']) > 1) {
-                                    $nombrerecpt = $dataxmlinfo['Receptor.Nombre'];
+                                if (strlen($dataxmlinfo['Nombre']) > 1) {
+                                    $nombrerecpt = $dataxmlinfo['Nombre'];
                                 }
                             }
 
