@@ -911,19 +911,29 @@ function exportReportToPdf(empresa) {
 
 
 function DoCellData(cell, row, col, data) {}
-function DoBeforeAutotable(table, headers, rows, AutotableSettings) {}
+function DoBeforeAutotable(table, headers, rows) {}
 
-$('table').tableExport({fileName: 'E-cont Auditoria ' + empresa,
+$('table').tableExport({fileName: 'E-cont Pendientes ' + empresa,
                         type: 'pdf',
-                        jspdf: {format: 'bestfit',
+                        jspdf: {
+                        orientation: 'l',
                                 margins: {left:20, right:10, top:20, bottom:20},
                                 autotable: {styles: {overflow: 'linebreak',
                                                      cellPadding: 2,
-                                                     fontSize:12,},
+                                                     fontSize: 10,
+
+                                                     },
+
+                                              headerStyles:{ fillColor: [41, 124, 207],
+                                                fontSize: 12,},
                                             tableWidth: 'auto',
-                                            tableExport: {onBeforeAutotable: DoBeforeAutotable,
-                                                          onCellData: DoCellData}}}
+                                            tableExport: {
+
+
+                                                          }}}
                        });
+
+
 
 
 

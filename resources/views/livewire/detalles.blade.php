@@ -76,7 +76,7 @@
                             @if ($btnvinanewctiv == 1)
                                 <div class="invoice-create-btn mb-1">
                                     <button class="btn btn-secondary" data-toggle="modal"
-                                    data-target="#nuevo-cheque" wire:click="$emitTo('agregarcheque','agregar','{{json_encode($movivinc)}}')"> Vincular a nuevo
+                                    data-target="#nuevo-cheque" wire:click="$emitTo('agregarcheque','agregar','{{json_encode($movivinc)}}','{{$sumtotalfactu}}')"> Vincular a nuevo
                                         Movimiento</button>
                                 </div>
                             @else

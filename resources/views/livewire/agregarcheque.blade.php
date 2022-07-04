@@ -247,7 +247,7 @@ document.getElementById("tipo").disabled = false;
                                                 {{-- -tooltip- --}}
                                                 <label for="inputPassword4">Total factura(s):</label>
                                                 <input class="form-control" type="text" readonly name="importeT"
-                                                    value="">
+                                                    value="${{ number_format(floatval($totalfactu), 2) }}">
                                             </div>
                                         </div>
                                         <div class="form-row">

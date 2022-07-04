@@ -2,15 +2,15 @@
 
 // Excel 2000 html format
 
-function exportReportToExcel(empresa) {
+function exportReportToExcel(empresa,fechas) {
 
     var empresa = empresa
-    $('#datos').tableExport({ type: 'excel', fileName: 'E-cont Auditoria ' + empresa });
+    $('#datos').tableExport({ type: 'excel', fileName: 'E-cont Auditoria ' + empresa + fechas });
 }
 
 
 // PDF export using jsPDF only
-function exportReportToPdf(empresa) {
+function exportReportToPdf(empresa,fechas) {
     var empresa = empresa
 
 
@@ -20,7 +20,7 @@ function exportReportToPdf(empresa) {
 function DoCellData(cell, row, col, data) {}
 function DoBeforeAutotable(table, headers, rows, AutotableSettings) {}
 
-$('table').tableExport({fileName: 'E-cont Auditoria ' + empresa,
+$('table').tableExport({fileName: 'E-cont Auditoria ' + empresa + fechas,
                         type: 'pdf',
                         jspdf: {format: 'bestfit',
                                 margins: {left:20, right:10, top:20, bottom:20},

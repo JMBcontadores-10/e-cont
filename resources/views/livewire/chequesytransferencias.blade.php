@@ -27,39 +27,22 @@
     <script src="{{ asset('js/tableExport/libs/jsPDF/jspdf.umd.min.js') }}" defer></script>
     <script src="{{ asset('js/tableExport/libs/pdfmake/pdfmake.min.js') }}" defer></script>
     <script src="{{ asset('js/tableExport/libs/pdfmake/vfs_fonts.js') }}" defer></script>
+    <!-- To export arabic characters include mirza_fonts.js _instead_ of vfs_fonts.js
+<script type="text/javascript" src="libs/pdfmake/mirza_fonts.js"></script>
+-->
 
+    <!-- For a chinese font include either gbsn00lp_fonts.js or ZCOOLXiaoWei_fonts.js _instead_ of vfs_fonts.js
+<script type="text/javascript" src="libs/pdfmake/gbsn00lp_fonts.js"></script>
+-->
+
+<script src="https://unpkg.com/jspdf@latest/dist/jspdf.umd.min.js"></script>
+    <script></script>
     {{-- Contenedor --}}
     <div class="app-content content">
         <div class="content-wrapper">
             <div class="content-body">
                 <section class="invoice-list-wrapper">
-                    {{-- Boton para crear un nuevo cheque --}}
-                    <div class="invoice-create-btn mb-1">
-                        <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static"
-                            data-keyboard="false" data-target="#nuevo-cheque"
-                            class="btn btn-primary glow invoice-create">
-                            Nuevo Cheque/Transferencia
-                        </a>
-                        {{-- ------------Boton para vinculacion atomatica de pagos a PPD---------- --}}
 
-                        <button wire:click="$emitTo('vincular-pagos-automatico','refreshPagoAutomatico')"
-                            class=" btn btn-secondary " style="vertical-align:middle">
-                            <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static"
-                                data-keyboard="false" data-target="#vinculacionAutomtica">
-                                <span>Vincular pagos </span>
-                            </a>
-                        </button>
-
-                        {{-- si $estatus es igual a Pendiente y $colCheques igual o mayor a 1  muestra boton pdf --}}
-
-                        @if ($estatus == 'pendi' && count($colCheques) >= 1)
-                            &nbsp;&nbsp;
-                            <button type="button" class="btn btn-danger"
-                                onclick="exportReportToPdf('{{ $empresa }}')">
-                                <i class="fas fa-file-pdf"></i>
-                                PDF pendientes
-                            </button>
-                        @endif
 
                     </div>
 
@@ -129,6 +112,24 @@
                         @endphp
                     @endif
 
+          {{------------ recibir variables de moduilo nominas para mostrar los chques vcinculados  -------------}}
+          @if (session()->get('idnominas'))
+          {{-- <div class="alert alert-success">
+
+</div> --}}@php echo "aqui  nomina".  $nomina= Session::get('nomina'); @endphp
+
+          <script>
+              $(document).ready(function() {
+                  // alert('{{ session('id') }}');
+                  window.livewire.emit('chequesVi', '{{ Session::get('rfcnomina') }}', '{{ Session::get('idnominas') }}');
+
+              });
+          </script>
+
+
+      @endif
+
+      {{ var_dump($this->ids)}}
                     {{-- Condicional para mostrar un listado de empresas --}}
                     @empty(!$empresas)
                         <label for="inputState">Empresa: {{ $empresa }}</label>
@@ -139,6 +140,7 @@
                             $rS = 1;
                             foreach ($empresas as $fila) {
                                 echo '<option value="' . $fila[$rfc] . '">' . $fila[$rS] . '</option>';
+                                $razonSocial=$fila[$rS];
                             } ?>
                         </select>
 
@@ -177,8 +179,8 @@
                         {{-- Checkbox para buscar todos los registros --}}
                         <fieldset>
                             <div class="custom-control custom-checkbox">
-                                <input wire:model="todos" type="checkbox" class="custom-control-input bg-danger" checked
-                                    name="customCheck" id="customColorCheck4">
+                                <input wire:model="todos" type="checkbox" class="custom-control-input bg-danger"
+                                    checked name="customCheck" id="customColorCheck4">
                                 <label class="custom-control-label" for="customColorCheck4">Todos</label>
                             </div>
                         </fieldset>
@@ -233,13 +235,131 @@
                             </button>
                         </div>
                     </div>
+ <!----- Header tabla hidden  --->
+                    <table style="display:none;" data-tableexport-display="always" style="width:100%">
+                        <tr>
+<th> </th>
+                          <th >Reporte Generado</th>
+                          <th>Pendientes de la Empresa</th>
+
+                        </tr>
+                        <tr>
+                            <td >
+
+
+                            </td>
+                          <td>@php
+                            date_default_timezone_set("America/Mexico_City");
+
+setlocale(LC_ALL,"es_MX.utf8");
+echo strftime("%A %d de %B del %Y");
+
+
+//Salida: español
+                             @endphp</td>
+                          <td>{{$empresa}}</td>
+
+                        </tr>
+
+                      </table>
+<!---  fin Header tabla hidden---->
+
+<table data-tableexport-display="none" style="width:100%">
+    <tr>
+        <th ><img width="150" src="img/logo-contarapp-01.png" ></th>
+      <th >@php
+        date_default_timezone_set("America/Mexico_City");
+
+setlocale(LC_ALL,"spanish_Utf8");
+echo strftime("%A %d de %B del %Y");
+
+
+//Salida: viernes 05 de Septiembre del 2016
+         @endphp</th>
+
+
+    </tr>
+    <tr>
+    <td colspan="2" style="text-align: left"> {{-- Boton para crear un nuevo cheque --}}
+        <div class="invoice-create-btn mb-1">
+            <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static"
+                data-keyboard="false" data-target="#nuevo-cheque"
+                class="btn btn-primary glow invoice-create btn-sm">
+                Nuevo Cheque/Transferencia
+            </a>
+            {{-- ------------Boton para vinculacion atomatica de pagos a PPD---------- --}}
+
+            <button wire:click="$emitTo('vincular-pagos-automatico','refreshPagoAutomatico')"
+                class=" btn btn-secondary btn-sm " style="vertical-align:middle">
+                <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static"
+                    data-keyboard="false" data-target="#vinculacionAutomtica">
+                    <span>Vincular pagos </span>
+                </a>
+            </button>
+            {{-------------- Boton para vincular traslados ------------------------------}}
+            <button wire:click="$emitTo('vincular-traslados-automatico','refreshPagoAutomatico')"
+                class=" btn btn-secondary btn-sm " style="vertical-align:middle">
+                <a data-toggle="modal" data-controls-modal="#nuevo-cheque" data-backdrop="static"
+                    data-keyboard="false" data-target="#vinculacionAutomticaTraslados">
+                    <span> Vincular carta porte </span>
+                </a>
+            </button>
+
+            {{-- si $estatus es igual a Pendiente y $colCheques igual o mayor a 1  muestra boton pdf --}}
+
+            @if ($estatus == 'pendi' && count($colCheques) >= 1)
+                &nbsp;&nbsp;
+                <button type="button" class="btn btn-danger btn-sm"
+                    onclick="exportReportToPdf('{{ $empresa }}')">
+                    <i class="fas fa-file-pdf "></i>
+                    PDF pendientes
+                </button>
+            @endif </td>
+    </tr>
+    <tr>
+        <td colspan="2" >
+            @php
+
+if(!empty(auth()->user()->tipo)){
+
+$rfcs=auth()->user()->empresas;
+                 $pendientes = Cheques::
+                         whereIn('rfc', $rfcs)
+                        ->where('importecheque', $this->condicion, $this->importe)
+
+                        ->where('pendi', 1)
+                        ->orderBy('fecha', 'desc')
+                        ->get()->count();
+
+                        echo "!".ucfirst(auth()->user()->nombre) ."! Tienes".$pendientes."pendientes por revisar";
+
+}
+            @endphp
+
+
+
+
+        </td>
+
+
+    </tr>
+
+
+  </table>
+
+
 
                     {{-- Tabla de contenido --}}
                     <div class="table-responsive">
                         <table id="datos" class="{{ $class }}" style="width:100%">
                             {{-- Encabezado --}}
+
+
+
                             <thead>
+
                                 <tr>
+
                                     <th>
                                         <span class="align-middle">Fecha de pago</span>
                                     </th>
@@ -342,11 +462,17 @@
                                 @endphp
 
                                 <tbody>
-                                    {{-- Cuerpo de la tabla con la funcion de expancion --}}
-                                    <tr onclick="showHideRow('{{ $id }}');">
+                                    <!--- verificar si existen pagos vinculados  "CANCELADOS"-->
+                                    @php
+                                        $Pcancelado=MetadataR::where('cheques_id', $id)->where('estado','Cancelado')->first(); ///consulta a metadata_r
+                                         if($Pcancelado){   $alertPagoCancelado ="#ffcc00";}else{$alertPagoCancelado ="style='background-color: white";}
+                                    @endphp
 
-                                        {{-- Fecha --}}
+                                    {{-- Cuerpo de la tabla con la funcion de expancion --}}
+                                    <tr    onclick="showHideRow('{{ $id }}');">
+
                                         <td>
+
                                             @if ($tipoO != 'Parcialidad' && $tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                                 @php
                                                     Cheques::find($id)->update(['pendi' => 1]);
@@ -399,7 +525,15 @@
 
                                         {{-- Pagado --}}
                                         <td>
+                                            @if (session()->get('idnominas') && isset($i->$nomina) )
+
+                                            <span class="invoice-amount">${{ number_format( $i->$nomina, 2) }}</span>
+                                             @else
                                             <span class="invoice-amount">${{ number_format($importeC, 2) }}</span>
+                                            @endif
+
+
+
                                         </td>
 
                                         {{-- $ de CFDI --}}
@@ -411,19 +545,51 @@
                                         <td data-tableexport-display="none">
                                             <span class="invoice-amount">${{ $diferencia }}</span>
                                         </td>
+                                      {{-- Nominas vinculadas --}}
+                                        <td> 
+                                            @if ($tipoO == 'Nómina')
+                                                
+                                        
+                                            <i 
+                                            data-toggle="modal" wire:click="$emitTo('ver-nominas-asignadas','refreshVerNominas')"
+                                            data-target="#VerNominasAsignadas{{ $id }}" 
+                                            style="color: #3498DB;"
+                                         class=" {{ $class }} fas fa-balance-scale bx bx-git-repo-forked align-middle"></i>
+                                         @endif 
+                                        </td>
                                         {{-- - Detalles pendientes --}}
-                                        <td style="display:none;" data-tableexport-display="always">
-                                            <span class="invoice-amount">
+                                        <td style="display:none;" data-tableexport-display="always" data-tableexport-display="always">
 
+                                                <!-- se muestra funcion pendientes() -->
+                                                @php
 
-                                            </span>
+                                                    $salto = '<br>';
+                                                    $msg = '';
+                                                    $msg2 = '';
+                                                    $msg3 = '';
+                                                    if ($faltaxml == 0) {
+                                                        $msg = "- No tiene CFDI's vinculados.";
+}
+if ($nombreChequeP == 0) {
+    $msg2 = '- No tiene pdf asociado.';
+}
+if ($diferenciaP == 0) {
+    $msg3 = '- Existe diferencia con el importe total.';
+}
+
+    echo $msg .  $msg2 . $msg3 ;
+                                                @endphp
+
                                         </td>
                                         {{-- - comentarios pendientes --}}
                                         <td style="display:none;" data-tableexport-display="always">
-                                            <span class="invoice-amount">
-                                                {{ $comentario }}
+                                          @if (empty($comentario))
+                                            <span class="invoice-amount">No hay comentarios.</span>
+                                            @else
+                                            {{ $comentario }}
+                                          @endif
 
-                                            </span>
+
 
                                         </td>
 
@@ -481,7 +647,8 @@
                                                 <div>
                                                     <div class="tr">Pago</div>
                                                     @if ($nombreCheque != '0')
-                                                        <a id="rutArc" href="{{ $rutaArchivo }}" target="_blank"></a>
+                                                        <a id="rutArc" href="{{ $rutaArchivo }}"
+                                                            target="_blank"></a>
                                                         @php $class_p="content_true_pdf" @endphp
                                                     @else
                                                         @php $class_p="icons" @endphp
@@ -607,7 +774,8 @@
                                                         @else
                                                             <div id="Revisado{{ $id }}"
                                                                 onclick="ToolRevisado(this.id)">
-                                                                <div id="{{ $id }}" class="RevisadoContainer"
+                                                                <div id="{{ $id }}"
+                                                                    class="RevisadoContainer"
                                                                     onclick="MostrarRevisado(this.id)">
                                                                     <a class="icons far fa-check-circle BtnRevisado"
                                                                         style="color: green"></a>
@@ -669,7 +837,8 @@
                                                         <div class="ImpContainer">
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="checkbox"
-                                                                    wire:model="impresion" value="{{ $id }}"
+                                                                    wire:model="impresion"
+                                                                    value="{{ $id }}"
                                                                     name="s{{ $id }}"
                                                                     id="Conta{{ $id }}">
                                                                 <label class="form-check-label"
@@ -689,17 +858,17 @@
 
                                         {{-- Llamando a las vistas de otros componentes --}}
                                         <livewire:ajuste :ajusteCheque="$i" :wire:key="'user-profile-one-'.$i->_id">
-                                            <livewire:comentarios :comentarioCheque="$i"
+                                         <livewire:comentarios :comentarioCheque="$i"
                                                 :wire:key="'user-profile-two-'.$i->_id">
-                                                <livewire:relacionados :filesrelacionados=$i
+                                          <livewire:relacionados :filesrelacionados=$i
                                                     :wire:key="'user-profile-five-'.$i->_id">
-                                                    <livewire:pdfcheque :pdfcheque=$i
+                                          <livewire:pdfcheque :pdfcheque=$i
                                                         :wire:key="'user-profile-tre-'.$i->_id">
-                                                        <livewire:editar :editCheque=$i
+                                         <livewire:editar :editCheque=$i
                                                             :wire:key="'user-profile-four-'.$i->_id">
-                                                            <livewire:poliza :polizaCheque=$i
+                                         <livewire:poliza :polizaCheque=$i
                                                                 :wire:key="'user-profile-six-'.$i->_id">
-                                                                <livewire:eliminar :eliminarCheque=$i
+                                            <livewire:eliminar :eliminarCheque=$i
                                                                     :wire:key="'user-profile-seven-'.$i->_id">
 
                                                                     @if (!$i->faltaxml == 0)
@@ -707,13 +876,30 @@
                                                                             :facturaVinculada=$i
                                                                             :wire:key="'user-profile-eight-'.$i->_id">
                                                                     @endif
-
+                                 <livewire:ver-nominas-asignadas :asignadas=$i
+                                                                    :wire:key="'user-profile-kgytr-'.$i->_id">
                                     </tr>
                                 </tbody>
                             @endforeach
+
+
+
                         </table>
 
                         {{ $colCheques->links() }} {{-- Animacion de cargando --}}
+
+<!--  tabla hidden footer-->
+<table  style="width:100%">
+    <tr>
+        {{-- <img width="150" src="img/logo-contarapp-01.png" > --}}
+         <th ></th>
+      <th >e-cont.mx © @php echo date('Y')  @endphp Todos Derechos Reservados</th>
+
+
+    </tr>
+
+
+  </table>
                         {{-- -- si $colCheques es mayor a 0 - --}}
                         @if ($colCheques->count() > 0)
                             <div wire:loading>
@@ -724,6 +910,11 @@
 
                                 <i class="fas fa-mug-hot"></i>&nbsp;Cargando datos por favor espere un momento....
                             </div>
+
+
+
+
+
                         @endif
                         @livewireScripts
                     </div>
@@ -735,6 +926,9 @@
     {{-- Llamamos a las vistas de otros componentes --}}
     <livewire:agregarcheque>
         <livewire:vincular-pagos-automatico>
+        <!-- llamamos al componente Vinculacion-autmoatica-traslados -->
+        <livewire:vincular-traslados-automatico>
+
             <livewire:uploadrelacionados>
                 @include('livewire.demo')
 

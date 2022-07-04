@@ -86,11 +86,11 @@ class DescargasAutomaticas extends Controller
   public $rfcs = [/// array que contiene las empresas
     // '1',
    // 'AHF060131G59',
-// 'AHF060131G59',
+ 'AHF060131G59',
 //     'AFU1809135Y4',
 //   'AIJ161001UD1',
 //    'AAE160217C36',
-    'CDI1801116Y9',
+   // 'CDI1801116Y9',
 //    'COB191129AZ2',
 //    'DOT1911294F3',
 //     'DRO191104EZ0',
@@ -110,7 +110,7 @@ class DescargasAutomaticas extends Controller
 
 //   'MCA130429FM8',
 //    'MCA130827V4A',
-//    'MOP18022474A',
+    'MOP18022474A',
 //    'MOBJ8502058A4',
 //    'PEM180224742',
 //    'PEMJ7110258J3',
@@ -371,8 +371,8 @@ try{
               $satScraper = new SatScraper(FielSessionManager::create($credential), $gateway, $handler);
               $rutas =
               [
-                  'Emitidos',
-                  //'Recibidos'
+                  //'Emitidos',
+                  'Recibidos'
               ];
               foreach ($rutas as $r) {
                 $totaldesc=0;
@@ -385,8 +385,8 @@ try{
 
                   /// -->[EMITIDOS]<---/////
                   $query = new QueryByFilters(
-                    new DateTimeImmutable($diaX),
-                      new DateTimeImmutable($diaX),
+                    new DateTimeImmutable('2022-03-13'),
+                      new DateTimeImmutable('2022-03-20'),
 
                   );
 
@@ -411,7 +411,7 @@ try{
         //    $satScraper->listByPeriod($query);
 
 // //Aqui llamamos a la funcion de meses
-$mesruta = Meses(05);
+$mesruta = Meses(03);
 
 //======================[RUTAS DESCARGAS EMITIDOS]================================///
 //XML

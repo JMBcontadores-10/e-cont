@@ -171,12 +171,19 @@ $n=0;
                 <div class="table-body-cell">
                      {{-- Si el cheque no está verificado se puede desvincular solo se pueden desvicular los que no seas pagos --}}
 
-                     @if ($datos->verificado == 0 && $efecto !=='Pago' )
+                     @if ($datos->verificado == 0 &&  $efecto !=='Pago'  )
 
                          <div id="checkbox-group" class="checkbox-group">
                              <input wire:model="checkedDesvincular" class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"
                                  id="allcheck" value="{{ $folioF }}" />
                          </div>
+
+                         @elseif ($efecto =='Pago' && $estado == 'Cancelado')
+
+                         <div id="checkbox-group" class="checkbox-group">
+                            <input wire:model="checkedDesvincular" class="mis-checkboxes" tu-attr-precio='{{ $total }}' type="checkbox"
+                                id="allcheck" value="{{ $folioF }}" />
+                        </div>
 
                  @endif
 
@@ -249,13 +256,13 @@ $vTotal = (float) $v['Total']; //Convertimos los datos del Total de String a Flo
 
              if($efecto == "Traslado"){
 
-                      $t=0;
-                       $egreso=0;
-$sub_Egreso=0;
-$a=0;
-$iva_Egreso =0;
+                      $t[]=0;
+                       $egreso[]=0;
+$sub_Egreso[]=0;
+$a[]=0;
+$iva_Egreso[] =0;
 $Iva =0;
-$Iv = 0;
+$Iv[] = 0;
 
                  }else{
 
@@ -483,7 +490,7 @@ $iva_Egreso [] = $vIva;
 
 
         <div class="table-body-cell"><b> Total </b></div>
-        @if(isset($suma_sub))
+        @if(isset($suma_sub) )
 			<div class="table-body-cell"><b>{{ "$".number_format($suma_sub, 2)}}</b> </div>
                 <div class="table-body-cell"><b>  {{ "$".number_format($suma_iva, 2)}}</b> </div>
                     <div class="table-body-cell"><b> {{ "$".number_format($suma_total, 2)}}</b> </div>
@@ -498,13 +505,14 @@ $iva_Egreso [] = $vIva;
         <div class="table-body-cell"></div>
         <div class="table-body-cell"></div>
         <div class="table-body-cell"></div>
+        @if(isset($suma_sub) )
 
         <div class="table-body-cell"><b>Total</b></div>
 			<div class="table-body-cell"><b> {{ "$".number_format($suma_sub, 2)}} </b> </div>
                 <div class="table-body-cell"><b> {{ "$".number_format($suma_iva, 2)}}</b> </div>
                     <div class="table-body-cell"><b> {{ "$".number_format($suma_total, 2)}}</b> </div>
 
-
+                    @endif
 
 
 		@endif

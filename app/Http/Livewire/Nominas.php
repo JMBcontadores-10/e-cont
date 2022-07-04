@@ -104,24 +104,29 @@ class Nominas extends Component
                 }//end if
 
 
-
-
-
                 $nominas=XmlE::
 
             where('Emisor.Rfc',$this->rfcEmpresa)
                 ->where('TipoDeComprobante','N')
                 ->where('Serie', $this->anio)
                 ->where('Complemento.0.Nomina.FechaPago','like','%' ."-".$this->mes."-".'%')
-                ->select('Fecha','Complemento','Total','Emisor')
+                ->select('Fecha','Complemento','Total','Emisor','Serie','UUID')
                 ->groupBy('Folio')
                 ->orderBy('Folio','Asc')
+
                 ->get();
 
+                // $nominas=XmlE::with([
+                //     function($query) {
+                //         $query->select('Fecha','Complemento','Total','Emisor','Serie','UUID');
+                //     }
+                // ])
+                // ->get();
 
 
 
-          ###################################################
+
+        ###################################################
           $meses = array(
             '01' => 'Enero',
             '02' => 'Febrero',
@@ -137,13 +142,10 @@ class Nominas extends Component
             '12' => 'Diciembre'
         );
 
-
-          ###################################################
-
+        ###################################################
 
 
-
-                $anios = range(2014, date('Y'));
+        $anios = range(2014, date('Y'));
 
         return view('livewire.nominas',[
         'empresas'=>$emp,
@@ -152,6 +154,7 @@ class Nominas extends Component
         'anio'=>$this->anio,
         'anios'=>$anios,
         'meses'=>$meses,
+        'mes'=>$this->mes,
         ])
         ->extends('layouts.livewire-layout')
         ->section('content');

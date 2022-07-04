@@ -6,7 +6,9 @@ use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cheques;
 use App\Models\MetadataR;
+use App\Models\MetadataE;
 use App\Models\Notificaciones;
+use App\Models\XmlE;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\Component;
 use LivewireUI\Modal\ModalComponent;
@@ -141,7 +143,45 @@ $notiE->update(
 );
 
 
+////// desvincular cheque de la niomna si esta asociado
 
+$nmeta=MetadataE:: where('cheques_id', $this->eliminarCheque->_id)->where('estado','!=','Cancelado')->first();
+$nxml=XmlE:: where('UUID', $nmeta->folioFiscal)->first();
+
+// $nomina= MetadataE::where('cheques_id', $this->eliminarCheque->_id)->where('estado','!=','Cancelado')->get();
+
+$aray_id[]=$this->eliminarCheque->_id;
+
+$n="nomina".$nxml->serie.$nxml->Folio;
+        $metadata = MetadataE:: // consulta a MetadataE
+            whereIn('cheques_id',$aray_id)
+            ->where('efecto', 'Nómina')
+            ->where('estado','Vigente')
+            ->pull('cheques_id',$aray_id);
+
+    //   $cheque= Cheques::
+    //    whereIn('_id',$aray_id[])
+    //    ->get();
+
+    //   foreach($cheque as $c):
+    //     $saldo= $c->$n + $c->saldo;
+    //     //// si la suma del saldo y el campo nomina son
+    //     ///iguales al importe original se elimina campo  saldo
+    //     if($saldo == $c->importecheque){
+    //         $c->unset($n);
+    //         $c->unset('saldo');
+    //     if(isset($c->nominaAsignada)){  $c->unset('nominaAsignada');}
+    //      }else{
+    //         $c->unset($n);
+    //         $c->update([
+
+    //             'saldo'=> $saldo,
+    //         ]);
+
+    //         if(isset($c->nominaAsignada)){  $c->unset('nominaAsignada');}
+    //      }
+
+    //    endforeach;
 
 
 
