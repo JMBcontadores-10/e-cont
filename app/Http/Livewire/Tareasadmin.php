@@ -91,6 +91,7 @@ class Tareasadmin extends Component
 
             $e = DB::Table('clientes')
                 ->whereNull('tipo')
+                ->whereNull('TipoSE')
                 ->get();
 
             foreach ($e as $em) {

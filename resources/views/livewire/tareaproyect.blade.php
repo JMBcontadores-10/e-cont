@@ -15,25 +15,26 @@
         }
     @endphp
 
+
     {{-- Tabla de tareas --}}
     <div class="table-responsive">
         <table class="{{ $class }}" style="width:100%">
             <thead>
                 <tr>
-                    <th class="text-center align-middle">Proyecto</th>
-                    <th class="text-center align-middle">Cierre facturación</th>
-                    <th class="text-center align-middle">IMSS</th>
-                    <th class="text-center align-middle">Impuesto Sobre Nómina</th>
-                    <th class="text-center align-middle">Impuesto Estatal Cedular</th>
-                    <th class="text-center align-middle">Impuesto Sobre Hospedaje</th>
-                    <th class="text-center align-middle">Declaración INEGI</th>
-                    <th class="text-center align-middle">Impuestos Federales</th>
-                    <th class="text-center align-middle">Envío contabilidad electrónica</th>
-                    <th class="text-center align-middle">Acuse DIOT</th>
-                    <th class="text-center align-middle">Cierre E-cont</th>
-                    <th class="text-center align-middle">Costo ventas</th>
-                    <th class="text-center align-middle">Archivo Digital</th>
-                    <th class="text-center align-middle">Conciliación impuestos</th>
+                    <th class="text-center align-middle FontProyectos sticky-colhead first-col">Proyecto</th>
+                    <th class="text-center align-middle FontProyectos">Cierre <br> facturación</th>
+                    <th class="text-center align-middle FontProyectos">IMSS</th>
+                    <th class="text-center align-middle FontProyectos">Impuesto <br> Sobre Nómina</th>
+                    <th class="text-center align-middle FontProyectos">Impuesto <br> Estatal Cedular</th>
+                    <th class="text-center align-middle FontProyectos">Impuesto <br> Sobre Hospedaje</th>
+                    <th class="text-center align-middle FontProyectos">Declaración <br> INEGI</th>
+                    <th class="text-center align-middle FontProyectos">Impuestos <br> Federales</th>
+                    <th class="text-center align-middle FontProyectos">Envío <br> contabilidad electrónica</th>
+                    <th class="text-center align-middle FontProyectos">Acuse <br> DIOT</th>
+                    <th class="text-center align-middle FontProyectos">Cierre <br> E-cont</th>
+                    <th class="text-center align-middle FontProyectos">Costo <br> ventas</th>
+                    <th class="text-center align-middle FontProyectos">Archivo <br> Digital</th>
+                    <th class="text-center align-middle FontProyectos">Conciliación <br> impuestos</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,7 +53,8 @@
 
                     <tr>
                         {{-- Nombre de proyecto --}}
-                        <td class="text-center align-middle">{{ $empresa['Nombre'] }}</td>
+                        <td class="text-center align-middle FontProyectos sticky-col first-col">
+                            {{ $empresa['Nombre'] }}</td>
 
                         {{-- Cierre de facturacion --}}
                         @if (!empty($proyectos->CierreFactu) || !empty($empresa['Cierre_Facturacion']))
@@ -442,7 +444,8 @@
                             </td>
                         @elseif (!empty($empresa['Conciliacion_Impuesto']))
                             <td class="text-center align-middle">
-                                <form wire:submit.prevent="ImpuFin('{{ $empresa['RFC'] }}', 'Conciliacion_Impuesto')">
+                                <form
+                                    wire:submit.prevent="ImpuFin('{{ $empresa['RFC'] }}', 'Conciliacion_Impuesto')">
                                     <input wire:model.defer="fechaimpu" min="2014-01-01" max={{ date('Y-m-d') }}
                                         type="date" required>
                                     <button class="tn btn-secondary BtnVinculadas" type="submit"
@@ -451,7 +454,8 @@
                             </td>
                         @else
                             <td class="text-center align-middle">
-                                <form wire:submit.prevent="ImpuFin('{{ $empresa['RFC'] }}', 'Conciliacion_Impuesto')">
+                                <form
+                                    wire:submit.prevent="ImpuFin('{{ $empresa['RFC'] }}', 'Conciliacion_Impuesto')">
                                     <input wire:model.defer="fechaimpu" min="2014-01-01" max={{ date('Y-m-d') }}
                                         type="date" required>
                                     <button class="tn btn-secondary BtnVinculadas" type="submit"

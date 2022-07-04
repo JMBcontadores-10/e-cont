@@ -656,7 +656,7 @@ select.list-dt:focus {
 }
 
 .table tbody tr:hover td {
-    background-color: rgba(59, 148, 195, 0.2);
+    background-color: #d8eaf3;
 }
 
 #table_detail {
@@ -1262,4 +1262,23 @@ tr:hover {
 .ContentRank {
     padding: 1em;
     text-align: center;
+}
+
+.FontProyectos {
+    font-size: 12px !important;
+}
+
+.sticky-colhead {
+    position: sticky;
+    background-color: #f8f8f8;
+}
+
+.sticky-col {
+    position: sticky;
+    background-color: white;
+}
+
+.first-col {
+    width: fit-content;
+    left: -0.5px;
 }
