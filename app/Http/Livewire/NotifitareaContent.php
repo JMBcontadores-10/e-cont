@@ -67,6 +67,8 @@ class NotifitareaContent extends Component
                     $totaltareas++;
                 }
             }
+        } else {
+            $totaltareas = 0;
         }
 
         return view('livewire.notifitarea-content', ['totaltareas' => $totaltareas, 'tareas' => $listatareas]);

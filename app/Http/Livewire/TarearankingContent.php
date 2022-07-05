@@ -104,11 +104,15 @@ class TarearankingContent extends Component
         //Bucle para obtener el porcentaje del colaborador que inicio sesion
         foreach ($ranking as $ranker) {
             if (!empty(auth()->user()->admin)) { //Condicional para obtener el porcentaje con respecto al RFC
-                $porcent = "";
+                $porcent = 0;
             }
 
             if ($ranker['RFC'] == auth()->user()->RFC) { //Condicional para obtener el porcentaje con respecto al RFC
                 $porcent = $ranker['Porcentaje'];
+            }
+
+            if (empty(auth()->user()->admin)) {
+                $porcent = 0;
             }
         }
 
