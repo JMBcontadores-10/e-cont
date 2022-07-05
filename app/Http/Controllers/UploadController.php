@@ -58,30 +58,33 @@ class UploadController extends Controller
                 $mailto = $_GET['Mail'];
                 $subject = 'Línea de captura ' . $asunto;
 
+                //Mensaje del correo
+                $message = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/html4/loose.dtd">
+                <html><head></head><body>
+                <p>Buen dia, Se envía línea de captura para el pago de ' . $asunto . ' del mes</p>
+                <p>Atentamente:</p>
+                <p>JMB CONTADORES</p>
+                <p>TEL. (55) 5536-0293, (55) 8662-3397</p>
+                <p>*Favor de no responder a este correo, ya que se genera automáticamente. Si deseas comunicarte con nosotros hazlo a través de los teléfonos de oficina o al correo contabilidad@jmbcontadores.mx*</p><br>
+                <p>La Información contenida en este correo electrónico y anexos es confidencial. Está dirigido únicamente para el uso del individuo o entidad a la que fue dirigida y puede contener información propietaria que no es del dominio público. Si has recibido este correo por error o no eres el destinatario al que fue enviado, por favor notificar al remitente de inmediato y borra este mensaje de tú computadora. Cualquier uso, distribución o reproducción de este correo que no sea por el destinatario queda prohibido.</p></body></html>';
+
                 //Separador de contenido con el mensaje
                 $separator = md5(time());
 
                 //Saltos de pagina
-                $eol = PHP_EOL;
+                $eol = "\r\n";
 
                 //Encabezado
                 $headers = "From: Econt <Econt@e-cont.com>" . $eol;
                 $headers .= "MIME-Version: 1.0" . $eol;
                 $headers .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\"" . $eol;
-                $headers .= "Content-Transfer-Encoding: 7bit" . $eol;
-                $headers .= "This is a MIME encoded message." . $eol;
 
                 //Mensaje
-                $body = "--" . $separator . $eol;
-                $body .= "Content-Type: text/plain; charset=\"iso-8859-1\"" . $eol;
-                $body .= "Content-Transfer-Encoding: 8bit" . $eol;
-                $body .= "Buen dia" . $eol;
-                $body .= "Se envía línea de captura para el pago de " . $asunto . " del mes." . $eol . $eol;
-                $body .= "Atentamente:" . $eol;
-                $body .= "JMB CONTADORES" . $eol;
-                $body .= "TEL. (55) 5536-0293, (55) 8662-3397" . $eol . $eol . $eol;
-                $body .= "*Favor de no responder a este correo, ya que se genera automáticamente. Si deseas comunicarte con nosotros hazlo a través de los teléfonos de oficina o al correo contabilidad@jmbcontadores.mx*" . $eol . $eol;
-                $body .= "La Información contenida en este correo electrónico y anexos es confidencial. Está dirigido únicamente para el uso del individuo o entidad a la que fue dirigida y puede contener información propietaria que no es del dominio público. Si has recibido este correo por error o no eres el destinatario al que fue enviado, por favor notificar al remitente de inmediato y borra este mensaje de tú computadora. Cualquier uso, distribución o reproducción de este correo que no sea por el destinatario queda prohibido." . $eol;
+                $body .= "--" . $separator . $eol;
+                $body .= "Content-Type: text/html; charset=UTF-8" . $eol;
+                $body .= "Content-Transfer-Encoding: 8bit" . $eol . $eol;
+                $body .= $message . $eol . $eol;
 
                 //Obtener los archivos de la carpeta
                 $files = glob('/home/lnrhdwjb/storage/FTP/' . $_GET['Tipo'] . '/*'); //Obtenemos todos los nombres de los ficheros
@@ -92,9 +95,10 @@ class UploadController extends Controller
 
                     //Archivo adjunto
                     $body .= "--" . $separator . $eol;
-                    $body .= "Content-Type: application/octet-stream; name=\"" . basename($file) . "\"" . $eol;
-                    $body .= "Content-Transfer-Encoding: base64" . $eol;
-                    $body .= "Content-Disposition: attachment" . $eol;
+                    $body .= "Content-Type: application/octet-stream; name=\"" . basename($file) . "\"\n" .
+                        "Content-Description: " . basename($file) . "\n" .
+                        "Content-Disposition: attachment;\n" . " filename=\"" . basename($file) . "\"; size=" . filesize($file) . ";\n" .
+                        "Content-Transfer-Encoding: base64\n\n" . $content . "\n\n";
                     $body .= $content . $eol;
                 }
 
