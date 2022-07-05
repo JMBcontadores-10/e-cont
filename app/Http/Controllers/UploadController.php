@@ -62,7 +62,7 @@ class UploadController extends Controller
                 $separator = md5(time());
 
                 //Saltos de pagina
-                $eol = "\r\n";
+                $eol = PHP_EOL;
 
                 //Encabezado
                 $headers = "From: Econt <Econt@e-cont.com>" . $eol;
@@ -110,13 +110,6 @@ class UploadController extends Controller
             }
         } catch (Exception $e) {
             echo "Hubo un error: " . $e;
-        }
-
-        //Eliminamos los archivos en la carpeta local
-        $files = glob('/home/lnrhdwjb/storage/FTP/' . $_GET['Tipo'] . '/*'); //Obtenemos todos los nombres de los ficheros
-        foreach ($files as $file) {
-            if (is_file($file))
-                unlink($file); //Elimino el fichero
         }
     }
 
