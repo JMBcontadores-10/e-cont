@@ -581,6 +581,8 @@ function filepondRaya(rfc, anio, periodo) {
 
     });
 
+    
+
     FilePond.setOptions({
         name: 'listaRaya',
         server: {

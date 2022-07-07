@@ -261,12 +261,7 @@
                                             class="ficon bx bx-calendar-alt"></i></a></li>
 
                                 <livewire:tarearanking-section />
-<<<<<<< HEAD
                             @endif                        </ul>
-=======
-                            @endif
-                        </ul>
->>>>>>> db6a1e3f848f834df51111c3801ed807e1226ac7
                     </div>
 
 
@@ -312,7 +307,6 @@
                                 <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item"
                                         onclick="alerta()"><i class="bx bx-user mr-50"></i> Editar
                                         Perfil</a><a class="dropdown-item" onclick="alerta()"><i
-<<<<<<< HEAD
                                             class="bx bx-envelope mr-50"></i> Email</a>
 
                                     @if (!empty(auth()->user()->tipo))
@@ -322,12 +316,6 @@
 <a
                                         class="dropdown-item" onclick="alerta()"><i
                                             class="bx bx-message mr-50"></i>Chats</a>
-=======
-                                            class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item"
-                                        href="{{ url('tareas') }}"><i
-                                            class="bx bx-check-square mr-50"></i>Tareas</a><a class="dropdown-item"
-                                        onclick="alerta()"><i class="bx bx-message mr-50"></i>Chats</a>
->>>>>>> db6a1e3f848f834df51111c3801ed807e1226ac7
                                     <div class="dropdown-divider mb-0"></div>
                                     <form action="{{ route('logout') }}" method="POST">
                                         @csrf
@@ -407,34 +395,10 @@
                             </li>
                         @endif
 
-<<<<<<< HEAD
                         @if (auth()->user()->tipo != 'VOLU')
                             <li id="expedifiscal"><a class="d-flex align-items-center" href="{{ url('expedifiscal') }}"><i
                                         class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
                                         data-i18n="Analytics">Expediente Fiscal</span></a>
-=======
-                        @if (auth()->user()->tipo && auth()->user()->tipo != 'VOLU')
-                            <li id="expedifiscal"><a class="d-flex align-items-center"
-                                    href="{{ url('expedifiscal') }}"><i class="bx bx-right-arrow-alt"></i><span
-                                        class="menu-item text-truncate" data-i18n="Analytics">Expediente
-                                        Fiscal</span></a>
-                            </li>
-                            <li id="descargas"><a class="d-flex align-items-center"
-                                    href="{{ url('descargas') }}"><i class="bx bx-right-arrow-alt"></i><span
-                                        class="menu-item text-truncate" data-i18n="Analytics">Descargas</span></a>
-                            </li>
-                            <li id="auditoria"><a class="d-flex align-items-center" href="{{ 'auditoria' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Auditoria</span></a>
-                            </li>
-                            <li id="consultas"><a class="d-flex align-items-center" href="{{ 'consultas' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Consultas</span></a>
-                            </li>
-                            <li id="monitoreo"><a class="d-flex align-items-center" href="{{ 'monitoreo' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Monitoreo de facturación</span></a>
->>>>>>> db6a1e3f848f834df51111c3801ed807e1226ac7
                             </li>
                         @endif
                     </ul>
