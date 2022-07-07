@@ -96,7 +96,12 @@
 
                     {{-- Encabezado del dia --}}
                     <div align="center">
-                        <h3>Facturación {{ $fechaayer }}</h3>
+                        {{-- Condicional para saber si se selecciono un rango --}}
+                        @if ($fechainic == $fechafin)
+                            <h3>Facturación {{ $fechainic }}</h3>
+                        @else
+                            <h3>Facturación {{ $fechainic }} al {{ $fechafin }}</h3>
+                        @endif
                     </div>
 
                     <div wire:loading>
@@ -156,7 +161,8 @@
                                 <table id="factuhisto" class="monihora {{ $class }}" style="width:100%">
                                     <thead>
                                         <tr>
-                                            <th colspan="4" class="text-center align-middle">Facturación por hora</th>
+                                            <th colspan="4" class="text-center align-middle">Facturación por hora
+                                            </th>
                                             {{-- Columnas --}}
                                         <tr>
                                             <th class="text-center align-middle">Hora</th>

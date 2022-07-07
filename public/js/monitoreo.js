@@ -12,6 +12,7 @@ function exportReportToExcel(empresa) {
             fileName: empresa,
             ignoreColumn: [4], //Quitamos la ultima columna de destalles
             mso: {
+                  fileFormat:'xlsx',
                   styles: ['background-color'],
             }
       });
@@ -38,6 +39,7 @@ function ExportHoraClientExcel(idempre, empresa) {
             ignoreColumn: [13], //Quitamos la ultima columna de destalles
             type: 'excel',
             mso: {
+                  fileFormat:'xlsx',
                   styles: ['background-color'],
             }
       });

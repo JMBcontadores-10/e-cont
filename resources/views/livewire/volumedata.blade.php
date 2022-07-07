@@ -1,4 +1,14 @@
 <div>
+    @php
+        //Importamos el modelo
+        use App\Models\User;
+        
+        //Hacemos una consulta de la empresa para saber que datos vamos a mostrar
+        $infogas = User::where('RFC', $this->empresa)
+            ->get()
+            ->first();
+    @endphp
+
     {{-- Modal de la captura de precio --}}
     {{-- Creacion del modal (BASE) --}}
     <div wire:ignore.self class="modal fade" id="volucaptumodal{{ $dia }}" tabindex="-1" role="dialog"
@@ -208,7 +218,7 @@
                                         </div>
 
                                         {{-- Condicional para que se muestre solamente en una empresa --}}
-                                        @if ($empresa == 'STR9303188X3')
+                                        @if ($infogas['PrecCompDesc'] == 1)
                                             {{-- COMPRAS CON DESCUENTO --}}
                                             <div class="resp-table-row">
                                                 <div class="table-body-cell">

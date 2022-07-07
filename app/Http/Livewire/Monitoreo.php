@@ -54,6 +54,7 @@ class Monitoreo extends Component
                 //Consultamos los metadatos
                 $infometaemit = MetadataE::where('emisorRfc', $this->rfcEmpresa)
                     ->whereBetween('fechaEmision',  [$this->fechainic . 'T00:00:00', $this->fechafin . 'T23:59:59'])
+                    ->where('estado', '!=', 'Cancelado')
                     ->where('efecto', '!=', 'Nómina')
                     ->get(['estado', 'efecto', 'fechaEmision', 'fechaCertificacion', 'folioFiscal', 'receptorRfc', 'receptorNombre', 'total']);
 

@@ -69,40 +69,121 @@ class InfoMonit extends Controller
 
 
             //CORREOS DE CONFIMACION (VERIFICAR QUE SI SALIERON LOS CORREOS)
+            //Contabilidad
 
-            //Confirmacion (Tecnologia)
-            ['rfc' => 'SST030407D77M', 'email' => 'tecnologia@jmbcontadores.mx'],
+            //1. SGA1410217U4
+            ['rfc' => 'SGA1410217U4', 'email' => 'contabilidad@jmbcontadores.mx'],
 
-            //Confirmacion (Tecnologia)
-            ['rfc' => 'SST030407D77J', 'email' => 'tecnologia@jmbcontadores.mx'],
+            //2. AHF060131G59
+            ['rfc' => 'AHF060131G59', 'email' => 'contabilidad@jmbcontadores.mx'],
 
-            //Confirmacion (Tecnologia)
-            ['rfc' => 'PERE9308105X4', 'email' => 'tecnologia@jmbcontadores.mx'],
+            //3. FGA980316918
+            ['rfc' => 'FGA980316918', 'email' => 'contabilidad@jmbcontadores.mx'],
 
-            //Confirmacion (Contabilidad)
+            //4. PERE9308105X4
+            ['rfc' => 'PERE9308105X4', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //5. SCT150918RC9
+            ['rfc' => 'SCT150918RC9', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //6. SGX190523KA4
+            // ['rfc' => 'SGX190523KA4', 'email' => ''], PENDIENTE DE OPERACION
+
+            //7. GPA161202UG8
+            ['rfc' => 'GPA161202UG8', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //8. PEMJ7110258J3
+            ['rfc' => 'PEMJ7110258J3', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //9. VCO990603D84
+            ['rfc' => 'VCO990603D84', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //10. STR9303188X3
+            ['rfc' => 'STR9303188X3', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //11. SGX160127MC4
+            ['rfc' => 'SGX160127MC4', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //12. SGT190523QX8
+            ['rfc' => 'SGT190523QX8', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+            //13. SST030407D77
             ['rfc' => 'SST030407D77J', 'email' => 'contabilidad@jmbcontadores.mx'],
 
-            //Confirmacion (Tecnologia)
+            //14. SST030407D77
             ['rfc' => 'SST030407D77M', 'email' => 'contabilidad@jmbcontadores.mx'],
 
-            //Confirmacion (Contabilidad)
-            ['rfc' => 'SGA1410217U4', 'email' => 'contabilidad@jmbcontadores.mx'],
+            //15. RUCE750317I21
+            ['rfc' => 'RUCE750317I21', 'email' => 'contabilidad@jmbcontadores.mx'],
+
+
+
+            //CORREOS DE CONFIMACION (VERIFICAR QUE SI SALIERON LOS CORREOS)
+            //Tecnologia
+
+            //1. SGA1410217U4
+            ['rfc' => 'SGA1410217U4', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //2. AHF060131G59
+            ['rfc' => 'AHF060131G59', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //3. FGA980316918
+            ['rfc' => 'FGA980316918', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //4. PERE9308105X4
+            ['rfc' => 'PERE9308105X4', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //5. SCT150918RC9
+            ['rfc' => 'SCT150918RC9', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //6. SGX190523KA4
+            // ['rfc' => 'SGX190523KA4', 'email' => ''], PENDIENTE DE OPERACION
+
+            //7. GPA161202UG8
+            ['rfc' => 'GPA161202UG8', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //8. PEMJ7110258J3
+            ['rfc' => 'PEMJ7110258J3', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //9. VCO990603D84
+            ['rfc' => 'VCO990603D84', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //10. STR9303188X3
+            ['rfc' => 'STR9303188X3', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //11. SGX160127MC4
+            ['rfc' => 'SGX160127MC4', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //12. SGT190523QX8
+            ['rfc' => 'SGT190523QX8', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //13. SST030407D77
+            ['rfc' => 'SST030407D77J', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //14. SST030407D77
+            ['rfc' => 'SST030407D77M', 'email' => 'tecnologia@jmbcontadores.mx'],
+
+            //15. RUCE750317I21
+            ['rfc' => 'RUCE750317I21', 'email' => 'tecnologia@jmbcontadores.mx'],
         ];
 
         //Bucle para enviar de forma automatica los correos
         foreach ($infomail as $datamail) {
             try {
                 $filename = $datamail['rfc'] . '.pdf';
-                $path = '../informonit';
+                $path = '/home/lnrhdwjb/informonit';
                 $file = $path . "/" . $filename;
 
                 //Condicional si el archivo existe
                 if (file_exists($file)) {
+                    //Obtenenmos la fecha de la semana pasada
+                    $semanaanterior = date('Y-m-d', strtotime('-1 week'));
+
                     //Obtenemos la fecha del dia anterior
                     $diaanterior = date('Y-m-d', strtotime('-1 day'));
 
                     $mailto = $datamail['email'];
-                    $subject = 'Reporte de facturación por clientes ' . $diaanterior;
+                    $subject = 'Reporte de facturación semanal por clientes ' . $semanaanterior . ' - ' . $diaanterior;
 
                     $content = file_get_contents($file);
                     $content = chunk_split(base64_encode($content));
@@ -114,7 +195,7 @@ class InfoMonit extends Controller
                     $eol = "\r\n";
 
                     //Encabezado
-                    $headers = "From: Econt <Econt@e-cont.com>" . $eol;
+                    $headers = "From: Econt <econt@correosecont.x10.mx>" . $eol;
                     $headers .= "MIME-Version: 1.0" . $eol;
                     $headers .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\"" . $eol;
                     $headers .= "Content-Transfer-Encoding: 7bit" . $eol;
@@ -155,7 +236,7 @@ class InfoMonit extends Controller
         }
 
         //Eliminamos los archivos en la carpeta local
-        $files = glob('../informonit/*'); //Obtenemos todos los nombres de los ficheros
+        $files = glob('/home/lnrhdwjb/informonit/*'); //Obtenemos todos los nombres de los ficheros
         foreach ($files as $file) {
             if (is_file($file))
                 unlink($file); //Elimino el fichero
@@ -163,7 +244,7 @@ class InfoMonit extends Controller
     }
 
 
-//**********************************************************************************************************************************************/
+    //**********************************************************************************************************************************************/
 
 
     //Metodo para recrear los PDF por si se crean con errores
@@ -192,49 +273,75 @@ class InfoMonit extends Controller
                     $RFCSucur = $clavesucur['RFC']; //RFC
                     $Clave = $clavesucur['Clave']; //Clave
 
-                    //Consulta para obtener la informacion XML
-                    $consulxmlclient = XmlE::where('Emisor.Rfc', $rfcerror)
-                        ->where('LugarExpedicion', $Clave)
-                        ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
-                        ->where('TipoDeComprobante', '!=', 'N')
+                    //Consulta para obtener la informacion de los Metadatos
+                    $consultmetaclient = MetadataE::where('receptorRfc', $rfcerror)
+                        ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                        ->where('efecto', '!=', 'Nómina')
+                        ->where('estado', '!=', 'Cancelado')
                         ->get();
 
+                    //Arreglo para obtener la informacion de los XML
+                    $XMLEInfo = [];
+
+                    foreach ($consultmetaclient as $infometaclient) {
+                        //Consulta para obtener la informacion XML
+                        $consulxmlclient = XmlE::where('UUID', $infometaclient['_id'])
+                            ->where('LugarExpedicion', $Clave)
+                            ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                            ->where('TipoDeComprobante', '!=', 'N')
+                            ->get();
+
+                        //Ciclo para extraer los datos
+                        foreach ($consulxmlclient as $infoxmlclient) {
+                            $XMLEInfo[] = ['RFC' => $infoxmlclient['Receptor.Rfc'], 'Nombre' => $infoxmlclient['Receptor.Nombre']];
+                        }
+                    }
 
                     //Condicional para saber si existen regisitros y aprovechar los 50 correos 
-                    if (count($consulxmlclient) > 0) {
+                    if (count($XMLEInfo) > 0) {
                         //Construimos la tabla
                         //Variables de contenedor
                         $datainfomonit = "";
                         $rowinfomonit = array();
 
-                        //Obtenemos una lista de los receptores
-                        $listarecept = []; //Arreglo que contedra los RFC recibidos
-
-                        //Ciclo para extraer los datos
-                        foreach ($consulxmlclient as $infoxmlclient) {
-                            array_push($listarecept, ['RFC' => $infoxmlclient['Receptor.Rfc'], 'Nombre' => $infoxmlclient['Receptor.Nombre']]);
-                        }
-
                         //Eliminamos los datos repetidos
-                        $listareceptrfc = array_unique(array_column($listarecept, 'RFC')); //Eliminamos las columnas con RFC repetido
-                        $listarecept = array_intersect_key($listarecept, $listareceptrfc); //Comparamos el arreglo original con el arreglo filtrado
+                        $listareceptrfc = array_unique(array_column($XMLEInfo, 'RFC')); //Eliminamos las columnas con RFC repetido
+                        $listarecept = array_intersect_key($XMLEInfo, $listareceptrfc); //Comparamos el arreglo original con el arreglo filtrado
 
                         //Ciclo para pasar por todos los RFC registrados en el arreglo
                         foreach ($listarecept as $datarecept) {
-                            //Realizaremos otra consulta para obtener los totales
-                            $consulxmlinfo = XmlE::where('Emisor.Rfc', $rfcerror)
-                                ->where('Receptor.Rfc', $datarecept['RFC'])
-                                ->where('LugarExpedicion', $Clave)
-                                ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
-                                ->where('TipoDeComprobante', '!=', 'N')
+                            //Consulta para obtener la informacion de los Metadatos
+                            $consultmetaclientempre = MetadataE::where('emisorRfc', $rfcerror)
+                                ->where('receptorRfcF', $datarecept['RFC'])
+                                ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                                ->where('efecto', '!=', 'Nómina')
+                                ->where('estado', '!=', 'Cancelado')
                                 ->get();
+
+
+                            //Arreglo para obtener la informacion de los XML
+                            $XMLEInfoEmpre = [];
+
+                            foreach ($consultmetaclientempre as $infometaclientempre) {
+                                //Consulta para obtener la informacion XML
+                                $consulxmlclientempre = XmlE::where('UUID', $infometaclientempre['_id'])
+                                    ->where('LugarExpedicion', $Clave)
+                                    ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                                    ->where('TipoDeComprobante', '!=', 'N')
+                                    ->get();
+
+                                //Ciclo para extraer los datos
+                                foreach ($consulxmlclientempre as $infoxmlclientempre) {
+                                    $XMLEInfoEmpre[] = ['Total' => $infoxmlclientempre['Total'], 'Nombre' => $infoxmlclientempre['Receptor.Nombre']];
+                                }
+                            }
 
                             //Variables para obtener el total
                             $totalfactu = 0;
                             $totalmonto = 0;
 
                             //Ciclo para descomponer la consulta
-                            foreach ($consulxmlinfo as $dataxmlinfo) {
+                            foreach ($XMLEInfoEmpre as $dataxmlinfo) {
                                 $totalfactu++; //Cantidad de facturas
                                 $totalmonto += $dataxmlinfo['Total']; //Monto
 
@@ -328,6 +435,7 @@ class InfoMonit extends Controller
                 ->where('emisorRfc', $rfcerror)
                 ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
+                ->where('estado', '!=', 'Cancelado')
                 ->groupBy('receptorRfc')
                 ->orderBy('receptorRfc', 'asc')
                 ->get();
@@ -336,6 +444,7 @@ class InfoMonit extends Controller
             $consulmetamonit = MetadataE::where('emisorRfc', $rfcerror)
                 ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
+                ->where('estado', '!=', 'Cancelado')
                 ->get();
 
             //Condicional para saber si existen regisitros y aprovechar los 50 correos 
@@ -439,7 +548,7 @@ class InfoMonit extends Controller
 
 
 
-//*********************************************************************************************************************************************/
+    //*********************************************************************************************************************************************/
 
 
 
@@ -447,9 +556,9 @@ class InfoMonit extends Controller
     public function SendFTP()
     {
         //Informacion de conexion FTP
-        $server = 'files.000webhost.com';
-        $ftp_user_name = 'correosecont';
-        $ftp_user_pass = 'C04taD4n13l/*';
+        $server = 'correosecont.x10.mx';
+        $ftp_user_name = 'lnrhdwjb';
+        $ftp_user_pass = 'Tecnologi@1';
 
         //Subimos los archivos a la servidor FTP y eliminamos los archivos en la carpeta local
         $files = glob('informonit/*'); //Obtenemos todos los nombres de los ficheros
@@ -511,7 +620,7 @@ class InfoMonit extends Controller
 
 
 
-//*********************************************************************************************************************************************/
+    //*********************************************************************************************************************************************/
 
 
 
@@ -540,6 +649,9 @@ class InfoMonit extends Controller
             'SST030407D77',
         ];
 
+        //Obtenenmos la fecha de la semana pasada
+        $semanaanterior = date('Y-m-d', strtotime('-1 week'));
+
         //Obtenemos la fecha del dia anterior
         $diaanterior = date('Y-m-d', strtotime('-1 day'));
 
@@ -549,16 +661,18 @@ class InfoMonit extends Controller
             //Metadato (Ordenado)
             $consulmetamonitclient = MetadataE::select('receptorRfc', 'receptorNombre',)
                 ->where('emisorRfc', $rfc)
-                ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                ->whereBetween('fechaEmision',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
+                ->where('estado', '!=', 'Cancelado')
                 ->groupBy('receptorRfc')
                 ->orderBy('receptorRfc', 'asc')
                 ->get();
 
             //Metadato (Completo)
             $consulmetamonit = MetadataE::where('emisorRfc', $rfc)
-                ->whereBetween('fechaEmision',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                ->whereBetween('fechaEmision',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
                 ->where('efecto', '!=', 'Nómina')
+                ->where('estado', '!=', 'Cancelado')
                 ->get();
 
             //Condicional para saber si existen regisitros y aprovechar los 50 correos 
@@ -636,7 +750,8 @@ class InfoMonit extends Controller
 
                 //Pasamos los datos de la tabla
                 $data = [
-                    'fechamonit' => $diaanterior,
+                    'fechainic' => $semanaanterior,
+                    'fechafin' => $diaanterior,
                     'rfcmonit' => $rfc,
                     'nommonit' => $nomclient['nombre'],
                     'infomonit' => $rowinfomonit
@@ -677,55 +792,81 @@ class InfoMonit extends Controller
                     $RFCSucur = $clavesucur['RFC']; //RFC
                     $Clave = $clavesucur['Clave']; //Clave
 
-                    //Consulta para obtener la informacion XML
-                    $consulxmlclient = XmlE::where('Emisor.Rfc', $rfcsucur)
-                        ->where('LugarExpedicion', $Clave)
-                        ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
-                        ->where('TipoDeComprobante', '!=', 'N')
+                    //Consulta para obtener la informacion de los Metadatos
+                    $consultmetaclient = MetadataE::where('receptorRfc', $rfcsucur)
+                        ->whereBetween('fechaEmision',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                        ->where('efecto', '!=', 'Nómina')
+                        ->where('estado', '!=', 'Cancelado')
                         ->get();
 
+                    //Arreglo para obtener la informacion de los XML
+                    $XMLEInfo = [];
+
+                    foreach ($consultmetaclient as $infometaclient) {
+                        //Consulta para obtener la informacion XML
+                        $consulxmlclient = XmlE::where('UUID', $infometaclient['_id'])
+                            ->where('LugarExpedicion', $Clave)
+                            ->whereBetween('Fecha',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                            ->where('TipoDeComprobante', '!=', 'N')
+                            ->get();
+
+                        //Ciclo para extraer los datos
+                        foreach ($consulxmlclient as $infoxmlclient) {
+                            $XMLEInfo[] = ['RFC' => $infoxmlclient['Receptor.Rfc'], 'Nombre' => $infoxmlclient['Receptor.Nombre']];
+                        }
+                    }
 
                     //Condicional para saber si existen regisitros y aprovechar los 50 correos 
-                    if (count($consulxmlclient) > 0) {
+                    if (count($XMLEInfo) > 0) {
                         //Construimos la tabla
                         //Variables de contenedor
                         $datainfomonit = "";
                         $rowinfomonit = array();
 
-                        //Obtenemos una lista de los receptores
-                        $listarecept = []; //Arreglo que contedra los RFC recibidos
-
-                        //Ciclo para extraer los datos
-                        foreach ($consulxmlclient as $infoxmlclient) {
-                            array_push($listarecept, ['RFC' => $infoxmlclient['Receptor.Rfc'], 'Nombre' => $infoxmlclient['Receptor.Nombre']]);
-                        }
-
                         //Eliminamos los datos repetidos
-                        $listareceptrfc = array_unique(array_column($listarecept, 'RFC')); //Eliminamos las columnas con RFC repetido
-                        $listarecept = array_intersect_key($listarecept, $listareceptrfc); //Comparamos el arreglo original con el arreglo filtrado
+                        $listareceptrfc = array_unique(array_column($XMLEInfo, 'RFC')); //Eliminamos las columnas con RFC repetido
+                        $listarecept = array_intersect_key($XMLEInfo, $listareceptrfc); //Comparamos el arreglo original con el arreglo filtrado
 
                         //Ciclo para pasar por todos los RFC registrados en el arreglo
                         foreach ($listarecept as $datarecept) {
-                            //Realizaremos otra consulta para obtener los totales
-                            $consulxmlinfo = XmlE::where('Emisor.Rfc', $rfcsucur)
-                                ->where('Receptor.Rfc', $datarecept['RFC'])
-                                ->where('LugarExpedicion', $Clave)
-                                ->whereBetween('Fecha',  [$diaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
-                                ->where('TipoDeComprobante', '!=', 'N')
+                            //Consulta para obtener la informacion de los Metadatos
+                            $consultmetaclientempre = MetadataE::where('emisorRfc', $rfcsucur)
+                                ->where('receptorRfcF', $datarecept['RFC'])
+                                ->whereBetween('fechaEmision',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                                ->where('efecto', '!=', 'Nómina')
+                                ->where('estado', '!=', 'Cancelado')
                                 ->get();
+
+
+                            //Arreglo para obtener la informacion de los XML
+                            $XMLEInfoEmpre = [];
+
+                            foreach ($consultmetaclientempre as $infometaclientempre) {
+                                //Consulta para obtener la informacion XML
+                                $consulxmlclientempre = XmlE::where('UUID', $infometaclientempre['_id'])
+                                    ->where('LugarExpedicion', $Clave)
+                                    ->whereBetween('Fecha',  [$semanaanterior . 'T00:00:00', $diaanterior . 'T23:59:59'])
+                                    ->where('TipoDeComprobante', '!=', 'N')
+                                    ->get();
+
+                                //Ciclo para extraer los datos
+                                foreach ($consulxmlclientempre as $infoxmlclientempre) {
+                                    $XMLEInfoEmpre[] = ['Total' => $infoxmlclientempre['Total'], 'Nombre' => $infoxmlclientempre['Receptor.Nombre']];
+                                }
+                            }
 
                             //Variables para obtener el total
                             $totalfactu = 0;
                             $totalmonto = 0;
 
                             //Ciclo para descomponer la consulta
-                            foreach ($consulxmlinfo as $dataxmlinfo) {
+                            foreach ($XMLEInfoEmpre as $dataxmlinfo) {
                                 $totalfactu++; //Cantidad de facturas
                                 $totalmonto += $dataxmlinfo['Total']; //Monto
 
                                 //Condicional para obtener la razon solcial (A veces obtiene un registro con una razon social vacia)
-                                if (strlen($dataxmlinfo['Receptor.Nombre']) > 1) {
-                                    $nombrerecpt = $dataxmlinfo['Receptor.Nombre'];
+                                if (strlen($dataxmlinfo['Nombre']) > 1) {
+                                    $nombrerecpt = $dataxmlinfo['Nombre'];
                                 }
                             }
 
@@ -783,7 +924,8 @@ class InfoMonit extends Controller
 
                         //Pasamos los datos de la tabla
                         $data = [
-                            'fechamonit' => $diaanterior,
+                            'fechainic' => $semanaanterior,
+                            'fechafin' => $diaanterior,
                             'rfcmonit' => $rfcsucur,
                             'nommonit' => $clavesucur['Nombre'],
                             'infomonit' => $rowinfomonit

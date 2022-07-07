@@ -2,6 +2,7 @@ function exportReportToExcel(empresa) {
       $('.voluhistori').tableExport({
             type: 'excel',
             fileName: 'E-cont Volumetrico ' + empresa,
+            preventInjection: false,
             mso: {
                   styles: ['background-color'],
             }

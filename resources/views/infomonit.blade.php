@@ -13,7 +13,7 @@
             </tr>
             <tr>
                 <th colspan="4" class="text-center align-middle">
-                    Facturación por cliente - {{$fechamonit}}
+                    Facturación por cliente {{$fechainic}} - {{$fechafin}}
                 </th>
             </tr>
             <tr>
