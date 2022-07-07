@@ -116,7 +116,8 @@
           @if (session()->get('idnominas'))
           {{-- <div class="alert alert-success">
 
-</div> --}}@php echo "aqui  nomina".  $nomina= Session::get('nomina'); @endphp
+</div> --}}
+@php  $nomina= Session::get('nomina'); @endphp
 
           <script>
               $(document).ready(function() {
@@ -129,7 +130,7 @@
 
       @endif
 
-      {{ var_dump($this->ids)}}
+      {{-- {{ var_dump($this->ids)}} --}}
                     {{-- Condicional para mostrar un listado de empresas --}}
                     @empty(!$empresas)
                         <label for="inputState">Empresa: {{ $empresa }}</label>
@@ -383,6 +384,8 @@ $rfcs=auth()->user()->empresas;
                             @php
                                 $arreglo = '';
                                 $totalVinculadas = 0;
+                                $asignado=0;
+                                $tO=0;
                             @endphp
 
                             @foreach ($colCheques as $i)
@@ -406,6 +409,8 @@ $rfcs=auth()->user()->empresas;
                                     $tipoO = $i->tipoopera;
                                     $comentario = $i->comentario;
 
+                                    if($tipoO == 'Nómina') {$tO=1;}
+
                                     if ($tipoO == 'Impuestos' or $tipoO == 'Parcialidad') {
                                         $diferencia = 0;
                                     } else {
@@ -416,6 +421,16 @@ $rfcs=auth()->user()->empresas;
                                         $diferenciaP = 0;
                                     } else {
                                         $diferenciaP = 1;
+                                    }
+                                     ///// si exsite un saldo se determina que al cheque le faltan asignaciones
+                                    if(isset($i->saldo) &&  $i->saldo > 0 ){
+
+                                        $asignado=1;
+
+                                       ///// cehque cerrado
+                                    }elseif (isset($i->nominaAsignada)){
+
+                                        $asignado=2;
                                     }
 
                                     $diferencia = number_format($diferencia, 2);
@@ -459,28 +474,40 @@ $rfcs=auth()->user()->empresas;
                                             }
                                         }
                                     }
+
+// echo $asignado;
                                 @endphp
 
                                 <tbody>
                                     <!--- verificar si existen pagos vinculados  "CANCELADOS"-->
                                     @php
+
                                         $Pcancelado=MetadataR::where('cheques_id', $id)->where('estado','Cancelado')->first(); ///consulta a metadata_r
                                          if($Pcancelado){   $alertPagoCancelado ="#ffcc00";}else{$alertPagoCancelado ="style='background-color: white";}
                                     @endphp
-
+                                   <div id="section{{$id}}">
                                     {{-- Cuerpo de la tabla con la funcion de expancion --}}
                                     <tr    onclick="showHideRow('{{ $id }}');">
 
                                         <td>
 
-                                            @if ($tipoO != 'Parcialidad' && $tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+
+
+                                            @if ( $tipoO != 'Parcialidad'  &&  $tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                                 @php
                                                     Cheques::find($id)->update(['pendi' => 1]);
+                      $completo=$diferenciaP.$faltaxml.$nombreChequeP.$asignado.$tO;
                                                 @endphp
+                                                        @if($completo != '00121')
+
+
                                                 <a style="color:red; padding: 0px 5px 0px 5px;"
                                                     class="parpadea fas fa-exclamation"
-                                                    onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }})"></a>
-                                            @else
+                                                    onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }},{{$asignado}},{{$tO}} )"></a>
+                                                    @endif
+                                                    @else
+
+
                                                 @php
                                                     Cheques::find($id)->update(['pendi' => 0]);
                                                 @endphp
@@ -538,24 +565,33 @@ $rfcs=auth()->user()->empresas;
 
                                         {{-- $ de CFDI --}}
                                         <td>
+                                            @if ($tipoO == 'Nómina')
+                                            <span class="invoice-amount">----</span>
+                                           @else
                                             <span class="invoice-amount">${{ number_format($sumaxml, 2) }}</span>
+                                            @endif
                                         </td>
 
                                         {{-- Comprobar --}}
                                         <td data-tableexport-display="none">
+                                            @if ($tipoO == 'Nómina')
+                                            <span class="invoice-amount">----</span>
+                                              @else
                                             <span class="invoice-amount">${{ $diferencia }}</span>
+
+                                            @endif
                                         </td>
                                       {{-- Nominas vinculadas --}}
-                                        <td> 
-                                            @if ($tipoO == 'Nómina')
-                                                
-                                        
-                                            <i 
+                                        <td>
+                                            @if ($tipoO == 'Nómina' && $asignado ==1 || $asignado == 2)
+
+
+                                            <i
                                             data-toggle="modal" wire:click="$emitTo('ver-nominas-asignadas','refreshVerNominas')"
-                                            data-target="#VerNominasAsignadas{{ $id }}" 
+                                            data-target="#VerNominasAsignadas{{ $id }}"
                                             style="color: #3498DB;"
                                          class=" {{ $class }} fas fa-balance-scale bx bx-git-repo-forked align-middle"></i>
-                                         @endif 
+                                         @endif
                                         </td>
                                         {{-- - Detalles pendientes --}}
                                         <td style="display:none;" data-tableexport-display="always" data-tableexport-display="always">
@@ -879,6 +915,7 @@ if ($diferenciaP == 0) {
                                  <livewire:ver-nominas-asignadas :asignadas=$i
                                                                     :wire:key="'user-profile-kgytr-'.$i->_id">
                                     </tr>
+                                   </div>
                                 </tbody>
                             @endforeach
 
@@ -997,4 +1034,12 @@ if ($diferenciaP == 0) {
         }
     });
 </script>
+
+
+
+
 </div>
+@php
+Session::forget('rfcnomina');
+
+@endphp

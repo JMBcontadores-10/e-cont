@@ -5,7 +5,9 @@ namespace App\Http\Livewire;
 use App\Models\Cheques;
 use App\Models\MetadataE;
 use App\Models\XmlE;
+use Exception;
 use Livewire\Component;
+use PhpParser\Node\Stmt\TryCatch;
 
 class VerNominasAsignadas extends Component
 {
@@ -26,6 +28,25 @@ protected  $listeners=[
 
 ];
 
+
+////// redireccionar a nominas
+ public function IrNominas($fechaPago,$rfc){
+
+    $dateValue = strtotime($fechaPago);//obtener la fecha
+    $mesPago = date('m',$dateValue);// obtener el mes
+    $anioPago= date('Y',$dateValue);// obtener el año
+
+    session()->put('mes', $mesPago);
+    session()->put('rfcnomina', $rfc);
+    session()->put('anio',$anioPago);
+
+    return redirect()->to('/nominas');
+
+ }
+
+
+
+
     public function render()
     {
 
@@ -43,16 +64,12 @@ protected  $listeners=[
 
 
 
-       $this->xmle=XmlE::
-       whereIn('UUID',$this->foliosFiscales)
-
-
-       ->get();
 
 
 
 
-
-         return view('livewire.ver-nominas-asignadas');
+         return view('livewire.ver-nominas-asignadas')
+        //  ->with('xmle',$this->xmle)
+         ;
     }
 }

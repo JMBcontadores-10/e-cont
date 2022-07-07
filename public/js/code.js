@@ -634,21 +634,38 @@ $('#vinpsub').on('click', function () {
 });
 
 // Muestra en una alerta los pendientes de los cheques
-function alertaP(a, b, c) {
+function alertaP(a, b, c, n,tipo) {
     var nl = "\r\n"
     var msg = ''
+if(tipo != 1){
+
     if (b == 0) {
         msg += "- No tiene CFDI's vinculados.";
         msg += nl;
     }
-    if (c == 0) {
-        msg += "- No tiene pdf asociado.";
-        msg += nl;
-    }
+
     if (a == 0) {
         msg += "- Existe diferencia con el importe total.";
         msg += nl;
     }
+}
+
+    if (c == 0) {
+        msg += "- No tiene pdf asociado.";
+        msg += nl;
+    }
+
+    if(n== 0){
+       msg += "El cheque debe asociaserse a una nomina";
+       msg += nl;
+    }else if(n== 1){
+        msg += "Existe saldo pendiente por asignar de este cheque de nomina";
+        msg += nl;
+
+    }
+
+
+
     alert(msg);
 }
 
@@ -781,7 +798,7 @@ function FilePondPDFVolu(rutaid, id) {
     // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateSize);
 
-    //Obtenemos el ID de cada 
+    //Obtenemos el ID de cada
     var inputfile = document.getElementById(rutaid);
 
     //Parametros de validacion de archivos
@@ -825,7 +842,7 @@ function FilePondPDFCRE(rutaid, id) {
     // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateSize);
 
-    //Obtenemos el ID de cada 
+    //Obtenemos el ID de cada
     var inputfile = document.getElementById(rutaid);
 
     //Parametros de validacion de archivos

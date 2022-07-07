@@ -1,5 +1,5 @@
 
-<div>{{-------------div principal---------------}}
+<div >{{-------------div principal---------------}}
 
 @php
 /// importar clase nomina
@@ -20,34 +20,13 @@ $Nomina = new Nomina(); /// objeto
 
 @endphp
 
-<script>
-
-function myFunction(id) {
-  // Get the checkbox
-  var checkBox = document.getElementById(id);
-  // Get the output text
-  var b = document.getElementById("boton"+id);
-
-  // If the checkbox is checked, display the output text
-  if (checkBox.checked == true){
-    b.style.display = "block";
-  } else {
-    b.style.display = "none";
-  }
-
-}
-
-
-function ImporteTemp(){
-
-    alert("holaa");
-}
-  </script>
 
 
 
-<div wire:ignore.self class="modal fade" id="asignarCheque{{ $datos }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+
+
+<div   wire:ignore.self class=" super modal " id="asignarCheque{{$datos }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div  class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;" class="icons fas fa-money-check"> asignarCheque perido {{ $datos }}</span></h6>
@@ -55,6 +34,7 @@ function ImporteTemp(){
                     <button id="mdlP{{$datos}}" type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true close-btn">×</span>
                     </button>
+
 
             </div>
 {{-- {{$datos}} {{$RFC}}  {{$fechaFinal}} --}}
@@ -236,7 +216,7 @@ Nuevo Cheque / Tranferencia
                       @if ($tpagado != 0)
                        @php $tabActive= "active";@endphp
                         <li class="nav-item">
-                        <a class="nav-link {{$tabActive}} " id="home-tab" data-toggle="tab" href="#home" aria-controls="home" role="tab"
+                        <a class="nav-link {{$tabActive}} " id="home-tab" data-toggle="tab" href="#home{{ $datos }}" aria-controls="home" role="tab"
                           aria-selected="true">
                           <i class="bx bx-git-repo-forked align-middle"></i>
                           <span class="align-middle">Cheques para Vincular</span>
@@ -246,7 +226,7 @@ Nuevo Cheque / Tranferencia
                       @if ($tpagado == 0)
                       @php $tabActive= "active";@endphp
                       <li class="nav-item">
-                        <a class="nav-link {{$tabActive}}" id="profile-tab" data-toggle="tab" href="#profile" aria-controls="profile" role="tab"
+                        <a class="nav-link {{$tabActive}}" id="profile-tab" data-toggle="tab" href="#profile{{ $datos }}" aria-controls="profile" role="tab"
                           aria-selected="false">
                           <i class="bx bx-git-pull-request align-middle"></i>
                           <span class="align-middle">Desvincular Cheques</span>
@@ -257,7 +237,7 @@ Nuevo Cheque / Tranferencia
                       </li>
                       @else
                       <li class="nav-item">
-                        <a class="nav-link " id="profile-tab" data-toggle="tab" href="#profile" aria-controls="profile" role="tab"
+                        <a class="nav-link " id="profile-tab" data-toggle="tab" href="#profile{{ $datos }}" aria-controls="profile" role="tab"
                           aria-selected="false">
                           <i class="bx bx-git-pull-request align-middle"></i>
                           <span class="align-middle">Desvicular Cheques</span>
@@ -281,9 +261,14 @@ Nuevo Cheque / Tranferencia
                         @if ($tpagado != 0)
                         @php $tabActive= "active";@endphp
 
-                      <div class="tab-pane {{ $tabActive}}" id="home" aria-labelledby="home-tab" role="tabpanel">
+                      <div class="tab-pane {{ $tabActive}}" id="home{{ $datos }}" aria-labelledby="home-tab" role="tabpanel">
 
                         <!--- [ tabla cheques para vincular] --->
+
+                        {{-- Busqueda por texto --}}
+                        <input wire:model.debounce.300ms="search" class="form-control" type="text"
+                            placeholder="Busca Cheque" aria-label="Search">
+                        &nbsp;&nbsp;
 
             {{-- ------------Boton para vinculacion ---------- --}}
 
@@ -393,7 +378,7 @@ $valor = $Nomina->importesTemporales($this->temporales, $i->_id);
 
                   <button type="button"
                   data-toggle="modal"data-controls-modal="#asingnarCheque"
-                  data-target="#sustraer" wire:click="emitirAsustraer('{{$i->_id}}')"
+                  data-target="#sustraer{{$datos}}{{$i->_id}}"  onclick="init()"
                   class="btn btn-secondary btn-sm">Ajustar</button>
 
 
@@ -401,8 +386,10 @@ $valor = $Nomina->importesTemporales($this->temporales, $i->_id);
 
             </div>
 
-     {{-- <livewire:sustraer :sustraerImporte="$i" :totalPagado="$totalPagado" :serie="$serie" :periodo="$datos" :totalrestante="$tpagado"  :wire:key="'sustraer'. $i->UUID.$i->_id"> --}}
-        @endforeach
+
+     <livewire:sustraer :sustraerImporte="$i" :totalPagado="$totalPagado" :serie="$serie" :periodo="$datos" :totalrestante="$tpagado"  :wire:key="'sustraer'. $i->UUID.$i->_id">
+
+     @endforeach
      </div>
   </div>
 
@@ -417,10 +404,13 @@ $valor = $Nomina->importesTemporales($this->temporales, $i->_id);
                       @endif
                       <!--- final de if tab para mstrar los cheques a vincular de la tabla-->
                       @if ($tpagado == 0)
-                      @php $tabActive= "active";@endphp
+                      <div class="tab-pane active " id="profile{{$datos}}" aria-labelledby="profile-tab" role="tabpanel">
+                       @else
+
+                       <div class="tab-pane " id="profile{{$datos}}" aria-labelledby="profile-tab" role="tabpanel">
+
                       @endif
 
-                      <div class="tab-pane" id="profile" aria-labelledby="profile-tab" role="tabpanel">
                        <!--[tabla para desvicular cheques ]-->
 
                      {{---checar si hay cheques vinculados---}}
@@ -463,8 +453,10 @@ $valor = $Nomina->importesTemporales($this->temporales, $i->_id);
     echo 'Excepción capturada: ',  $e->getMessage(), "\n";
 }
 
-                      @endphp
 
+
+                      @endphp
+    <strong style="float: right;">Total: ${{number_format($granTotal -  $totalPagado,2)}}</strong>
 
                       <!--- fin de la seccion collapse -->
 
@@ -626,9 +618,6 @@ La suma de los cheques asignados a este perido con cuerdan correctamente con el 
 
 {{--
 @include('livewire.agregarcheque') --}}
-
-
-
 
 </div>{{----------- fin div principal--------------}}
 

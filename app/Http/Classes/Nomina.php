@@ -157,8 +157,10 @@ whereIn('UUID',$cont)
     /// se obtienen todos lo cheques  vinculados
 $cheques=Cheques::
       whereIn('_id', $metadata->cheques_id)->get();
+
 //// se clasifican los cheques para saber si se sumara saldo / nomina.serie.folio ó importe
    foreach($cheques as $cheque){
+
 
     ///// suma campo nomina.serie.folio si existe
 
@@ -169,8 +171,11 @@ $cheques=Cheques::
     /// suma campo saldo si nomina.serie.folio no existe y saldo si
    }else if(!isset($cheque->$nomi) && $cheque->saldo){
 
-           $suma+=$cheques->saldo;
+           $suma+=$cheque->saldo;
 
+   }elseif(isset($cheque->nominaAsignada) && $cheque->saldo !=0){
+
+             $suma+=$cheque->saldo;
    }else{
 
            $suma += $cheque->importecheque;

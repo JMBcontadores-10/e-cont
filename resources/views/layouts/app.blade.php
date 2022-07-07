@@ -252,26 +252,16 @@
                                     data-toggle="tooltip" data-placement="top" title="Chat"><i
                                         class="ficon bx bx-chat"></i></a></li>
 
-                            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link"
-                                    data-toggle="tooltip" data-placement="top" title="Todo"><i
-                                        class="ficon bx bx-check-circle"></i></a></li>
+                            @if (!empty(auth()->user()->tipo))
+                                <livewire:notifitarea-section />
 
-                            <li class="nav-item d-none d-lg-block" onclick="alerta()"><a class="nav-link"
-                                    data-toggle="tooltip" data-placement="top" title="Calendario"><i
-                                        class="ficon bx bx-calendar-alt"></i></a></li>
-                        </ul>
+                                <li class="nav-item d-none d-lg-block" data-backdrop="static" data-keyboard="false"
+                                    data-toggle="modal" data-target="#calcolabotarea"><a class="nav-link"
+                                        data-toggle="tooltip" data-placement="top" title="Calendario"><i
+                                            class="ficon bx bx-calendar-alt"></i></a></li>
 
-                        <ul class="nav navbar-nav">
-                            <li class="nav-item d-none d-lg-block"><a class="nav-link bookmark-star"><i
-                                        class="ficon bx bx-star warning"></i></a>
-                                <div class="bookmark-input search-input">
-                                    <div class="bookmark-input-icon"><i class="bx bx-search primary"></i></div>
-                                    <input class="form-control input" type="text" placeholder="Explorar..." tabindex="0"
-                                        data-search="template-search">
-                                    <ul class="search-list"></ul>
-                                </div>
-                            </li>
-                        </ul>
+                                <livewire:tarearanking-section />
+                            @endif                        </ul>
                     </div>
 
 
@@ -317,8 +307,13 @@
                                 <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item"
                                         onclick="alerta()"><i class="bx bx-user mr-50"></i> Editar
                                         Perfil</a><a class="dropdown-item" onclick="alerta()"><i
-                                            class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item"
-                                        onclick="alerta()"><i class="bx bx-check-square mr-50"></i>Tareas</a><a
+                                            class="bx bx-envelope mr-50"></i> Email</a>
+
+                                    @if (!empty(auth()->user()->tipo))
+                                        <a class="dropdown-item" href="{{ url('tareas') }}">
+                                            <i class="bx bx-check-square mr-50"></i>Tareas</a>
+                                    @endif
+<a
                                         class="dropdown-item" onclick="alerta()"><i
                                             class="bx bx-message mr-50"></i>Chats</a>
                                     <div class="dropdown-divider mb-0"></div>
@@ -400,7 +395,7 @@
                         @endif
 
                         @if (auth()->user()->tipo != 'VOLU')
-                            <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"><i
+                            <li id="expedifiscal"><a class="d-flex align-items-center" href="{{ url('expedifiscal') }}"><i
                                         class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
                                         data-i18n="Analytics">Expediente Fiscal</span></a>
                             </li>
@@ -1040,10 +1035,13 @@
   </footer> --}}
     <!-- END: Footer-->
 
-
+    {{-- Calendario de actividades --}}
+    <livewire:tareacal />
 
 </body>
 <livewire:notification-content>
+    <livewire:notifitarea-content />
+    <livewire:tarearanking-content />
     <footer style="margin-top: 20px;">
         {{-- <p class="row justify-content-center" style="font-size: 20px; font-weight: bold;">E-CONT {{ date('Y') }} |
       JMB Contadores</p> --}}

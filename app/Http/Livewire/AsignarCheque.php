@@ -10,8 +10,7 @@ use App\Models\XmlE;
 use DateTime;
 use DateTimeZone;
 use Livewire\Component;
-
-
+use Psy\Command\WhereamiCommand;
 
 class AsignarCheque extends Component
 
@@ -31,12 +30,17 @@ class AsignarCheque extends Component
      $nominas,
      $mes,
      $nomina,
+     $search,
      $temporales=[];
 
     public $importe;
 
 
     public  $value=0, $anio;
+
+
+
+
 
 
 
@@ -236,7 +240,13 @@ if ($this->temporales){
        if($item['uuid'] === $ch){
        $cheques = Cheques::where('_id',$item['uuid'])->first();
 
-      $saldo= $cheques->importecheque - $item['importe'];
+
+
+      if(isset($cheques->saldo)){
+        $saldo= $cheques->saldo - $item['importe'];
+
+
+         }else{   $saldo= $cheques->importecheque - $item['importe'];}
     $cheques2=Cheques::where('_id', $item['uuid'])
     ->update([
 
@@ -254,8 +264,11 @@ if ($this->temporales){
     $cheques2=Cheques::where('_id', $ch)
     ->update([
 
-        'nominaAsignada' => 1,
-        'saldo'=>0,
+        $this->nomina => $cheques->saldo ,
+        'saldo' => 0,
+
+         'nominaAsignada' => 1,
+        // 'saldo'=>0,
     ]);
 
 }elseif($cheques->importecheque <= $totalP)
@@ -327,11 +340,28 @@ $this->miId=$id;
 
     public function desvicunlar(){
 $n=$this->nomina="nomina".$this->serie.$this->asignarCheque;
+
+
         $metadata = MetadataE:: // consulta a MetadataE
             whereIn('cheques_id',$this->chequesVinculados)
             ->where('efecto', 'Nómina')
+
             ->where('estado','Vigente')
-            ->pull('cheques_id',$this->chequesVinculados);
+            ->get();
+
+
+            foreach($metadata as $m){
+
+            $xml=XmlE::where('UUID',$m->folioFiscal)->first();
+            if($xml->Folio ==  $this->asignarCheque && $xml->Serie == $this->serie)
+             $meta=
+             MetadataE::where('folioFiscal',$xml->UUID) // consulta a MetadataE
+            -> where('efecto', 'Nómina')
+
+             ->where('estado','Vigente')
+
+             ->pull('cheques_id',$this->chequesVinculados);
+            }
 
       $cheque= Cheques::
        whereIn('_id',$this->chequesVinculados)
@@ -345,12 +375,21 @@ $n=$this->nomina="nomina".$this->serie.$this->asignarCheque;
             $c->unset($this->nomina);
             $c->unset('saldo');
         if(isset($c->nominaAsignada)){  $c->unset('nominaAsignada');}
-         }else{
-            $c->unset($this->nomina);
-            $c->update([
+         }elseif(isset($c->nominaAsignada) && !isset($c->saldo) ){
 
+            $c->unset('nominaAsignada');
+
+        }else{
+
+            $c->unset($n);
+
+            $actualizar= Cheques::
+            where('_id',$c->_id)
+            ->update([
                 'saldo'=> $saldo,
-            ]);
+                ]);
+
+
 
             if(isset($c->nominaAsignada)){  $c->unset('nominaAsignada');}
          }
@@ -372,7 +411,7 @@ $n=$this->nomina="nomina".$this->serie.$this->asignarCheque;
 public function emitirAsustraer($id){
 
     $this->emitTo('sustraer','recibeAsignar',$id);
-   
+
 }
 
 
@@ -391,7 +430,8 @@ public function emitirAsustraer($id){
 
         //Consulta de los cheques vinculados
 if (isset($this->cheques_asociados->cheques_id)  ){
-        $Cheques = Cheques::where('rfc', $this->RFC)
+        $Cheques = Cheques::search($this->search)
+         ->where('rfc', $this->RFC)
            ->WhereNotIn('_id', $this->cheques_asociados->cheques_id)
 
             ->where('tipoopera', 'Nómina')
@@ -400,7 +440,8 @@ if (isset($this->cheques_asociados->cheques_id)  ){
             ->orderBy('fecha', 'Desc')
             ->get();
 }else{
-    $Cheques = Cheques::where('rfc', $this->RFC)
+    $Cheques = Cheques::search($this->search)
+    ->where('rfc', $this->RFC)
              ->whereNull($this->nomina)
             ->where('tipoopera', 'Nómina')
             ->whereNull('nominaAsignada')
@@ -416,6 +457,7 @@ if (isset($this->cheques_asociados->cheques_id)  ){
                 'datos' => $this->asignarCheque,
                 'RFC' => $this->RFC,
                 'Cheques' => $Cheques,
+                'Cheques1' => $Cheques,
                 'chequesAsig' => $this->chequesAsignados,
                 'fechaFinal' => $this->fecha,
                 'content' => $this->content,

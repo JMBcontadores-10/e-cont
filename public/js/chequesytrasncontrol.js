@@ -830,6 +830,7 @@ $(document).ready(function() {
 
 function showHideRow(Id) {
     $("#hidden_row" + Id).toggle();
+    $("#section" + Id).css("background-color", "gray");
 
     //Escodemos los mensajes de contabilidad y revision de cheques
     $('#MostrarConta' + Id).hide();

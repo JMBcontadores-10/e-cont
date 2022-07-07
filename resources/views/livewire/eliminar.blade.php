@@ -71,10 +71,10 @@ function miFunc() {
                       <p><strong> Se realizarán las siguientes acciones: </strong>  </p><br>
                       @endif
                       <ul>
-                        @php 
-                         
+                        @php
+
                         $nomina= MetadataE:: where('cheques_id', $datos->_id)->where('estado','!=','Cancelado')->first();
-                      
+
                         @endphp
                         @if (isset($nomina->folioFiscal))
                         <li>Este cheque esta asociado a una nomina (Se desviculará). </li>

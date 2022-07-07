@@ -27,9 +27,46 @@
 
         $suma = 0;
     @endphp
+<!--   Recibir variables desde cheques y transferencias -->
+@if (session()->get('rfcnomina'))
+{{-- <div class="alert alert-success">
+
+</div> --}}
+
+<script>
+    $(document).ready(function() {
+        // alert('{{ session('id') }}');
+        window.livewire.emit('filtrarRequest', '{{ Session::get('rfcnomina') }}', '{{ Session::get('mes') }}','{{Session::get('anio')}}');
+
+    });
+</script>
+
+@php
+    Session::forget('rfcnomina');
+    Session::forget('mes');
+    Session::forget('anio');
+@endphp
+@endif
 
 
     {{-- Contenedor --}}
+
+<style>
+
+
+.content-wrapper{
+
+    z-index:0;
+}
+
+.content-body{
+
+    z-index:0;
+}
+
+
+</style>
+
     <div class="app-content content">
         <div class="content-wrapper">
             <div class="content-body">
@@ -208,7 +245,7 @@
                                             <a wire:loading.attr="hidden" data-toggle="modal"
                                                 data-controls-modal="#asingnarCheque" name="14"
                                                 id="{{ $nom['Folio'] }}" data-backdrop="static" data-keyboard="false"
-                                                wire:click="$emitTo('asignar-cheque','refresAsignar')"
+                                                {{-- wire:click="$emitTo('asignar-cheque','refresAsignar')" --}}
                                                 data-target="#asignarCheque{{ $nom['Folio'] }}"
                                                 class="icons fas fa-money-check">
                                             </a>
@@ -259,11 +296,10 @@
                 <livewire:agregarcheque>
                     <livewire:vincular-pagos-automatico>
                         <livewire:uploadrelacionados>
-                            <livewire:sustraer>
+
             </div>
         </div>
     </div>
-
 
 
 </div>{{-- -----fin div principal----- --}}

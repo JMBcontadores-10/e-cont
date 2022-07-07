@@ -41,6 +41,7 @@ class Agregarcheque extends Component
     $rfc,
     $fecha,
     $movivinc,
+    $idNomina,
     $TotalIngresos = 0,
     $TotalEgresos = 0;
  //Variable para la suma de totales de las facturas seleccionadas
@@ -290,6 +291,7 @@ if($this->folio){
 
     $asignacion =XmlE::where('Emisor.Rfc',$this->rfc)
     ->where('Complemento.0.Nomina.FechaFinalPago',$this->fecha)
+    ->where('estado','!=','Cancelado')
     ->where('Folio',$this->folio)
     ->where('Serie', $anio)
     ->get();
@@ -302,7 +304,7 @@ if($this->folio){
      //$insert->unset('cheques_id');
     }
 
-
+    $this->emitTo( 'asignar-cheque','refresAsignar');
     }
 ######################### [ FIN ]################
 
@@ -316,7 +318,7 @@ $this->dispatchBrowserEvent('step2', []);
 
 $this->emitTo( 'notification-secction','avisoPush');
 
-
+$this->emitTo( 'asignar-cheque','refresAsignar');
 
 
     }

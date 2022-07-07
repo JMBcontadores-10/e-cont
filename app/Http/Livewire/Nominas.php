@@ -31,8 +31,21 @@ class Nominas extends Component
     protected $listeners =[
 
       'nominarefresh' =>'$refresh',
+      'recibir','filtrarRequest',
 
     ];
+
+
+    public function filtrarRequest($rfc,$mes, $anio){
+
+        $this->rfcEmpresa =$rfc;
+        $this->anio=$anio;
+        $this->mes=$mes;
+
+
+    }
+
+
 
 
     // public function cheque($id)

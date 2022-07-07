@@ -8,15 +8,14 @@ use Livewire\Component;
 class Sustraer extends Component
 {
 
-
+public Cheques $sustraerImporte;
 public $totalPagado,
        $importe,
        $fechaPago,
        $serie,
        $periodo,
        $totalrestante,
-       $miId,
-       $hola,
+       $error,
        $temporales=[];
 
 
@@ -36,18 +35,9 @@ protected function rules(){
 protected $listeners=[
 
 'refreshSustraer' => '$refresh',
-'recibeAsignar',
 ];
 
 
-
-///functionload
-
-public function load() {
-
-
-    $this->hola="hola";
-}
 
 // metodo sustraer
 public function sustraer($id)
@@ -111,24 +101,37 @@ public function sustraer($id)
 
     }
 
-/////
+
 
 ///// limpiar campo importe
     $this->reset('importe');
 
 }
 
-///// recibeAsignar
-
-public function recibeAsignar($id) {
-
-$this->miId=$id;
-}
-
 
  public function almacenar(){
 
-$this->emitTo('asignar-cheque','almacenar',$this->miId ,$this->importe);
+   if (isset($this->sustraerImporte->saldo)){
+    $saldo = $this->sustraerImporte->saldo;
+   }else{
+
+    $saldo = $this->sustraerImporte->importecheque;
+   }
+
+
+    if($this->importe > $this->totalrestante || $this->importe > $saldo){
+
+        return $this->error=1;
+
+    }elseif($this->importe < 0){
+
+            return $this->error=2;
+    }else{
+        $this->error=0;
+
+    }
+
+$this->emitUp('almacenar',$this->sustraerImporte->_id,$this->importe);
 
  }
 
@@ -140,10 +143,6 @@ $this->emitTo('asignar-cheque','almacenar',$this->miId ,$this->importe);
 
 
 
-        return view('livewire.sustraer',[
-        'totalPagado'=>$this->totalPagado,
-        'fechaPago'=>$this->fechaPago,
-          'serie'=>$this->serie
-        ]);
+        return view('livewire.sustraer');
     }
 }
