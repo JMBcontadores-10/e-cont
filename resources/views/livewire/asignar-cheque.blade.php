@@ -16,7 +16,7 @@ $Nomina = new Nomina(); /// objeto
     $nomna="nomina".$serie.$datos;
     $tabActive="";
 
-    $totalPagado = $Nomina::TotalPago($RFC, $serie, $asignarCheque,$mes);
+    $totalPagado = $Nomina::TotalPago($RFC, $serie, $asignarCheque,$mes, $tipoNomina);
 
 @endphp
 
@@ -29,7 +29,7 @@ $Nomina = new Nomina(); /// objeto
     <div  class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;" class="icons fas fa-money-check"> asignarCheque perido {{ $datos }}</span></h6>
+                <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;" class="icons fas fa-money-check"> Asignar cheque perido {{ $datos }}</span></h6>
 
                     <button id="mdlP{{$datos}}" type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true close-btn">×</span>
@@ -61,15 +61,18 @@ $Nomina = new Nomina(); /// objeto
 {{$content}}<br>{{$totalPagado}} --}}
 {{-- valor de input : {{$cont}} <br> --}}
 
-@php $tpagado=$Nomina::TotalPago($RFC, $serie, $asignarCheque,$mes);
+@php $tpagado=$Nomina::TotalPago($RFC, $serie, $asignarCheque,$mes,$tipoNomina);
 /// retona un uuid asociado a la nomina para sacar los cheques vinculados
 
-$idschequesVinculados=$Nomina::TotalPago($RFC, $serie, $asignarCheque,$mes,'retornaUUID');
+echo "tipo".$tipoNomina."aqui". $idschequesVinculados=$Nomina::TotalPago($RFC, $serie, $asignarCheque,$mes, $tipoNomina ,'retornaUUID');
  //// checar si hay cheques vinculados
 
 @endphp
 
+{{-- ANIO: {{$anio}}<br>
+{{$this->asignarCheque}}
 
+<br>{{var_dump($xs)}} --}}
 
 <div class="modal-body">
 {{--To   {{$granTotal}}
@@ -77,7 +80,7 @@ $idschequesVinculados=$Nomina::TotalPago($RFC, $serie, $asignarCheque,$mes,'reto
 {{var_dump($cheques_asociados->cheques_id)}}
 
 @endif --}}
-<strong> Total de la nomina: ${{number_format($granTotal,2)}} </strong>
+<strong> Total de la nómina: ${{number_format($granTotal,2)}} </strong>
 
 @if ( count($chequesAsig) > 0)
  @php
@@ -187,7 +190,37 @@ $suma += $importeAsig;
 
 <center>
 La suma de los cheques asignados a este perido con cuerdan correctamente con el total pago.
-<h5>  <br><bold><small> Total cubierto: </small> $ {{number_format($granTotal,2)}} </bold> </h5>
+<h5>  <br><bold><small> Total cubierto: </small> $ {{number_format($granTotal,2)}} </bold> <br>
+
+    @php
+    $idsAjuste=[];
+    $boleanAjuste=false;
+
+     $ajuste = MetadataE:: where('folioFiscal',$idschequesVinculados)->first();
+     if($ajuste->cheques_id){
+
+foreach ($ajuste->cheques_id as $value) {
+    $idsAjuste[]=$value;
+}
+        /////verigfcar si existe ajuste en los cheques asignados
+       $c= Cheques::whereIn('_id',$idsAjuste)->get();
+
+   foreach ($c as $key => $l) {
+    if($l->ajuste > 0){
+    $boleanAjuste=true;
+    }
+
+   }
+
+     }
+    @endphp
+    @if ($boleanAjuste)
+
+    <small>" El importe total se cubrio con ajuste"</small>
+    @endif
+</h5>
+
+
 </center>
 @endif
         <div class="invoice-create-btn mb-1">
@@ -521,6 +554,12 @@ $valor = $Nomina->importesTemporales($this->temporales, $i->_id);
 
                                                 @if ($i->$nomna!==null   )
                                                 ${{ number_format($i->$nomna - $valor, 2) }}
+                                                {{-- mostrar el ajuste si es que existe---}}
+                                                @if (isset($i->ajuste))
+
+                                                 <p style="color: #3CA2DB" > + {{number_format($i->ajuste,2)}}</p>
+                                                @endif
+
                                                 @if ($valor >0)
                                                  &nbsp;/ &nbsp; <strong style="color:royalblue"> ${{ number_format( $valor, 2) }}
                                                  <a style="color:royalblue; padding: 0px 5px 0px 5px;"
@@ -529,6 +568,11 @@ $valor = $Nomina->importesTemporales($this->temporales, $i->_id);
                                                 @endif
                                                 @elseif(isset($i->saldo) && $i->saldo != 0)
                                                 ${{ number_format($i->saldo - $valor, 2) }}
+                                                 {{-- mostrar el ajuste si es que existe---}}
+                                                 @if (isset($i->ajuste))
+
+                                                 <p style="color: #3CA2DB" > + {{number_format($i->ajuste,2)}}</p>
+                                                @endif
                                                 @if ($valor >0)
                                                 &nbsp;/ &nbsp; <strong style="color:royalblue"> ${{ number_format( $valor, 2) }}
                                                     <a style="color:royalblue; padding: 0px 5px 0px 5px;"
@@ -538,6 +582,11 @@ $valor = $Nomina->importesTemporales($this->temporales, $i->_id);
                                                @endif
                                                 @else
                                                 ${{ number_format($i->importecheque - $valor, 2) }}
+                                                 {{-- mostrar el ajuste si es que existe---}}
+                                                 @if (isset($i->ajuste))
+
+                                                 <p style="color: #3CA2DB" > + {{number_format($i->ajuste,2)}}</p>
+                                                @endif
                                                 @if ($valor >0)
                                                 &nbsp;/ &nbsp; <strong style="color:royalblue"> ${{ number_format( $valor, 2) }}
                                                     <a style="color:royalblue; padding: 0px 5px 0px 5px;"

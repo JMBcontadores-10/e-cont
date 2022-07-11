@@ -29,8 +29,10 @@ class AsignarCheque extends Component
      $TotalPagado,
      $nominas,
      $mes,
+     $xs,
      $nomina,
      $search,
+     $tipoNomina,
      $temporales=[];
 
     public $importe;
@@ -109,7 +111,7 @@ $this->chequesAsignados[]=$id;
 $this->nomina="nomina".$this->serie.$this->asignarCheque;
         $this->condicion = '>';
         $this->idNuevoCheque = Null;
-        $this->anio = date("Y");
+
 
         $Cheques = Cheques::where('rfc', $this->RFC)
         ->where('tipoopera', 'Nómina')
@@ -162,7 +164,8 @@ $this->nomina="nomina".$this->serie.$this->asignarCheque;
     {
         $resta = floatval($resta);
 
-        $asignacion = XmlE::where('Emisor.Rfc', $this->RFC)
+       $asignacion = XmlE::where('Emisor.Rfc', $this->RFC)
+
             ->where('Complemento.0.Nomina.FechaFinalPago', $this->fecha)
             ->where('Folio', $this->asignarCheque)
             ->where('Serie', $this->anio)
@@ -170,7 +173,7 @@ $this->nomina="nomina".$this->serie.$this->asignarCheque;
 
         foreach ($asignacion as $a) {
 
-            $insert = MetadataE::where('folioFiscal', $a['UUID'])->first();
+           $insert = MetadataE::where('folioFiscal', $a['UUID'])->first();
             $insert->push('cheques_id', $this->chequesAsignados);
             // $insert->unset('cheques_id');
         }
@@ -207,9 +210,8 @@ $this->nomina="nomina".$this->serie.$this->asignarCheque;
         $saldo=0;
 
 
-
-        $asignacion = XmlE::where('Emisor.Rfc', $this->RFC)
-            ->where('Complemento.0.Nomina.FechaFinalPago', $this->fecha)
+      $asignacion = XmlE::where('Emisor.Rfc', $this->RFC)
+            ->where('Complemento.Nomina.FechaFinalPago', $this->fecha)
             ->where('Folio', $this->asignarCheque)
             ->where('Serie', $this->anio)
             ->get();
@@ -218,8 +220,9 @@ $this->nomina="nomina".$this->serie.$this->asignarCheque;
 
         foreach ($asignacion as $a) { /// asignar los chequesId alos meta de nomina
 
-           $insert = MetadataE::where('folioFiscal', $a['UUID'])->first();
-         $insert->push('cheques_id', $this->chequesAsignados);
+           $insert = MetadataE::where('folioFiscal', $a['UUID'])
+           ->push('cheques_id', $this->chequesAsignados);
+
           // $insert->unset('cheques_id');
 
 
@@ -291,7 +294,7 @@ $this->chequesAsignados = [];
 $this->chequesVinculados= [];
 
 $this->emit('refresAsignar');
-
+$this->emitTo('nominas','nominarefresh');
 
     }/// fin del metodo asignar
 
@@ -401,7 +404,7 @@ $n=$this->nomina="nomina".$this->serie.$this->asignarCheque;
        $this->chequesVinculados= [];
 
        $this->emitSelf('refresAsignar');
-
+       $this->emitTo('nominas','nominarefresh');
 
 
     }

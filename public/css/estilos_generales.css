@@ -16,6 +16,11 @@ body {
     color: #8CD138;
 }
 
+.content_warning {
+    font-size: 19px;
+    color: #F4CF38 ;
+}
+
 .content_true_pdf {
     font-size: 19px;
     color: #D33E20;

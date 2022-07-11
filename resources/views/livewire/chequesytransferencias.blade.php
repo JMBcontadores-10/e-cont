@@ -323,7 +323,7 @@ echo strftime("%A %d de %B del %Y");
 
 if(!empty(auth()->user()->tipo)){
 
-$rfcs=auth()->user()->empresas;
+    $rfcs=auth()->user()->empresas;
                  $pendientes = Cheques::
                          whereIn('rfc', $rfcs)
                         ->where('importecheque', $this->condicion, $this->importe)
@@ -384,12 +384,14 @@ $rfcs=auth()->user()->empresas;
                             @php
                                 $arreglo = '';
                                 $totalVinculadas = 0;
-                                $asignado=0;
-                                $tO=0;
+
                             @endphp
 
                             @foreach ($colCheques as $i)
                                 @php
+                                 $asignado=0;
+                                $tO=0;
+                                $completo="";
                                     $editar = true;
                                     $id = $i->_id;
                                     $tipo = $i->tipomov;
@@ -475,7 +477,7 @@ $rfcs=auth()->user()->empresas;
                                         }
                                     }
 
-// echo $asignado;
+//  echo $asignado."<br>".$tO;
                                 @endphp
 
                                 <tbody>
@@ -496,7 +498,12 @@ $rfcs=auth()->user()->empresas;
                                             @if ( $tipoO != 'Parcialidad'  &&  $tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                                 @php
                                                     Cheques::find($id)->update(['pendi' => 1]);
-                      $completo=$diferenciaP.$faltaxml.$nombreChequeP.$asignado.$tO;
+                     $completo=$diferenciaP.$faltaxml.$nombreChequeP.$asignado.$tO;
+
+                                      if($completo  == '00121') {
+                                        Cheques::find($id)->update(['pendi' => 0]);
+                                      }
+
                                                 @endphp
                                                         @if($completo != '00121')
 
@@ -504,14 +511,21 @@ $rfcs=auth()->user()->empresas;
                                                 <a style="color:red; padding: 0px 5px 0px 5px;"
                                                     class="parpadea fas fa-exclamation"
                                                     onclick="alertaP({{ $diferenciaP }},{{ $faltaxml }}, {{ $nombreChequeP }},{{$asignado}},{{$tO}} )"></a>
+
+
+
                                                     @endif
+
+
                                                     @else
 
 
                                                 @php
                                                     Cheques::find($id)->update(['pendi' => 0]);
+
                                                 @endphp
-                                                @if ($verificado == 1 && Auth::user()->tipo)
+
+                                                @if ($verificado == 1 && Auth::user()->tipo )
                                                     @switch($contabilizado)
                                                         @case(0)
                                                             <a class="parpadea icons fa fa-check" style="color: green"
@@ -527,6 +541,22 @@ $rfcs=auth()->user()->empresas;
                                                     @endswitch
                                                 @endif
                                             @endif
+
+                                            @if ($verificado == 1 && Auth::user()->tipo && $tipoO=='Nómina' )
+                                            @switch($contabilizado)
+                                                @case(0)
+                                                    <a class="parpadea icons fa fa-check" style="color: green"
+                                                        aria-hidden="true" onclick="alert('Revisado')"></a>
+                                                @break
+
+                                                @case(1)
+                                                    <a class="parpadea icons fas fa-calculator" style="color: blue"
+                                                        aria-hidden="true" onclick="alert('Contabilizado')"></a>
+                                                @break
+
+                                                @default
+                                            @endswitch
+                                        @endif
                                             {{ $fecha }} &nbsp;
                                         </td>
 
@@ -556,7 +586,13 @@ $rfcs=auth()->user()->empresas;
 
                                             <span class="invoice-amount">${{ number_format( $i->$nomina, 2) }}</span>
                                              @else
-                                            <span class="invoice-amount">${{ number_format($importeC, 2) }}</span>
+                                             {{--------------------------- Ajuste Diferencial -----------------------}}
+                                             @if($ajuste != 0)
+                                             <span style="color: rebeccapurple" class="invoice-amount">${{ number_format($importeC + $ajuste , 2)  }}</span>
+                                             @else
+                                             <span class="invoice-amount">${{ number_format($importeC, 2) }}</span>
+                                             @endif
+
                                             @endif
 
 
@@ -583,7 +619,7 @@ $rfcs=auth()->user()->empresas;
                                         </td>
                                       {{-- Nominas vinculadas --}}
                                         <td>
-                                            @if ($tipoO == 'Nómina' && $asignado ==1 || $asignado == 2)
+                                            @if ($tipoO == 'Nómina' && $asignado == 1 || $asignado == 2)
 
 
                                             <i
@@ -659,13 +695,13 @@ if ($diferenciaP == 0) {
                                                         {{-- Condicional para las acciones de movimientos ya revisados --}}
 
                                                         <a class="{{ $class }} fas fa-balance-scale"
-                                                            data-toggle="modal"
+                                                            data-toggle="modal" wire:click="$emitTo('ajuste','refreshAjuste')"
                                                             data-target="#ajuste{{ $id }}"></a>
 
                                                     </div>
                                                 @endif
 
-                                                {{-- Notas --}}
+                                                {{--- Notas --}}
                                                 <div>
                                                     <div class="tr"> Nota(s)</div>
                                                     @if (!empty($comentario))
@@ -796,9 +832,18 @@ if ($diferenciaP == 0) {
                                                 @if (Auth::user()->tipo)
                                                     <div>
                                                         <div class="tr">Revisado</div>
-                                                        @if ($tipoO != 'Parcialidad' && $tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
-                                                            @php Cheques::find($id)->update(['pendi' => 1]); @endphp
-                                                        @elseif($verificado == 0)
+                                                        {{-- @if (  $tipoO != 'Parcialidad' && $tipo != 'Débito'
+                                                          && $tipo != 'Efectivo' && $tipoO != 'Otro'
+                                                         and ($tipoO == 'Impuestos' ||
+                                                         $tipoO == 'Sin CFDI' ? $nombreCheque == '0' :
+
+                                                         ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0'))) --}}
+
+
+                                                            {{-- @php Cheques::find($id)->update(['pendi' => 1]); @endphp --}}
+                                                       @if($verificado == 0   && $i->pendi == 0 )
+
+
                                                             <div class="form-check">
                                                                 <input class="form-check-input" type="checkbox"
                                                                     wire:model="revisado" value="{{ $id }}"
@@ -807,7 +852,8 @@ if ($diferenciaP == 0) {
                                                                 <label class="form-check-label"
                                                                     for="Revi{{ $id }}">Revisar</label>
                                                             </div>
-                                                        @else
+
+                                                        @elseif($verificado == 1 && $i->pendi == 0 )
                                                             <div id="Revisado{{ $id }}"
                                                                 onclick="ToolRevisado(this.id)">
                                                                 <div id="{{ $id }}"
@@ -857,9 +903,9 @@ if ($diferenciaP == 0) {
                                                             </div>
                                                         @endif
 
-                                                        @if ($tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
+                                                        {{-- @if (    $tipo != 'Débito' && $tipo != 'Efectivo' && $tipoO != 'Otro' and ($tipoO == 'Impuestos' || $tipoO == 'Sin CFDI' ? $nombreCheque == '0' : ($faltaxml == 0 or $diferenciaP != 1 or $nombreCheque == '0')))
                                                             @php Cheques::find($id)->update(['pendi' => 1]); @endphp
-                                                        @endif
+                                                        @endif --}}
                                                     </div>
                                                 @endif
 

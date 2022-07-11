@@ -9,8 +9,10 @@ use Livewire\Component;
 
 class Nominas extends Component
 {
-    public $rfcEmpresa;
-    public $anio,$mes;
+    public $rfcEmpresa,
+     $anio,
+     $mes,
+     $perioricidad;
 
     public function mount()
     {
@@ -25,6 +27,7 @@ class Nominas extends Component
         /////////////////
         $this->anio=date("Y");
         $this->mes=date("m");
+        $this->perioricidad="02";
 
     }
 
@@ -123,11 +126,29 @@ class Nominas extends Component
                 ->where('TipoDeComprobante','N')
                 ->where('Serie', $this->anio)
                 ->where('Complemento.0.Nomina.FechaPago','like','%' ."-".$this->mes."-".'%')
+                ->where('Complemento.0.Nomina.Receptor.PeriodicidadPago', $this->perioricidad)
+                ->where('Complemento.0.Nomina.TipoNomina', 'O' )
                 ->select('Fecha','Complemento','Total','Emisor','Serie','UUID')
                 ->groupBy('Folio')
                 ->orderBy('Folio','Asc')
-
                 ->get();
+
+
+                $nominasExtraOrdinarias=XmlE::
+                where('Emisor.Rfc',$this->rfcEmpresa)
+                ->where('TipoDeComprobante','N')
+                ->where('Serie', $this->anio)
+                ->where('Complemento.0.Nomina.FechaPago','like','%' ."-".$this->mes."-".'%')
+                ->where('Complemento.0.Nomina.Receptor.PeriodicidadPago', '99')
+                ->where('Complemento.0.Nomina.TipoNomina', 'E' )
+                ->select('Fecha','Complemento','Total','Emisor','Serie','UUID')
+                ->groupBy('Folio')
+                ->orderBy('Folio','Asc')
+                ->get();
+
+
+                ///////// obtener los extraOrdinarios
+
 
                 // $nominas=XmlE::with([
                 //     function($query) {
@@ -168,6 +189,8 @@ class Nominas extends Component
         'anios'=>$anios,
         'meses'=>$meses,
         'mes'=>$this->mes,
+        'nominasExtraOrdinarias'=>$nominasExtraOrdinarias,
+
         ])
         ->extends('layouts.livewire-layout')
         ->section('content');

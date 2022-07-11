@@ -64,7 +64,7 @@ $class='';
                 <div class="tr table-body-cell">RFC</div>
                 <div class="tr table-body-cell">Sueldo</div>
                 <div class="tr table-body-cell">Total <br>Percepciones</div>
-                <div class="tr table-body-cell">Prestamo <br>Infonavit</div>
+                <div class="tr table-body-cell">Préstamo <br>Infonavit</div>
 
                 <div class="tr table-body-cell">ISR</div>
                 <div class="tr table-body-cell">Total deducciones</div>
@@ -99,8 +99,10 @@ $sumTotalNeto=0;
 
 @php
 
-       $numero = (string) (int) substr($i['Complemento.0.Nomina.FechaFinalPago'], 5, 2);
-       $dateValue = strtotime($i['Complemento.0.Nomina.FechaFinalPago']);//obtener la fecha
+    //    $numero = (string) (int) substr($i['Complemento.0.Nomina.FechaFinalPago'], 5, 2);
+    //    $dateValue = strtotime($i['Complemento.0.Nomina.FechaFinalPago']);//obtener la fecha
+    $numero = (string) (int) substr($i['Fecha'], 5, 2);
+    $dateValue = strtotime($i['Fecha']);//obtener la fecha
         $mesfPago = date('m',$dateValue);// obtener el mes
         $espa=new Cheques();// se crea objeto para obtener la funcion meses español en modelo cheques
         $mes=$espa->fecha_es($mesfPago);// se obtiene mes y se convierte en español
@@ -116,29 +118,29 @@ $sumTotalNeto=0;
            <div class="table-body-cell"> {{$i['Receptor.Rfc']}}</div>
            <div class="table-body-cell">
                @php $sumaSueldo+= $i['Complemento.0.Nomina.Percepciones.Percepcion.0.ImporteGravado'];  @endphp
-            {{ $i['Complemento.0.Nomina.Percepciones.Percepcion.0.ImporteGravado']}}</div>
+            {{ number_format($i['Complemento.0.Nomina.Percepciones.Percepcion.0.ImporteGravado'],2)}}</div>
            <div class="table-body-cell">
                @php $sumTotalpercepciones+=$i['Complemento.0.Nomina.TotalPercepciones'];  @endphp
-            {{$i['Complemento.0.Nomina.TotalPercepciones']}}</div>
+            {{ number_format($i['Complemento.0.Nomina.TotalPercepciones'],2)}}</div>
            <div class="table-body-cell">
                 @php
                 if(is_numeric($funcion-> deducciones("FD",$i['UUID']))){
                 $sumaPrestamoInfonavit+=$funcion-> deducciones("FD",$i['UUID']);
                 }else{  }
 
-                    echo  $funcion-> deducciones("FD",$i['UUID']); @endphp
+                    echo    $funcion-> deducciones("FD",$i['UUID']); @endphp
                     </div>
            <div class="table-body-cell">@php
-                if(is_numeric($funcion->deducciones("ISR",$i['UUID']))){
-                    $sumaIsr+= $funcion->deducciones("ISR",$i['UUID']);
+                if(is_numeric($funcion->deducciones("ISR",$i['UUID'],$i['Complemento.0.Nomina.TipoNomina']))){
+                    $sumaIsr+= $funcion->deducciones("ISR",$i['UUID'],$i['Complemento.0.Nomina.TipoNomina']);
                 }else{  }
-           echo  $funcion->deducciones("ISR",$i['UUID']); @endphp</div>
+           echo    $funcion->deducciones("ISR",$i['UUID'],$i['Complemento.0.Nomina.TipoNomina']); @endphp</div>
            <div class="table-body-cell">
             @php $sumTotalDeducciones+=$i['Complemento.0.Nomina.TotalDeducciones'];  @endphp
-            {{$i['Complemento.0.Nomina.TotalDeducciones']}}</div>
+            {{ number_format($i['Complemento.0.Nomina.TotalDeducciones'],2)}}</div>
            <div class="table-body-cell">
             @php $sumTotalNeto+=$i['Total'];  @endphp
-                {{$i['Total']}}</div>
+                {{ number_format($i['Total'],2)}}</div>
            <div class="table-body-cell"> {{$i['UUID']}}</div>
            <div class="table-body-cell">
             <a href="{{ $rutaXml }}" download="{{ $i['UUID'] }}.xml">
@@ -156,14 +158,14 @@ $sumTotalNeto=0;
 
            <div class="table-body-cell"> </div>
            <div class="table-body-cell"> </div>
-           <div class="table-body-cell"> </div>
-           <div class="table-body-cell">${{$sumaSueldo}} </div>
-           <div class="table-body-cell">${{$sumTotalpercepciones}} </div>
-           <div class="table-body-cell">${{$sumaPrestamoInfonavit}} </div>
+           <div class="table-body-cell"><strong>Total </strong> </div>
+           <div class="table-body-cell"><strong>${{$sumaSueldo}}</strong> </div>
+           <div class="table-body-cell"><strong>${{$sumTotalpercepciones}}</strong> </div>
+           <div class="table-body-cell"><strong>${{$sumaPrestamoInfonavit}}</strong> </div>
 
-           <div class="table-body-cell">${{ $sumaIsr}}</div>
-           <div class="table-body-cell">${{$sumTotalDeducciones}} </div>
-           <div class="table-body-cell">${{$sumTotalNeto}} </div>
+           <div class="table-body-cell"><strong>${{ $sumaIsr}}</strong></div>
+           <div class="table-body-cell"><strong>${{$sumTotalDeducciones}}</strong> </div>
+           <div class="table-body-cell"><strong>${{$sumTotalNeto}}</strong> </div>
            <div class="table-body-cell"> </div>
            <div class="table-body-cell">
 

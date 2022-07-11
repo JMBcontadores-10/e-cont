@@ -15,6 +15,7 @@
         /// importar clase nomina
         use App\Http\Classes\Nomina;
         use Illuminate\Support\Facades\DB;
+        use App\Models\XmlE;
 
         $Nomina = new Nomina();
 
@@ -97,15 +98,6 @@
                     <div class="form-inline mr-auto">
 
 
-                        {{-- Busqueda por año --}}
-                        <label for="inputState">Año</label>
-                        <select wire:loading.attr="disabled" wire:model="anio" id="inputState2"
-                            class="select form-control">
-                            <?php foreach (array_reverse($anios) as $value) {
-                                echo '<option value="' . $value . '">' . $value . '</option>';
-                            } ?>
-                        </select>
-                        &nbsp;&nbsp;
                         {{-- Busqueda por mes --}}
                         <label for="inputState">Mes</label>
                         <select wire:model="mes" id="inputState1" wire:loading.attr="disabled"
@@ -116,6 +108,27 @@
                             } ?>
                         </select>
                         &nbsp;&nbsp;
+
+                        {{-- Busqueda por año --}}
+                        <label for="inputState">Año</label>
+                        <select wire:loading.attr="disabled" wire:model="anio" id="inputState2"
+                            class="select form-control">
+                            <?php foreach (array_reverse($anios) as $value) {
+                                echo '<option value="' . $value . '">' . $value . '</option>';
+                            } ?>
+                        </select>
+                        &nbsp;&nbsp;
+                         {{-- Busqueda por perioricidad --}}
+                         <label for="inputState">Tipo de Nómina</label>
+                         <select wire:loading.attr="disabled" wire:model="perioricidad" id="inputState2"
+                             class="select form-control">
+
+                             <option value="02">Semanal </option>
+                             <option value="03">Catorcenal </option>
+                             <option value="04">Quincenal </option>
+                             <option value="05">Mensual </option>
+                         </select>
+                         &nbsp;&nbsp;
 
 
                     </div>
@@ -148,22 +161,166 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        <span class="align-middle">#Periodo</span>
+                                        <span class="align-middle">No.Periodo</span>
                                     </th>
                                     <th>Periodo</th>
                                     <th>Fecha Pago </th>
-                                    <th>Raya</th>
+                                    <th>Nómina</th>
                                     <th>Recibos de <br> Nómina </th>
-                                    <th>Detalles</th>
-                                    <th>Total pago</th>
+                                    <th>Detalle</th>
+                                    <th>Total pagado</th>
                                     <th>ISR </th>
                                     <th>Asignar cheque</th>
 
                                 </tr>
                             </thead>
-                            {{-- -------  INCIO DEL FOR   --- --}}
 
+                            {{-- -------  INCIO DEL FOR   --- --}}
+{{count($nominasExtraOrdinarias)}}
                             <tbody>
+{{--------- INCIO DEL FOR EXTRA-ORDINARIOS--- --}}
+@foreach ($nominasExtraOrdinarias as $nomExtra)
+
+<tr>
+    <td class="text-center align-middle">
+        @if ($nomExtra['Complemento.0.Nomina.TipoNomina'] == 'E')
+            <a class="icon_basic">E</a>
+        @endif
+        {{ $nomExtra['Folio'] }}
+    </td>
+    @if (isset($nomExtra['Complemento.0.Nomina.FechaInicialPago']))
+        @php  $fechaPago=$nomExtra['Complemento.0.Nomina.FechaPago']  ;    @endphp
+        <td class="text-center align-middle">
+            {{ $nomExtra['Complemento.0.Nomina.FechaInicialPago'] }} al
+            {{ $nomExtra['Complemento.0.Nomina.FechaFinalPago'] }} </td>
+        <td class="text-center align-middle">
+            {{ $nomExtra['Complemento.0.Nomina.FechaPago'] }} </td>
+    @else
+        @php  $fechaPago=$nomExtra['Complemento.Nomina.FechaPago']  ;    @endphp
+        <td class="text-center align-middle">
+            {{ $nomExtra['Complemento.Nomina.FechaInicialPago'] }} al
+            {{ $nomExtra['Complemento.Nomina.FechaFinalPago'] }} </td>
+        <td class="text-center align-middle">
+            {{ $nomExtra['Complemento.Nomina.FechaPago'] }} </td>
+    @endif
+    @php
+        /// validacion de existencia de arcivo para activar el icono con contenido/////
+        $ruta = 'contarappv1_descargas/' . $this->rfcEmpresa . '/' . $anio . '/Nomina/Periodo' . $nomExtra['Folio'] . '/Raya/NominaPeriodo' . $nomExtra['Folio'] . '.pdf';
+        $rutaR = 'contarappv1_descargas/' . $this->rfcEmpresa . '/' . $anio . '/Nomina/Periodo' . $nomExtra['Folio'] . '/RecibosNomina/RecibosPeriodo' . $nomExtra['Folio'] . '.pdf';
+
+        if (Storage::disk('public2')->exists($ruta)) {
+            $clas="content_true";
+        } else {
+            $clas="icons";
+        }
+
+        if (Storage::disk('public2')->exists($rutaR)) {
+            $clasR="content_true";
+        } else {
+            $clasR="icons";
+        }
+
+    @endphp
+
+
+    <td class="text-center align-middle">
+
+
+        <a wire:loading.attr="hidden"
+            class="{{ $clas }} fas fa-clipboard-list"
+            {{-- wire:click="$emitTo('lista-raya','refresR')" --}}
+            onclick="filepondRaya('{{ $this->rfcEmpresa }}','{{ $anio }}','{{ $nomExtra['Folio'] }}')"
+            data-toggle="modal"data-backdrop="static"
+            data-target="#raya{{ $nomExtra['Folio'] }}{{ $fechaPago }}"></a>
+    </td>
+    <td class="text-center align-middle">
+
+        <a wire:loading.attr="hidden"
+            class="{{ $clasR }}  fas fa-file-invoice"
+            onclick="filepondRecibosNomina('{{ $this->rfcEmpresa }}','{{ $anio }}','{{ $nomExtra['Folio'] }}')"
+            data-toggle="modal"data-backdrop="static"
+            data-target="#recibosnom{{ $nomExtra['Folio'] }}{{ $fechaPago }}"></a>
+
+    </td>
+    <td class="text-center align-middle">
+        <a wire:loading.attr="hidden" data-toggle="modal"
+            data-controls-modal="#detallesEmpleados{{ $nomExtra['Folio'] }}"
+            data-backdrop="static" data-keyboard="false"
+            data-target="#detallesEmpleados{{ $nomExtra['Folio'] }}"
+            class=" icons fas fa-eye"></a>
+    </td>
+    <td class="text-center align-middle">
+        ${{ number_format($granTotal= $Nomina::TotalPagado($this->rfcEmpresa, $anio, $nomExtra['Folio'],$nomExtra['Complemento.0.Nomina.TipoNomina']), 2) }}
+    </td>
+    <td class="text-center align-middle">
+        ${{ number_format($Nomina->ISR($this->rfcEmpresa, $anio, $nomExtra['Folio'],$nomExtra['Complemento.0.Nomina.TipoNomina']), 2) }}
+    </td>
+    <!-- TD que contiene el modal asignar cheque-->
+    <td class="text-center align-middle">
+
+
+
+          @php
+           $total=$Nomina::TotalPago($this->rfcEmpresa, $anio, $nomExtra['Folio'],$mes, $nomExtra['Complemento.0.Nomina.TipoNomina']);
+          //// cheque completo
+          if($total == 0){
+             $class = 'content_true';
+             // tiene cheques asignados pero falta cubrir elmonto total
+          }elseif ( $total != $granTotal && $total > 0){
+
+                $class = 'content_warning';
+          }elseif($total == $granTotal) {
+
+            $class = 'icons';
+          }
+
+
+          @endphp
+        <a wire:loading.attr="hidden" data-toggle="modal"
+            data-controls-modal="#asingnarCheque" name="14"
+            id="{{ $nomExtra['Folio'] }}" data-backdrop="static" data-keyboard="false"
+            wire:click="$emitTo('asignar-cheque','refresAsignar')"
+            data-target="#asignarCheque{{$nomExtra['Folio'] }}"
+            class="{{$class}} fas fa-money-check">
+        </a>
+
+
+    </td>
+    <!-- TD que contiene el modal asignar cheque-->
+</tr>
+{{-- <livewire:lista-raya :raya="$nom" :wire:key="'user-profile-one-'.$nom['Folio']"> --}}
+@livewire('lista-raya', ['folio' => $nomExtra['Folio'], 'RFC' => $this->rfcEmpresa, 'fecha' => $fechaPago, 'ruta' => $ruta], key('user-profile-one-' . $nomExtra['Folio'] . $fechaPago))
+@livewire('recibosnomina', ['folio' => $nomExtra['Folio'], 'RFC' => $this->rfcEmpresa, 'fecha' => $fechaPago], key('user-profile-twoo-' . $nomExtra['Folio'] . $fechaPago))
+
+
+    @livewire(
+        'asignar-cheque',
+        [
+            'fecha' => $nomExtra['Complemento.0.Nomina.FechaFinalPago'],
+            'asignarCheque' =>$nomExtra['Folio'],
+            'RFC' => $this->rfcEmpresa,
+            'content' => 'icons',
+            'serie' => $nomExtra['Serie'],
+            'mes'=>$this->mes,
+            'granTotal' => $granTotal,
+            'anio'  => $anio,
+            'tipoNomina' =>$nomExtra['Complemento.0.Nomina.TipoNomina'],
+            'fechaPago' =>$nomExtra['Complemento.Nomina.FechaPago'],
+
+        ],
+
+        key('user-profile-three-' . $nomExtra['Folio'] . $fechaPago),
+    )
+
+
+@livewire('detallesempleados', ['anio' => $anio, 'fecha' => $fechaPago, 'folio' => $nomExtra['Folio'], 'tipoNomina'=>$nomExtra['Complemento.0.Nomina.TipoNomina'], 'RFC' => $this->rfcEmpresa], key('user-profile-four-' . $nomExtra['Folio'] . $fechaPago))
+
+@php $suma=0; @endphp
+
+@endforeach
+
+
+{{--------- INCIO DEL FOR  ORDINARIOS--- --}}
                                 @foreach ($nominas as $nom)
 
                                     <tr>
@@ -210,8 +367,10 @@
 
                                         <td class="text-center align-middle">
 
+
                                             <a wire:loading.attr="hidden"
                                                 class="{{ $clas }} fas fa-clipboard-list"
+                                                {{-- wire:click="$emitTo('lista-raya','refresR')" --}}
                                                 onclick="filepondRaya('{{ $this->rfcEmpresa }}','{{ $anio }}','{{ $nom['Folio'] }}')"
                                                 data-toggle="modal"data-backdrop="static"
                                                 data-target="#raya{{ $nom['Folio'] }}{{ $fechaPago }}"></a>
@@ -233,22 +392,40 @@
                                                 class=" icons fas fa-eye"></a>
                                         </td>
                                         <td class="text-center align-middle">
-                                            ${{ number_format($granTotal= $Nomina::TotalPagado($this->rfcEmpresa, $anio, $nom['Folio']), 2) }}
+                                            ${{ number_format($granTotal= $Nomina::TotalPagado($this->rfcEmpresa, $anio, $nom['Folio'],$nom['Complemento.0.Nomina.TipoNomina']), 2) }}
                                         </td>
                                         <td class="text-center align-middle">
-                                            ${{ number_format($Nomina->ISR($this->rfcEmpresa, $anio, $nom['Folio']), 2) }}
+                                            ${{ number_format($Nomina->ISR($this->rfcEmpresa, $anio, $nom['Folio'],$nom['Complemento.0.Nomina.TipoNomina']), 2) }}
                                         </td>
                                         <!-- TD que contiene el modal asignar cheque-->
                                         <td class="text-center align-middle">
 
 
+
+                                              @php
+                                               $total=$Nomina::TotalPago($this->rfcEmpresa, $anio, $nom['Folio'],$mes, $nom['Complemento.0.Nomina.TipoNomina']);
+                                              //// cheque completo
+                                              if($total == 0){
+                                                 $class = 'content_true';
+                                                 // tiene cheques asignados pero falta cubrir elmonto total
+                                              }elseif ( $total != $granTotal && $total > 0){
+
+                                                    $class = 'content_warning';
+                                              }elseif($total == $granTotal) {
+
+                                                $class = 'icons';
+                                              }
+
+
+                                              @endphp
                                             <a wire:loading.attr="hidden" data-toggle="modal"
                                                 data-controls-modal="#asingnarCheque" name="14"
                                                 id="{{ $nom['Folio'] }}" data-backdrop="static" data-keyboard="false"
-                                                {{-- wire:click="$emitTo('asignar-cheque','refresAsignar')" --}}
+                                                wire:click="$emitTo('asignar-cheque','refresAsignar')"
                                                 data-target="#asignarCheque{{ $nom['Folio'] }}"
-                                                class="icons fas fa-money-check">
+                                                class="{{$class}} fas fa-money-check">
                                             </a>
+
 
                                         </td>
                                         <!-- TD que contiene el modal asignar cheque-->
@@ -268,7 +445,8 @@
                                                 'serie' => $nom['Serie'],
                                                 'mes'=>$this->mes,
                                                 'granTotal' => $granTotal,
-
+                                                'anio'  => $anio,
+                                                'tipoNomina' =>$nom['Complemento.0.Nomina.TipoNomina'],
                                                 'fechaPago' => $nom['Complemento.Nomina.FechaPago'],
 
                                             ],
@@ -277,7 +455,7 @@
                                         )
 
 
-                                    @livewire('detallesempleados', ['anio' => $anio, 'fecha' => $fechaPago, 'folio' => $nom['Folio'], 'RFC' => $this->rfcEmpresa], key('user-profile-four-' . $nom['Folio'] . $fechaPago))
+                                    @livewire('detallesempleados', ['anio' => $anio, 'fecha' => $fechaPago, 'folio' => $nom['Folio'], 'tipoNomina'=>$nom['Complemento.0.Nomina.TipoNomina'], 'RFC' => $this->rfcEmpresa], key('user-profile-four-' . $nom['Folio'] . $fechaPago))
 
                                     @php $suma=0; @endphp
 

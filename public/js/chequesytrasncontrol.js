@@ -579,9 +579,13 @@ function filepondRaya(rfc, anio, periodo) {
                 resolve(type);
             }),
 
+            onprocessfile: () => {
+                window.livewire.emit('refresR');
+              },
+
     });
 
-    
+
 
     FilePond.setOptions({
         name: 'listaRaya',
@@ -635,6 +639,10 @@ function filepondRecibosNomina(rfc, anio, periodo) {
                 // Do custom type detection here and return with promise
                 resolve(type);
             }),
+
+            onprocessfile: () => {
+                window.livewire.emit('refrescarNomina');
+              },
 
     });
 

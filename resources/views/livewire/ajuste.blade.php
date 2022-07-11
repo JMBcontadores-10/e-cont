@@ -29,7 +29,13 @@
     @if ($datos->ajuste==0)
     <p>No existe ajuste </p>
 @else
- <p>Se realizo por: ${{ $datos->ajuste }} mxn. </p>
+ <p>Se realizo por: ${{ $datos->ajuste }} mxn. <br>
+
+Detalles: <br>
+Importe Original: <strong> ${{ number_format($datos->importecheque,2)}}</strong><br>
+Importe con Ajuste: <strong  style="color: rebeccapurple"> ${{number_format($datos->importecheque + $datos->ajuste,2)}}</strong>
+</p>
+
  @endif
 
  @if($datos->verificado!==1)

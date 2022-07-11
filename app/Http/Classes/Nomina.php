@@ -25,7 +25,7 @@ class Nomina
 
     //===={ Obtener el total pagado de los CFDI'S Nomina }
 
-    public function TotalPagado($rfc, $anio, $folio)
+    public function TotalPagado($rfc, $anio, $folio,$tipoNomina)
     {
 
         /// se obtienen los metadatos de los cfdi´s para filtrar los
@@ -49,6 +49,7 @@ class Nomina
             ->whereIn('UUID', $cont)
             ->where('Emisor.Rfc', $rfc)
             ->where('TipoDeComprobante', 'N')
+            ->where('Complemento.0.Nomina.TipoNomina',$tipoNomina)
             ->where('Serie', $anio)
             ->where('Folio', $folio)
             ->get()->sum('Total');
@@ -60,10 +61,10 @@ class Nomina
 
     ##############################################
 
-    public function ISR($rfc, $anio, $folio){
+    public function ISR($rfc, $anio, $folio, $tipoNomina){
  /// se obtienen los metadatos de los cfdi´s para filtrar los
         /// cancelados
-
+        $sumaIsr=0;
         $metadata = MetadataE:: // consulta a MetadataE
             where('emisorRfc', $rfc)
             ->where('estado', '!=', 'Cancelado')
@@ -76,14 +77,72 @@ class Nomina
         foreach ($metadata as $m) {
             $cont[] = $m->folioFiscal;
         }
-    return XmlE::
+    $xmlIsr= XmlE::
      whereIn('UUID',$cont)
      ->where('Emisor.Rfc',$rfc)
      ->where('TipoDeComprobante','N')
+     ->where('Complemento.0.Nomina.TipoNomina',$tipoNomina)
      ->where('Serie', $anio)
      ->where('Folio',$folio)
      // ->select('Fecha','Complemento','Total')
-     ->get()->sum('Complemento.0.Nomina.Deducciones.Deduccion.1.Importe');
+    //  ->sum('Complemento.0.Nomina.Deducciones.Deduccion.1.Importe')
+     ->get();
+
+
+    //  echo "count".count(  $xmlIsr)."<br>";
+
+     foreach($xmlIsr as $dd){
+
+
+
+        $deduccion= XmlE::where(['UUID' => $dd->UUID])
+        ->where([
+            "Complemento.0.Nomina.Deducciones.Deduccion" =>
+            [
+                '$elemMatch' =>
+                [
+                    "TipoDeduccion" =>"002"
+                ]
+                ]
+        ])->first();
+
+
+        if($deduccion!=NULL){
+
+            foreach($deduccion['Complemento.0.Nomina.Deducciones.Deduccion'] as $d)
+
+            {
+
+                if($d['TipoDeduccion']=="002" && $dd['Complemento.0.Nomina.TipoNomina'] == "E"){
+
+
+                    $sumaIsr+=  $d['Importe'] ;
+                }
+               else if ($d['TipoDeduccion']=="002" && $d['Concepto'] == "ISR mes"){
+
+                $sumaIsr+=  $d['Importe'] ;
+
+               }
+
+
+        }
+
+
+
+
+
+    }
+
+
+
+
+
+}
+
+
+return  $sumaIsr;
+
+
 
     }
 
@@ -92,7 +151,7 @@ class Nomina
            //--> [ {modal asignar-cheque.blade} ] <--//
   /////==========={ sacar el total pagado } =======///////
 
-  public function TotalPago($rfc,$anio,$folio, $mes, $data = null){
+  public function TotalPago($rfc,$anio,$folio, $mes, $tipoNomina , $data = null){
  /**  Declaración de Variables */
 $suma=0;
 $uuid=[];
@@ -125,6 +184,7 @@ whereIn('UUID',$cont)
     ->where('Serie', $anio)
     ->where('Folio',$folio)
     ->where('Complemento.0.Nomina.FechaPago','like','%' ."-".$mes."-".'%')
+    ->where('Complemento.0.Nomina.TipoNomina',$tipoNomina)
     ->select('Fecha','Complemento','Total','Emisor','Serie','UUID')
     ->groupBy('Folio')
     ->orderBy('Folio','Asc')
@@ -140,13 +200,14 @@ whereIn('UUID',$cont)
 
 /// se obtienen los metadatos de los cfdi´s para filtrar los
 /// cancelados
+
         $metadata = MetadataE:: // consulta a MetadataE
-            where('folioFiscal', $uuid[0])
+             where('folioFiscal', $uuid[0])
             ->where('efecto', 'Nómina')
             ->first();
 
 //// suma del total de todos los cdfi nominas
-   $nominaTotal= Nomina::TotalPagado($rfc, $anio, $folio);
+   $nominaTotal = Nomina::TotalPagado($rfc, $anio, $folio,$tipoNomina);
 
    if ($data == null) //// si existe un parametro para uuid
    {
@@ -168,28 +229,55 @@ $cheques=Cheques::
     {
           $suma += $cheque->$nomi;
 
+           ////////////[ SE SUMA EL AJUSTE SI EXISTE ]////////////
+   if($cheque->ajuste > 0){
+
+    $suma += $cheque->ajuste;
+
+   }
+
     /// suma campo saldo si nomina.serie.folio no existe y saldo si
    }else if(!isset($cheque->$nomi) && $cheque->saldo){
 
            $suma+=$cheque->saldo;
+        ////////////[ SE SUMA EL AJUSTE SI EXISTE ]////////////
+   if($cheque->ajuste > 0){
+
+    $suma += $cheque->ajuste;
+
+   }
 
    }elseif(isset($cheque->nominaAsignada) && $cheque->saldo !=0){
 
              $suma+=$cheque->saldo;
+              ////////////[ SE SUMA EL AJUSTE SI EXISTE ]////////////
+   if($cheque->ajuste > 0){
+
+    $suma += $cheque->ajuste;
+
+   }
    }else{
 
            $suma += $cheque->importecheque;
+            ////////////[ SE SUMA EL AJUSTE SI EXISTE ]////////////
+   if($cheque->ajuste > 0){
+
+    $suma += $cheque->ajuste;
 
    }
 
+   }
+
+
        }/// fin de foreach $cheques
+
 
 
   return $nominaTotal -$suma;
 
     } else {// fin del isset $metadata
 
-        return  $nominaTotal;
+        return  $nominaTotal ;
     }/// fi del isset metadata
 
 }else{///// fin del if data = null

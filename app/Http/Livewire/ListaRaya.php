@@ -15,7 +15,7 @@ class ListaRaya extends Component
     public $fecha;
     public $RFC;
     public $ruta;
-    protected $listeners = ['refreshRaya' => '$refresh' ]; // listeners para refrescar el modal
+    protected $listeners = ['refreshRaya' => '$refresh','refresR' ]; // listeners para refrescar el modal
 
 
 
@@ -27,26 +27,21 @@ class ListaRaya extends Component
     // }
 
 
-    public function eliminar($ruta,$Folio,$dirname,$fecha){
+    public function eliminar($ruta,$Folio,$dirname,$fecha ){
 
-
-
-
- /// elimina el pdf de la carpeta correspondiente
-
+ /// elimina el pdf de la carpeta correspondient
 
   unlink($ruta);
 
   rmdir($dirname);
+  $dateValue = strtotime($fecha);//obtener la fecha
+  $anio = date('Y',$dateValue);// obtener el mes
 
 
   $this->dispatchBrowserEvent('cerrarRayamodal', ["IdCheque" => $Folio,"fecha"=>$fecha]);
 
+//  $this->emit('refreshRaya');
 
-
-
-
- $this->emit('refreshRaya');
 
  $this->emitTo('nominas','nominarefresh');
 
@@ -60,6 +55,13 @@ class ListaRaya extends Component
     }// fin funcion eliminar
 
 
+
+    public function refresR(){
+
+        $this->emit('refreshRaya');
+        $this->emitTo('nominas','nominarefresh');
+
+    }
 
     public function refreshRaya(){
 
