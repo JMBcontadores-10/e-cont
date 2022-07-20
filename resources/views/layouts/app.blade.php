@@ -314,14 +314,11 @@
                                         <a class="dropdown-item" href="{{ url('tareas') }}">
                                             <i class="bx bx-check-square mr-50"></i>Tareas</a>
                                     @endif
-
                                     <a class="dropdown-item" onclick="alerta()"><i
                                             class="bx bx-message mr-50"></i>Chats</a>
-
                                     <div class="dropdown-divider mb-0"></div>
                                     <form action="{{ route('logout') }}" method="POST">
                                         @csrf
-                                        {{ csrf_field() }}
                                         <input class="dropdown-item" type="submit" value="Cerrar sesión">
                                     </form>
 
@@ -365,7 +362,7 @@
                             class="menu-title text-truncate" data-i18n="Dashboard">Módulos</span></a>
                     <ul class="menu-content">
 
-                        @if (auth()->user()->tipo != 'VOLU')
+                        @if (auth()->user()->tipo != 'VOLU' && auth()->user()->tipo != 'Nomina')
                             <li id="chequesytransferencias"><a class="d-flex align-items-center"
                                     href="{{ url('chequesytransferencias') }}"><i
                                         class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
@@ -386,11 +383,22 @@
                                         class="menu-item text-truncate" data-i18n="Analytics">Expediente
                                         Digital</span></a>
                             </li>
+                        @elseif (auth()->user()->tipo == 'Nomina')
+                            <li id="Contruccion"><a class="d-flex align-items-center" href="{{ 'nominas' }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Nóminas</span></a>
+
+                            </li>
+                            <li id="expedifiscal"><a class="d-flex align-items-center"
+                                    href="{{ url('expedifiscal') }}"><i class="bx bx-right-arrow-alt"></i><span
+                                        class="menu-item text-truncate" data-i18n="Analytics">Expediente
+                                        Fiscal</span></a>
+                            </li>
                         @endif
 
 
                         {{-- Modulo solo para gasolinerias --}}
-                        @if (auth()->user()->gas == 1 || auth()->user()->tipo)
+                        @if (auth()->user()->gas == 1 || (auth()->user()->tipo && auth()->user()->tipo != 'Nomina'))
                             <li id="volumetrico"><a class="d-flex align-items-center"
                                     href="{{ 'volumetrico' }}"><i class="bx bx-right-arrow-alt"></i><span
                                         class="menu-item text-truncate" data-i18n="Analytics">Control
@@ -398,11 +406,27 @@
                             </li>
                         @endif
 
-                        @if (auth()->user()->tipo != 'VOLU')
+                        @if (auth()->user()->tipo != 'VOLU' && auth()->user()->tipo != 'Nomina')
                             <li id="expedifiscal"><a class="d-flex align-items-center"
                                     href="{{ url('expedifiscal') }}"><i class="bx bx-right-arrow-alt"></i><span
                                         class="menu-item text-truncate" data-i18n="Analytics">Expediente
                                         Fiscal</span></a>
+                            </li>
+                            <li id="descargas"><a class="d-flex align-items-center"
+                                    href="{{ url('descargas') }}"><i class="bx bx-right-arrow-alt"></i><span
+                                        class="menu-item text-truncate" data-i18n="Analytics">Descargas</span></a>
+                            </li>
+                            <li id="auditoria"><a class="d-flex align-items-center" href="{{ 'auditoria' }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Auditoria</span></a>
+                            </li>
+                            <li id="consultas"><a class="d-flex align-items-center" href="{{ 'consultas' }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Consultas</span></a>
+                            </li>
+                            <li id="monitoreo"><a class="d-flex align-items-center" href="{{ 'monitoreo' }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Monitoreo de facturación</span></a>
                             </li>
                         @endif
                     </ul>
