@@ -271,6 +271,9 @@ class Tareanueva extends Component
 
         //Limpiar el campo de colaborador
         $this->colaboradortarea = null;
+
+        //Si eliminamos a un colaborador no esconder las opciones
+        $this->dispatchBrowserEvent('noclosefrecu', []);
     }
 
     //Metodo para limpiar el periodo seleccionado

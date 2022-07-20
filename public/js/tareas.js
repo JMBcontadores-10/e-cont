@@ -100,12 +100,40 @@ $(document).ready(function () {
             setTimeout(function () {
                   $("#Mnserrorcolab").prop('hidden', true);
             }, 2500)
+
+            //Si seleccionamos el periodo no esconder las opciones
+            //Obtenemos el valor del select
+            var frecuencia = $(".frecuente").val();
+
+            //Condicional para mostrar el input de periodo
+            if (frecuencia == "Si") {
+                  $(".periodogroup").attr('hidden', false);
+                  $('#periodo').prop("required", true);
+            } else {
+                  $(".periodogroup").attr('hidden', true);
+                  $('#periodo').prop("required", false);
+            }
       });
 
       //Recibimos el llamado y ejecutamos la funcion
       window.addEventListener('cerrartarea', event => {
             //Cerramos el modal
             $(".closetarea").click();
+      });
+
+      //Recibimos el llamado y ejecutamos la funcion
+      window.addEventListener('noclosefrecu', event => {
+            //Obtenemos el valor del select
+            var frecuencia = $(".frecuente").val();
+
+            //Condicional para mostrar el input de periodo
+            if (frecuencia == "Si") {
+                  $(".periodogroup").attr('hidden', false);
+                  $('#periodo').prop("required", true);
+            } else {
+                  $(".periodogroup").attr('hidden', true);
+                  $('#periodo').prop("required", false);
+            }
       });
 
       //Recibimos el llamado y ejecutamos la funcion
