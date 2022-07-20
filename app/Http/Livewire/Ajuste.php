@@ -9,15 +9,15 @@ use LivewireUI\Modal\ModalComponent;
 class Ajuste extends ModalComponent
 {
 
-    
-    
+
+
     public Cheques $ajusteCheque; // coneccion al model cheques
     public $ajuste;
-    
 
 
-    
-  protected $listeners = ['emitajuste'];
+
+
+  protected $listeners = ['refreshAjuste'=>'$refresh', 'emitajuste'];
 
 
      public function emitajuste(){
@@ -28,17 +28,17 @@ class Ajuste extends ModalComponent
 
     protected function rules(){
 
-      
-      
+
+
       return[  'ajuste' => 'required|numeric',
-               
+
     ];
     }
 
-    
 
 
-    
+
+
 
     public function guardar(){
 
@@ -46,7 +46,7 @@ class Ajuste extends ModalComponent
 
        $valor = floatval($this->ajuste);
 
-    
+
         $data=[
 
 

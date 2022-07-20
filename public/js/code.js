@@ -634,21 +634,38 @@ $('#vinpsub').on('click', function () {
 });
 
 // Muestra en una alerta los pendientes de los cheques
-function alertaP(a, b, c) {
+function alertaP(a, b, c, n,tipo) {
     var nl = "\r\n"
     var msg = ''
+if(tipo != 1){
+
     if (b == 0) {
         msg += "- No tiene CFDI's vinculados.";
         msg += nl;
     }
-    if (c == 0) {
-        msg += "- No tiene pdf asociado.";
-        msg += nl;
-    }
+
     if (a == 0) {
         msg += "- Existe diferencia con el importe total.";
         msg += nl;
     }
+}
+
+    if (c == 0) {
+        msg += "- No tiene pdf asociado.";
+        msg += nl;
+    }
+
+    if(n== 0){
+       msg += "El cheque debe asociaserse a una nomina";
+       msg += nl;
+    }else if(n== 1){
+        msg += "Existe saldo pendiente por asignar de este cheque de nomina";
+        msg += nl;
+
+    }
+
+
+
     alert(msg);
 }
 
@@ -781,7 +798,7 @@ function FilePondPDFVolu(rutaid, id) {
     // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateSize);
 
-    //Obtenemos el ID de cada 
+    //Obtenemos el ID de cada
     var inputfile = document.getElementById(rutaid);
 
     //Parametros de validacion de archivos
@@ -825,7 +842,7 @@ function FilePondPDFCRE(rutaid, id) {
     // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
     FilePond.registerPlugin(FilePondPluginFileValidateSize);
 
-    //Obtenemos el ID de cada 
+    //Obtenemos el ID de cada
     var inputfile = document.getElementById(rutaid);
 
     //Parametros de validacion de archivos
@@ -854,56 +871,6 @@ function FilePondPDFCRE(rutaid, id) {
         name: 'volupdfcre',
         server: {
             url: 'pdfcrevolu/' + id,
-            headers: {
-                'X-CSRF-TOKEN': token.value
-            }
-        }
-    });
-}
-
-//Funcion de creacion de FilePond
-function FilePondAcuseExped(rutaid, id) {
-    // registrar plugin validacion filepond  se deben agregar los cdn despues del body
-    FilePond.registerPlugin(FilePondPluginFileValidateType);
-
-    // registrar plugin validacion size filepond  se deben agregar los cdn despues del body
-    FilePond.registerPlugin(FilePondPluginFileValidateSize);
-
-    //Obtenemos el ID de cada 
-    var inputfile = document.getElementById(rutaid);
-
-    //Parametros de validacion de archivos
-    FilePond.create(inputfile, {
-        maxFileSize: '1000KB',
-        labelMaxFileSizeExceeded: 'El archivo debe pesar menos de 1MB / 1000KB',
-        labelIdle: 'Sube un archivo <span class="filepond--label-action"> Explorar </span>',
-        labelFileLoading: 'Cargando',
-        labelFileProcessing: 'Subiendo a E-cont..',
-        labelFileProcessingComplete: 'Carga completa',
-        labelFileProcessingAborted: 'Carga cancelada',
-        labelTapToCancel: 'Presiona para cancelar',
-        allowMultiple: true,
-        acceptedFileTypes: ["application/pdf"],
-        fileValidateTypeDetectType: (source, type) =>
-            new Promise((resolve, reject) => {
-                resolve(type);
-            }),
-        onprocessfilestart: () =>{
-            $("#loadfileexpe").show();
-        },
-        onprocessfiles: () => {
-            window.livewire.emit('uploadacuse', { 'id': id });
-        }
-    });
-
-    //Obtenemos el valor del token
-    var token = document.querySelector('input[name="_token"]');
-
-    //Ya obtenida la enviamos al servidor junto con la empresa seleccionada
-    FilePond.setOptions({
-        name: 'acuse',
-        server: {
-            url: 'pdfacuse/' + id,
             headers: {
                 'X-CSRF-TOKEN': token.value
             }

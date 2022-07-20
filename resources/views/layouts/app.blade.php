@@ -398,27 +398,11 @@
                             </li>
                         @endif
 
-                        @if (auth()->user()->tipo && auth()->user()->tipo != 'VOLU')
+                        @if (auth()->user()->tipo != 'VOLU')
                             <li id="expedifiscal"><a class="d-flex align-items-center"
                                     href="{{ url('expedifiscal') }}"><i class="bx bx-right-arrow-alt"></i><span
                                         class="menu-item text-truncate" data-i18n="Analytics">Expediente
                                         Fiscal</span></a>
-                            </li>
-                            <li id="descargas"><a class="d-flex align-items-center"
-                                    href="{{ url('descargas') }}"><i class="bx bx-right-arrow-alt"></i><span
-                                        class="menu-item text-truncate" data-i18n="Analytics">Descargas</span></a>
-                            </li>
-                            <li id="auditoria"><a class="d-flex align-items-center" href="{{ 'auditoria' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Auditoria</span></a>
-                            </li>
-                            <li id="consultas"><a class="d-flex align-items-center" href="{{ 'consultas' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Consultas</span></a>
-                            </li>
-                            <li id="monitoreo"><a class="d-flex align-items-center" href="{{ 'monitoreo' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Monitoreo de facturación</span></a>
                             </li>
                         @endif
                     </ul>

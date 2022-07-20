@@ -40,8 +40,12 @@ class Agregarcheque extends Component
     $folio,
     $rfc,
     $fecha,
-    $movivinc;
-
+    $movivinc,
+    $idNomina,
+    $TotalIngresos = 0,
+    $TotalEgresos = 0;
+ //Variable para la suma de totales de las facturas seleccionadas
+ public $sumtotalfactu;
 
 
     public $idNuevoCheque;
@@ -55,8 +59,9 @@ class Agregarcheque extends Component
 
 
 //// funcion agregarDesdeCuentas
-public function agregar($id){
+public function agregar($id,$sum){
     $this->movivinc = $id;
+    $this->sumtotalfactu = $sum;
 }
 
 
@@ -222,7 +227,10 @@ if($this->movivinc){
     //Actualiza el contador faltaxml descontando cada factura
     $cheque->update(['faltaxml'=> $cheque->faltaxml + 1]);
 }
+$ImporteTotal = $TotalIngresos - $TotalEgresos;
 
+//Inserta el total de la suma de los cfdis  en importexml para corregir
+$cheque->update(['importexml' => $ImporteTotal]);
 
 }// fin if movivinc
 
@@ -283,6 +291,7 @@ if($this->folio){
 
     $asignacion =XmlE::where('Emisor.Rfc',$this->rfc)
     ->where('Complemento.0.Nomina.FechaFinalPago',$this->fecha)
+    ->where('estado','!=','Cancelado')
     ->where('Folio',$this->folio)
     ->where('Serie', $anio)
     ->get();
@@ -295,7 +304,7 @@ if($this->folio){
      //$insert->unset('cheques_id');
     }
 
-
+    $this->emitTo( 'asignar-cheque','refresAsignar');
     }
 ######################### [ FIN ]################
 
@@ -309,7 +318,7 @@ $this->dispatchBrowserEvent('step2', []);
 
 $this->emitTo( 'notification-secction','avisoPush');
 
-
+$this->emitTo( 'asignar-cheque','refresAsignar');
 
 
     }
@@ -320,7 +329,6 @@ $this->emitTo( 'notification-secction','avisoPush');
 
     public function render()
     {
-
 
         if(!empty(auth()->user()->tipo) ||!empty(auth()->user()->TipoSE) ){
 
@@ -357,6 +365,7 @@ $this->emitTo( 'notification-secction','avisoPush');
             'folio'=>$this->folio,
             'rfc'=>$this->rfc,
             'fecha'=>$this->fecha,
+            'totalfactu'=>$this->sumtotalfactu,
             // 'arreglo_cuentas'=>$this->arreglo_cuentas,
 
         ]);
@@ -386,8 +395,11 @@ $this->Nuevo_tipomov="";
 $this->Nuevo_tipoopera="";
 $this->idNuevoCheque=null;
 $this->step3=true;
+$this->sumtotalfactu = "";
+if($this->movivinc){
         // $this->emit('refreshUpload');
         return redirect()->to('/chequesytransferencias');
+}
     }
 
 
@@ -406,6 +418,7 @@ $this->Nuevo_tipomov="";
 $this->Nuevo_tipoopera="";
 $this->idNuevoCheque=null;
 $this->step3=true;
+$this->sumtotalfactu = "";
 
     }
 

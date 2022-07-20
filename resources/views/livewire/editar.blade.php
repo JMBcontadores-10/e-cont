@@ -72,18 +72,18 @@ function miFunc() {
                             <label for="exampleFormControlInput1">Forma de pago</label>
 
                             <select name="tipo" class="form-control" wire:model="editCheque.tipomov">
-                                <option {{ $datos->tipomov == 'Cheque' ? 'selected' : '' }}>Cheque</option>
-                                <option {{ $datos->tipomov == 'Transferencia' ? 'selected' : '' }}>Transferencia</option>
-                                <option {{ $datos->tipomov == 'Domiciliación' ? 'selected' : '' }}>Domiciliación</option>
-                                <option {{ $datos->tipomov == 'Efectivo' ? 'selected' : '' }}>Efectivo</option>
-                                <option {{ $datos->tipomov == 'Débito' ? 'selected' : '' }}>Débito</option>
+                            <option value="Cheque">Cheque </option>
+                            <option value="Transferencia">Transferencia </option>
+                            <option value="Domiciliación">Domiciliación </option>
+                            <option value="Efectivo">Efectivo </option>
+                            <option value="Débito">Débito </option>
                             </select>
 
 
                         </div>
                         <div class="form-group col-md-6">
                             <label for="exampleFormControlInput1">Numero de factura</label>
-                            <input type="text" class="form-control" id="exampleFormControlInput1" wire:model="editCheque.numcheque">
+                            <input type="text" class="form-control" id="exampleFormControlInput1" wire:model.defer="editCheque.numcheque">
                             @error('numcheque') <span class="text-danger error">{{ $message }}</span>@enderror
                         </div>
 
@@ -91,26 +91,26 @@ function miFunc() {
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label for="exampleFormControlInput1">Fecha de pago</label>
-                        <input class="form-control" type=date  wire:model="editCheque.fecha" name="fechaCheque"
+                        <input class="form-control" type=date  wire:model.defer="editCheque.fecha" name="fechaCheque"
                          min="2014-01-01" max={{ $date }}>
                     </div>
                     <div class="form-group col-md-6">
                         <label for="exampleFormControlInput1">Total pagado</label>
                         <input class="form-control" id="" type="number" step="0.01"  name="importeCheque"
-                        wire:model="editCheque.importecheque">
+                        wire:model.defer="editCheque.importecheque">
                 </div>
                     </div><!-- fin group2 -->
                 <div class="form-group">
                     <label for="exampleFormControlInput1">Beneficiario</label>
                 <input class="form-control" type=text   name="beneficiario"
-                wire:model="editCheque.Beneficiario">
+                wire:model.defer="editCheque.Beneficiario">
                 </div>
 
             <div class="form-row"><!-- group 3-->
                 <div class="form-group col-md-6">
                     <label for="exampleFormControlInput1">Tipo de operación</label>
 
-                    <select name="tipopera" class="form-control" wire:model="editCheque.tipoopera">
+                    <select name="tipopera" class="form-control" wire:model.defer="editCheque.tipoopera">
                         <option {{ $datos->tipoopera == 'Impuestos' ? 'selected' : '' }}>Impuestos</option>
                         <option {{ $datos->tipoopera == 'Nómina' ? 'selected' : '' }}>Nómina</option>
                         <option {{$datos->tipoopera == 'Gasto y/o compra' ? 'selected' : '' }}>Gasto y/o

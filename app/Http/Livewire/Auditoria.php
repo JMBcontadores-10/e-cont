@@ -193,6 +193,8 @@ class Auditoria extends Component
     {
 
 
+
+
         if(!empty(auth()->user()->tipo)){
 
             $e=array();
@@ -244,6 +246,20 @@ class Auditoria extends Component
 
                 }//end if
 
+   ////// Razon social para exportacion de excel y pdf
+   ///// si rfcEmpresa esta definido, entonces se obtiene el nombre de la empresa
+
+    if($this->rfcEmpresa !=Null){
+
+        $razon=DB::table('clientes')
+        ->select('nombre')
+        ->where('RFC', $this->rfcEmpresa)
+        ->first();
+
+        $razonSocial=$razon['nombre'];
+    }else{
+        $razonSocial="";
+    }
 
 
         return view('livewire.auditoria',['list'=>$this->consultar(),
@@ -252,6 +268,8 @@ class Auditoria extends Component
         'empresas'=>$emp,
         'empresa'=>$this->rfcEmpresa,
         'fecha_ini'=>$this->fecha_ini,
+        'razon_social'=>$razonSocial,
+        'fechas'=>$this->fecha_ini.' Al '.$this->fecha_fin,
 
         ])
         ->extends('layouts.livewire-layout')

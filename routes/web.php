@@ -95,6 +95,7 @@ Route::get('/dir1', [App\Http\Controllers\Prueba::class, 'createDir2'])->name('c
 // Rutas Jose Segura
 
 Route::get('/vinculacionAutomatica', [App\Http\Controllers\vinculacionAutomaticaCfdi::class, 'vincular'])->name('vincular');
+Route::get('/vinculacionAutomaticaTraslados', [App\Http\Controllers\vinculacionAutomaticaTraslados::class, 'vincular'])->name('vincularTraslados');
 Route::get('/script2', [App\Http\Controllers\RecarpetarCheques::class, 'archivar'])->name('archivar');
 //Route::view('editar','livewire.editar');
 /// rutas Filepond

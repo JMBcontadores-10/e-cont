@@ -56,7 +56,7 @@ window.addEventListener('PushNotifaction', event => {
 
                              @if($noti->tipo=="CED")
                              <a  wire:click="verchequeLink('{{$noti->rfc}}','{{$noti->cheques_id}}','{{$noti->_id}}')">
-                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Se edito el cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$noti->fecha}}<br>
+                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Se Editó el cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$noti->fecha}}<br>
 
 
                                 {{$noti->created_at->locale('es')->diffForHumans()}}</small>
@@ -67,17 +67,24 @@ window.addEventListener('PushNotifaction', event => {
 
                              @elseif($noti->tipo=="CFA")
                              <a  wire:click="verchequeLink('{{$noti->rfc}}','{{$noti->cheques_id}}','{{$noti->_id}}')">
-                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Se agrego un cheque, con mes diferente al actual!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->locale('es')->diffForHumans()}}</small>
+                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Se Agregó un cheque, con mes diferente al actual!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->locale('es')->diffForHumans()}}</small>
                              </a>
                              <button wire:click="cerrarNotificacion('{{$noti->_id}}')"  type="button" class="btn btn-icon rounded-circle btn-light-danger mr-1 mb-1">
                                 <i class="bx bxs-message-square-x"></i></button>
                        <hr>  <br>
                              @elseif($noti->tipo=="CE")
 
-                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Elimino un Cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->locale('es')->diffForHumans()}}</small>
+                             <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Eliminó un Cheque!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha de pago:&nbsp;{{$noti->fecha}}<br>{{$noti->created_at->locale('es')->diffForHumans()}}</small>
                              <button wire:click="cerrarNotificacion('{{$noti->_id}}')"  type="button" class="btn btn-icon rounded-circle btn-light-danger mr-1 mb-1">
                                 <i class="bx bxs-message-square-x"></i></button>
                        <hr>  <br>
+
+                       @elseif($noti->tipo=="FC")
+
+                       <h6 class="media-heading"><span class="text-bold-500">  {{$noti->rfc}}</span> ¡Se canceló una factura!<br>Factura#:&nbsp; {{$noti->numcheque}}</h6><small class="notification-text">Fecha Cancelación:&nbsp;{{$noti->fecha}}<br>Cheque Id:&nbsp; @if(is_array($noti->cheques_id)) {{$noti->cheques_id[0]}} @else {{$noti->cheques_id}}    @endif  <br> {{$noti->created_at->locale('es')->diffForHumans()}}</small>
+                       <button wire:click="cerrarNotificacion('{{$noti->_id}}')"  type="button" class="btn btn-icon rounded-circle btn-light-danger mr-1 mb-1">
+                          <i class="bx bxs-message-square-x"></i></button>
+                 <hr>  <br>
 
                              @elseif($noti->tipo=="M")
                            <a wire:click="notificacionLink('{{$noti->cheques_id}}','{{$noti->emisorMensaje}}' ,'{{$noti->_id}}')">

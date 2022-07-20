@@ -6,7 +6,9 @@ use DateTime;
 use DateTimeZone;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cheques;
+use App\Models\MetadataE;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
@@ -20,8 +22,8 @@ class Chequesytransferencias extends Component
     public Cheques $Crear; // enlaza al modelo cheques
     public $datos;
     public float $ajuste;
-    public  $users, $name, $email, $user_id, $fecha, $ajuste2, $datos1, $user;
-    public $cheque;
+    public  $users, $name, $email, $user_id, $fecha, $ajuste2, $datos1, $user, $ids=[],$uuid;
+    public $cheque,$nom;
     public $importe = "";
     public $condicion;
     public $revisado;
@@ -82,8 +84,22 @@ class Chequesytransferencias extends Component
         'mostvincu' => 'mostmovivincu',
         'notivincu' => 'notivinculo',
         'vercheq' => 'vercheque',
+        'chequesVi'=> 'chequesVinculos',
 
     ];
+
+    public function chequesVinculos($rfc, $uuid){
+
+        $this->rfcEmpresa = $rfc;
+        $i=MetadataE::where('folioFiscal',$uuid)->first();
+       foreach($i->cheques_id as $l){ $this->ids[]= $l; }
+
+
+
+
+    }
+
+
 
     public function mostmovivincu($data)
     {
@@ -132,8 +148,29 @@ class Chequesytransferencias extends Component
         $rfc = Auth::user()->RFC;
         $anio = $dt->format('Y');
 
+
+    if($this->ids == ""){
+
+        Session::forget('idnominas');
+     Session::forget('rfcnomina');
+
+
+    }
+
+if ($this->ids){
+    $cheque = Cheques::
+    whereIn('_id',$this->ids)
+    ->where('rfc', $this->rfcEmpresa)
+    ->orderBy('fecha', 'desc')
+    ->orderBy('updated_at', 'desc')
+    ->paginate($this->perPage);
+
+    $this->ids="";
+
+
+}
         //Condicional para saber si de va a buscar todos los registros o se aplicacran los filtros
-        if ($this->todos) {
+        elseif ($this->todos) {
             //Consulta para mostrar todos los registros
             $cheque = Cheques::search($this->search)
                 ->where('rfc', $this->rfcEmpresa)
@@ -289,6 +326,8 @@ class Chequesytransferencias extends Component
             $this->emitTo('chequesytransferencias', 'chequesRefresh');
         }
 
+
+
         return view('livewire.chequesytransferencias', [
             'colCheques' => $cheque,
             'meses' => $meses,
@@ -335,27 +374,7 @@ class Chequesytransferencias extends Component
 
 //// metodo pendientes
 
-    public function pendientes($a, $b,$c)
-    {
 
-    $salto = "\r\n";
-    $msg = '';
-    if($b == 0) {
-        $msg += "- No tiene CFDI's vinculados.";
-        $msg += $salto;
-    }
-    if ($c == 0) {
-        $msg += "- No tiene pdf asociado.";
-        $msg += $salto;
-    }
-    if ($a == 0) {
-        $msg += "- Existe diferencia con el importe total.";
-        $msg += $salto;
-    }
-
-    return $msg;
-
-}
 
 
 

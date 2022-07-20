@@ -11,7 +11,7 @@ class Recibosnomina extends Component
     public $folio; // coneccion al model cheques
     public $RFC;
     public $fecha;
-    protected $listeners = ['refresNomina' => '$refresh' ]; // listeners para refrescar el modal
+    protected $listeners = ['refresNomina' => '$refresh','refrescarNomina' ]; // listeners para refrescar el modal
 
 
     public function eliminar($ruta,$Folio,$dirname,$fecha){
@@ -30,7 +30,7 @@ class Recibosnomina extends Component
          $this->dispatchBrowserEvent('cerrarNominamodal', ["IdCheque" => $Folio,"fecha"=>$fecha]);
 
 
-        $this->emit('refresNomina');
+        // $this->emit('refresNomina');
 
         $this->emitTo('nominas','nominarefresh');
 
@@ -47,6 +47,7 @@ class Recibosnomina extends Component
 public function refrescarNomina(){
 
     $this->emit('refresNomina');
+    $this->emitTo('nominas','nominarefresh');
 
 }
 

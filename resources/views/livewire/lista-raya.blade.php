@@ -9,7 +9,7 @@
             <div class="modal-header">
                 <h6 class="modal-title" id="exampleModalLabel"> <span style="text-decoration: none;" class="icons fas fa-clipboard-list"> Subir lista de Raya </span></h6>
 
-                    <button wire:click="refreshRaya()" id="mdlP{{$datos}}{{$fecha}}" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <button  id="mdlP{{$datos}}{{$fecha}}" type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true close-btn">×</span>
                     </button>
             </div>
@@ -19,6 +19,13 @@
     window.addEventListener('cerrarRayamodal', event => {
         $("#mdlP"+event.detail.IdCheque+event.detail.fecha).click();
     });
+///// llamamo de nuevo a la funcion paraactiva el filepond
+window.addEventListener('activarFilepondRaya', event => {
+
+    alert('activarFilepondRaya');
+
+    filepondRaya(rfcEmpresa,anio,fecha)
+});
 </script>
 
 <div class="modal-body"><!--modal body -->

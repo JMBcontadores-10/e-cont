@@ -116,7 +116,7 @@
 
   {{-- Condicional para mostrar un listado de empresas --}}
   @empty(!$empresas)
-  <label for="inputState">Empresa: {{ $empresa }}</label>
+  <label for="inputState">Empresa: {{ $empresa }} {{$razon_social}}</label>
   <select wire:loading.attr="disabled" wire:model="rfcEmpresa" id="inputState1"
       class=" select form-control">
       <option value="">--Selecciona Empresa--</option>
@@ -185,8 +185,8 @@ data-keyboard="false" data-target="#listacdfi"    class="btn btn-info notificati
   <br>
 
   <div {{ $active }}  class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-    <button type="button" class="btn btn-success" onclick="exportReportToExcel('{{$empresa}}')">Excel</button>
-    <button type="button" class="btn btn-danger"  onclick="exportReportToPdf('{{$empresa}}')">Pdf</button>
+    <button type="button" class="btn btn-success" onclick="exportReportToExcel('{{$razon_social}}','{{$fechas}}')">Excel</button>
+    <button type="button" class="btn btn-danger"  onclick="exportReportToPdf('{{$razon_social}}','{{$fechas}}')">Pdf</button>
 
   </div>
 

@@ -13,12 +13,13 @@ class Detallesempleados extends Component
     $folio,
     $RFC,
     $fechaFinal,
-    $anio;
+    $anio,
+    $tipoNomina;
 
 
 
 
-public function deducciones($i,$uuid){
+public function deducciones($i,$uuid,$tipoNomina =null){
 
     switch ($i) {
         case "FD":
@@ -65,9 +66,17 @@ public function deducciones($i,$uuid){
             if($deduccion!=NULL){
 
             foreach($deduccion['Complemento.0.Nomina.Deducciones.Deduccion'] as $d){
-                if ($d['TipoDeduccion']=="002")
+
+
+                if($d['TipoDeduccion']=="002" && $tipoNomina == "E"){
+
+
+                    return $d['Importe'];
+
+                }elseif ($d['TipoDeduccion']=="002" && $d['Concepto'] == "ISR mes"){
 
                 return $d['Importe'];
+                }
 
 
         }
@@ -113,6 +122,7 @@ $cont[]=$m->folioFiscal;
           whereIn('UUID',$cont)
          ->where('Emisor.Rfc',$this->RFC)
         ->where('TipoDeComprobante','N')
+        ->where('Complemento.0.Nomina.TipoNomina',$this->tipoNomina)
         ->where('Serie', $this->anio)
        ->where('Folio',$this->folio)
        // ->select('Fecha','Complemento','Total')

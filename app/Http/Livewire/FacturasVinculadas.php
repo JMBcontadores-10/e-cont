@@ -83,7 +83,21 @@ class FacturasVinculadas extends Component
         // Revisa todos los UUID de los CFDI seleccionados y elimina la vinculación con cheques
         foreach ($this->checkedDesvincular as $i) {
 
+        /// verificar si el cfdi es un págo cancelado
+        $Pcancelado = MetadataR::where('folioFiscal', $i)->first(); ///consulta a metadata_r
+
+        if ($Pcancelado->estado == 'Cancelado'){
+
+            $Pcancelado->unset('cheques_id');
+            continue;
+
+        }else{
+          ////////////// fin del if pago cancelado
+
+
+
             $xml_r = MetadataR::where('folioFiscal', $i)->first(); ///consulta a metadata_r
+
             $xmlppd = XmlR::where('UUID', $i)->get(); /// enlasar l xml del ppd
 
 
@@ -221,8 +235,7 @@ class FacturasVinculadas extends Component
         //     'faltaxml' => $faltaxml,
         // ]);
 
-
-
+ }/// fin del  if -> else ágo cancelado
     }
 
 

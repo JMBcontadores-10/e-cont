@@ -6,6 +6,7 @@
   $dtz = new DateTimeZone("America/Mexico_City");
         $dt = new DateTime("now", $dtz);
         $date = $dt->format('Y-m-d');
+        use App\Models\MetadataE;
 
  @endphp
 
@@ -70,6 +71,14 @@ function miFunc() {
                       <p><strong> Se realizarán las siguientes acciones: </strong>  </p><br>
                       @endif
                       <ul>
+                        @php
+
+                        $nomina= MetadataE:: where('cheques_id', $datos->_id)->where('estado','!=','Cancelado')->first();
+
+                        @endphp
+                        @if (isset($nomina->folioFiscal))
+                        <li>Este cheque esta asociado a una nomina (Se desviculará). </li>
+                        @endif
 
                          @if ($datos->nombrec !="0")
                          <li>Se eliminará el PDF principal </li>
