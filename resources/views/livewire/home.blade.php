@@ -195,7 +195,7 @@
                                         <div class="card-body">
                                             {{-- Contenido --}}
                                             {{-- Tabla de tareas --}}
-                                            <div class="table-responsive">
+                                            <div style="max-height: 12.9em;" class="table-responsive">
                                                 <table class="{{ $class }}" style="width:100%">
                                                     <thead>
                                                         <tr>

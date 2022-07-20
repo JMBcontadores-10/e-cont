@@ -29,10 +29,10 @@ class Expedientefiscal extends Component
     }
 
     //Metodo para enviar el identificador para subir los acuses
-    public function SendDataAcuse($tipo, $empresa, $mes, $anio, $matriz, $nombre)
+    public function SendDataAcuse($tipo, $empresa, $mes, $anio, $sucur)
     {
         //Obtenemos los argumentos del metodo y costruimos el identificador
-        $identacuse = $tipo . '&' . $empresa . '&' . $mes . '&' . $anio . '&' . $matriz . '&' . $nombre; //Los separamos con un caracter especial para identificar la separacion de cada dato
+        $identacuse = $tipo . '&' . $empresa . '&' . $mes . '&' . $anio . '&' . $sucur; //Los separamos con un caracter especial para identificar la separacion de cada dato
 
         //Emitimos el resultado al componente que se encargara de subr los acuses
         $this->emit('recidataacuse', $identacuse);
@@ -61,6 +61,22 @@ class Expedientefiscal extends Component
             //Emitimos una accion de JS para no cerrar los complementarios
             $this->dispatchBrowserEvent('noclosecomple', ['Mes' => $mesdescompuesto[0], 'TipoComp' => $mesdescompuesto[2] ?? $mesdescompuesto[1] ?? ""]);
         }
+    }
+
+    //Metodo para eliminar la fecha de presentacion
+    public function DeleteFecha($Tipo, $Empresa, $Mes, $Anio)
+    {
+        //Lo alamacenamos en la base de datos
+        ExpedFiscal::where('rfc', $Empresa)
+            ->update([
+                'ExpedFisc.' . $Anio . '.' . $Tipo . '.' . $Mes . '.Declaracion' => null,
+            ], ['upsert' => true]);
+
+        //Descomponesmos la cadena enviada (a un arreglo)
+        $mesdescompuesto = explode('_', $Mes);
+
+        //Emitimos una accion de JS para no cerrar los complementarios
+        $this->dispatchBrowserEvent('noclosecomple', ['Mes' => $mesdescompuesto[0], 'TipoComp' => $mesdescompuesto[2] ?? $mesdescompuesto[1] ?? ""]);
     }
 
     public function render()

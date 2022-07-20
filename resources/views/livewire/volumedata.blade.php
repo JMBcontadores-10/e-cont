@@ -19,8 +19,8 @@
                 <div class="modal-header">
                     <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
                             class="icons fas fa-gas-pump">Capturar volumétrico {{ $dia }}</span></h6>
-                    <button id="closevoludata{{ $dia }}" type="button" class="close"
-                        wire:click="Refresh()" data-dismiss="modal" aria-label="Close">
+                    <button id="closevoludata{{ $dia }}" type="button" class="close" wire:click="Refresh()"
+                        data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true close-btn">×</span>
                     </button>
                 </div>
@@ -157,8 +157,9 @@
 
                                             @if ($Magna == '1')
                                                 <div class="table-body-cell">
-                                                    <input type="number" step="0.01" id="compramagna{{ $dia }}"
-                                                        name="CompraM" wire:model.defer="compramagna"
+                                                    <input type="number" step="0.01"
+                                                        id="compramagna{{ $dia }}" name="CompraM"
+                                                        wire:model.defer="compramagna"
                                                         class="form-control Magna CompraM" required>
                                                 </div>
                                             @endif
@@ -218,7 +219,7 @@
                                         </div>
 
                                         {{-- Condicional para que se muestre solamente en una empresa --}}
-                                        @if ($infogas['PrecCompDesc'] == 1)
+                                        @if (!empty($infogas['PrecCompDesc']))
                                             {{-- COMPRAS CON DESCUENTO --}}
                                             <div class="resp-table-row">
                                                 <div class="table-body-cell">
@@ -228,8 +229,8 @@
                                                 @if ($Magna == '1')
                                                     <div class="table-body-cell">
                                                         <input type="number" step="0.01"
-                                                            id="compradescmagna{{ $dia }}" name="CompraDescM"
-                                                            wire:model.defer="compradescmagna"
+                                                            id="compradescmagna{{ $dia }}"
+                                                            name="CompraDescM" wire:model.defer="compradescmagna"
                                                             class="form-control Magna CompM{{ $dia }}"
                                                             required {{ $activem }}>
                                                     </div>
@@ -331,8 +332,9 @@
                                             @if ($Magna == '1')
                                                 <div class="table-body-cell">
                                                     <input id="autostickmagna{{ $dia }}" type="number"
-                                                        step="0.01" name="AutoStickM" wire:model.defer="autostickmagna"
-                                                        class="form-control Magna" required>
+                                                        step="0.01" name="AutoStickM"
+                                                        wire:model.defer="autostickmagna" class="form-control Magna"
+                                                        required>
                                                 </div>
                                             @endif
 
@@ -340,16 +342,17 @@
                                                 <div class="table-body-cell">
                                                     <input id="autostickpremium{{ $dia }}" type="number"
                                                         step="0.01" name="AutoStickP"
-                                                        wire:model.defer="autostickpremium" class="form-control Premium"
-                                                        required>
+                                                        wire:model.defer="autostickpremium"
+                                                        class="form-control Premium" required>
                                                 </div>
                                             @endif
 
                                             @if ($Diesel == '1')
                                                 <div class="table-body-cell">
                                                     <input id="autostickdiesel{{ $dia }}" type="number"
-                                                        step="0.01" name="AutoStickD" wire:model.defer="autostickdiesel"
-                                                        class="form-control Diesel" required>
+                                                        step="0.01" name="AutoStickD"
+                                                        wire:model.defer="autostickdiesel" class="form-control Diesel"
+                                                        required>
                                                 </div>
                                             @endif
                                         </div>
@@ -480,8 +483,8 @@
                                             @if ($Premium == '1')
                                                 <div class="table-body-cell">
                                                     <input type="number" step="0.01"
-                                                        id="inventiniccambpremium{{ $dia }}" name="IventInicP"
-                                                        wire:model.defer="inventiniccambpremium"
+                                                        id="inventiniccambpremium{{ $dia }}"
+                                                        name="IventInicP" wire:model.defer="inventiniccambpremium"
                                                         class="form-control PremiumCamb" required>
                                                 </div>
                                             @endif
@@ -489,8 +492,8 @@
                                             @if ($Diesel == '1')
                                                 <div class="table-body-cell">
                                                     <input type="number" step="0.01"
-                                                        id="inventiniccambdiesel{{ $dia }}" name="IventInicD"
-                                                        wire:model.defer="inventiniccambdiesel"
+                                                        id="inventiniccambdiesel{{ $dia }}"
+                                                        name="IventInicD" wire:model.defer="inventiniccambdiesel"
                                                         class="form-control DieselCamb" required>
                                                 </div>
                                             @endif
@@ -584,7 +587,8 @@
                                                     <div class="table-body-cell">
                                                         <input type="number" step="0.01"
                                                             id="compracambdescpremium{{ $dia }}"
-                                                            name="CompraDescP" wire:model.defer="compracambdescpremium"
+                                                            name="CompraDescP"
+                                                            wire:model.defer="compracambdescpremium"
                                                             class="form-control PremiumCamb" required readonly>
                                                     </div>
                                                 @endif
@@ -682,8 +686,8 @@
 
                                             @if ($Premium == '1')
                                                 <div class="table-body-cell">
-                                                    <input id="autostickcambpremium{{ $dia }}" type="number"
-                                                        step="0.01" name="AutoStickP"
+                                                    <input id="autostickcambpremium{{ $dia }}"
+                                                        type="number" step="0.01" name="AutoStickP"
                                                         wire:model.defer="autostickcambpremium"
                                                         class="form-control PremiumCamb" required>
                                                 </div>
@@ -715,17 +719,17 @@
 
                                             @if ($Premium == '1')
                                                 <div class="table-body-cell">
-                                                    <input id="invdetercambpremium{{ $dia }}" name="InvDeterP"
-                                                        wire:model.defer="invdetercambpremium" class="form-control"
-                                                        readonly>
+                                                    <input id="invdetercambpremium{{ $dia }}"
+                                                        name="InvDeterP" wire:model.defer="invdetercambpremium"
+                                                        class="form-control" readonly>
                                                 </div>
                                             @endif
 
                                             @if ($Diesel == '1')
                                                 <div class="table-body-cell">
-                                                    <input id="invdetercambdiesel{{ $dia }}" name="InvDeterD"
-                                                        wire:model.defer="invdetercambdiesel" class="form-control"
-                                                        readonly>
+                                                    <input id="invdetercambdiesel{{ $dia }}"
+                                                        name="InvDeterD" wire:model.defer="invdetercambdiesel"
+                                                        class="form-control" readonly>
                                                 </div>
                                             @endif
                                         </div>

@@ -12,6 +12,7 @@ class Volumedata extends Component
     public $dia;
     public $empresa;
     public $formdatavolu;
+    public $matriz;
 
     //Variables del combustible que manejan
     public $Magna;
@@ -128,6 +129,10 @@ class Volumedata extends Component
     {
         //Hacemos una consulta de la empresa para saber que datos vamos a mostrar
         $infogas = User::where('RFC', $this->empresa)->get()->first();
+
+        if (empty($infogas)) {
+            $infogas = User::where('RFC', $this->matriz)->get()->first();
+        }
 
         //Obtenemos los datos requeridos
         if (!empty($infogas)) {

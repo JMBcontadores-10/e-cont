@@ -102,7 +102,6 @@ class Home extends Component
             }
         }
 
-
         return view('livewire.home', ['empresa' => $this->rfcEmpresa, 'empresas' => $emp, 'anios' => $anios, 'pendientes' => $cheqpendient, 'colaboradores' => $colaboradores, 'tareas' => $listatareas, 'proyectos' => $listaproyectos])
             ->extends('layouts.livewire-layout')
             ->section('content');

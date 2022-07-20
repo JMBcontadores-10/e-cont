@@ -37,6 +37,33 @@ $(document).ready(function () {
             }
       });
 
+      //Recibimos el llamado y ejecutamos la funcion
+      window.addEventListener('enviosuccessmail', event => {
+            FilePondAcuseExped('acuse', event.detail.idacuse);
+            $(".b").show();
+
+            $("#btnsuccessemail").click();
+            $("#btnsuccessemail").prop('disabled', true);
+
+            switch (event.detail.estado) {
+                  case "Exito":
+                        //Mensaje de encabeazdo
+                        $("#EncaSuccess").text("Correo enviado con éxito");
+
+                        //Cuerpo del mensaje
+                        $("#BodySuccess").text("El correo con los acuses cargados, se envio satisfactoriamente");
+                        break;
+
+                  case "Error":
+                        //Mensaje de encabeazdo
+                        $("#EncaSuccess").text("Parece que hubo un error");
+
+                        //Cuerpo del mensaje
+                        $("#BodySuccess").text("Vaya parece que hubo un error: Suba nuevamente su archivo (eliminando los cargados anteriormente) e intente nuevamente el envio de su correo");
+                        break;
+            }
+      });
+
       //Boton para convertir el input en filepond
       $(".selectfecha").click(function () {
             //Ejecutamos la funcion de convercion del input

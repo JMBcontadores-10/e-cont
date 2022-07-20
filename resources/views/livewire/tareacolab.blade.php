@@ -16,8 +16,68 @@
         }
     @endphp
 
+    {{-- Filtros para los colaboradores --}}
+    @if (empty(auth()->user()->admin))
+        {{-- Filtros de busqueda --}}
+        <div class="form-inline mr-auto">
+            {{-- Filtros de para los colaboradores --}}
+            @if (auth()->user()->tipo == 'VOLU')
+                {{-- Boton para agregar una nueva tarea --}}
+                <button class="btn btn-primary" data-toggle="modal" data-target="#nuevatarea" data-backdrop="static"
+                    data-keyboard="false">
+                    <i class="fas fa-plus" style="top: 0 !important"></i> Nueva tarea
+                </button>
+
+                {{-- Espaciado --}}
+                <div style="width: 5em"></div>
+            @endif
+
+            {{-- Filtros de para los colaboradores --}}
+            {{-- Busqueda por mes --}}
+            <label class="mestarea" for="inputState">Mes</label>
+            &nbsp;&nbsp;
+            <select id="MesSelecTarea" wire:model="mestareaadmin" id="inputState1" wire:loading.attr="disabled"
+                class="mestarea select form-control">
+                <?php foreach ($meses as $key => $value) {
+                    echo '<option value="' . $key . '">' . $value . '</option>';
+                } ?>
+            </select>
+            &nbsp;&nbsp;
+            &nbsp;&nbsp;
+
+            {{-- Filtros de para los colaboradores --}}
+            {{-- Busqueda por año --}}
+            <label for="inputState">Año</label>
+            &nbsp;&nbsp;
+            <select id="AnioSelectTarea" wire:loading.attr="disabled" wire:model="aniotareaadmin" id="inputState2"
+                class="select form-control">
+                <?php foreach (array_reverse($anios) as $value) {
+                    echo '<option value="' . $value . '">' . $value . '</option>';
+                } ?>
+            </select>
+            &nbsp;&nbsp;
+            &nbsp;&nbsp;
+
+            {{-- Filtros de para los colaboradores --}}
+            @if (auth()->user()->tipo == 'VOLU')
+                {{-- Busqueda por avance --}}
+                <label for="inputState">Colaborador</label>
+                &nbsp;&nbsp;
+                <select wire:loading.attr="disabled" id="selectdepto" wire:model="colaboselect"
+                    class="select form-control AvanceSelectTarea">
+                    <option value="">Seleccione un colaborador</option>
+                    @foreach ($consulconta as $infocolabo)
+                        <option value="{{ $infocolabo['RFC'] }}">{{ ucfirst($infocolabo['nombre']) }}</option>
+                    @endforeach
+                </select>
+            @endif
+        </div>
+
+        <br>
+    @endif
+
     {{-- Animacion de cargando --}}
-    <div wire:loading wire:target="rfccolab, Completado, Cancelar">
+    <div wire:loading wire:target="rfccolab, Completado, Cancelar, colaboselect, mestareaadmin, aniotareaadmin">
         <div style="color: #3CA2DB" class="la-ball-clip-rotate-multiple">
             <div></div>
             <div></div>
@@ -40,7 +100,7 @@
                     <th class="text-center align-middle">Finalizar</th>
                     {{-- Opciones para administradores --}}
                     @if (!empty(auth()->user()->admin))
-                        <th class="text-center align-middle">Cancelar</th>
+                        <th class="text-center align-middle">Editar</th>
                     @endif
                     <th class="text-center align-middle">Tareas</th>
                     <th class="text-center align-middle">Fecha de inicio</th>
@@ -50,8 +110,9 @@
                     <th class="text-center align-middle">Frecuencia </th>
                     <th class="text-center align-middle">Descripción </th>
                     <th class="text-center align-middle">Estado</th>
+                    <th class="text-center align-middle">Actividad</th>
                     {{-- Opciones para administradores --}}
-                    @if (!empty(auth()->user()->admin))
+                    @if (!empty(auth()->user()->admin) || auth()->user()->tipo == 'VOLU')
                         <th class="text-center align-middle">Colaborador</th>
                     @endif
                 </tr>
@@ -59,21 +120,99 @@
             <tbody>
                 @foreach ($proyectos as $proyecto)
                     <tr style="background-color: #f8f8f8;">
-                        <td colspan="11"><label>{{ $proyecto['Nombre'] }}</label></td>
+                        <td colspan="12"><label>{{ $proyecto['Nombre'] }}</label></td>
                     </tr>
                     {{-- Mostramos la lista de tareas --}}
                     @foreach ($tareas as $tarea)
-                        @if (!empty(auth()->user()->admin))
+                        @php
+                            //Switch para mostrar el nombre del impuesto
+                            switch ($tarea['tipoimpuesto']) {
+                                case 'Cierre_Facturacion':
+                                    $impuesto = 'Cierre de facturación';
+                                    break;
+                            
+                                case 'IMSS':
+                                    $impuesto = 'IMSS';
+                                    break;
+                            
+                                case 'Impuestos_Remuneraciones':
+                                    $impuesto = 'ISN';
+                                    break;
+                            
+                                case 'Impuestos_Estatal':
+                                    $impuesto = 'Impuesto Cedular';
+                                    break;
+                            
+                                case 'Impuestos_Hospedaje':
+                                    $impuesto = 'ISH';
+                                    break;
+                            
+                                case 'Declaracion_INEGI':
+                                    $impuesto = 'Declaración INEGI';
+                                    break;
+                            
+                                case 'Impuestos_Federales':
+                                    $impuesto = 'Impuestos Federales';
+                                    break;
+                            
+                                case 'Balanza_Mensual':
+                                    $impuesto = 'Balanza Mensual';
+                                    break;
+                            
+                                case 'DIOT':
+                                    $impuesto = 'Acuse DIOT';
+                                    break;
+                            
+                                case 'Cierre_Econt':
+                                    $impuesto = 'Cierre E-cont';
+                                    break;
+                            
+                                case 'Costo_Ventas':
+                                    $impuesto = 'Costo de ventas';
+                                    break;
+                            
+                                case 'Archivo_Digital':
+                                    $impuesto = 'Archivo Digital';
+                                    break;
+                            
+                                case 'Conciliacion_Impuesto':
+                                    $impuesto = 'Concentrado de impuestos';
+                                    break;
+                            
+                                case 'Notas_Credito':
+                                    $impuesto = 'Nota de credito';
+                                    break;
+                            
+                                default:
+                                    $impuesto = 'Sin impuesto';
+                                    break;
+                            }
+                        @endphp
+
+                        @if (!empty(auth()->user()->admin) || auth()->user()->tipo == 'VOLU')
                             @if ($tarea['rfcproyecto'] == $proyecto['RFC'])
                                 @php
-                                    if (!empty($tarea['completado']) && empty(auth()->user()->admin)) {
-                                        $complete = 'background-color: #ddd; pointer-events: none;';
-                                    } else {
-                                        $complete = null;
+                                    //Colores de estado
+                                    switch ($tarea['estado']) {
+                                        case '0':
+                                            $complete = null;
+                                            break;
+                                    
+                                        case '1':
+                                            $complete = 'background-color: #fff4b2;';
+                                            break;
+                                    
+                                        case '2':
+                                            $complete = 'background-color: #d0ffae; pointer-events: none; text-decoration:line-through;';
+                                            break;
+                                    
+                                        case 'fin':
+                                            $complete = 'background-color: #d0ffae; pointer-events: none; text-decoration:line-through;';
+                                            break;
                                     }
                                 @endphp
 
-                                <tr style="{{ $complete }}">
+                                <tr style="{{ $complete }} color: #3e464e">
                                     {{-- Boton de completado --}}
                                     @if (!empty($tarea['completado']))
                                         <td>
@@ -81,17 +220,26 @@
                                         </td>
                                     @else
                                         <td>
+                                            {{-- Boton de completado --}}
                                             <a wire:click="Completado('{{ $tarea['_id'] }}')"
                                                 class="icons fas fa-check-circle fa-2x"></a>
+
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                                            {{-- Boton de eliminar registro --}}
+                                            <a title="Cancelar" wire:click="Cancelar('{{ $tarea['_id'] }}')"
+                                                class="icons fas fa-trash-alt fa-2x"></a>
                                         </td>
                                     @endif
 
-                                    {{-- Cancelar tarea --}}
+                                    {{-- Editar tarea --}}
                                     @if (!empty(auth()->user()->admin))
                                         {{-- Boton para cancelar (eliminar)/ finalizar una tarea --}}
                                         <td>
-                                            <a title="Cancelar" wire:click="Cancelar('{{ $tarea['_id'] }}')"
-                                                class="icons fas fa-times-circle fa-2x content_true_pdf"></a>
+                                            <a title="Editar"
+                                                wire:click="SendInfoEdit('{{ $tarea['_id'] }}')"data-backdrop="static"
+                                                data-keyboard="false" data-toggle="modal" data-target="#nuevatarea"
+                                                class="icons fas fa-edit fa-2x"></a>
                                         </td>
                                     @endif
 
@@ -123,20 +271,35 @@
                                     {{-- Estado --}}
                                     @switch($tarea['estado'])
                                         @case('0')
-                                            <td>No iniciada</td>
+                                            <td>
+                                                <label>No iniciada</label>
+                                            </td>
                                         @break
 
                                         @case('1')
-                                            <td>En proceso</td>
+                                            <td>
+                                                <label>En proceso</label>
+                                            </td>
                                         @break
 
                                         @case('2')
-                                            <td>Concluida</td>
+                                            <td>
+                                                <label>Concluida</label>
+                                            </td>
+                                        @break
+
+                                        @case('fin')
+                                            <td>
+                                                <label>Concluida</label>
+                                            </td>
                                         @break
                                     @endswitch
 
+                                    {{-- Impuesto --}}
+                                    <td>{{ $impuesto }}</td>
+
                                     {{-- Cancelar tarea --}}
-                                    @if (!empty(auth()->user()->admin))
+                                    @if (!empty(auth()->user()->admin) || auth()->user()->tipo == 'VOLU')
                                         {{-- Prioridad --}}
                                         <td>{{ ucfirst($tarea['nomcolaborador']) }}</td>
                                     @endif
@@ -145,14 +308,27 @@
                         @else
                             @if ($tarea['rfccolaborador'] == $rfccolab && $tarea['rfcproyecto'] == $proyecto['RFC'])
                                 @php
-                                    if (!empty($tarea['completado']) && empty(auth()->user()->admin)) {
-                                        $complete = 'background-color: #ddd; pointer-events: none;';
-                                    } else {
-                                        $complete = null;
+                                    //Colores de estado
+                                    switch ($tarea['estado']) {
+                                        case '0':
+                                            $complete = null;
+                                            break;
+                                    
+                                        case '1':
+                                            $complete = 'background-color: #fff4b2;';
+                                            break;
+                                    
+                                        case '2':
+                                            $complete = 'background-color: #d0ffae; pointer-events: none; text-decoration:line-through;';
+                                            break;
+                                    
+                                        case 'fin':
+                                            $complete = 'background-color: #d0ffae; pointer-events: none; text-decoration:line-through;';
+                                            break;
                                     }
                                 @endphp
 
-                                <tr style="{{ $complete }}">
+                                <tr style="{{ $complete }} color: #3e464e">
                                     {{-- Boton de completado --}}
                                     @if (!empty($tarea['completado']))
                                         <td>
@@ -193,17 +369,32 @@
                                     {{-- Estado --}}
                                     @switch($tarea['estado'])
                                         @case('0')
-                                            <td>No iniciada</td>
+                                            <td>
+                                                <label>No iniciada</label>
+                                            </td>
                                         @break
 
                                         @case('1')
-                                            <td>En proceso</td>
+                                            <td>
+                                                <label>En proceso</label>
+                                            </td>
                                         @break
 
                                         @case('2')
-                                            <td>Concluida</td>
+                                            <td>
+                                                <label>Concluida</label>
+                                            </td>
+                                        @break
+
+                                        @case('fin')
+                                            <td>
+                                                <label>Concluida</label>
+                                            </td>
                                         @break
                                     @endswitch
+
+                                    {{-- Impuesto --}}
+                                    <td>{{ $impuesto }}</td>
                                 </tr>
                             @endif
                         @endif

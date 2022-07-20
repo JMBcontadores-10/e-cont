@@ -308,13 +308,20 @@
                                 <div class="dropdown-menu dropdown-menu-right pb-0"><a class="dropdown-item"
                                         onclick="alerta()"><i class="bx bx-user mr-50"></i> Editar
                                         Perfil</a><a class="dropdown-item" onclick="alerta()"><i
-                                            class="bx bx-envelope mr-50"></i> Email</a><a class="dropdown-item"
-                                        href="{{ url('tareas') }}"><i
-                                            class="bx bx-check-square mr-50"></i>Tareas</a><a class="dropdown-item"
-                                        onclick="alerta()"><i class="bx bx-message mr-50"></i>Chats</a>
+                                            class="bx bx-envelope mr-50"></i> Email</a>
+
+                                    @if (!empty(auth()->user()->tipo))
+                                        <a class="dropdown-item" href="{{ url('tareas') }}">
+                                            <i class="bx bx-check-square mr-50"></i>Tareas</a>
+                                    @endif
+
+                                    <a class="dropdown-item" onclick="alerta()"><i
+                                            class="bx bx-message mr-50"></i>Chats</a>
+
                                     <div class="dropdown-divider mb-0"></div>
                                     <form action="{{ route('logout') }}" method="POST">
                                         @csrf
+                                        {{ csrf_field() }}
                                         <input class="dropdown-item" type="submit" value="Cerrar sesión">
                                     </form>
 

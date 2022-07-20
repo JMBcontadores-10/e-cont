@@ -76,17 +76,41 @@ class Tareacal extends Component
                             //Condicional para saber si tiene un periodo de termino
                             if ($tarea['rfccolaborador'] == $this->contaselect && $tarea['asigntarea'] == $date) {
                                 //Condicional para saber si una tarea ya esta completada
-                                if (!empty($tarea['completado'])) {
-                                    $week .= '<br> <div style="background:#b1ff79; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
-                                } else {
-                                    $week .= '<br> <div style="background:#f8f8f8; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
+                                switch ($tarea['estado']) {
+                                    case '0':
+                                        $week .= '<br> <div style="background:#f8f8f8; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
+                                        break;
+
+                                    case '1':
+                                        $week .= '<br> <div style="background:#fff4b2; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
+                                        break;
+
+                                    case '2':
+                                        $week .= '<br> <div style="background:#d0ffae; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
+                                        break;
+
+                                    case 'fin':
+                                        $week .= '<br> <div style="background:#d0ffae; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
+                                        break;
                                 }
                             } elseif ($tarea['rfccolaborador'] == $this->contaselect && $tarea['fechaentrega'] >= $date && $tarea['asigntarea'] <= $date) {
                                 //Condicional para saber si una tarea ya esta completada
-                                if (!empty($tarea['completado'])) {
-                                    $week .= '<br> <div style="background:#b1ff79; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
-                                } else {
-                                    $week .= '<br> <div style="background:#f8f8f8; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
+                                switch ($tarea['estado']) {
+                                    case '0':
+                                        $week .= '<br> <div style="background:#f8f8f8; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
+                                        break;
+
+                                    case '1':
+                                        $week .= '<br> <div style="background:#fff4b2; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
+                                        break;
+
+                                    case '2':
+                                        $week .= '<br> <div style="background:#d0ffae; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
+                                        break;
+
+                                    case 'fin':
+                                        $week .= '<br> <div style="background:#d0ffae; color:#727e8c; border-radius:5px; padding:5px;">' . $tarea['nombre'] . ' - ' . Str::limit($tarea['nomproyecto'], 15) . '</div>';
+                                        break;
                                 }
                             }
                         }

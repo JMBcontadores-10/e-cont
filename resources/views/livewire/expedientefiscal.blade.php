@@ -19,35 +19,17 @@
         //Obtenemos los datos de facturacion
         $ConsulClient = User::where('RFC', $empresa)->first();
         
-        //Condicional para saber si la empresa tiene una sucursal
-        if (!empty($infoempre['Sucursales'])) {
-            //Descomponemos los datos de la sucursal
-            foreach ($infoempre['Sucursales'] as $datasucursal) {
-                //Comparmos si las sucursales son iguales a la seleccionada
-                if ($datasucursal['RFC'] == $this->sucursal) {
-                    //Almacenamos los datos en variables
-                    $ImptoFederal = $datasucursal['ImptoFederal'] ?? null;
-                    $ImptoRemuneracion = $datasucursal['ImptoRemuneracion'] ?? null;
-                    $ImptoHospedaje = $datasucursal['ImptoHospedaje'] ?? null;
-                    $IMSS = $datasucursal['IMSS'] ?? null;
-                    $DIOT = $datasucursal['DIOT'] ?? null;
-                    $BalanMensual = $datasucursal['BalanMensual'] ?? null;
-                    $Matriz = $empresa ?? null;
-                    $NombreSucur = $datasucursal['Nombre'] ?? null;
-                }
-            }
-        } else {
-            //Almacenamos los datos en variables
-            $ImptoFederal = $ConsulClient['ImptoFederal'] ?? null;
-            $ImptoRemuneracion = $ConsulClient['ImptoRemuneracion'] ?? null;
-            $ImptoHospedaje = $ConsulClient['ImptoHospedaje'] ?? null;
-            $IMSS = $ConsulClient['IMSS'] ?? null;
-            $DIOT = $ConsulClient['DIOT'] ?? null;
-            $BalanMensual = $ConsulClient['BalanMensual'] ?? null;
-        }
+        //Almacenamos los datos en variables
+        $ImptoFederal = $ConsulClient['ImptoFederal'] ?? null;
+        $ImptoRemuneracion = $ConsulClient['ImptoRemuneracion'] ?? null;
+        $ImptoHospedaje = $ConsulClient['ImptoHospedaje'] ?? null;
+        $IMSS = $ConsulClient['IMSS'] ?? null;
+        $DIOT = $ConsulClient['DIOT'] ?? null;
+        $BalanMensual = $ConsulClient['BalanMensual'] ?? null;
         
         //Arreglo con sucursales (Para empresas que solo ocupan la sucursal en este modulo)
-        $sucursales = [['Matriz' => 'PERE9308105X4', 'Sucursal' => 'Tlahuac', 'Campo' => 'IMPUESTO SOBRE REMUNERACIONES/NOMINA', 'Carpeta' => 'Impuestos_Remuneraciones']];
+        $sucursales = [['Matriz' => 'PERE9308105X4', 'Sucursal' => 'Tlahuac', 'Campo' => 'ISN', 'Carpeta' => 'Impuestos_Remuneraciones', 'Email' => 'servicio.tlahuac@permergas.mx'], ['Matriz' => 'STR9303188X3', 'Sucursal' => '', 'Campo' => 'Impuesto Cedular', 'Carpeta' => 'Impuestos_Estatal', 'Email' => '']];
+        
     @endphp
 
     {{-- Contenedor para mantener responsivo el contenido del modulo --}}
@@ -135,7 +117,8 @@
                                     <th class="text-center align-middle" colspan="14">Expediente Fiscal
                                         {{ $anioexpe }}</th>
                                 </tr>
-                                @if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales'])))
+                                @if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) ||
+                                    (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales'])))
                                     <tr>
                                         <th class="text-center align-middle" rowspan="2">Mes</th>
 
@@ -156,13 +139,13 @@
                                         @if (!empty($ImptoRemuneracion))
                                             <th class="text-center align-middle" style="background-color: #a9d08e"
                                                 colspan="2">
-                                                Impuesto sobre Remuneraciones/Nomina</th>
+                                                ISN</th>
                                         @endif
 
                                         @if (!empty($ImptoHospedaje))
                                             <th class="text-center align-middle" style="background-color: #ffe699"
                                                 colspan="2">
-                                                Impuesto sobre Hospedaje</th>
+                                                ISH</th>
                                         @endif
 
                                         @if (!empty($IMSS))
@@ -187,7 +170,7 @@
                                         @foreach ($sucursales as $sucursal)
                                             @if ($sucursal['Matriz'] == $this->rfcEmpresa)
                                                 <th class="text-center align-middle">
-                                                    Fecha presentación</th>
+                                                    Fecha</th>
                                                 <th class="text-center align-middle">
                                                     Acuse(s)
                                                 </th>
@@ -197,7 +180,7 @@
 
                                         @if (!empty($ImptoFederal))
                                             <th class="text-center align-middle" style="background-color: #9bc2e6">Fecha
-                                                presentación</th>
+                                            </th>
                                             <th class="text-center align-middle" style="background-color: #9bc2e6">
                                                 Acuse(s)
                                             </th>
@@ -205,7 +188,7 @@
 
                                         @if (!empty($ImptoRemuneracion))
                                             <th class="text-center align-middle" style="background-color: #a9d08e">Fecha
-                                                presentación</th>
+                                            </th>
                                             <th class="text-center align-middle" style="background-color: #a9d08e">
                                                 Acuse(s)
                                             </th>
@@ -213,7 +196,7 @@
 
                                         @if (!empty($ImptoHospedaje))
                                             <th class="text-center align-middle" style="background-color: #ffe699">Fecha
-                                                presentación</th>
+                                            </th>
                                             <th class="text-center align-middle" style="background-color: #ffe699">
                                                 Acuse(s)
                                             </th>
@@ -221,20 +204,20 @@
 
                                         @if (!empty($IMSS))
                                             <th class="text-center align-middle" style="background-color: #f8caac">Fecha
-                                                presentación</th>
+                                            </th>
                                             <th class="text-center align-middle" style="background-color: #f8caac">
                                                 Acuse(s)
                                             </th>
                                         @endif
 
                                         @if (!empty($DIOT))
-                                            <th class="text-center align-middle">Fecha presentación</th>
+                                            <th class="text-center align-middle">Fecha</th>
                                             <th class="text-center align-middle">Acuse(s)</th>
                                         @endif
 
                                         @if (!empty($BalanMensual))
                                             <th class="text-center align-middle" style="background-color: #e1eeda">Fecha
-                                                presentación</th>
+                                            </th>
                                             <th class="text-center align-middle" style="background-color: #e1eeda">
                                                 Acuse(s)
                                             </th>
@@ -243,7 +226,8 @@
                                 @endif
                             </thead>
                             <tbody>
-                                @if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) || (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales'])))
+                                @if ((!empty($this->rfcEmpresa) && !empty($this->sucursal)) ||
+                                    (!empty($this->rfcEmpresa) && empty($this->infoempre['Sucursales'])))
                                     @php
                                         //Consulta para saber si la empresa tiene una sucursal
                                         if (!empty($this->sucursal)) {
@@ -352,7 +336,12 @@
 
 
                                                 {{-- Condicional para importar la funcion de JS --}}
-                                                @if (!empty($ImptoFederal) || !empty($ImptoRemuneracion) || !empty($ImptoHospedaje) || !empty($IMSS) || !empty($DIOT) || !empty($BalanMensual))
+                                                @if (!empty($ImptoFederal) ||
+                                                    !empty($ImptoRemuneracion) ||
+                                                    !empty($ImptoHospedaje) ||
+                                                    !empty($IMSS) ||
+                                                    !empty($DIOT) ||
+                                                    !empty($BalanMensual))
                                                     <script>
                                                         //Boton para mostrar el formulario
                                                         $(".fechapre").click(function() {
@@ -427,7 +416,19 @@
 
                                                     {{-- Fecha presentacion --}}
                                                     <td>
-                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '.Declaracion']))
+                                                        @if (!empty(
+                                                            $consulexpefisc[
+                                                                'ExpedFisc.' .
+                                                                    $anioexpe .
+                                                                    '.' .
+                                                                    $sucursal['Carpeta'] .
+                                                                    '.' .
+                                                                    $mesespa .
+                                                                    '_' .
+                                                                    $sucursal['Sucursal'] .
+                                                                    '.Declaracion'
+                                                            ]
+                                                        ))
                                                             <a {{ $active }}
                                                                 formulario="{{ $sucursal['Carpeta'] }}-{{ $rfcselect }}-{{ $mesespa . '_' . $sucursal['Sucursal'] }}-{{ $anioexpe }}"
                                                                 class="fechapre selectfecha icons fas fas fa-calendar content_true"></a>
@@ -441,32 +442,58 @@
                                                         <div class="formexpe"
                                                             id="{{ $sucursal['Carpeta'] }}-{{ $rfcselect }}-{{ $mesespa . '_' . $sucursal['Sucursal'] }}-{{ $anioexpe }}">
                                                             <br>
-                                                            <form
-                                                                wire:submit.prevent="FechaPresent('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}', '{{ $anioexpe }}')">
-                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                    wire:model.defer="fechapresent" type="date">
-                                                                <button class="tn btn-secondary BtnVinculadas"
-                                                                    type="submit"
-                                                                    wire:loading.attr="disabled">Capturar</button>
-                                                            </form>
+                                                            {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                            @if (!empty(
+                                                                $consulexpefisc[
+                                                                    'ExpedFisc.' .
+                                                                        $anioexpe .
+                                                                        '.' .
+                                                                        $sucursal['Carpeta'] .
+                                                                        '.' .
+                                                                        $mesespa .
+                                                                        '_' .
+                                                                        $sucursal['Sucursal'] .
+                                                                        '.Declaracion'
+                                                                ]
+                                                            ))
+                                                                {{-- Boton de eliminar --}}
+                                                                <button
+                                                                    wire:click="DeleteFecha('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}', '{{ $anioexpe }}')"
+                                                                    class="tn btn-secondary BtnVinculadas"
+                                                                    wire:loading.attr="disabled">Limpiar</button>
+                                                            @else
+                                                                {{-- Fomrulario para capturar la fecha --}}
+                                                                <form
+                                                                    wire:submit.prevent="FechaPresent('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}', '{{ $anioexpe }}')">
+                                                                    <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                        wire:model.defer="fechapresent" type="date">
+                                                                    <button class="tn btn-secondary BtnVinculadas"
+                                                                        type="submit"
+                                                                        wire:loading.attr="disabled">Capturar</button>
+                                                                </form>
+                                                            @endif
                                                         </div>
                                                     </td>
 
                                                     {{-- Acuse --}}
                                                     <td>
                                                         {{-- Condicional para saber si hay un PDF cargado --}}
-                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '.Acuse']))
+                                                        @if (!empty(
+                                                            $consulexpefisc[
+                                                                'ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '.Acuse'
+                                                            ]
+                                                        ))
                                                             <a {{ $active }}
                                                                 class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                                 data-toggle="modal"
-                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                                 data-target="#acuseexp" data-backdrop="static"
                                                                 data-keyboard="false"></a>
                                                         @else
                                                             <a {{ $active }}
                                                                 class="selectfecha icons fas fa-file-pdf"
                                                                 data-toggle="modal"
-                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                                 data-target="#acuseexp" data-backdrop="static"
                                                                 data-keyboard="false"></a>
                                                         @endif
@@ -501,14 +528,25 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Federales-{{ $rfcselect }}-{{ $mesespa }}-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Federales.' . $mesespa . '.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -519,14 +557,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -552,14 +590,24 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Remuneraciones-{{ $rfcselect }}-{{ $mesespa }}-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -570,14 +618,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -603,14 +651,24 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Hospedaje-{{ $rfcselect }}-{{ $mesespa }}-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Hospedaje.' . $mesespa . '.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -621,14 +679,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -654,14 +712,24 @@
                                                     <div class="formexpe"
                                                         id="IMSS-{{ $rfcselect }}-{{ $mesespa }}-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.IMSS.' . $mesespa . '.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -672,14 +740,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -705,14 +773,24 @@
                                                     <div class="formexpe"
                                                         id="DIOT-{{ $rfcselect }}-{{ $mesespa }}-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.DIOT.' . $mesespa . '.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -723,14 +801,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -756,14 +834,24 @@
                                                     <div class="formexpe"
                                                         id="Balanza_Mensual-{{ $rfcselect }}-{{ $mesespa }}-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Balanza_Mensual.' . $mesespa . '.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -774,14 +862,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -811,7 +899,19 @@
 
                                                     {{-- Fecha presentacion --}}
                                                     <td>
-                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '_C.Declaracion']))
+                                                        @if (!empty(
+                                                            $consulexpefisc[
+                                                                'ExpedFisc.' .
+                                                                    $anioexpe .
+                                                                    '.' .
+                                                                    $sucursal['Carpeta'] .
+                                                                    '.' .
+                                                                    $mesespa .
+                                                                    '_' .
+                                                                    $sucursal['Sucursal'] .
+                                                                    '_C.Declaracion'
+                                                            ]
+                                                        ))
                                                             <a {{ $active }}
                                                                 formulario="{{ $sucursal['Carpeta'] }}-{{ $rfcselect }}-{{ $mesespa . '_' . $sucursal['Sucursal'] }}_C-{{ $anioexpe }}"
                                                                 class="fechapre selectfecha icons fas fas fa-calendar content_true"></a>
@@ -825,32 +925,67 @@
                                                         <div class="formexpe"
                                                             id="{{ $sucursal['Carpeta'] }}-{{ $rfcselect }}-{{ $mesespa . '_' . $sucursal['Sucursal'] }}_C-{{ $anioexpe }}">
                                                             <br>
-                                                            <form
-                                                                wire:submit.prevent="FechaPresent('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_C', '{{ $anioexpe }}')">
-                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                    wire:model.defer="fechapresent" type="date">
-                                                                <button class="tn btn-secondary BtnVinculadas"
-                                                                    type="submit"
-                                                                    wire:loading.attr="disabled">Capturar</button>
-                                                            </form>
+                                                            {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                            @if (!empty(
+                                                                $consulexpefisc[
+                                                                    'ExpedFisc.' .
+                                                                        $anioexpe .
+                                                                        '.' .
+                                                                        $sucursal['Carpeta'] .
+                                                                        '.' .
+                                                                        $mesespa .
+                                                                        '_' .
+                                                                        $sucursal['Sucursal'] .
+                                                                        '_C.Declaracion'
+                                                                ]
+                                                            ))
+                                                                {{-- Boton de eliminar --}}
+                                                                <button
+                                                                    wire:click="DeleteFecha('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_C', '{{ $anioexpe }}')"
+                                                                    class="tn btn-secondary BtnVinculadas"
+                                                                    wire:loading.attr="disabled">Limpiar</button>
+                                                            @else
+                                                                {{-- Fomrulario para capturar la fecha --}}
+                                                                <form
+                                                                    wire:submit.prevent="FechaPresent('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_C', '{{ $anioexpe }}')">
+                                                                    <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                        wire:model.defer="fechapresent"
+                                                                        type="date">
+                                                                    <button class="tn btn-secondary BtnVinculadas"
+                                                                        type="submit"
+                                                                        wire:loading.attr="disabled">Capturar</button>
+                                                                </form>
+                                                            @endif
                                                         </div>
                                                     </td>
 
                                                     {{-- Acuse --}}
                                                     <td>
                                                         {{-- Condicional para saber si hay un PDF cargado --}}
-                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '_C.Acuse']))
+                                                        @if (!empty(
+                                                            $consulexpefisc[
+                                                                'ExpedFisc.' .
+                                                                    $anioexpe .
+                                                                    '.' .
+                                                                    $sucursal['Carpeta'] .
+                                                                    '.' .
+                                                                    $mesespa .
+                                                                    '_' .
+                                                                    $sucursal['Sucursal'] .
+                                                                    '_C.Acuse'
+                                                            ]
+                                                        ))
                                                             <a {{ $active }}
                                                                 class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                                 data-toggle="modal"
-                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                                 data-target="#acuseexp" data-backdrop="static"
                                                                 data-keyboard="false"></a>
                                                         @else
                                                             <a {{ $active }}
                                                                 class="selectfecha icons fas fa-file-pdf"
                                                                 data-toggle="modal"
-                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                                 data-target="#acuseexp" data-backdrop="static"
                                                                 data-keyboard="false"></a>
                                                         @endif
@@ -878,14 +1013,24 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Federales-{{ $rfcselect }}-{{ $mesespa }}_C-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Federales.' . $mesespa . '_C.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -896,14 +1041,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -915,7 +1060,9 @@
 
                                                 {{-- Fecha presentacion --}}
                                                 <td>
-                                                    @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_C.Declaracion']))
+                                                    @if (!empty(
+                                                        $consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_C.Declaracion']
+                                                    ))
                                                         <a {{ $active }}
                                                             formulario="Impuestos_Remuneraciones-{{ $rfcselect }}-{{ $mesespa }}_C-{{ $anioexpe }}"
                                                             class="fechapre selectfecha icons fas fas fa-calendar content_true"></a>
@@ -929,14 +1076,26 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Remuneraciones-{{ $rfcselect }}-{{ $mesespa }}_C-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty(
+                                                            $consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_C.Declaracion']
+                                                        ))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -947,14 +1106,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -980,14 +1139,24 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Hospedaje-{{ $rfcselect }}-{{ $mesespa }}_C-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Hospedaje.' . $mesespa . '_C.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -998,14 +1167,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1031,14 +1200,24 @@
                                                     <div class="formexpe"
                                                         id="IMSS-{{ $rfcselect }}-{{ $mesespa }}_C-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.IMSS.' . $mesespa . '_C.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1049,14 +1228,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1082,14 +1261,24 @@
                                                     <div class="formexpe"
                                                         id="DIOT-{{ $rfcselect }}-{{ $mesespa }}_C-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.DIOT.' . $mesespa . '_C.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1100,14 +1289,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1133,14 +1322,24 @@
                                                     <div class="formexpe"
                                                         id="Balanza_Mensual-{{ $rfcselect }}-{{ $mesespa }}_C-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Balanza_Mensual.' . $mesespa . '_C.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1151,14 +1350,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_C', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1198,7 +1397,19 @@
 
                                                     {{-- Fecha presentacion --}}
                                                     <td>
-                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '_A.Declaracion']))
+                                                        @if (!empty(
+                                                            $consulexpefisc[
+                                                                'ExpedFisc.' .
+                                                                    $anioexpe .
+                                                                    '.' .
+                                                                    $sucursal['Carpeta'] .
+                                                                    '.' .
+                                                                    $mesespa .
+                                                                    '_' .
+                                                                    $sucursal['Sucursal'] .
+                                                                    '_A.Declaracion'
+                                                            ]
+                                                        ))
                                                             <a {{ $active }}
                                                                 formulario="{{ $sucursal['Carpeta'] }}-{{ $rfcselect }}-{{ $mesespa . '_' . $sucursal['Sucursal'] }}_A-{{ $anioexpe }}"
                                                                 class="fechapre selectfecha icons fas fas fa-calendar content_true"></a>
@@ -1212,32 +1423,67 @@
                                                         <div class="formexpe"
                                                             id="{{ $sucursal['Carpeta'] }}-{{ $rfcselect }}-{{ $mesespa . '_' . $sucursal['Sucursal'] }}_A-{{ $anioexpe }}">
                                                             <br>
-                                                            <form
-                                                                wire:submit.prevent="FechaPresent('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_A', '{{ $anioexpe }}')">
-                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                    wire:model.defer="fechapresent" type="date">
-                                                                <button class="tn btn-secondary BtnVinculadas"
-                                                                    type="submit"
-                                                                    wire:loading.attr="disabled">Capturar</button>
-                                                            </form>
+                                                            {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                            @if (!empty(
+                                                                $consulexpefisc[
+                                                                    'ExpedFisc.' .
+                                                                        $anioexpe .
+                                                                        '.' .
+                                                                        $sucursal['Carpeta'] .
+                                                                        '.' .
+                                                                        $mesespa .
+                                                                        '_' .
+                                                                        $sucursal['Sucursal'] .
+                                                                        '_A.Declaracion'
+                                                                ]
+                                                            ))
+                                                                {{-- Boton de eliminar --}}
+                                                                <button
+                                                                    wire:click="DeleteFecha('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_A', '{{ $anioexpe }}')"
+                                                                    class="tn btn-secondary BtnVinculadas"
+                                                                    wire:loading.attr="disabled">Limpiar</button>
+                                                            @else
+                                                                {{-- Fomrulario para capturar la fecha --}}
+                                                                <form
+                                                                    wire:submit.prevent="FechaPresent('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_A', '{{ $anioexpe }}')">
+                                                                    <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                        wire:model.defer="fechapresent"
+                                                                        type="date">
+                                                                    <button class="tn btn-secondary BtnVinculadas"
+                                                                        type="submit"
+                                                                        wire:loading.attr="disabled">Capturar</button>
+                                                                </form>
+                                                            @endif
                                                         </div>
                                                     </td>
 
                                                     {{-- Acuse --}}
                                                     <td>
                                                         {{-- Condicional para saber si hay un PDF cargado --}}
-                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '_A.Acuse']))
+                                                        @if (!empty(
+                                                            $consulexpefisc[
+                                                                'ExpedFisc.' .
+                                                                    $anioexpe .
+                                                                    '.' .
+                                                                    $sucursal['Carpeta'] .
+                                                                    '.' .
+                                                                    $mesespa .
+                                                                    '_' .
+                                                                    $sucursal['Sucursal'] .
+                                                                    '_A.Acuse'
+                                                            ]
+                                                        ))
                                                             <a {{ $active }}
                                                                 class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                                 data-toggle="modal"
-                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_A', '{{ $sucursal['Email'] }}')"
                                                                 data-target="#acuseexp" data-backdrop="static"
                                                                 data-keyboard="false"></a>
                                                         @else
                                                             <a {{ $active }}
                                                                 class="selectfecha icons fas fa-file-pdf"
                                                                 data-toggle="modal"
-                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_A', '{{ $sucursal['Email'] }}')"
                                                                 data-target="#acuseexp" data-backdrop="static"
                                                                 data-keyboard="false"></a>
                                                         @endif
@@ -1264,14 +1510,24 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Federales-{{ $rfcselect }}-{{ $mesespa }}_A-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Federales.' . $mesespa . '_A.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1282,14 +1538,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1301,7 +1557,9 @@
 
                                                 {{-- Fecha presentacion --}}
                                                 <td>
-                                                    @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_A.Declaracion']))
+                                                    @if (!empty(
+                                                        $consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_A.Declaracion']
+                                                    ))
                                                         <a {{ $active }}
                                                             formulario="Impuestos_Remuneraciones-{{ $rfcselect }}-{{ $mesespa }}_A-{{ $anioexpe }}"
                                                             class="fechapre selectfecha icons fas fas fa-calendar content_true"></a>
@@ -1315,14 +1573,26 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Remuneraciones-{{ $rfcselect }}-{{ $mesespa }}_A-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty(
+                                                            $consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_A.Declaracion']
+                                                        ))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1333,14 +1603,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1366,14 +1636,24 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Hospedaje-{{ $rfcselect }}-{{ $mesespa }}_A-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Hospedaje.' . $mesespa . '_A.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1384,14 +1664,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1417,14 +1697,24 @@
                                                     <div class="formexpe"
                                                         id="IMSS-{{ $rfcselect }}-{{ $mesespa }}_A-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.IMSS.' . $mesespa . '_A.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1435,14 +1725,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1468,14 +1758,24 @@
                                                     <div class="formexpe"
                                                         id="DIOT-{{ $rfcselect }}-{{ $mesespa }}_A-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.DIOT.' . $mesespa . '_A.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1486,14 +1786,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1519,14 +1819,24 @@
                                                     <div class="formexpe"
                                                         id="Balanza_Mensual-{{ $rfcselect }}-{{ $mesespa }}_A-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Balanza_Mensual.' . $mesespa . '_A.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1537,14 +1847,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_A', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1578,7 +1888,19 @@
 
                                                     {{-- Fecha presentacion --}}
                                                     <td>
-                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '_B.Declaracion']))
+                                                        @if (!empty(
+                                                            $consulexpefisc[
+                                                                'ExpedFisc.' .
+                                                                    $anioexpe .
+                                                                    '.' .
+                                                                    $sucursal['Carpeta'] .
+                                                                    '.' .
+                                                                    $mesespa .
+                                                                    '_' .
+                                                                    $sucursal['Sucursal'] .
+                                                                    '_B.Declaracion'
+                                                            ]
+                                                        ))
                                                             <a {{ $active }}
                                                                 formulario="{{ $sucursal['Carpeta'] }}-{{ $rfcselect }}-{{ $mesespa . '_' . $sucursal['Sucursal'] }}_B-{{ $anioexpe }}"
                                                                 class="fechapre selectfecha icons fas fas fa-calendar content_true"></a>
@@ -1592,32 +1914,67 @@
                                                         <div class="formexpe"
                                                             id="{{ $sucursal['Carpeta'] }}-{{ $rfcselect }}-{{ $mesespa . '_' . $sucursal['Sucursal'] }}_B-{{ $anioexpe }}">
                                                             <br>
-                                                            <form
-                                                                wire:submit.prevent="FechaPresent('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_B', '{{ $anioexpe }}')">
-                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                    wire:model.defer="fechapresent" type="date">
-                                                                <button class="tn btn-secondary BtnVinculadas"
-                                                                    type="submit"
-                                                                    wire:loading.attr="disabled">Capturar</button>
-                                                            </form>
+                                                            {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                            @if (!empty(
+                                                                $consulexpefisc[
+                                                                    'ExpedFisc.' .
+                                                                        $anioexpe .
+                                                                        '.' .
+                                                                        $sucursal['Carpeta'] .
+                                                                        '.' .
+                                                                        $mesespa .
+                                                                        '_' .
+                                                                        $sucursal['Sucursal'] .
+                                                                        '_B.Declaracion'
+                                                                ]
+                                                            ))
+                                                                {{-- Boton de eliminar --}}
+                                                                <button
+                                                                    wire:click="DeleteFecha('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_B', '{{ $anioexpe }}')"
+                                                                    class="tn btn-secondary BtnVinculadas"
+                                                                    wire:loading.attr="disabled">Limpiar</button>
+                                                            @else
+                                                                {{-- Fomrulario para capturar la fecha --}}
+                                                                <form
+                                                                    wire:submit.prevent="FechaPresent('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_B', '{{ $anioexpe }}')">
+                                                                    <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                        wire:model.defer="fechapresent"
+                                                                        type="date">
+                                                                    <button class="tn btn-secondary BtnVinculadas"
+                                                                        type="submit"
+                                                                        wire:loading.attr="disabled">Capturar</button>
+                                                                </form>
+                                                            @endif
                                                         </div>
                                                     </td>
 
                                                     {{-- Acuse --}}
                                                     <td>
                                                         {{-- Condicional para saber si hay un PDF cargado --}}
-                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '_B.Acuse']))
+                                                        @if (!empty(
+                                                            $consulexpefisc[
+                                                                'ExpedFisc.' .
+                                                                    $anioexpe .
+                                                                    '.' .
+                                                                    $sucursal['Carpeta'] .
+                                                                    '.' .
+                                                                    $mesespa .
+                                                                    '_' .
+                                                                    $sucursal['Sucursal'] .
+                                                                    '_B.Acuse'
+                                                            ]
+                                                        ))
                                                             <a {{ $active }}
                                                                 class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                                 data-toggle="modal"
-                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                                 data-target="#acuseexp" data-backdrop="static"
                                                                 data-keyboard="false"></a>
                                                         @else
                                                             <a {{ $active }}
                                                                 class="selectfecha icons fas fa-file-pdf"
                                                                 data-toggle="modal"
-                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                                 data-target="#acuseexp" data-backdrop="static"
                                                                 data-keyboard="false"></a>
                                                         @endif
@@ -1644,14 +2001,24 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Federales-{{ $rfcselect }}-{{ $mesespa }}_B-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Federales.' . $mesespa . '_B.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1662,14 +2029,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1681,7 +2048,9 @@
 
                                                 {{-- Fecha presentacion --}}
                                                 <td>
-                                                    @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_B.Declaracion']))
+                                                    @if (!empty(
+                                                        $consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_B.Declaracion']
+                                                    ))
                                                         <a {{ $active }}
                                                             formulario="Impuestos_Remuneraciones-{{ $rfcselect }}-{{ $mesespa }}_B-{{ $anioexpe }}"
                                                             class="fechapre selectfecha icons fas fas fa-calendar content_true"></a>
@@ -1695,14 +2064,26 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Remuneraciones-{{ $rfcselect }}-{{ $mesespa }}_B-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty(
+                                                            $consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_B.Declaracion']
+                                                        ))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1713,14 +2094,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1746,14 +2127,24 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Hospedaje-{{ $rfcselect }}-{{ $mesespa }}_B-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Hospedaje.' . $mesespa . '_B.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1764,14 +2155,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1797,14 +2188,24 @@
                                                     <div class="formexpe"
                                                         id="IMSS-{{ $rfcselect }}-{{ $mesespa }}_B-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.IMSS.' . $mesespa . '_B.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1815,14 +2216,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1848,14 +2249,24 @@
                                                     <div class="formexpe"
                                                         id="DIOT-{{ $rfcselect }}-{{ $mesespa }}_B-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.DIOT.' . $mesespa . '_B.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1866,14 +2277,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1899,14 +2310,24 @@
                                                     <div class="formexpe"
                                                         id="Balanza_Mensual-{{ $rfcselect }}-{{ $mesespa }}_B-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Balanza_Mensual.' . $mesespa . '_B.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -1917,14 +2338,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_B', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -1960,7 +2381,19 @@
 
                                                     {{-- Fecha presentacion --}}
                                                     <td>
-                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '_D.Declaracion']))
+                                                        @if (!empty(
+                                                            $consulexpefisc[
+                                                                'ExpedFisc.' .
+                                                                    $anioexpe .
+                                                                    '.' .
+                                                                    $sucursal['Carpeta'] .
+                                                                    '.' .
+                                                                    $mesespa .
+                                                                    '_' .
+                                                                    $sucursal['Sucursal'] .
+                                                                    '_D.Declaracion'
+                                                            ]
+                                                        ))
                                                             <a {{ $active }}
                                                                 formulario="{{ $sucursal['Carpeta'] }}-{{ $rfcselect }}-{{ $mesespa . '_' . $sucursal['Sucursal'] }}_D-{{ $anioexpe }}"
                                                                 class="fechapre selectfecha icons fas fas fa-calendar content_true"></a>
@@ -1974,32 +2407,67 @@
                                                         <div class="formexpe"
                                                             id="{{ $sucursal['Carpeta'] }}-{{ $rfcselect }}-{{ $mesespa . '_' . $sucursal['Sucursal'] }}_D-{{ $anioexpe }}">
                                                             <br>
-                                                            <form
-                                                                wire:submit.prevent="FechaPresent('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_D', '{{ $anioexpe }}')">
-                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                    wire:model.defer="fechapresent" type="date">
-                                                                <button class="tn btn-secondary BtnVinculadas"
-                                                                    type="submit"
-                                                                    wire:loading.attr="disabled">Capturar</button>
-                                                            </form>
+                                                            {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                            @if (!empty(
+                                                                $consulexpefisc[
+                                                                    'ExpedFisc.' .
+                                                                        $anioexpe .
+                                                                        '.' .
+                                                                        $sucursal['Carpeta'] .
+                                                                        '.' .
+                                                                        $mesespa .
+                                                                        '_' .
+                                                                        $sucursal['Sucursal'] .
+                                                                        '_D.Declaracion'
+                                                                ]
+                                                            ))
+                                                                {{-- Boton de eliminar --}}
+                                                                <button
+                                                                    wire:click="DeleteFecha('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_D', '{{ $anioexpe }}')"
+                                                                    class="tn btn-secondary BtnVinculadas"
+                                                                    wire:loading.attr="disabled">Limpiar</button>
+                                                            @else
+                                                                {{-- Fomrulario para capturar la fecha --}}
+                                                                <form
+                                                                    wire:submit.prevent="FechaPresent('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_D', '{{ $anioexpe }}')">
+                                                                    <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                        wire:model.defer="fechapresent"
+                                                                        type="date">
+                                                                    <button class="tn btn-secondary BtnVinculadas"
+                                                                        type="submit"
+                                                                        wire:loading.attr="disabled">Capturar</button>
+                                                                </form>
+                                                            @endif
                                                         </div>
                                                     </td>
 
                                                     {{-- Acuse --}}
                                                     <td>
                                                         {{-- Condicional para saber si hay un PDF cargado --}}
-                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.' . $sucursal['Carpeta'] . '.' . $mesespa . '_' . $sucursal['Sucursal'] . '_D.Acuse']))
+                                                        @if (!empty(
+                                                            $consulexpefisc[
+                                                                'ExpedFisc.' .
+                                                                    $anioexpe .
+                                                                    '.' .
+                                                                    $sucursal['Carpeta'] .
+                                                                    '.' .
+                                                                    $mesespa .
+                                                                    '_' .
+                                                                    $sucursal['Sucursal'] .
+                                                                    '_D.Acuse'
+                                                            ]
+                                                        ))
                                                             <a {{ $active }}
                                                                 class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                                 data-toggle="modal"
-                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                                 data-target="#acuseexp" data-backdrop="static"
                                                                 data-keyboard="false"></a>
                                                         @else
                                                             <a {{ $active }}
                                                                 class="selectfecha icons fas fa-file-pdf"
                                                                 data-toggle="modal"
-                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                                wire:click="SendDataAcuse('{{ $sucursal['Carpeta'] }}', '{{ $rfcselect }}', '{{ $mesespa . '_' . $sucursal['Sucursal'] }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                                 data-target="#acuseexp" data-backdrop="static"
                                                                 data-keyboard="false"></a>
                                                         @endif
@@ -2027,14 +2495,24 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Federales-{{ $rfcselect }}-{{ $mesespa }}_D-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Federales.' . $mesespa . '_D.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -2045,14 +2523,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Federales', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -2064,7 +2542,9 @@
 
                                                 {{-- Fecha presentacion --}}
                                                 <td>
-                                                    @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_D.Declaracion']))
+                                                    @if (!empty(
+                                                        $consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_D.Declaracion']
+                                                    ))
                                                         <a {{ $active }}
                                                             formulario="Impuestos_Remuneraciones-{{ $rfcselect }}-{{ $mesespa }}_D-{{ $anioexpe }}"
                                                             class="fechapre selectfecha icons fas fas fa-calendar content_true"></a>
@@ -2078,14 +2558,26 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Remuneraciones-{{ $rfcselect }}-{{ $mesespa }}_D-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty(
+                                                            $consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Remuneraciones.' . $mesespa . '_D.Declaracion']
+                                                        ))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -2096,14 +2588,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Remuneraciones', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -2129,14 +2621,24 @@
                                                     <div class="formexpe"
                                                         id="Impuestos_Hospedaje-{{ $rfcselect }}-{{ $mesespa }}_D-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Impuestos_Hospedaje.' . $mesespa . '_D.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -2147,14 +2649,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Impuestos_Hospedaje', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -2180,14 +2682,24 @@
                                                     <div class="formexpe"
                                                         id="IMSS-{{ $rfcselect }}-{{ $mesespa }}_D-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.IMSS.' . $mesespa . '_D.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -2198,14 +2710,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('IMSS', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -2231,14 +2743,24 @@
                                                     <div class="formexpe"
                                                         id="DIOT-{{ $rfcselect }}-{{ $mesespa }}_D-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.DIOT.' . $mesespa . '_D.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -2249,14 +2771,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $Matriz ?? null }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('DIOT', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif
@@ -2282,14 +2804,24 @@
                                                     <div class="formexpe"
                                                         id="Balanza_Mensual-{{ $rfcselect }}-{{ $mesespa }}_D-{{ $anioexpe }}">
                                                         <br>
-                                                        <form
-                                                            wire:submit.prevent="FechaPresent('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
-                                                            <input min="2014-01-01" max={{ date('Y-m-d') }}
-                                                                wire:model.defer="fechapresent" type="date">
-                                                            <button class="tn btn-secondary BtnVinculadas"
-                                                                type="submit"
-                                                                wire:loading.attr="disabled">Capturar</button>
-                                                        </form>
+                                                        {{-- Condicional para mostrar el formulario para capturar nueva fecha o eliminar la fecha --}}
+                                                        @if (!empty($consulexpefisc['ExpedFisc.' . $anioexpe . '.Balanza_Mensual.' . $mesespa . '_D.Declaracion']))
+                                                            {{-- Boton de eliminar --}}
+                                                            <button
+                                                                wire:click="DeleteFecha('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')"
+                                                                class="tn btn-secondary BtnVinculadas"
+                                                                wire:loading.attr="disabled">Limpiar</button>
+                                                        @else
+                                                            {{-- Fomrulario para capturar la fecha --}}
+                                                            <form
+                                                                wire:submit.prevent="FechaPresent('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}')">
+                                                                <input min="2014-01-01" max={{ date('Y-m-d') }}
+                                                                    wire:model.defer="fechapresent" type="date">
+                                                                <button class="tn btn-secondary BtnVinculadas"
+                                                                    type="submit"
+                                                                    wire:loading.attr="disabled">Capturar</button>
+                                                            </form>
+                                                        @endif
                                                     </div>
                                                 </td>
 
@@ -2300,14 +2832,14 @@
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf content_true_pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @else
                                                         <a {{ $active }}
                                                             class="selectfecha icons fas fa-file-pdf"
                                                             data-toggle="modal"
-                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $NombreSucur ?? null }}')"
+                                                            wire:click="SendDataAcuse('Balanza_Mensual', '{{ $rfcselect }}', '{{ $mesespa }}_D', '{{ $anioexpe }}', '{{ $sucursal['Email'] }}')"
                                                             data-target="#acuseexp" data-backdrop="static"
                                                             data-keyboard="false"></a>
                                                     @endif

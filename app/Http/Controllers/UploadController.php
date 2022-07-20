@@ -17,9 +17,63 @@ use Exception;
 // controlador para el plugin filepond
 class UploadController extends Controller
 {
+    //Metodo de un correo sencillo
+    public function EmmailPrueba()
+    {
+        //Informacion del correo
+        $mailto = 'angelsosagonz@gmail.com';
+        $subject = 'Correo Econt';
+
+        //Mensaje del correo
+        $message = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+         "http://www.w3.org/TR/html4/loose.dtd">
+         <html><head></head><body>
+         <p>Buen dia</p>
+         <p>Atentamente:</p>
+         <p>JMB CONTADORES</p>
+         <p>TEL. (55) 5536-0293, (55) 8662-3397</p>
+         <p>*Favor de no responder a este correo, ya que se genera automáticamente. Si deseas comunicarte con nosotros hazlo a través de los teléfonos de oficina o al correo contabilidad@jmbcontadores.mx*</p><br>
+         <p>La Información contenida en este correo electrónico y anexos es confidencial. Está dirigido únicamente para el uso del individuo o entidad a la que fue dirigida y puede contener información propietaria que no es del dominio público. Si has recibido este correo por error o no eres el destinatario al que fue enviado, por favor notificar al remitente de inmediato y borra este mensaje de tú computadora. Cualquier uso, distribución o reproducción de este correo que no sea por el destinatario queda prohibido.</p></body></html>';
+
+        //Separador de contenido con el mensaje
+        $separator = md5(time());
+
+        //Saltos de pagina
+        $eol = "\r\n";
+
+        //Encabezado
+        $headers = 'From: Econt <econt@correosecont.x10.mx>' . $eol;
+        $headers .= 'Reply-To: Econt <econt@correosecont.x10.mx>' . $eol;
+        $headers .= 'X-Mailer: PHP/' . phpversion();
+        $headers .= "MIME-Version: 1.0" . $eol;
+        $headers .= "Content-Transfer-Encoding: 7bit" . $eol;
+        $headers .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\"" . $eol;
+
+        //Mensaje
+        $body .= "--" . $separator . $eol;
+        $body .= "Content-Type: text/html; charset=UTF-8" . $eol;
+        $body .= "Content-Transfer-Encoding: 8bit" . $eol . $eol;
+        $body .= $message . $eol . $eol;
+
+        //Envio de correo
+        if (mail($mailto, $subject, $body, $headers)) {
+            echo "Correo:" . $mailto . " , enviado satisfactoriamente";
+        } else {
+            echo "Correo:" . $mailto . ", no se envio, hubo un error";
+            print_r(error_get_last());
+        }
+    }
+
+
     //Metodo para el envio de los correos (Este se ejecuta en el servidor de correos)
     public function SendEmail()
     {
+        //Arreglo con cuenta y correo secundario
+        $secondmail = [
+            ['RFC' => 'SST030407D77J', 'mailsecon' => 'tecnologia@jmbcontadores.mx', 'Asunto' => 'Impuestos_Federales'],
+            ['RFC' => 'SST030407D77J', 'mailsecon' => 'tecnologia@jmbcontadores.mx', 'Asunto' => 'Impuestos_Remuneraciones'],
+        ];
+
         try {
             //Creamos el asunto del mensaje
             //Switch para identificar el tipo de impuesto
@@ -44,19 +98,22 @@ class UploadController extends Controller
                     $asunto = 'DIOT';
                     break;
 
-                case 'Balanza Mensual':
+                case 'Balanza_Mensual':
                     $asunto = 'Balanza Mensual';
+
+                case 'Impuestos_Estatal':
+                    $asunto = 'Impuestos Estatal';
                     break;
             }
 
             //Funcion para obtener la informacion de la carpeta
-            $carpeta = @scandir('/home/lnrhdwjb/storage/FTP/' . $_GET['Tipo'] . '/');
+            $carpeta = @scandir('/home/lnrhdwjb/storage/FTP/' . $_GET['RFC'] . '/' . $_GET['Tipo'] . '/');
 
             //Condicional para saber si la caperta tiene archivos contenido
             if (count($carpeta) > 2) {
                 //Informacion del correo
                 $mailto = $_GET['Mail'];
-                $subject = 'Línea de captura ' . $asunto;
+                $subject = 'Línea de captura ' . $asunto . ' ' . $_GET['RFC'];
 
                 //Mensaje del correo
                 $message = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -76,8 +133,11 @@ class UploadController extends Controller
                 $eol = "\r\n";
 
                 //Encabezado
-                $headers = "From: Econt <Econt@e-cont.com>" . $eol;
+                $headers = 'From: Econt <econt@correosecont.x10.mx>' . $eol;
+                $headers .= 'Reply-To: Econt <econt@correosecont.x10.mx>' . $eol;
+                $headers .= 'X-Mailer: PHP/' . phpversion();
                 $headers .= "MIME-Version: 1.0" . $eol;
+                $headers .= "Content-Transfer-Encoding: 7bit" . $eol;
                 $headers .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\"" . $eol;
 
                 //Mensaje
@@ -87,7 +147,7 @@ class UploadController extends Controller
                 $body .= $message . $eol . $eol;
 
                 //Obtener los archivos de la carpeta
-                $files = glob('/home/lnrhdwjb/storage/FTP/' . $_GET['Tipo'] . '/*'); //Obtenemos todos los nombres de los ficheros
+                $files = glob('/home/lnrhdwjb/storage/FTP/' . $_GET['RFC'] . '/' . $_GET['Tipo'] . '/*'); //Obtenemos todos los nombres de los ficheros
                 foreach ($files as $file) {
 
                     $content = file_get_contents($file);
@@ -95,10 +155,10 @@ class UploadController extends Controller
 
                     //Archivo adjunto
                     $body .= "--" . $separator . $eol;
-                    $body .= "Content-Type: application/octet-stream; name=\"" . basename($file) . "\"\n" .
-                        "Content-Description: " . basename($file) . "\n" .
-                        "Content-Disposition: attachment;\n" . " filename=\"" . basename($file) . "\"; size=" . filesize($file) . ";\n" .
-                        "Content-Transfer-Encoding: base64\n\n" . $content . "\n\n";
+                    $body .= "Content-Type: application/octet-stream; name=\"" . basename($file) . "\"\r\n" .
+                        "Content-Description: " . basename($file) . "\r\n" .
+                        "Content-Disposition: attachment;\r\n" . " filename=\"" . basename($file) . "\"; size=" . filesize($file) . ";\r\n" .
+                        "Content-Transfer-Encoding: base64\r\n" . $content . "\r\n";
                     $body .= $content . $eol;
                 }
 
@@ -108,6 +168,70 @@ class UploadController extends Controller
                 } else {
                     echo "Correo:" . $mailto . ", no se envio, hubo un error";
                     print_r(error_get_last());
+                }
+
+                //Envio de un segundo correo de empresa (Super Servicio Toluca *EXPERIMENTAL*)
+                foreach ($secondmail as $infomailsecon) {
+                    if ($infomailsecon['RFC'] == $_GET['RFC'] && $infomailsecon['Asunto'] == $_GET['Tipo']) {
+                        //Informacion del correo
+                        $mailto = $infomailsecon['mailsecon'];
+                        $subject = 'Línea de captura ' . $asunto . ' ' . $infomailsecon['RFC'];
+
+                        //Mensaje del correo
+                        $message = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/html4/loose.dtd">
+                <html><head></head><body>
+                <p>Buen dia, Se envía línea de captura para el pago de ' . $asunto . ' del mes</p>
+                <p>Atentamente:</p>
+                <p>JMB CONTADORES</p>
+                <p>TEL. (55) 5536-0293, (55) 8662-3397</p>
+                <p>*Favor de no responder a este correo, ya que se genera automáticamente. Si deseas comunicarte con nosotros hazlo a través de los teléfonos de oficina o al correo contabilidad@jmbcontadores.mx*</p><br>
+                <p>La Información contenida en este correo electrónico y anexos es confidencial. Está dirigido únicamente para el uso del individuo o entidad a la que fue dirigida y puede contener información propietaria que no es del dominio público. Si has recibido este correo por error o no eres el destinatario al que fue enviado, por favor notificar al remitente de inmediato y borra este mensaje de tú computadora. Cualquier uso, distribución o reproducción de este correo que no sea por el destinatario queda prohibido.</p></body></html>';
+
+                        //Separador de contenido con el mensaje
+                        $separator = md5(time());
+
+                        //Saltos de pagina
+                        $eol = "\r\n";
+
+                        //Encabezado
+                        $headers = 'From: Econt <econt@correosecont.x10.mx>' . $eol;
+                        $headers .= 'Reply-To: Econt <econt@correosecont.x10.mx>' . $eol;
+                        $headers .= 'X-Mailer: PHP/' . phpversion();
+                        $headers .= "MIME-Version: 1.0" . $eol;
+                        $headers .= "Content-Transfer-Encoding: 7bit" . $eol;
+                        $headers .= "Content-Type: multipart/mixed; boundary=\"" . $separator . "\"" . $eol;
+
+                        //Mensaje
+                        $body .= "--" . $separator . $eol;
+                        $body .= "Content-Type: text/html; charset=UTF-8" . $eol;
+                        $body .= "Content-Transfer-Encoding: 8bit" . $eol . $eol;
+                        $body .= $message . $eol . $eol;
+
+                        //Obtener los archivos de la carpeta
+                        $files = glob('/home/lnrhdwjb/storage/FTP/' . $_GET['RFC'] . '/' . $_GET['Tipo'] . '/*'); //Obtenemos todos los nombres de los ficheros
+                        foreach ($files as $file) {
+
+                            $content = file_get_contents($file);
+                            $content = chunk_split(base64_encode($content));
+
+                            //Archivo adjunto
+                            $body .= "--" . $separator . $eol;
+                            $body .= "Content-Type: application/octet-stream; name=\"" . basename($file) . "\"\r\n" .
+                                "Content-Description: " . basename($file) . "\r\n" .
+                                "Content-Disposition: attachment;\r\n" . " filename=\"" . basename($file) . "\"; size=" . filesize($file) . ";\r\n" .
+                                "Content-Transfer-Encoding: base64\r\n" . $content . "\r\n";
+                            $body .= $content . $eol;
+                        }
+
+                        //Envio de correo
+                        if (mail($mailto, $subject, $body, $headers)) {
+                            echo "Correo:" . $mailto . " , enviado satisfactoriamente";
+                        } else {
+                            echo "Correo:" . $mailto . ", no se envio, hubo un error";
+                            print_r(error_get_last());
+                        }
+                    }
                 }
             } else {
                 echo "Carpeta vacia";
@@ -675,14 +799,6 @@ class UploadController extends Controller
             //Año
             $Anio = $iddescompuestos[3];
 
-            //Variables para sucursal
-
-            //Matriz
-            $Matriz = $iddescompuestos[4] ?? null;
-
-            //Nombre
-            $Nombre = $iddescompuestos[5] ?? null;
-
             //Datos para nombrar el archivo
             $dtz = new DateTimeZone("America/Mexico_City");
             $dt = new DateTime("now", $dtz);
@@ -696,16 +812,9 @@ class UploadController extends Controller
             //Nombramos al archivo
             $renameFile = $Id2 . $espa->fecha_es($mesActual) . $Id . "&" . $nombreArchivo;
 
-            //Condicional para saber si existe una matriz (Sucursales)
-            if (!empty($Matriz) || !empty($Nombre)) {
-                //Ruta de descarga
-                $ruta = "contarappv1_descargas/" . $Matriz . "/" . $Anio . "/Expediente_Fiscal/" . $Tipo . "/" . $Mes . "/" . $Nombre . '/';
-                $rutaftp = 'FTP/' . $Tipo . "/";
-            } else {
-                //Ruta de descarga
-                $ruta = "contarappv1_descargas/" . $Empresa . "/" . $Anio . "/Expediente_Fiscal/" . $Tipo . "/" . $Mes . "/";
-                $rutaftp = 'FTP/' . $Tipo . "/";
-            }
+            //Ruta de descarga
+            $ruta = "contarappv1_descargas/" . $Empresa . "/" . $Anio . "/Expediente_Fiscal/" . $Tipo . "/" . $Mes . "/";
+            $rutaftp = 'FTP/' . $Empresa . '/' . $Tipo . "/";
 
             //Condicional para obtener la extencion
             $fileextencion = $file->getClientOriginalExtension();
@@ -729,79 +838,6 @@ class UploadController extends Controller
                 //Agregamos el archivo a la lista de acuses
                 $infoacuse->pull('ExpedFisc.' . $Anio . '.' . $Tipo . '.' .  $Mes . '.Acuse', "");
                 $infoacuse->push('ExpedFisc.' . $Anio . '.' . $Tipo . '.' .  $Mes . '.Acuse', $renameFile);
-            }
-
-            //Envio de los datos por FTP y correo
-
-            //Condicional para identificar los impuestos que se enviara el correo
-            if ($Tipo == 'Impuestos_Federales' || $Tipo == 'Impuestos_Remuneraciones' || $Tipo == 'Impuestos_Hospedaje' || $Tipo == 'IMSS') {
-                //Informacion de conexion FTP
-                $server = 'correosecont.x10.mx';
-                $ftp_user_name = 'lnrhdwjb';
-                $ftp_user_pass = 'Tecnologi@1';
-
-                /*Vamos a pasar por todas las carpetas que son requeridos
-                    - Impuestos federales
-                    - Impuestos sobre remuneraciones
-                    - Impuesto hospedaje
-                    - IMSS*/
-
-                //Subimos los archivos a la servidor FTP y eliminamos los archivos en la carpeta local
-                $files = glob('storage/FTP/' . $Tipo . "/*"); //Obtenemos todos los nombres de los ficheros
-                foreach ($files as $file) {
-                    //FTP
-                    //Conexion FTP
-                    $ftpconect = \ftp_connect($server) or die("No se pudo conectar con el servidor: $server <br>");
-
-                    //Condicional para saber si se realizo una conexion exitosa
-                    if (@ftp_login($ftpconect, $ftp_user_name, $ftp_user_pass)) {
-                        //Mensaje de confirmacion
-                        echo "La conexion con $ftp_user_name@$server se realizo con exito <br>";
-
-                        //Obtenemos los datos de direccion de archivos
-                        $localFilePath  = $file; //Archivo local
-                        $remoteFilePath = $file; //Archivo remoto
-
-                        //Condicional para conocer el tamaño del archivo
-                        if (filesize($file) > 0) {
-                            //Subimos los archivos al servidor FTP
-                            if (ftp_put($ftpconect, $remoteFilePath, $localFilePath, FTP_BINARY)) {
-                                echo "El archivo $localFilePath se subio exitosamente <br>";
-                            } else {
-                                echo "Hubo un error al subir el archivo $localFilePath <br>";
-                            }
-                        } else {
-                            //Si el archivo tiene un error vamos a volver a crearlo
-                            //Obtenemos el RFC que esta en el nombre del archivo
-                            $info = pathinfo($file);
-                            $rfcerror =  basename($file, '.' . $info['extension']);
-
-                            //Ejecutamos el metodo para crear el PDF 
-                            $this->MakePDFError($rfcerror);
-
-                            //Realizamos otra condicional para verififcar si no tiene errores
-                            if (filesize($file) > 0) {
-                                //Subimos los archivos al servidor FTP
-                                if (ftp_put($ftpconect, $remoteFilePath, $localFilePath, FTP_BINARY)) {
-                                    echo "El archivo $localFilePath se subio exitosamente <br>";
-                                } else {
-                                    echo "Hubo un error al subir el archivo $localFilePath <br>";
-                                }
-                            } else {
-                                echo "El archivo $localFilePath tiene un error al crearse, favor de revisar <br>";
-                            }
-                        }
-                    } else {
-                        echo "No se pudo conectar con el servidor: $server <br>";
-                    }
-
-                    //Cerramos la conexion 
-                    ftp_close($ftpconect);
-
-                    if (is_file($file)) {
-                        unlink($file); //Elimino el fichero
-                    }
-                }
             }
         }
     }

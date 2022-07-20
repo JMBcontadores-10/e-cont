@@ -71,7 +71,7 @@ class Tareadepto extends Component
                                         );
                                     }
                                 } else {
-                                    $emp[] = array('RFC' => $em['RFC'], 'Nombre' => $em['nombre']);
+                                    $emp[] = array('RFC' => $em['RFC'], 'Nombre' => $em['nombre'] ?? null);
                                 }
                             }
                         }

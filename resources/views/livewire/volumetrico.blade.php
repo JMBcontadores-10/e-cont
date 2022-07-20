@@ -192,7 +192,8 @@
                     @if ($Diesel == '1')
                         {{-- Tabla --}}
                         <div class="table-responsive">
-                            <table id="voluhistoridiesel" class="voluhistori {{ $class }}" style="width:100%">
+                            <table id="voluhistoridiesel" class="voluhistori {{ $class }}"
+                                style="width:100%">
                                 <thead>
                                     @if ($infogas['PrecCompDesc'] == 1)
                                         <tr>
@@ -418,8 +419,9 @@
                                 data-keyboard="false">Histórico</button>
                             &nbsp;&nbsp;&nbsp;&nbsp;
 
-                            <button class="btn btn-success BtnVinculadas" data-toggle="modal" data-target="#revisapdf"
-                                data-backdrop="static" data-keyboard="false">Marcar revisado PDF</button>
+                            <button class="btn btn-success BtnVinculadas" data-toggle="modal"
+                                data-target="#revisapdf" data-backdrop="static" data-keyboard="false">Marcar revisado
+                                PDF</button>
                         @endif
                     </div>
 
@@ -477,7 +479,8 @@
             @endphp
 
             {{-- Llamamos al componente del modal junto con los datos necesarios --}}
-            <livewire:volumedata :empresa=$sucursales :dia=$fecha :wire:key="'user-profile-one-'.$sucursales.$fecha">
+            <livewire:volumedata :matriz=$empresa :empresa=$sucursales :dia=$fecha
+                :wire:key="'user-profile-one-'.$sucursales.$fecha">
                 <livewire:volumepdf :empresa=$empresa :sucursales=$sucursales :nomsucur=$nomsucur :dia=$fecha
                     :wire:key="'user-profile-two-'.$sucursales.$fecha">
                     <livewire:volumecre :empresa=$empresa :sucursales=$sucursales :nomsucur=$nomsucur :dia=$fecha

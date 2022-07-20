@@ -92,7 +92,9 @@
                     {{-- Mensaje de informacion de descarga --}}
                     <div id="Mnsdeccompl" hidden>
                         <div id="mnssuccess" class="alert alert-primary">
-                            <b><div id="meninic"></div></b>
+                            <b>
+                                <div id="meninic"></div>
+                            </b>
                             <div id="mendesc"></div>
                             <div id="menerror"></div>
                         </div>
@@ -162,8 +164,8 @@
                                     <tr>
                                         <th class="text-center align-middle">XML <input id="allxml" type="checkbox"
                                                 wire:loading.attr="disabled" /></th>
-                                        <th class="text-center align-middle">R. Imp. <input id="allpdf" type="checkbox"
-                                                wire:loading.attr="disabled" />
+                                        <th class="text-center align-middle">R. Imp. <input id="allpdf"
+                                                type="checkbox" wire:loading.attr="disabled" />
                                         </th>
                                         <th class="text-center align-middle">Acuse</th>
                                         <th class="text-center align-middle">Folio Fiscal</th>
@@ -245,11 +247,11 @@
                                                 }
                                                 
                                                 //XML
-                                                $rutaxml = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/XML/";
+                                                $rutaxml = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreci/Descargas/$mesruta/Recibidos/XML/";
                                                 //PDF
-                                                $rutapdf = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                                                $rutapdf = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreci/Descargas/$mesruta/Recibidos/PDF/";
                                                 //Acuse
-                                                $rutapdfacuse = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
+                                                $rutapdfacuse = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
                                                 
                                                 //Buscamos si exsiten los archivos (si estn descargados)
                                                 //XML
@@ -282,8 +284,9 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
-                                                            name="chkxml" class="mis-checkboxes ChkMasProv chkxml"
+                                                            wire:loading.attr="disabled"
+                                                            style="transform: scale(1.5);" name="chkxml"
+                                                            class="mis-checkboxes ChkMasProv chkxml"
                                                             type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
@@ -294,8 +297,9 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
-                                                            name="chkpdf" class="mis-checkboxes ChkMasProv chkpdf"
+                                                            wire:loading.attr="disabled"
+                                                            style="transform: scale(1.5);" name="chkpdf"
+                                                            class="mis-checkboxes ChkMasProv chkpdf"
                                                             type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
@@ -308,8 +312,9 @@
                                                         <span class="invoice-amount"> - </span>
                                                     @else
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
-                                                            name="chkacuse" class="mis-checkboxes ChkMasProv chkacuse"
+                                                            wire:loading.attr="disabled"
+                                                            style="transform: scale(1.5);" name="chkacuse"
+                                                            class="mis-checkboxes ChkMasProv chkacuse"
                                                             type="checkbox" />
                                                     @endif
                                                 </td>
@@ -620,10 +625,10 @@
                             <table id="example" class="{{ $class }}" style="width:100%">
                                 <thead>
                                     <tr>
-                                        <th class="text-center align-middle">XML <input id="allxml" type="checkbox"
-                                                wire:loading.attr="disabled" /></th>
-                                        <th class="text-center align-middle">R. Imp. <input id="allpdf" type="checkbox"
-                                                wire:loading.attr="disabled" />
+                                        <th class="text-center align-middle">XML <input id="allxml"
+                                                type="checkbox" wire:loading.attr="disabled" /></th>
+                                        <th class="text-center align-middle">R. Imp. <input id="allpdf"
+                                                type="checkbox" wire:loading.attr="disabled" />
                                         </th>
                                         <th class="text-center align-middle">Acuse</th>
                                         <th class="text-center align-middle">Folio Fiscal</th>
@@ -703,11 +708,11 @@
                                                 }
                                                 
                                                 //XML
-                                                $rutaxml = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Emitidos/XML/";
+                                                $rutaxml = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreci/Descargas/$mesruta/Emitidos/XML/";
                                                 //PDF
-                                                $rutapdf = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Emitidos/PDF/";
+                                                $rutapdf = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreci/Descargas/$mesruta/Emitidos/PDF/";
                                                 //Acuse
-                                                $rutapdfacuse = "storage/contarappv1_descargas/$rfcEmpresa/$anioreci/Descargas/$mesruta/Emitidos/ACUSE/";
+                                                $rutapdfacuse = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreci/Descargas/$mesruta/Emitidos/ACUSE/";
                                                 
                                                 //Buscamos si exsiten los archivos (si estn descargados)
                                                 //XML
@@ -740,8 +745,9 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
-                                                            name="chkxml" class="mis-checkboxes ChkMasProv chkxml"
+                                                            wire:loading.attr="disabled"
+                                                            style="transform: scale(1.5);" name="chkxml"
+                                                            class="mis-checkboxes ChkMasProv chkxml"
                                                             type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
@@ -752,8 +758,9 @@
                                                 <td class="text-center align-middle">
                                                     @if ($listrecibi->estadoComprobante == 'Vigente')
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
-                                                            name="chkpdf" class="mis-checkboxes ChkMasProv chkpdf"
+                                                            wire:loading.attr="disabled"
+                                                            style="transform: scale(1.5);" name="chkpdf"
+                                                            class="mis-checkboxes ChkMasProv chkpdf"
                                                             type="checkbox" />
                                                     @else
                                                         <span class="invoice-amount"> - </span>
@@ -766,8 +773,9 @@
                                                         <span class="invoice-amount"> - </span>
                                                     @else
                                                         <input value="{{ $listrecibi->uuid }}"
-                                                            wire:loading.attr="disabled" style="transform: scale(1.5);"
-                                                            name="chkacuse" class="mis-checkboxes ChkMasProv chkacuse"
+                                                            wire:loading.attr="disabled"
+                                                            style="transform: scale(1.5);" name="chkacuse"
+                                                            class="mis-checkboxes ChkMasProv chkacuse"
                                                             type="checkbox" />
                                                     @endif
                                                 </td>

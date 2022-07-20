@@ -109,9 +109,7 @@ class TarearankingContent extends Component
 
             if ($ranker['RFC'] == auth()->user()->RFC) { //Condicional para obtener el porcentaje con respecto al RFC
                 $porcent = $ranker['Porcentaje'];
-            }
-
-            if (empty(auth()->user()->admin)) {
+            } else {
                 $porcent = 0;
             }
         }

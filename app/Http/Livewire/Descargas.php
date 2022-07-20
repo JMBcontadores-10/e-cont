@@ -426,11 +426,11 @@ class Descargas extends Component
                 $mesruta = $this->Meses($this->mesreci);
 
                 //XML
-                $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
+                $rutaxml = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
                 //PDF
-                $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                $rutapdf = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
                 //Acuse
-                $rutaacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
+                $rutaacuse = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
 
                 //Realizamos la descarga
                 //XML
@@ -498,11 +498,11 @@ class Descargas extends Component
                     $mesruta = $this->Meses($this->mesemitinic);
 
                     //XML
-                    $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioemitinic/Descargas/$mesruta/Emitidos/XML/";
+                    $rutaxml = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioemitinic/Descargas/$mesruta/Emitidos/XML/";
                     //PDF
-                    $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioemitinic/Descargas/$mesruta/Emitidos/PDF/";
+                    $rutapdf = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioemitinic/Descargas/$mesruta/Emitidos/PDF/";
                     //Acuse
-                    $rutaacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioemitinic/Descargas/$mesruta/Emitidos/ACUSE/";
+                    $rutaacuse = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioemitinic/Descargas/$mesruta/Emitidos/ACUSE/";
 
                     //Realizamos la descarga
                     //XML
@@ -545,7 +545,7 @@ class Descargas extends Component
                         $mesrutaxml = $this->Meses($mesreciemitxml);
 
                         //XML
-                        $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioreciemitxml/Descargas/$mesrutaxml/Emitidos/XML/";
+                        $rutaxml = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreciemitxml/Descargas/$mesrutaxml/Emitidos/XML/";
 
                         //Realizamos la descarga
                         //XML
@@ -576,7 +576,7 @@ class Descargas extends Component
                         $mesrutapdf = $this->Meses($mesreciemitpdf);
 
                         //PDF
-                        $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioreciemitpdf/Descargas/$mesrutapdf/Emitidos/PDF/";
+                        $rutapdf = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreciemitpdf/Descargas/$mesrutapdf/Emitidos/PDF/";
 
                         //Realizamos la descarga
                         //PDF
@@ -600,7 +600,7 @@ class Descargas extends Component
 
                         //Acuse
                         //Acuse
-                        $rutaacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioreciemitpdfacu/Descargas/$mesrutapdfacuse/Emitidos/ACUSE/";
+                        $rutaacuse = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreciemitpdfacu/Descargas/$mesrutapdfacuse/Emitidos/ACUSE/";
 
                         //Realizamos la descarga
                         //PDF Acuse
@@ -673,11 +673,11 @@ class Descargas extends Component
 
                     //Rutas
                     //XML
-                    $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
+                    $rutaxml = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
                     //PDF
-                    $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                    $rutapdf = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
                     //Acuse
-                    $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
+                    $rutapdfacuse = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
 
                     //Con un bucle pasamos por los uuids almacenados en el arreglo
                     foreach ($totaldatacfdi as $listuuids) {
@@ -735,11 +735,11 @@ class Descargas extends Component
 
                 //Rutas
                 //XML
-                $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
+                $rutaxml = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioreci/Descargas/$mesruta/Recibidos/XML/";
                 //PDF
-                $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
+                $rutapdf = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioreci/Descargas/$mesruta/Recibidos/PDF/";
                 //Acuse
-                $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
+                $rutapdfacuse = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$this->anioreci/Descargas/$mesruta/Recibidos/ACUSE/";
 
                 //Con un bucle pasamos por los uuids almacenados en el arreglo
                 foreach ($allcfdi as $listuuids) {
@@ -819,11 +819,11 @@ class Descargas extends Component
 
             //Rutas
             //XML
-            $rutaxml = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioruta/Descargas/$mesruta/Emitidos/XML/";
+            $rutaxml = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioruta/Descargas/$mesruta/Emitidos/XML/";
             //PDF
-            $rutapdf = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioruta/Descargas/$mesruta/Emitidos/PDF/";
+            $rutapdf = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioruta/Descargas/$mesruta/Emitidos/PDF/";
             //Acuse
-            $rutapdfacuse = "storage/contarappv1_descargas/$this->rfcEmpresa/$anioruta/Descargas/$mesruta/Emitidos/ACUSE/";
+            $rutapdfacuse = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioruta/Descargas/$mesruta/Emitidos/ACUSE/";
 
             //Con un bucle pasamos por los uuids almacenados en el arreglo
             foreach ($totaldatacfdi as $listuuids) {

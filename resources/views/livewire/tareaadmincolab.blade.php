@@ -10,8 +10,22 @@
     {{-- Contabilidad --}}
     <div style="background-color: #b1ffaa; padding: 15px; text-align: center;">
         {{-- Encabzado --}}
-        <h5><b>Contabilidad: <h5 id="PorcentConta"></h5></b></h5>
+        <h5><b>Contabilidad: <h5 class="PorcentConta"></h5></b></h5>
     </div>
+
+    {{-- Encabezado para la exportacion --}}
+    <table class="tareaavance">
+        <thead>
+            <tr>
+                <th hidden data-tableexport-display="always" colspan="2"
+                    style="background-color: #b1ffaa; padding: 15px; text-align: center;">
+                    <h5>
+                        <b>Contabilidad: <h5 class="PorcentConta"></h5></b>
+                    </h5>
+                </th>
+            </tr>
+        </thead>
+    </table>
 
     <br>
 
@@ -47,8 +61,14 @@
 
                         {{-- Tabla de tareas --}}
                         <div class="table-responsive">
-                            <table class="{{ $class }}" style="width:100%">
+                            <table class="{{ $class }} tareaavance" style="width:100%">
                                 <thead>
+                                    <tr>
+                                        <th hidden data-tableexport-display="always" colspan="2"
+                                            style="background-color: #b1ffaa; padding: 5px;">
+                                            <b>{{ ucfirst($contador['nombre']) }}</b>
+                                        </th>
+                                    </tr>
                                     <tr>
                                         <th scope="col">Proyecto</th>
                                         <th scope="col">Avance</th>
@@ -94,8 +114,9 @@
                                         @endphp
 
                                         <tr>
-                                            <td>{{ $key }}</td>
-                                            <td>Tareas completadas {{ $completado }} de {{ $value }}
+                                            <td style="color: #3e464e">{{ $key }}</td>
+                                            <td style="color: #3e464e">Tareas completadas {{ $completado }} de
+                                                {{ $value }}
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <b>{{ number_format($porcentaje, 2) }}%</b>
                                             </td>
@@ -166,11 +187,11 @@
             //Recibimos el llamado y ejecutamos la funcion
             window.addEventListener('estadonuevo', event => {
                 var Porcentaje = $("#porcentconta").val();
-                $("#PorcentConta").text('Avance del ' + Porcentaje + '%');
+                $(".PorcentConta").text('Avance del ' + Porcentaje + '%');
             });
 
             var Porcentaje = $("#porcentconta").val();
-            $("#PorcentConta").text('Avance del ' + Porcentaje + '%');
+            $(".PorcentConta").text('Avance del ' + Porcentaje + '%');
         </script>
     </div>
 
@@ -179,8 +200,22 @@
     {{-- Contabilidad --}}
     <div style="background-color: #fff3aa; padding: 15px; text-align: center;">
         {{-- Encabzado --}}
-        <h5><b>Nomina: <h5 id="PorcentNomina"></h5></b></h5>
+        <h5><b>Nomina: <h5 class="PorcentNomina"></h5></b></h5>
     </div>
+
+    {{-- Encabezado para la exportacion --}}
+    <table class="tareaavance">
+        <thead>
+            <tr>
+                <th hidden data-tableexport-display="always" colspan="2"
+                    style="background-color: #fff3aa; padding: 15px; text-align: center;">
+                    <h5>
+                        <b>Nomina: <h5 class="PorcentNomina"></h5></b>
+                    </h5>
+                </th>
+            </tr>
+        </thead>
+    </table>
 
     <br>
 
@@ -219,8 +254,14 @@
 
                         {{-- Tabla de tareas --}}
                         <div class="table-responsive">
-                            <table class="{{ $class }}" style="width:100%">
+                            <table class="{{ $class }} tareaavance" style="width:100%">
                                 <thead>
+                                    <tr>
+                                        <th hidden data-tableexport-display="always" colspan="2"
+                                            style="background-color: #fff3aa; padding: 5px;">
+                                            <b>{{ ucfirst($contador['nombre']) }}</b>
+                                        </th>
+                                    </tr>
                                     <tr>
                                         <th scope="col">Proyecto</th>
                                         <th scope="col">Avance</th>
@@ -266,8 +307,9 @@
                                         @endphp
 
                                         <tr>
-                                            <td>{{ $key }}</td>
-                                            <td>Tareas completadas {{ $completado }} de {{ $value }}
+                                            <td style="color: #3e464e">{{ $key }}</td>
+                                            <td style="color: #3e464e">Tareas completadas {{ $completado }} de
+                                                {{ $value }}
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <b>{{ number_format($porcentaje, 2) }}%</b>
                                             </td>
@@ -338,11 +380,11 @@
             //Recibimos el llamado y ejecutamos la funcion
             window.addEventListener('estadonuevo', event => {
                 var Porcentaje = $("#porcentnomina").val();
-                $("#PorcentNomina").text('Avance del ' + Porcentaje + '%');
+                $(".PorcentNomina").text('Avance del ' + Porcentaje + '%');
             });
 
             var Porcentaje = $("#porcentnomina").val();
-            $("#PorcentNomina").text('Avance del ' + Porcentaje + '%');
+            $(".PorcentNomina").text('Avance del ' + Porcentaje + '%');
         </script>
     </div>
 
@@ -351,8 +393,22 @@
     {{-- Contabilidad --}}
     <div style="background-color: #aac6ff; padding: 15px; text-align: center;">
         {{-- Encabzado --}}
-        <h5><b>Factuación: <h5 id="PorcentFactu"></h5></b></h5>
+        <h5><b>Factuación: <h5 class="PorcentFactu"></h5></b></h5>
     </div>
+
+    {{-- Encabezado para la exportacion --}}
+    <table class="tareaavance">
+        <thead>
+            <tr>
+                <th hidden data-tableexport-display="always" colspan="2"
+                    style="background-color: #aac6ff; padding: 15px; text-align: center;">
+                    <h5>
+                        <b>Factuación: <h5 class="PorcentFactu"></h5></b>
+                    </h5>
+                </th>
+            </tr>
+        </thead>
+    </table>
 
     <br>
 
@@ -391,8 +447,14 @@
 
                         {{-- Tabla de tareas --}}
                         <div class="table-responsive">
-                            <table class="{{ $class }}" style="width:100%">
+                            <table class="{{ $class }} tareaavance" style="width:100%">
                                 <thead>
+                                    <tr>
+                                        <th hidden data-tableexport-display="always" colspan="2"
+                                            style="background-color: #aac6ff; padding: 5px;">
+                                            <b>{{ ucfirst($contador['nombre']) }}</b>
+                                        </th>
+                                    </tr>
                                     <tr>
                                         <th scope="col">Proyecto</th>
                                         <th scope="col">Avance</th>
@@ -438,8 +500,9 @@
                                         @endphp
 
                                         <tr>
-                                            <td>{{ $key }}</td>
-                                            <td>Tareas completadas {{ $completado }} de {{ $value }}
+                                            <td style="color: #3e464e">{{ $key }}</td>
+                                            <td style="color: #3e464e">Tareas completadas {{ $completado }} de
+                                                {{ $value }}
                                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                                 <b>{{ number_format($porcentaje, 2) }}%</b>
                                             </td>
@@ -511,10 +574,10 @@
         //Recibimos el llamado y ejecutamos la funcion
         window.addEventListener('estadonuevo', event => {
             var Porcentaje = $("#porcentfactu").val();
-            $("#PorcentFactu").text('Avance del ' + Porcentaje + '%');
+            $(".PorcentFactu").text('Avance del ' + Porcentaje + '%');
         });
 
         var Porcentaje = $("#porcentfactu").val();
-        $("#PorcentFactu").text('Avance del ' + Porcentaje + '%');
+        $(".PorcentFactu").text('Avance del ' + Porcentaje + '%');
     </script>
 </div>

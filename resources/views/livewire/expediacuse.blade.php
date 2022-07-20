@@ -6,7 +6,10 @@
         use App\Models\ExpedFiscal;
         use App\Models\Cheques;
         
-        if ($dataacuse) {
+        if (!empty($dataacuse)) {
+            //Arreglo que almacenara las rutas
+            $rutasacuse = [];
+        
             //Descomponemos la cadena enviada (a un arreglo)
             $iddescompuestos = explode('&', $dataacuse);
         
@@ -22,14 +25,6 @@
             //Año
             $Anio = $iddescompuestos[3];
         
-            //Variables para sucursal
-        
-            //Matriz
-            $Matriz = $iddescompuestos[4] ?? null;
-        
-            //Nombre
-            $Nombre = $iddescompuestos[5] ?? null;
-        
             //Realizamos una consulta a la coleccion de expediente
             $infoacuse = ExpedFiscal::where(['rfc' => $Empresa])->first();
         }
@@ -37,9 +32,9 @@
 
     {{-- Modal de PDF volumetricos --}}
     {{-- Creacion del modal --}}
-    <div wire:ignore.self class="modal fade" id="acuseexp" tabindex="-1" role="dialog"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div wire:ignore.self class="modal fade" id="acuseexp" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 {{-- Encabezado --}}
                 <div class="modal-header">
@@ -56,7 +51,8 @@
                     {{-- Mensaje de aviso --}}
                     <div id="mnssuccess" class="alert alert-warning">
                         <div align="center"><b>Importante</b></div>
-                        Todo acuse cargado en este módulo Econt lo enviara de forma automática por medio de correo electrónico a la empresa seleccionada
+                        Todo acuse cargado en este módulo Econt lo enviara de forma automática por medio de correo
+                        electrónico a la empresa seleccionada
                     </div>
 
                     {{-- Texto de archivos existentes --}}
@@ -81,18 +77,15 @@
                                     @if (!empty($dataacuse) && !empty($infoacuse['ExpedFisc.' . $Anio . '.' . $Tipo . '.' . $Mes . '.Acuse']))
                                         @php
                                             $n = 1;
+                                            
+                                            //Arreglo donde almacenamos las rutas
+                                            $resendruta = [];
                                         @endphp
 
                                         @foreach ($infoacuse['ExpedFisc.' . $Anio . '.' . $Tipo . '.' . $Mes . '.Acuse'] as $dataacuse)
                                             @php
-                                                //Condicional para saber si existe una matriz (Sucursales)
-                                                if (!empty($Matriz) || !empty($Nombre)) {
-                                                    //Ruta de descarga
-                                                    $ruta = 'storage/contarappv1_descargas/' . $Matriz . '/' . $Anio . '/Expediente_Fiscal/' . $Tipo . '/' . $Mes . '/' . $Nombre . '/' . $dataacuse;
-                                                } else {
-                                                    //Ruta de descarga
-                                                    $ruta = 'storage/contarappv1_descargas/' . $Empresa . '/' . $Anio . '/Expediente_Fiscal/' . $Tipo . '/' . $Mes . '/' . $dataacuse;
-                                                }
+                                                //Ruta de descarga
+                                                $ruta = 'storage/contarappv1_descargas/' . $Empresa . '/' . $Anio . '/Expediente_Fiscal/' . $Tipo . '/' . $Mes . '/' . $dataacuse;
                                             @endphp
 
                                             <div class="b" id="c{{ $n }}">
@@ -110,8 +103,7 @@
                                                 {{-- Condicional para la accion eliminar, cuando el movimiento esta revisado --}}
                                                 <div class="BotonesPDFContainer">
                                                     <!--Eliminar PDF-->
-                                                    <div class="BtnDelPDF"
-                                                        wire:click="Eliminar('{{ $dataacuse }}')"
+                                                    <div class="BtnDelPDF" wire:click="Eliminar('{{ $dataacuse }}')"
                                                         wire:loading.attr="disabled">
                                                         <i class="icons fas fa-trash-alt"></i>
                                                     </div>
@@ -121,6 +113,9 @@
 
                                             @php
                                                 $n++;
+                                                
+                                                //Almacenamos las rutas en el arreglo
+                                                $resendruta[] = $ruta;
                                             @endphp
                                         @endforeach
                                     @else
@@ -146,6 +141,55 @@
                                 </form>
                             </span>
                         </p>
+                    </div>
+
+                    {{-- Condicional para mostrar el boton de reenviar solamente a los impuestos disponibles --}}
+                    @if (!empty($dataacuse) && !empty($resendruta))
+                        @php
+                            //Convertimos en JSON la lista de las rutas
+                            $jsonrutas = json_encode($resendruta);
+                        @endphp
+
+                        @if ($Tipo == 'Impuestos_Federales' ||
+                            $Tipo == 'Impuestos_Remuneraciones' ||
+                            $Tipo == 'Impuestos_Hospedaje' ||
+                            $Tipo == 'IMSS' ||
+                            $Tipo == 'Impuestos_Estatal')
+                            <div align="center" style="padding: 15px;">
+                                <button
+                                    wire:click="ResendAcuse('{{ $Tipo }}', '{{ $Empresa }}', {{ $jsonrutas }})"
+                                    type="button" class="btn btn-success BtnVinculadas">Enviar correo</button>
+                            </div>
+                        @endif
+                    @endif
+
+                    <button id="btnsuccessemail" data-toggle="modal" data-target="#successemail" data-backdrop="static"
+                        data-keyboard="false" hidden>Exito</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Modal mensaje de envio de correo exitoso --}}
+    {{-- Creacion del modal --}}
+    <div wire:ignore.self class="modal fade" id="successemail" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                {{-- Encabezado --}}
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel"><span style="text-decoration: none;"
+                            class="icons fas fas fa-check-circle">Exito</span></h6>
+
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true close-btn">×</span>
+                    </button>
+                </div>
+                {{-- Cuerpo del modal --}}
+                <div class="modal-body">
+                    <div id="MensSuccess" align="center">
+                        <h3 id="EncaSuccess"></h3>
+                        <h5 id="BodySuccess"></h5>
                     </div>
                 </div>
             </div>

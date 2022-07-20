@@ -73,7 +73,7 @@
                             {{-- Bucle para mostrar los registros --}}
                             @foreach ($nombresfactu as $infofactu)
                                 <tr>
-                                    <td>{{ $infofactu['Nombre'] }}</td>
+                                    <td style="color: #3e464e">{{ $infofactu['Nombre'] }}</td>
 
                                     @for ($i = 1; $i <= 12; $i++)
                                         @php

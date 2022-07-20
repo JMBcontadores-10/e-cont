@@ -27,6 +27,10 @@ class Tareas extends Model
         'rfccolaborador',
         'nomcolaborador',
         'estado',
+        'tipoimpuesto',
+        'diasfrecu',
+        'diamesfrecu',
+        'finfrecu',
     ];
 
     protected $collection = 'tareas';
