@@ -48,12 +48,34 @@
                 </div>
                 {{-- Cuerpo del modal --}}
                 <div class="modal-body">
-                    {{-- Mensaje de aviso --}}
-                    <div id="mnssuccess" class="alert alert-warning">
-                        <div align="center"><b>Importante</b></div>
-                        Todo acuse cargado en este módulo Econt lo enviara de forma automática por medio de correo
-                        electrónico a la empresa seleccionada
-                    </div>
+                    @if (!empty($dataacuse) && !empty($infoacuse['ExpedFisc.' . $Anio . '.' . $Tipo . '.' . $Mes . '.Acuse']))
+                        {{-- Mensaje de aviso --}}
+                        <div id="mnssuccess" class="alert alert-primary">
+                            <div align="center"><b>Importante</b></div>
+                            Todo acuse cargado se almacena en los servidores de Econt y podrá enviar los
+                            acuses previamente cargado a la empresa
+
+                            <br>
+
+                            @if ($Tipo == 'Impuestos_Federales' ||
+                                $Tipo == 'Impuestos_Remuneraciones' ||
+                                $Tipo == 'Impuestos_Hospedaje' ||
+                                $Tipo == 'IMSS' ||
+                                $Tipo == 'Impuestos_Estatal')
+                                <div align="center" style="padding: 15px;">
+                                    <button id="btnpushsentemail" type="button"
+                                        class="btn btn-success BtnVinculadas">Enviar correo</button>
+                                </div>
+
+                                <script>
+                                    //Accion para hacer click al boton oculto para enviar el correo
+                                    $("#btnpushsentemail").click(function() {
+                                        $("#btnsendemailacuse").click();
+                                    });
+                                </script>
+                            @endif
+                        </div>
+                    @endif
 
                     {{-- Texto de archivos existentes --}}
                     <div class="ArchExistContenedor">
@@ -155,11 +177,9 @@
                             $Tipo == 'Impuestos_Hospedaje' ||
                             $Tipo == 'IMSS' ||
                             $Tipo == 'Impuestos_Estatal')
-                            <div align="center" style="padding: 15px;">
-                                <button
-                                    wire:click="ResendAcuse('{{ $Tipo }}', '{{ $Empresa }}', {{ $jsonrutas }})"
-                                    type="button" class="btn btn-success BtnVinculadas">Enviar correo</button>
-                            </div>
+                            <button id="btnsendemailacuse"
+                                wire:click="ResendAcuse('{{ $Tipo }}', '{{ $Empresa }}', {{ $jsonrutas }})"
+                                type="button" class="btn btn-success BtnVinculadas" hidden>Enviar correo</button>
                         @endif
                     @endif
 
