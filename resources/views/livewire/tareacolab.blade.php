@@ -14,6 +14,11 @@
         if (empty($class)) {
             $class = 'table nowrap dataTable no-footer';
         }
+        
+        //Obtenemos la fecha del dia de hoy
+        $dtz = new DateTimeZone('America/Mexico_City');
+        $dt = new DateTime('now', $dtz);
+        $fechahoy = $dt->format('Y-m-d H:i:s');
     @endphp
 
     {{-- Filtros para los colaboradores --}}
@@ -87,20 +92,28 @@
 
     {{-- Titulo --}}
     @if (!empty(auth()->user()->admin))
-        <h2><b>Tareas creadas</b></h2>
+        {{-- Filtros de busqueda --}}
+        <div class="form-inline mr-auto">
+            <h2><b>Tareas creadas</b></h2>
+            &nbsp;&nbsp;
+            &nbsp;&nbsp;
+            {{-- Exportar a Excel --}}
+            <button type="button" class="btn btn-success BtnVinculadas"
+                onclick="exporttareasexcel('{{ $fechahoy }}')">Excel</button>
+        </div>
     @else
         <h2><b>Mis tareas</b></h2>
     @endif
 
     {{-- Tabla de tareas --}}
     <div wire:poll class="table-responsive">
-        <table class="{{ $class }}" style="width:100%">
+        <table class="{{ $class }} tabletareas" style="width:100%">
             <thead>
                 <tr>
-                    <th class="text-center align-middle">Finalizar</th>
+                    <th data-tableexport-display="none" class="text-center align-middle">Finalizar</th>
                     {{-- Opciones para administradores --}}
                     @if (!empty(auth()->user()->admin))
-                        <th class="text-center align-middle">Editar</th>
+                        <th data-tableexport-display="none" class="text-center align-middle">Editar</th>
                     @endif
                     <th class="text-center align-middle">Tareas</th>
                     <th class="text-center align-middle">Fecha de inicio</th>
@@ -110,7 +123,6 @@
                     <th class="text-center align-middle">Frecuencia </th>
                     <th class="text-center align-middle">Descripción </th>
                     <th class="text-center align-middle">Estado</th>
-                    <th class="text-center align-middle">Actividad</th>
                     {{-- Opciones para administradores --}}
                     @if (!empty(auth()->user()->admin) || auth()->user()->tipo == 'VOLU')
                         <th class="text-center align-middle">Colaborador</th>
@@ -124,71 +136,6 @@
                     </tr>
                     {{-- Mostramos la lista de tareas --}}
                     @foreach ($tareas as $tarea)
-                        @php
-                            //Switch para mostrar el nombre del impuesto
-                            switch ($tarea['tipoimpuesto']) {
-                                case 'Cierre_Facturacion':
-                                    $impuesto = 'Cierre de facturación';
-                                    break;
-                            
-                                case 'IMSS':
-                                    $impuesto = 'IMSS';
-                                    break;
-                            
-                                case 'Impuestos_Remuneraciones':
-                                    $impuesto = 'ISN';
-                                    break;
-                            
-                                case 'Impuestos_Estatal':
-                                    $impuesto = 'Impuesto Cedular';
-                                    break;
-                            
-                                case 'Impuestos_Hospedaje':
-                                    $impuesto = 'ISH';
-                                    break;
-                            
-                                case 'Declaracion_INEGI':
-                                    $impuesto = 'Declaración INEGI';
-                                    break;
-                            
-                                case 'Impuestos_Federales':
-                                    $impuesto = 'Impuestos Federales';
-                                    break;
-                            
-                                case 'Balanza_Mensual':
-                                    $impuesto = 'Balanza Mensual';
-                                    break;
-                            
-                                case 'DIOT':
-                                    $impuesto = 'Acuse DIOT';
-                                    break;
-                            
-                                case 'Cierre_Econt':
-                                    $impuesto = 'Cierre E-cont';
-                                    break;
-                            
-                                case 'Costo_Ventas':
-                                    $impuesto = 'Costo de ventas';
-                                    break;
-                            
-                                case 'Archivo_Digital':
-                                    $impuesto = 'Archivo Digital';
-                                    break;
-                            
-                                case 'Conciliacion_Impuesto':
-                                    $impuesto = 'Concentrado de impuestos';
-                                    break;
-                            
-                                case 'Notas_Credito':
-                                    $impuesto = 'Nota de credito';
-                                    break;
-                            
-                                default:
-                                    $impuesto = 'Sin impuesto';
-                                    break;
-                            }
-                        @endphp
-
                         @if (!empty(auth()->user()->admin) || auth()->user()->tipo == 'VOLU')
                             @if ($tarea['rfcproyecto'] == $proyecto['RFC'])
                                 @php
@@ -215,11 +162,11 @@
                                 <tr style="{{ $complete }} color: #3e464e">
                                     {{-- Boton de completado --}}
                                     @if (!empty($tarea['completado']))
-                                        <td>
+                                        <td data-tableexport-display="none">
                                             <a class="content_true icons fas fa-check-circle fa-2x"></a>
                                         </td>
                                     @else
-                                        <td>
+                                        <td data-tableexport-display="none">
                                             {{-- Boton de completado --}}
                                             <a wire:click="Completado('{{ $tarea['_id'] }}')"
                                                 class="icons fas fa-check-circle fa-2x"></a>
@@ -235,7 +182,7 @@
                                     {{-- Editar tarea --}}
                                     @if (!empty(auth()->user()->admin))
                                         {{-- Boton para cancelar (eliminar)/ finalizar una tarea --}}
-                                        <td>
+                                        <td data-tableexport-display="none">
                                             <a title="Editar"
                                                 wire:click="SendInfoEdit('{{ $tarea['_id'] }}')"data-backdrop="static"
                                                 data-keyboard="false" data-toggle="modal" data-target="#nuevatarea"
@@ -250,7 +197,7 @@
                                     <td>{{ $tarea['asigntarea'] }}</td>
 
                                     {{-- Fecha de vencimiento --}}
-                                    <td>{{ $tarea['fechaentrega'] ?? 'Sin fecha' }}</td>
+                                    <td>{{ $tarea['fechaentrega'] ?? '-' }}</td>
 
                                     {{-- Fecha termino --}}
                                     @if (!empty($tarea['completado']))
@@ -266,7 +213,7 @@
                                     <td>{{ $tarea['periodo'] ?? 'Unica' }}</td>
 
                                     {{-- Descripcion --}}
-                                    <td>{{ $tarea['descripcion'] ?? 'Sin descripción' }}</td>
+                                    <td>{{ $tarea['descripcion'] ?? '-' }}</td>
 
                                     {{-- Estado --}}
                                     @switch($tarea['estado'])
@@ -294,9 +241,6 @@
                                             </td>
                                         @break
                                     @endswitch
-
-                                    {{-- Impuesto --}}
-                                    <td>{{ $impuesto }}</td>
 
                                     {{-- Cancelar tarea --}}
                                     @if (!empty(auth()->user()->admin) || auth()->user()->tipo == 'VOLU')
@@ -392,9 +336,6 @@
                                             </td>
                                         @break
                                     @endswitch
-
-                                    {{-- Impuesto --}}
-                                    <td>{{ $impuesto }}</td>
                                 </tr>
                             @endif
                         @endif

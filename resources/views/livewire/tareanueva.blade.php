@@ -94,7 +94,7 @@
                         </div>
 
                         {{-- Colaboradores --}}
-                        <div {{ $activecolabo }} class="form-group">
+                        <div class="form-group">
                             <label for="colaboradores">*Colaborador(es)</label>
 
                             <div class="row">
@@ -135,7 +135,7 @@
 
                             <br>
 
-                            <div {{ $activecolabo }} class="row">
+                            <div class="row">
                                 <div class="col-8">
                                     <select class="form-control" id="colaboradores" wire:model.defer="colaboradortarea">
                                         <option value="">Seleccione un colaborador</option>

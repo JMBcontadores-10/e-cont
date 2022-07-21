@@ -200,7 +200,7 @@
     {{-- Contabilidad --}}
     <div style="background-color: #fff3aa; padding: 15px; text-align: center;">
         {{-- Encabzado --}}
-        <h5><b>Nomina: <h5 class="PorcentNomina"></h5></b></h5>
+        <h5><b>Nómina: <h5 class="PorcentNomina"></h5></b></h5>
     </div>
 
     {{-- Encabezado para la exportacion --}}
@@ -210,7 +210,7 @@
                 <th hidden data-tableexport-display="always" colspan="2"
                     style="background-color: #fff3aa; padding: 15px; text-align: center;">
                     <h5>
-                        <b>Nomina: <h5 class="PorcentNomina"></h5></b>
+                        <b>Nómina: <h5 class="PorcentNomina"></h5></b>
                     </h5>
                 </th>
             </tr>
@@ -393,7 +393,7 @@
     {{-- Contabilidad --}}
     <div style="background-color: #aac6ff; padding: 15px; text-align: center;">
         {{-- Encabzado --}}
-        <h5><b>Factuación: <h5 class="PorcentFactu"></h5></b></h5>
+        <h5><b>Facturación: <h5 class="PorcentFactu"></h5></b></h5>
     </div>
 
     {{-- Encabezado para la exportacion --}}
@@ -403,7 +403,7 @@
                 <th hidden data-tableexport-display="always" colspan="2"
                     style="background-color: #aac6ff; padding: 15px; text-align: center;">
                     <h5>
-                        <b>Factuación: <h5 class="PorcentFactu"></h5></b>
+                        <b>Facturación: <h5 class="PorcentFactu"></h5></b>
                     </h5>
                 </th>
             </tr>

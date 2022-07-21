@@ -42,11 +42,48 @@ $("#checkfrecnunca").click(function () {
       }
 });
 
-//Exportar tablas a PDF y Excel
+//Exportar tablas a PDF y Excel (Colaoboradores)
 function exporttareasavanceexcel(fecha) {
       $('.tareaavance').tableExport({
             type: 'excel',
             fileName: 'E-cont avence tareas ' + fecha,
+            preventInjection: false,
+            mso: {
+                  styles: ['background-color'],
+            }
+      });
+}
+
+//Exportar tablas a PDF y Excel (Tareas)
+function exporttareasexcel(fecha) {
+      $('.tabletareas').tableExport({
+            exportHiddenCells: true,
+            type: 'excel',
+            fileName: 'E-cont tareas ' + fecha,
+            mso: {
+                  fileFormat: 'xlsx',
+                  styles: ['background-color'],
+            }
+      });
+}
+
+//Exportar tablas a PDF y Excel (Depto colaborador)
+function exportcontabilidadexcel(fecha) {
+      $('.tablecontabilidad').tableExport({
+            type: 'excel',
+            fileName: 'E-cont Colaborador ' + fecha,
+            preventInjection: false,
+            mso: {
+                  styles: ['background-color'],
+            }
+      });
+}
+
+//Exportar tablas a PDF y Excel (Depto facturacion)
+function exportfacturacionexcel(fecha) {
+      $('.tablefacturacion').tableExport({
+            type: 'excel',
+            fileName: 'E-cont Facturacion ' + fecha,
             preventInjection: false,
             mso: {
                   styles: ['background-color'],

@@ -34,7 +34,6 @@ class Tareanueva extends Component
     public $hidden = 'hidden';
     public $hiddensema = 'hidden';
     public $hiddenmes = 'hidden';
-    public $activecolabo = 'hidden';
     public $requiretarea = null;
     public $edofechafin = null;
 
@@ -46,6 +45,69 @@ class Tareanueva extends Component
     {
         //Lo alamcenamos en una variable global
         $this->idtarea = $id;
+
+        //Condicional para saber si exite un identificador y asi editar
+        if (!empty($this->idtarea)) {
+            //Realizamos una consulta para obtener los datos
+            $consultarea = Tareas::where('_id', $this->idtarea)->first();
+
+            //Llenamos las variables
+            $this->idtareaperiod = $consultarea['id'];
+            $this->nombretarea = $consultarea['nombre'];
+            $this->descripciontarea = $consultarea['descripcion'];
+            $this->proyectotarea = json_encode(['RFC' => $consultarea['rfcproyecto'], 'Nombre' => $consultarea['nomproyecto']]);
+            $this->fechaentregatarea = $consultarea['fechaentrega'];
+            $this->prioridadtarea = $consultarea['prioridad'];
+            $this->frecuentetarea = $consultarea['frecuencia'];
+            $this->periodotarea = $consultarea['periodo'];
+            $this->asigntarea = $consultarea['asigntarea'];
+            $this->colaboradorestarea[] = json_encode(['RFC' => $consultarea['rfccolaborador'], 'Nombre' => $consultarea['nomcolaborador']]);
+            $this->imputarea = $consultarea['tipoimpuesto'];
+            $this->diasfrecu = $consultarea['diasfrecu'];
+            $this->fechafrecufin = $consultarea['finfrecu'];
+            $this->diasfrecumes = $consultarea['diamesfrecu'];
+
+            //Condicional para saber si hay frecuencia
+            if ($this->frecuentetarea == 'Si') {
+                $this->hidden = null;
+                $this->requiretarea = 'required';
+            } else {
+                $this->hidden = 'hidden';
+                $this->requiretarea = null;
+            }
+
+            //Condicional para no ocultar la seccion de frecuencia
+            if ($this->frecuentetarea == 'Si') {
+                $this->hidden = null;
+                $this->requiretarea = 'required';
+            } else {
+                $this->hidden = 'hidden';
+                $this->requiretarea = null;
+            }
+
+            //Condicional para ocultar los input de frecuencia
+            switch ($this->periodotarea) {
+                case 'Semanal':
+                    $this->hiddensema = null;
+                    $this->hiddenmes = 'hidden';
+                    break;
+
+                case 'Mensual':
+                    $this->hiddensema = 'hidden';
+                    $this->hiddenmes = null;
+                    break;
+
+                default:
+                    $this->hiddensema = 'hidden';
+                    $this->hiddenmes = 'hidden';
+                    break;
+            }
+
+            //Condicional para marcar y deshabilitar el inpt de fecha
+            if (empty($this->fechafrecufin)) {
+                $this->dispatchBrowserEvent('nuncafecha', []);
+            }
+        }
     }
 
     //Metodo para agregar una nueva tarea
@@ -246,14 +308,35 @@ class Tareanueva extends Component
     public function AddColabo()
     {
         if (!empty($this->colaboradortarea)) {
-            //Agregar un colaborador a la tarea
-            $this->colaboradorestarea[] = $this->colaboradortarea;
+            //Condicional para agregar un colaborador en la seccion de editar o agrega mas
+            if (!empty($this->idtarea)) {
+                //Limpiamos el arreglo para agregar solo un colaborador
+                $this->colaboradorestarea = [];
 
-            //Limpiamos los repetidos
-            $this->colaboradorestarea = array_map("unserialize", array_unique(array_map("serialize", $this->colaboradorestarea)));
+                //Agregar un colaborador a la tarea
+                $this->colaboradorestarea[] = $this->colaboradortarea;
 
-            //Limpiar el campo de colaborador
-            $this->colaboradortarea = null;
+                //Limpiamos los repetidos
+                $this->colaboradorestarea = array_map("unserialize", array_unique(array_map("serialize", $this->colaboradorestarea)));
+
+                //Limpiar el campo de colaborador
+                $this->colaboradortarea = "";
+
+                //Si eliminamos a un colaborador no esconder las opciones
+                $this->dispatchBrowserEvent('noclosefrecu', []);
+            } else {
+                //Agregar un colaborador a la tarea
+                $this->colaboradorestarea[] = $this->colaboradortarea;
+
+                //Limpiamos los repetidos
+                $this->colaboradorestarea = array_map("unserialize", array_unique(array_map("serialize", $this->colaboradorestarea)));
+
+                //Limpiar el campo de colaborador
+                $this->colaboradortarea = null;
+
+                //Si eliminamos a un colaborador no esconder las opciones
+                $this->dispatchBrowserEvent('noclosefrecu', []);
+            }
         } else {
             //Se enviara un mensaje de error
             $this->dispatchBrowserEvent('errortareas', ['error' => 'Seleccione un colaborador']);
@@ -310,75 +393,6 @@ class Tareanueva extends Component
 
     public function render()
     {
-        //Condicional para saber si exite un identificador y asi editar
-        if (!empty($this->idtarea)) {
-            //Realizamos una consulta para obtener los datos
-            $consultarea = Tareas::where('_id', $this->idtarea)->first();
-
-            //Llenamos las variables
-            $this->idtareaperiod = $consultarea['id'];
-            $this->nombretarea = $consultarea['nombre'];
-            $this->descripciontarea = $consultarea['descripcion'];
-            $this->proyectotarea = json_encode(['RFC' => $consultarea['rfcproyecto'], 'Nombre' => $consultarea['nomproyecto']]);
-            $this->fechaentregatarea = $consultarea['fechaentrega'];
-            $this->prioridadtarea = $consultarea['prioridad'];
-            $this->frecuentetarea = $consultarea['frecuencia'];
-            $this->periodotarea = $consultarea['periodo'];
-            $this->asigntarea = $consultarea['asigntarea'];
-            $this->colaboradorestarea[] = json_encode(['RFC' => $consultarea['rfccolaborador'], 'Nombre' => $consultarea['nomcolaborador']]);
-            $this->imputarea = $consultarea['tipoimpuesto'];
-            $this->diasfrecu = $consultarea['diasfrecu'];
-            $this->fechafrecufin = $consultarea['finfrecu'];
-            $this->diasfrecumes = $consultarea['diamesfrecu'];
-
-            //Condicional para saber si hay frecuencia
-            if ($this->frecuentetarea == 'Si') {
-                $this->hidden = null;
-                $this->requiretarea = 'required';
-            } else {
-                $this->hidden = 'hidden';
-                $this->requiretarea = null;
-            }
-
-            //Quitamos los campos para agregar colaboradores
-            $this->activecolabo = 'hidden';
-
-            //Condicional para no ocultar la seccion de frecuencia
-            if ($this->frecuentetarea == 'Si') {
-                $this->hidden = null;
-                $this->requiretarea = 'required';
-            } else {
-                $this->hidden = 'hidden';
-                $this->requiretarea = null;
-            }
-
-            //Condicional para ocultar los input de frecuencia
-            switch ($this->periodotarea) {
-                case 'Semanal':
-                    $this->hiddensema = null;
-                    $this->hiddenmes = 'hidden';
-                    break;
-
-                case 'Mensual':
-                    $this->hiddensema = 'hidden';
-                    $this->hiddenmes = null;
-                    break;
-
-                default:
-                    $this->hiddensema = 'hidden';
-                    $this->hiddenmes = 'hidden';
-                    break;
-            }
-
-            //Condicional para marcar y deshabilitar el inpt de fecha
-            if (empty($this->fechafrecufin)) {
-                $this->dispatchBrowserEvent('nuncafecha', []);
-            }
-        } else {
-            //Agregamos los campos para agregar colaboradores
-            $this->activecolabo = null;
-        }
-
         //Arreglo con las empresas que estan en ceros
         $empreceros = [
             ['RFC' => 'NOALTA-006', 'Nombre' => 'ADMON TOTAL PARA PEQUEÑAS Y MEDIANAS EMPRESAS ASUNCION, S.A. DE C.V.', 'Impuestos_Federales' => '1', 'Balanza_Mensual' => '1', 'DIOT' => '1'],
@@ -445,6 +459,7 @@ class Tareanueva extends Component
         //Obtenenmos los datos de los usuarios (Contadores)
         $consulconta = User::where('tipo', '2')
             ->orwhere('tipo', 'VOLU')
+            ->orwhere('tipo', 'Nomina')
             ->where('nombre', '!=', null)
             ->get(['RFC', 'nombre']);
 

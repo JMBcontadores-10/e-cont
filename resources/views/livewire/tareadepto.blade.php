@@ -31,7 +31,7 @@
             <label>En el departamento de facturación se mostrará las actividades periódicas mensuales y bimestrales</label>
             {{-- Tabla para mostrar los datos de cada departamento --}}
             <div wire:poll class="table-responsive">
-                <table class="{{ $class }}" style="width:100%">
+                <table class="{{ $class }} tablefacturacion" style="width:100%">
                     <thead>
                         <tr>
                             <th class="text-center align-middle">Emisión de facturas</th>

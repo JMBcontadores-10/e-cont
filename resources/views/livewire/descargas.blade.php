@@ -653,11 +653,11 @@
                                             </td>
                                         </tr>
                                     @else
-                                        @foreach ($list as $listrecibi)
+                                        @foreach ($list as $listemiti)
                                             @php
                                                 //Obtenemos las rutas de los CFDI recibidos
                                                 //Mes
-                                                switch ($mesreci) {
+                                                switch ($mesemitinic) {
                                                     case '1':
                                                         $mesruta = '1.Enero';
                                                         break;
@@ -708,15 +708,15 @@
                                                 }
                                                 
                                                 //XML
-                                                $rutaxml = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreci/Descargas/$mesruta/Emitidos/XML/";
+                                                $rutaxml = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioemitinic/Descargas/$mesruta/Emitidos/XML/";
                                                 //PDF
-                                                $rutapdf = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreci/Descargas/$mesruta/Emitidos/PDF/";
+                                                $rutapdf = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioemitinic/Descargas/$mesruta/Emitidos/PDF/";
                                                 //Acuse
-                                                $rutapdfacuse = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioreci/Descargas/$mesruta/Emitidos/ACUSE/";
+                                                $rutapdfacuse = "storage/contarappv1_descargas/" . strtoupper($this->rfcEmpresa) . "/$anioemitinic/Descargas/$mesruta/Emitidos/ACUSE/";
                                                 
                                                 //Buscamos si exsiten los archivos (si estn descargados)
                                                 //XML
-                                                $xmlfile = $rutaxml . strtoupper($listrecibi->uuid) . '.xml';
+                                                $xmlfile = $rutaxml . strtoupper($listemiti->uuid) . '.xml';
                                                 if (file_exists($xmlfile)) {
                                                     $existxml = 'Si';
                                                 } else {
@@ -724,7 +724,7 @@
                                                 }
                                                 
                                                 //PDF
-                                                $pdffile = $rutapdf . strtoupper($listrecibi->uuid) . '.pdf';
+                                                $pdffile = $rutapdf . strtoupper($listemiti->uuid) . '.pdf';
                                                 if (file_exists($pdffile)) {
                                                     $existpdf = 'Si';
                                                 } else {
@@ -732,7 +732,7 @@
                                                 }
                                                 
                                                 //Acuse
-                                                $acusefile = $rutapdfacuse . strtoupper($listrecibi->uuid) . '-acuse' . '.pdf';
+                                                $acusefile = $rutapdfacuse . strtoupper($listemiti->uuid) . '-acuse' . '.pdf';
                                                 if (file_exists($acusefile)) {
                                                     $existpdfacuse = 'Si';
                                                 } else {
@@ -743,8 +743,8 @@
                                             <tr>
                                                 {{-- XML Checkbox --}}
                                                 <td class="text-center align-middle">
-                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
-                                                        <input value="{{ $listrecibi->uuid }}"
+                                                    @if ($listemiti->estadoComprobante == 'Vigente')
+                                                        <input value="{{ $listemiti->uuid }}"
                                                             wire:loading.attr="disabled"
                                                             style="transform: scale(1.5);" name="chkxml"
                                                             class="mis-checkboxes ChkMasProv chkxml"
@@ -756,8 +756,8 @@
 
                                                 {{-- R.Imp --}}
                                                 <td class="text-center align-middle">
-                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
-                                                        <input value="{{ $listrecibi->uuid }}"
+                                                    @if ($listemiti->estadoComprobante == 'Vigente')
+                                                        <input value="{{ $listemiti->uuid }}"
                                                             wire:loading.attr="disabled"
                                                             style="transform: scale(1.5);" name="chkpdf"
                                                             class="mis-checkboxes ChkMasProv chkpdf"
@@ -769,10 +769,10 @@
 
                                                 {{-- Acuse --}}
                                                 <td class="text-center align-middle">
-                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                    @if ($listemiti->estadoComprobante == 'Vigente')
                                                         <span class="invoice-amount"> - </span>
                                                     @else
-                                                        <input value="{{ $listrecibi->uuid }}"
+                                                        <input value="{{ $listemiti->uuid }}"
                                                             wire:loading.attr="disabled"
                                                             style="transform: scale(1.5);" name="chkacuse"
                                                             class="mis-checkboxes ChkMasProv chkacuse"
@@ -783,53 +783,53 @@
                                                 {{-- Folio fiscal --}}
                                                 <td class="text-center align-middle">
                                                     <span
-                                                        class="invoice-amount">{{ strtoupper($listrecibi->uuid) }}</span>
+                                                        class="invoice-amount">{{ strtoupper($listemiti->uuid) }}</span>
                                                 </td>
 
                                                 {{-- RFC Emisor --}}
                                                 <td class="text-center align-middle">
                                                     <span
-                                                        class="invoice-amount">{{ $listrecibi->rfcReceptor }}</span>
+                                                        class="invoice-amount">{{ $listemiti->rfcReceptor }}</span>
                                                 </td>
 
                                                 {{-- Razon social (nombre del emisor) --}}
                                                 <td class="text-center align-middle">
                                                     <span
-                                                        class="invoice-amount">{{ $listrecibi->nombreReceptor }}</span>
+                                                        class="invoice-amount">{{ $listemiti->nombreReceptor }}</span>
                                                 </td>
 
                                                 {{-- Fecha emision --}}
                                                 <td class="text-center align-middle">
                                                     <span
-                                                        class="invoice-amount">{{ $listrecibi->fechaEmision }}</span>
+                                                        class="invoice-amount">{{ $listemiti->fechaEmision }}</span>
                                                 </td>
 
                                                 {{-- Fecha certificcion --}}
                                                 <td class="text-center align-middle">
                                                     <span
-                                                        class="invoice-amount">{{ $listrecibi->fechaCertificacion }}</span>
+                                                        class="invoice-amount">{{ $listemiti->fechaCertificacion }}</span>
                                                 </td>
 
                                                 {{-- Total --}}
                                                 <td class="text-center align-middle">
-                                                    <span class="invoice-amount">{{ $listrecibi->total }}</span>
+                                                    <span class="invoice-amount">{{ $listemiti->total }}</span>
                                                 </td>
 
                                                 {{-- Efecto --}}
                                                 <td class="text-center align-middle">
                                                     <span
-                                                        class="invoice-amount">{{ $listrecibi->efectoComprobante }}</span>
+                                                        class="invoice-amount">{{ $listemiti->efectoComprobante }}</span>
                                                 </td>
 
                                                 {{-- Estado --}}
                                                 <td class="text-center align-middle">
                                                     <span
-                                                        class="invoice-amount">{{ $listrecibi->estadoComprobante }}</span>
+                                                        class="invoice-amount">{{ $listemiti->estadoComprobante }}</span>
                                                 </td>
 
                                                 {{-- Aprobacion --}}
                                                 <td class="text-center align-middle">
-                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                    @if ($listemiti->estadoComprobante == 'Vigente')
                                                         <img src="img/ima.png">
                                                     @else
                                                         <img src="img/ima2.png">
@@ -849,7 +849,7 @@
 
                                                 {{-- Desc ACUSE --}}
                                                 <td class="text-center align-middle">
-                                                    @if ($listrecibi->estadoComprobante == 'Vigente')
+                                                    @if ($listemiti->estadoComprobante == 'Vigente')
                                                         <span class="invoice-amount"> - </span>
                                                     @else
                                                         <span

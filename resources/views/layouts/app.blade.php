@@ -361,7 +361,7 @@
                 <li class=" nav-item"><a><i class="#" data-icon="desktop"></i><span
                             class="menu-title text-truncate" data-i18n="Dashboard">Módulos</span></a>
                     <ul class="menu-content">
-
+                        {{-- Modulos para empresas --}}
                         @if (auth()->user()->tipo != 'VOLU' && auth()->user()->tipo != 'Nomina')
                             <li id="chequesytransferencias"><a class="d-flex align-items-center"
                                     href="{{ url('chequesytransferencias') }}"><i
@@ -374,20 +374,13 @@
                                         class="menu-item text-truncate" data-i18n="Analytics">Cuentas
                                         por Pagar</span></a>
                             </li>
-                            <li id="Contruccion"><a class="d-flex align-items-center" href="{{ 'nominas' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Nóminas</span></a>
-                            </li>
-                            <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"
-                                    href=""><i class="bx bx-right-arrow-alt"></i><span
-                                        class="menu-item text-truncate" data-i18n="Analytics">Expediente
-                                        Digital</span></a>
-                            </li>
-                        @elseif (auth()->user()->tipo == 'Nomina')
-                            <li id="Contruccion"><a class="d-flex align-items-center" href="{{ 'nominas' }}"><i
-                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
-                                        data-i18n="Analytics">Nóminas</span></a>
+                        @endif
 
+                        {{-- Modulos para empresas y nominas --}}
+                        @if (auth()->user()->tipo != 'VOLU')
+                            <li id="Contruccion"><a class="d-flex align-items-center" href="{{ 'nominas' }}"><i
+                                        class="bx bx-right-arrow-alt"></i><span class="menu-item text-truncate"
+                                        data-i18n="Analytics">Nóminas</span></a>
                             </li>
                             <li id="expedifiscal"><a class="d-flex align-items-center"
                                     href="{{ url('expedifiscal') }}"><i class="bx bx-right-arrow-alt"></i><span
@@ -396,9 +389,8 @@
                             </li>
                         @endif
 
-
-                        {{-- Modulo solo para gasolinerias --}}
-                        @if (auth()->user()->gas == 1 || (auth()->user()->tipo && auth()->user()->tipo != 'Nomina'))
+                        {{-- Modulos para empresas y volumetrico --}}
+                        @if (auth()->user()->tipo != 'Nomina' || auth()->user()->gas == 1)
                             <li id="volumetrico"><a class="d-flex align-items-center"
                                     href="{{ 'volumetrico' }}"><i class="bx bx-right-arrow-alt"></i><span
                                         class="menu-item text-truncate" data-i18n="Analytics">Control
@@ -406,11 +398,12 @@
                             </li>
                         @endif
 
-                        @if (auth()->user()->tipo != 'VOLU' && auth()->user()->tipo != 'Nomina')
-                            <li id="expedifiscal"><a class="d-flex align-items-center"
-                                    href="{{ url('expedifiscal') }}"><i class="bx bx-right-arrow-alt"></i><span
+                        {{-- Modulo para contadores --}}
+                        @if (auth()->user()->tipo != 'VOLU' && auth()->user()->tipo != 'Nomina' && !empty(auth()->user()->tipo))
+                            <li id="Contruccion"><a class="d-flex align-items-center" onclick="alerta()"
+                                    href=""><i class="bx bx-right-arrow-alt"></i><span
                                         class="menu-item text-truncate" data-i18n="Analytics">Expediente
-                                        Fiscal</span></a>
+                                        Digital</span></a>
                             </li>
                             <li id="descargas"><a class="d-flex align-items-center"
                                     href="{{ url('descargas') }}"><i class="bx bx-right-arrow-alt"></i><span
@@ -429,6 +422,7 @@
                                         data-i18n="Analytics">Monitoreo de facturación</span></a>
                             </li>
                         @endif
+
                     </ul>
 
                 </li>

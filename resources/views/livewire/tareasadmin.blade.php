@@ -79,41 +79,65 @@
         &nbsp;&nbsp;
         &nbsp;&nbsp;
 
-        {{-- Departamentos --}}
-        @if (empty($active))
-            {{-- Busqueda por avance --}}
-            <label {{ $active }} for="inputState">Departamento</label>
-            &nbsp;&nbsp;
-            <select {{ $active }} wire:loading.attr="disabled" id="selectdepto" wire:model="departament"
-                class="select form-control AvanceSelectTarea">
-                <option>Contabilidad</option>
-                <option>Nóminas</option>
-                <option>Facturación</option>
-            </select>
-        @endif
+        {{-- Condiciones para mostrar el contenido dependiendo el departamento --}}
+        @switch($this->avancetareaadmin)
+            @case('Departamento')
+                {{-- Busqueda por avance --}}
+                <label for="inputState">Departamento</label>
+                &nbsp;&nbsp;
+                <select wire:loading.attr="disabled" id="selectdepto" wire:model="departament"
+                    class="select form-control AvanceSelectTarea">
+                    <option>Contabilidad</option>
+                    <option>Nóminas</option>
+                    <option>Facturación</option>
+                </select>
 
-        {{-- Lista de colaboradores --}}
-        @if (empty($activetarea))
-            {{-- Busqueda por avance --}}
-            <label {{ $activetarea }} for="inputState">Colaborador</label>
-            &nbsp;&nbsp;
-            <select {{ $activetarea }} wire:loading.attr="disabled" id="selectdepto" wire:model="colaboselect"
-                class="select form-control AvanceSelectTarea">
-                <option value="">Seleccione un colaborador</option>
-                @foreach ($consulconta as $infocolabo)
-                    <option value="{{ $infocolabo['RFC'] }}">{{ ucfirst($infocolabo['nombre']) }}</option>
-                @endforeach
-            </select>
-        @endif
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;
 
-        {{-- Botones de exportacion --}}
-        @if (empty($activecolao))
-            {{-- Exportar a Excel --}}
-            <button type="button" class="btn btn-success BtnVinculadas"
-                onclick="exporttareasavanceexcel('{{ $fechahoy }}')">Excel</button>
-            &nbsp;&nbsp;
-        @endif
 
+                {{-- Condicones para mostrar los botones de exportacion --}}
+                @switch($departament)
+                    @case('Contabilidad')
+                        {{-- Exportar a Excel --}}
+                        <button type="button" class="btn btn-success BtnVinculadas"
+                            onclick="exportcontabilidadexcel('{{ $fechahoy }}')">Excel</button>
+                    @break
+
+                    @case('Nóminas')
+                    @break
+
+                    @case('Facturación')
+                        {{-- Exportar a Excel --}}
+                        <button type="button" class="btn btn-success BtnVinculadas"
+                            onclick="exportfacturacionexcel('{{ $fechahoy }}')">Excel</button>
+                    @break
+
+                    @default
+                @endswitch
+            @break
+
+            @case('Tareas')
+                {{-- Busqueda por avance --}}
+                <label for="inputState">Colaborador</label>
+                &nbsp;&nbsp;
+                <select wire:loading.attr="disabled" id="selectdepto" wire:model="colaboselect"
+                    class="select form-control AvanceSelectTarea">
+                    <option value="">Seleccione un colaborador</option>
+                    @foreach ($consulconta as $infocolabo)
+                        <option value="{{ $infocolabo['RFC'] }}">{{ ucfirst($infocolabo['nombre']) }}</option>
+                    @endforeach
+                </select>
+            @break
+
+            @case('Colaboradores')
+                {{-- Exportar a Excel --}}
+                <button type="button" class="btn btn-success BtnVinculadas"
+                    onclick="exporttareasavanceexcel('{{ $fechahoy }}')">Excel</button>
+            @break
+
+            @default
+        @endswitch
     </div>
 
     <br><br>

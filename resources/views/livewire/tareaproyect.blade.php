@@ -17,7 +17,7 @@
 
     {{-- Tabla de tareas --}}
     <div class="table-responsive">
-        <table class="{{ $class }}" style="width:100%">
+        <table class="{{ $class }} tablecontabilidad" style="width:100%">
             <thead>
                 <tr>
                     <th class="text-center align-middle FontProyectos sticky-colhead first-col">Proyecto</th>

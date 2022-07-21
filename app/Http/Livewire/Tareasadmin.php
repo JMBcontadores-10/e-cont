@@ -14,9 +14,6 @@ class Tareasadmin extends Component
     public $avancetareaadmin;
     public $departament;
     public $colaboselect;
-    public $active = "hidden";
-    public $activetarea = "hidden";
-    public $activecolao = 'hidden';
 
     //Variable para la captura de impuestos
     public $fechaimpu;
@@ -57,33 +54,6 @@ class Tareasadmin extends Component
 
     public function render()
     {
-        //Condicionales para saber lo que se va a mostrar dependiendo del avance
-        switch ($this->avancetareaadmin) {
-            case 'Departamento':
-                $this->active = null;
-                $this->activetarea = 'hidden';
-                $this->activecolao = 'hidden';
-                break;
-
-            case 'Tareas':
-                $this->active = 'hidden';
-                $this->activetarea = null;
-                $this->activecolao = 'hidden';
-                break;
-
-            case 'Colaboradores':
-                $this->active = 'hidden';
-                $this->activetarea = 'hidden';
-                $this->activecolao = null;
-                break;
-
-            default:
-                $this->active = 'hidden';
-                $this->activetarea = 'hidden';
-                $this->activecolao = null;
-                break;
-        }
-
         //Vamos a obtener los colaboradores
         $consulconta = User::where('tipo', '2')
             ->orwhere('tipo', 'VOLU')
