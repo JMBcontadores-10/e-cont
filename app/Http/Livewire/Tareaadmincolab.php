@@ -26,6 +26,7 @@ class Tareaadmincolab extends Component
         //Consultamos a la colleccion de clientes para obtener los colaboradores
         $colaboradores = User::where('tipo', '2')
             ->orwhere('tipo', 'VOLU')
+            ->orwhere('tipo', 'Nomina')
             ->where('nombre', '!=', null)
             ->get();
 

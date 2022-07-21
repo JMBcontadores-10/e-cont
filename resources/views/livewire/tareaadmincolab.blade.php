@@ -232,7 +232,7 @@
 
         <div class="row g-2">
             @foreach ($colaboradores as $contador)
-                @if ($contador['depto'] == 'Nomina')
+                @if ($contador['tipo'] == 'Nomina')
                     @php
                         //Limpiamos el arreglo de proyecto al cambiar de contador
                         $proyectos = [];
